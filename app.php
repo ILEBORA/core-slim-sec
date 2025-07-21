@@ -11,7 +11,7 @@ define('CORE_CLIENT_IV', $_ENV['CORE_CLIENT_IV'] ?? '');
 define('CORE_SERVER', 'https://boracore.co.ke');
 
 // env var or fixed path outside vendor
-$cacheDir = $_ENV['CORE_CACHE_PATH'] ?? __DIR__ . '/../../cache';
+$cacheDir = $_ENV['CORE_CACHE_PATH'] ?? __DIR__ . '/../../../.cache';
 if (!is_dir($cacheDir)) {
     mkdir($cacheDir, 0777, true);
 }
