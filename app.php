@@ -49,8 +49,26 @@ $decrypted = openssl_decrypt(
     CORE_CLIENT_IV
 );
 
-if (!$decrypted) {
-    die("Decryption failed - invalid credentials or corrupted core.\n");
+// Validate content is not empty or corrupted
+if (
+    $decrypted === false ||
+    !is_string($decrypted) ||
+    strlen(trim($decrypted)) < 100 || // too short? suspicious
+    !preg_match('/namespace\s+[a-zA-Z0-9_\\\\]+;/', $decrypted) // basic PHP structure
+) {
+    $errorFile = __DIR__ . '/resources/core-decryption-error.html';
+    http_response_code(500);
+    if (file_exists($errorFile)) {
+        readfile($errorFile);
+    } else {
+        echo "Decryption failed and error page is missing.";
+    }
+    exit;
+    
 }
 
-eval($decrypted);
+try {
+    eval($decrypted);
+} catch (Throwable $e) {
+    die("Core execution error: " . $e->getMessage());
+}
