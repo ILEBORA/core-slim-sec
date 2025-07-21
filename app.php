@@ -19,8 +19,22 @@ if (!is_dir($cacheDir)) {
 $cachePath = $cacheDir . '/.core.cached.bora';
 $versionFile = $cacheDir . '/.core.version';
 
+$defaultVersion = 'v1.0.0';
+
+// Check if version file exists; if not create it
+if (!file_exists($versionFile)) {
+    file_put_contents($versionFile, $defaultVersion);
+    $currentVersion = $defaultVersion;
+} else {
+    $currentVersion = trim(file_get_contents($versionFile));
+}
+
+// Check if core cache file exists; if not set currentVersion to empty to force download
+if (!file_exists($cachePath)) {
+    $currentVersion = ''; // force download since core file missing
+}
+
 // Get current and remote versions
-$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '';
 $remoteVersion = @file_get_contents(CORE_SERVER . '/latest-version');
 
 if ($remoteVersion && $currentVersion !== $remoteVersion) {
