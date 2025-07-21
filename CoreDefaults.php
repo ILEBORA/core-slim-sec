@@ -20,7 +20,7 @@ if (php_sapi_name() !== 'cli' && ($_SERVER['REMOTE_ADDR'] ?? '') !== '::1') {
 // ini_set('error_log', __DIR__ . '/../../.logs/errors.log'); // relative to vendor dir
 // ini_set('log_errors_max_len', 1024);
 
-$defaultLogPath = dirname(__DIR__, 4) . '/.logs/errors.log'; // resolves to project root
+$defaultLogPath = dirname(__DIR__, 3) . '/.logs/errors.log'; // resolves to project root
 
 if (!file_exists(dirname($defaultLogPath))) {
     mkdir(dirname($defaultLogPath), 0777, true); // Create logs directory if not exists
@@ -50,7 +50,7 @@ if (!defined('REQUEST_SCHEME')) {
 
 // Define BASE_DIR etc. only if not already defined
 if (!defined("BASE_DIR")) {
-    define("BASE_DIR", dirname(__DIR__, 4));
+    define("BASE_DIR", dirname(__DIR__, 3));
     if(isset($_SERVER['DOCUMENT_ROOT']) && !empty(isset($_SERVER['DOCUMENT_ROOT']))){
         $baseUrlRelative = !empty($_SERVER['DOCUMENT_ROOT']) ?  explode($_SERVER['DOCUMENT_ROOT'], str_replace(DIRECTORY_SEPARATOR, "/", BASE_DIR))[1] : '';
         define("BASE_URL_RELATIVE", $baseUrlRelative . '/');
