@@ -1,0 +1,15 @@
+{
+  "name": "ilebora/core-slim-sec",
+  "description": "Dist version of BoraSlim framework",
+  "type": "library",
+  "autoload": {
+    "files": [
+      "CoreDefaults.php",
+      "Helpers.php",
+      "app.php"
+    ]
+  },
+  "require": {
+    "twig/twig": "^3.0"
+  }
+}
