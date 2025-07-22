@@ -432,17 +432,15 @@ if (!function_exists('View')) {
 }
 
 if (!function_exists('getVersion')) {
-     function getVersion(){
-        $versionFile = '.config/.version';
-        if(!file_exists($versionFile)){
-            return $versionFile.' file not found.';
+    function getVersion($folder = null) {
+        $basePath = $folder ?? '.';
+        $versionFile = rtrim($basePath, '/\\') . '/.config/.version';
+
+        if (!file_exists($versionFile)) {
+            return 'v1.0.0'; // default version
         }
 
-        // Get the current version
-        $currentVersion = trim(file_get_contents($versionFile));
-
-        return $currentVersion;
-
+        return trim(file_get_contents($versionFile)) ?: 'v1.0.0'; // fallback if file is empty
     }
 }
 
