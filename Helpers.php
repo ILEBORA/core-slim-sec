@@ -432,15 +432,17 @@ if (!function_exists('View')) {
 }
 
 if (!function_exists('getVersion')) {
-    function getVersion($folder = null) {
-        $basePath = $folder ?? '.';
-        $versionFile = rtrim($basePath, '/\\') . '/.config/.version';
-
-        if (!file_exists($versionFile)) {
-            return 'v1.0.0'; // default version
+     function getVersion(){
+        $versionFile = '.config/.version';
+        if(!file_exists($versionFile)){
+            return $versionFile.' file not found.';
         }
 
-        return trim(file_get_contents($versionFile)) ?: 'v1.0.0'; // fallback if file is empty
+        // Get the current version
+        $currentVersion = trim(file_get_contents($versionFile));
+
+        return $currentVersion;
+
     }
 }
 
@@ -496,5 +498,33 @@ if (!function_exists('getMimeType')) {
         ];
 
         return $map[$ext] ?? mime_content_type($path);
+    }
+}
+if (!function_exists('extractVersion')) {
+    function extractVersion(string $str): ?string {
+        // Strip everything before the first digit
+        $str = preg_replace('/^[^0-9]*/', '', $str);
+
+        // Match version like 1.2.3, 1.2, 1.2.3-beta, 1.2.3+build, etc.
+        if (preg_match('/^(\d+\.\d+(?:\.\d+)?(?:[-+][\w\.]+)?)/', $str, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('isSameOrigin')) {
+    function isSameOrigin(string $url): bool {
+        $core = parse_url($url);
+        $req = [
+            'host' => $_SERVER['HTTP_HOST'] ?? '',
+            'scheme' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http',
+            'port' => $_SERVER['SERVER_PORT'] ?? null,
+        ];
+
+        return strcasecmp($core['host'], $req['host']) === 0
+            && (!isset($core['scheme']) || strcasecmp($core['scheme'], $req['scheme']) === 0)
+            && (!isset($core['port']) || $core['port'] == $req['port']);
     }
 }

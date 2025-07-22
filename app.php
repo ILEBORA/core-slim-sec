@@ -35,22 +35,50 @@ if (!file_exists($cachePath)) {
 }
 
 // Get current and remote versions
-$remoteVersion = @file_get_contents(CORE_SERVER . '/latest-version');
+// $remoteVersion = 'v1.0.2';// @file_get_contents(CORE_SERVER . '/latest-version');
+if (isSameOrigin(CORE_SERVER)) {
+    // die('here');
+    $remoteVersion = @file_get_contents('.core/.config/.version');
+} else {
+    // die('there');
+    $remoteVersion = @file_get_contents(CORE_SERVER . '/latest-version');
+}
 
-if ($remoteVersion && $currentVersion !== $remoteVersion) {
-    echo "New core version available. Downloading...\n";
+// die($remoteVersion);
 
-    // Request the core encrypted for this client
-    $response = @file_get_contents(
-        CORE_SERVER . "/download?client_id=" . urlencode(CORE_CLIENT_ID)
-    );
+$remoteVersion = extractVersion($remoteVersion);
+$currentVersion = extractVersion($currentVersion);
 
-    if (!$response) {
-        die("Failed to download new core.");
+if ($remoteVersion && $currentVersion) {
+    if (version_compare($currentVersion, $remoteVersion, '<')) {
+        error_log("New core version available. Downloading...\n");
+
+        if (!isSameOrigin(CORE_SERVER)) {
+            // Request the core encrypted for this client
+            $response = @file_get_contents(
+                CORE_SERVER . "/download?client_id=" . urlencode(CORE_CLIENT_ID)
+            );
+        }else{
+            // Request the core encrypted for this client
+            // die('here');
+            if (function_exists('handleCoreDownload')) {
+                $response = \App\Utils\Utils::handleCoreDownload(CORE_CLIENT_ID);
+            } else {
+                die("Local download handler not found.");
+            }
+        }
+
+        if (!$response) {
+            die("Failed to download new core.");
+        }
+
+        file_put_contents($cachePath, $response);
+        file_put_contents($versionFile, $remoteVersion);
+    }else{
+        //echo you are up to date
     }
-
-    file_put_contents($cachePath, $response);
-    file_put_contents($versionFile, $remoteVersion);
+}else{
+    //error parsing version
 }
 
 $enc = file_get_contents($cachePath);
