@@ -13,7 +13,7 @@ ini_set('ignore_repeated_errors', TRUE);
 // Default display_errors based on environment
 if (php_sapi_name() !== 'cli' && ($_SERVER['REMOTE_ADDR'] ?? '') !== '::1') {
     ini_set('display_errors', false);
-    die('Admin2' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    // die('Admin2' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
 }
 
 // ini_set('log_errors', TRUE);
