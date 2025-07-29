@@ -412,7 +412,7 @@ if (!function_exists('View')) {
 
         $app_name = App::config('app_name');
         $app_name = !empty($app_name) ? $app_name : 'BoraSlim App';
-        $base_url = '/';
+        $base_url = BASE_URL ?? '/';
 
         if ($instance === null) {
             $instance = new View();
