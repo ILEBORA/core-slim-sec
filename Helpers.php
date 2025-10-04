@@ -375,11 +375,7 @@ function Model(): \BoraSlim\Core\Helpers\ModelResolver
 if (!function_exists('Feature')) {
     function Feature(): \BoraSlim\Core\Helpers\FeatureResolver
     {
-        static $resolver = null;
-        if ($resolver === null) {
-            $resolver = new \BoraSlim\Core\Helpers\FeatureResolver();
-        }
-        return $resolver;
+        return \BoraSlim\Core\App::getInstance()->getResolver();
     }
 }
 
@@ -467,8 +463,9 @@ if (!function_exists('hasPermission')) {
     function hasPermission($perm, $sub = null, $force_create = false){
         // $class = Manage()->permission->getInstance();
         // return $class->hasPermission($perm, $sub, $force_create);
-        $class = Feature()->permissions->getInstance();  // note: key "permissions" must match registration
-        return $class->hasPermission($perm, $sub, $force_create);
+        $permManager = myApp()->getFeature('permissions');
+        // $class = Feature()->permissions->getInstance();  // note: key "permissions" must match registration
+        return $permManager->hasPermission($perm, $sub, $force_create);
     }
 }
 

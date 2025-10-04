@@ -61,7 +61,7 @@ if ($remoteVersion && $currentVersion) {
         }else{
             // Request the core encrypted for this client
             // die('here');
-            if (class_exists('\App\Utils\Utils') && method_exists('\App\Utils\Utils', 'handleCoreDownload')) {
+            if (function_exists('handleCoreDownload')) {
                 $response = \App\Utils\Utils::handleCoreDownload(CORE_CLIENT_ID);
             } else {
                 die("Local download handler not found.");
