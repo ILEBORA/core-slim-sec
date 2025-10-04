@@ -7,7 +7,7 @@
     {
       "name": "ILEBORA Technologies",
       "email": "support@ilebora.com",
-      "homepage": "https://ilebora.com"
+      "homepage": "https://boracore.co.ke"
     }
   ],
   "minimum-stability": "stable",
@@ -46,5 +46,6 @@
     "branch-alias": {
       "dev-main": "1.0-dev"
     }
-  }
+  },
+  "keywords": ["framework", "bora", "php", "core", "slim"]
 }
