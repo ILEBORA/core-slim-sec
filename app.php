@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.1
- *  Build ID:   9BFCA31C1A56
- *  Timestamp:  2025-10-05 09:32:48
+ *  Build ID:   C8911A2527BD
+ *  Timestamp:  2025-10-06 00:59:31
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -57,7 +57,7 @@ foreach ($systemPaths as $systemFile) {
 define('CORE_SEC_PASSWORD', $_ENV['CORE_CLIENT_SECRET'] ?? 'BoraSlim_Core_v1@Secure');
 define('CORE_CLIENT_ID', $_ENV['CORE_CLIENT_ID'] ?? '');
 define('CORE_CLIENT_IV', $_ENV['CORE_CLIENT_IV'] ?? '');
-define('CORE_SERVER', 'https://boracore.co.ke');
+define('CORE_SERVER', 'http://161.35.37.44');
 
 // env var or fixed path outside vendor
 $cacheDir = $_ENV['CORE_CACHE_PATH'] ?? __DIR__ . '/../../../.cache';
@@ -146,12 +146,13 @@ if (file_exists($hashPath)) {
 }
 
 // --- 🧠 Decrypt and run ---
+$clientIv = hex2bin(CORE_CLIENT_IV);
 $decrypted = openssl_decrypt(
     $encrypted,
-    'AES-128-CTR',
+    'AES-256-CTR',
     CORE_SEC_PASSWORD,
     0,
-    CORE_CLIENT_IV
+    $clientIv
 );
 
 // --- Sanity checks ---

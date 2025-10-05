@@ -761,15 +761,16 @@ if(!function_exists('handleCoreDownload')){
     function handleCoreDownload(string $clientId): string|false
     {
         $corePath = ".core/core.bora";
-        $systemKey = 'BoraSlim_Core_v1@Secure'; // Static key for system-layer encryption
-        $iv = '1234567891011121';  // 16 bytes for AES-128-CTR
+        $systemKey = $_ENV['SYSTEM_KEY'];
+        $systemIv = $_ENV['SYSTEM_IV'];
 
         if (!$clientId) {
             return false;
         }
 
         // Simulate client-specific key (you could fetch this from DB)
-        $clientSecret = 'BoraSlim_Core_v1@Secure'; // getClientSecretFromDb($clientId);
+        $clientSecret = $_ENV['CORE_CLIENT_SECRET'];
+        $clientIv = hex2bin($_ENV['CORE_CLIENT_IV']);
 
         if (!file_exists($corePath)) {
             return false;
@@ -777,14 +778,14 @@ if(!function_exists('handleCoreDownload')){
 
         // Decrypt system-layer core
         $encCore = file_get_contents($corePath);
-        $layer1 = openssl_decrypt($encCore, 'AES-128-CTR', $systemKey, 0, $iv);
+        $layer1 = openssl_decrypt($encCore, 'AES-256-CTR', $systemKey, 0, $systemIv);
 
         if ($layer1 === false) {
             return false;
         }
         
         // Re-encrypt for client
-        $clientEnc = openssl_encrypt($layer1, 'AES-128-CTR', $clientSecret, 0, $iv);
+        $clientEnc = openssl_encrypt($layer1, 'AES-256-CTR', $clientSecret, 0, $clientIv);
 
         return $clientEnc ?: false;
     }
