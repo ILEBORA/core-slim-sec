@@ -17,6 +17,7 @@
       "BoraSlim\\": "src/"
     },
     "files": [
+      "EnvLoader.php",
       "CoreDefaults.php",
       "Helpers.php",
       "app.php"
@@ -47,5 +48,5 @@
       "dev-main": "1.0-dev"
     }
   },
-  "keywords": ["framework", "bora", "php", "core", "slim"]
+  "keywords": ["framework", "bora", "php", "core", "slim", "ilebora", "ile bora", "the best"]
 }

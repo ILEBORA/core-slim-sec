@@ -1,6 +1,6 @@
 # Bora Core Slim Sec - Helper Framework
 
-⚠️ **Disclaimer:** This repository contains only the helper framework (`Helpers.php`, `CoreDefaults.php`, utility functions, and templating logic).  
+⚠️ **Disclaimer:** This repository contains only the helper framework (`Helpers.php`, `CoreDefaults.php`, `EnvLoader.php`, utility functions, and templating logic).  
 
 The actual **Bora Core engine** is **encrypted and never included in this repository**. This means the repo does not contain sensitive business logic or secret keys.
 
