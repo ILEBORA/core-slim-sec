@@ -38,12 +38,53 @@ if (!function_exists('appDBC')) {
 
 if (!function_exists('getActiveRoutesFromDB')) {
     function getActiveRoutesFromDB() {
-        $rows = appDB()->runQuery("SELECT `method`, `uri`, `controller`, `action` FROM `app_dynamic_routes` WHERE `enabled` = 1");
+        $rows = appDB()->runQuery("SELECT `method`, `uri`, `controller`, `action` FROM `app_dynamic_routes` WHERE `enabled` = 1 ORDER BY `priority` DESC");
         return $rows->fetch_all(MYSQLI_ASSOC);
     }
 }
 
-if (!function_exists('processDBRoutes')) {
+if (!function_exists('processDBRoutesO')) {
+    function processDBRoutesO($router){
+        $routes = getActiveRoutesFromDB(); 
+        // breakWith($routes);
+        foreach ($routes as $route) {
+            $class  = $route['controller'];
+            $method = $route['action'];
+            $uri    = $route['uri'];
+            $http   = $route['method'];
+            $permId = $route['permission_level_id'] ?? 1;
+            $permKey= $route['permission_key'] ?? null;
+
+            if (class_exists($class) && method_exists($class, $method)) {
+                $permManager = myApp()->getFeature('permissions');
+                // if (!$permManager->check($permId, $permKey)) {
+                //     continue;
+                // }
+
+                $router->addRoute($route['method'], $route['uri'], "$class@$method");
+
+                
+
+                // $router->addRoute($http, $uri, function() use ($class, $method, $permId, $permKey) {
+                //     // 🔒 Permission enforcement
+                //     if (!Permission::check($permId, $permKey)) {
+                //         header("HTTP/1.1 403 Forbidden");
+                //         echo "Forbidden: You do not have access to this route.";
+                //         exit;
+                //     }
+
+                //     // ✅ Call the real controller
+                //     $controller = new $class();
+                //     return call_user_func([$controller, $method]);
+                // });
+            }
+        }
+
+        return $router;
+    }
+}
+
+if (!function_exists('processDBRoute')) {
     function processDBRoutes($router){
         $routes = getActiveRoutesFromDB(); 
         foreach ($routes as $route) {
@@ -178,8 +219,15 @@ function userIP(){
     return getUserIpAddr();
 }
 
+
 function userID(){
-    global $userID; //TODO:: get userID
+    $userID = ''; //TODO:: get userID
+
+    if (isset($_SESSION['access_token'])) {
+        $payload = \App\Utils\Utils::validToken($_SESSION['access_token']);
+        $user = $payload['user'];
+        $userID = $user['id'];
+    }
     
     return $userID; 
 }
@@ -372,6 +420,12 @@ function Model(): \BoraSlim\Core\Helpers\ModelResolver
     return $resolver;
 }
 
+if (!function_exists('ModManage')) {
+    function ModManage() : \BoraSlim\Core\Managers\ModuleManager{
+        return \BoraSlim\Core\App::getInstance()->getModules();
+    }
+}
+
 if (!function_exists('Feature')) {
     function Feature(): \BoraSlim\Core\Helpers\FeatureResolver
     {
@@ -408,10 +462,70 @@ if (!function_exists('View')) {
 
         $app_name = App::config('app_name');
         $app_name = !empty($app_name) ? $app_name : 'BoraSlim App';
+        $base_url = defined('BASE_URL') ? BASE_URL : '/';
+
+        $rolePermissionManager = myApp()->getFeature('permissions'); //Manage()->permission->getInstance();
+        // dieVal($rolePermissionManager);
+        $rolePerms = $rolePermissionManager->getRoles(true);
+        $currentRole = $rolePermissionManager->getCurrentRole();
+        
+        $encodedPerms = base64_encode(json_encode($rolePerms));
+        $encodedRole = base64_encode(json_encode($currentRole));
+        
+        if ($instance === null) {
+            $instance = new View();
+            $instance
+                ->share('base_url', $base_url)
+                ->share('app_name', $app_name)
+                ->share('app_version', getVersion())
+                ->share('access_permissions', $encodedPerms)
+                ->share('access_role', $encodedRole)
+                ->share('auth', [
+                    'role' => $currentRole,
+                    'permissions' => $rolePerms ,
+                    'isGuest' => $currentRole === 'guest',
+                ])
+                ->share('meta_description', 'Learn more about our company and values.')
+                ->share('meta_keywords', 'about, company, values')
+                ->share('meta_author', 'MySite Team')
+                ->share('meta_robots', 'index, follow')
+                ->share('channelID', defined('CHANNEL_ID') ? CHANNEL_ID :'')
+                ->share('redirectDefault', redirectDefault())
+                ;
+        }
+
+        return $instance;
+    }
+}
+
+if(!function_exists('redirectDefault')){
+    function redirectDefault(){
+        $url = '';
+        if( $role = myApp()->getFeature('permissions')->fetchCurrentRole()){
+            switch($role){
+                case 'Guest': $url = ''; break;
+                case 'Client': $url = 'portal'; break;
+                case 'Administrator':
+                case 'Developer': $url = 'bo'; break;
+                default: $url = ''; break;
+            }
+        }
+
+        return $url;
+    }
+}
+
+if (!function_exists('modView')) {
+    function modView($module = null): View {
+        static $instance = null;
+
+        $app_name = App::config('app_name');
+        $app_name = !empty($app_name) ? $app_name : 'BoraSlim App';
         $base_url = BASE_URL ?? '/';
 
         if ($instance === null) {
-            $instance = new View();
+            $modulePath = ($module) ? 'modules/'.ucfirst($module).'/Views' : null;
+            $instance = new View($modulePath);
             $instance
                 ->share('base_url', $base_url)
                 ->share('app_name', $app_name)
@@ -469,6 +583,7 @@ if (!function_exists('hasPermission')) {
     }
 }
 
+
 if (!function_exists('in_array_case_insensitive')) {
     function in_array_case_insensitive($needle, array $haystack): bool {
         return in_array(strtolower($needle), array_map('strtolower', $haystack));
@@ -523,5 +638,134 @@ if (!function_exists('isSameOrigin')) {
         return strcasecmp($core['host'], $req['host']) === 0
             && (!isset($core['scheme']) || strcasecmp($core['scheme'], $req['scheme']) === 0)
             && (!isset($core['port']) || $core['port'] == $req['port']);
+    }
+}
+
+if(!function_exists('response')){
+    function response(){
+        return new \BoraSlim\Core\Utils\Response();
+    }
+}
+
+if (!function_exists('myApp')) {
+    function myApp(): \BoraSlim\Core\App
+    {
+        static $instance = null;
+        if ($instance === null) {
+            global $app;
+            $instance = $app;
+        }
+        return $instance;
+    }
+}
+
+if(!function_exists('isAjaxRequest')){
+    function isAjaxRequest(): bool
+    {
+        return (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+        );
+    }
+}
+
+if (!function_exists('appConstants')) {
+    /**
+     * Usage: 
+     *   appConstants('ROLE_ADMIN')  → returns the value
+     *   appConstants()::ROLE_ADMIN  → returns via class reference
+     */
+    function appConstants(string $key = null)
+    {
+        $class = class_exists(\App\Config\Constants::class)
+            ? \App\Config\Constants::class
+            : \BoraSlim\Core\Config\Constants::class;
+
+        // If no key is provided, return the class itself
+        if ($key === null) {
+            return $class;
+        }
+
+        // Otherwise, resolve the constant value
+        if (defined("{$class}::{$key}")) {
+            return constant("{$class}::{$key}");
+        }
+
+        throw new \Exception("Constant {$key} not defined in {$class}");
+    }
+}
+
+
+if(!function_exists('Redirect')){
+    function Redirect() : \App\Utils\Redirect{
+        return new \App\Utils\Redirect();
+    }
+}
+
+if(!function_exists('CryptoJSAesEncrypt')){
+    function CryptoJSAesEncrypt($plain_text, $passphrase = "" ){
+        $salt = openssl_random_pseudo_bytes(256);
+        $iv = openssl_random_pseudo_bytes(16);
+        $iterations = 999; 
+        $passphrase = getIfSet($_SESSION['APP_KEY'],''); 
+        $key = hash_pbkdf2("sha512", $passphrase, $salt, $iterations, 64);
+
+        $encrypted_data = openssl_encrypt($plain_text, 'aes-256-cbc', hex2bin($key), OPENSSL_RAW_DATA, $iv);
+
+        $data = array("ciphertext" => base64_encode($encrypted_data), "iv" => bin2hex($iv), "salt" => bin2hex($salt));
+        return json_encode($data);
+    }
+}
+
+
+if(!function_exists('Hooks')){
+    function Hooks(){
+        return \App\Utils\Hooks::getInstance();
+    }
+}
+
+if(!file_exists('sanitizeFolderName')){
+    function sanitizeFolderName($name) {
+        // Replace colons and other non-alphanumeric characters (except underscores and dashes) with an underscore
+        $sanitized = preg_replace('/[^a-zA-Z0-9_-]/', '_', $name);
+        
+        // Optional: collapse multiple underscores
+        $sanitized = preg_replace('/_+/', '_', $sanitized);
+
+        // Trim underscores from start and end
+        return trim($sanitized, '_');
+    }
+}
+
+if(!function_exists('handleCoreDownload')){
+    function handleCoreDownload(string $clientId): string|false
+    {
+        $corePath = ".core/core.bora";
+        $systemKey = 'BoraSlim_Core_v1@Secure'; // Static key for system-layer encryption
+        $iv = '1234567891011121';  // 16 bytes for AES-128-CTR
+
+        if (!$clientId) {
+            return false;
+        }
+
+        // Simulate client-specific key (you could fetch this from DB)
+        $clientSecret = 'BoraSlim_Core_v1@Secure'; // getClientSecretFromDb($clientId);
+
+        if (!file_exists($corePath)) {
+            return false;
+        }
+
+        // Decrypt system-layer core
+        $encCore = file_get_contents($corePath);
+        $layer1 = openssl_decrypt($encCore, 'AES-128-CTR', $systemKey, 0, $iv);
+
+        if ($layer1 === false) {
+            return false;
+        }
+        
+        // Re-encrypt for client
+        $clientEnc = openssl_encrypt($layer1, 'AES-128-CTR', $clientSecret, 0, $iv);
+
+        return $clientEnc ?: false;
     }
 }
