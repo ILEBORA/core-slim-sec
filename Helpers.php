@@ -240,7 +240,8 @@ function userIP(){
 }
 
 
-function userID(){
+function userID():string
+{
     $userID = ''; //TODO:: get userID
 
     if (isset($_SESSION['access_token'])) {
@@ -695,7 +696,7 @@ if (!function_exists('appConstants')) {
      *   appConstants('ROLE_ADMIN')  → returns the value
      *   appConstants()::ROLE_ADMIN  → returns via class reference
      */
-    function appConstants(string $key = null)
+    function appConstants(?string $key = null)
     {
         $class = class_exists(\App\Config\Constants::class)
             ? \App\Config\Constants::class
