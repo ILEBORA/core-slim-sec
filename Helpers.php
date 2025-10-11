@@ -695,7 +695,7 @@ if (!function_exists('appConstants')) {
      * Usage: 
      *   appConstants('ROLE_ADMIN')  → returns the value
      *   appConstants()::ROLE_ADMIN  → returns via class reference
-     */
+     */ 
     function appConstants(?string $key = null)
     {
         $class = class_exists(\App\Config\Constants::class)
