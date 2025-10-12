@@ -250,7 +250,7 @@ function userID():string
         $userID = $user['id'];
     }
     
-    return $userID; 
+    return (string) $userID; 
 }
 
 function pass($vars){
@@ -492,6 +492,12 @@ if (!function_exists('View')) {
         
         $encodedPerms = base64_encode(json_encode($rolePerms));
         $encodedRole = base64_encode(json_encode($currentRole));
+
+        $menus = ModManage()->ui->manager->menu->getMenus();
+
+        $app = ModManage()->ui->manager->buildUIContext();
+
+        $prefs = ModManage()->ui->manager->user->getPrefs(true);
         
         if ($instance === null) {
             $instance = new View();
@@ -499,6 +505,7 @@ if (!function_exists('View')) {
                 ->share('base_url', $base_url)
                 ->share('app_name', $app_name)
                 ->share('app_version', getVersion())
+                ->share('core_version', getCoreVersion())
                 ->share('access_permissions', $encodedPerms)
                 ->share('access_role', $encodedRole)
                 ->share('auth', [
@@ -512,6 +519,11 @@ if (!function_exists('View')) {
                 ->share('meta_robots', 'index, follow')
                 ->share('channelID', defined('CHANNEL_ID') ? CHANNEL_ID :'')
                 ->share('redirectDefault', redirectDefault())
+
+                //Extras
+                ->share('app', $app)
+                ->share('menus', $menus)
+                ->share('prefs', $prefs)
                 ;
         }
 
@@ -567,6 +579,21 @@ if (!function_exists('getVersion')) {
         $versionFile = '.config/.version';
         if(!file_exists($versionFile)){
             return $versionFile.' file not found.';
+        }
+
+        // Get the current version
+        $currentVersion = trim(file_get_contents($versionFile));
+
+        return $currentVersion;
+
+    }
+}
+
+if (!function_exists('getCoreVersion')) {
+     function getCoreVersion(){
+        $versionFile = '.cache/.core.version';
+        if(!file_exists($versionFile)){
+            return '1.0.0';//$versionFile.' file not found.';
         }
 
         // Get the current version
