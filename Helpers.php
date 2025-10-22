@@ -26,15 +26,24 @@ use BoraSlim\Core;
 if (!function_exists('newSession')) {
     function newSession(array $settings = []) {
         if (session_status() === PHP_SESSION_NONE) {
+            if (headers_sent()) {
+                trigger_error("Cannot start session, headers already sent.", E_USER_WARNING);
+                return;
+            }
 
-            header('P3P: CP="CAO PSA OUR"');
+            // Environment-aware defaults
+            $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+            $secure  = $settings['secure'] ?? ($isHttps ? 1 : 0);
+            $samesite = $settings['samesite'] ?? ($secure ? 'None' : 'Lax');
 
-            ini_set('session.cookie_samesite', $settings['samesite'] ?? 'None');
-            ini_set('session.cookie_secure', $settings['secure'] ?? 'true');
+            ini_set('session.cookie_secure', $secure);
+            ini_set('session.cookie_samesite', $samesite);
             session_cache_limiter($settings['cache_limiter'] ?? 'private, must-revalidate');
             session_cache_expire($settings['cache_expire'] ?? 30);
-            
-            session_name($settings['name'] ?? 'ACS');
+
+            $name = $settings['name'] ?? (defined('ACS') ? ACS : 'borasession');
+            session_name($name);
+
             session_start();
         }
     }
@@ -622,14 +631,68 @@ if (!function_exists('widgetCache')) {
 
 //** NEW */
 if (!function_exists('hasPermission')) {
-    function hasPermission($perm, $sub = null, $force_create = false){
-        // $class = Manage()->permission->getInstance();
-        // return $class->hasPermission($perm, $sub, $force_create);
-        $permManager = myApp()->getFeature('permissions');
-        // $class = Feature()->permissions->getInstance();  // note: key "permissions" must match registration
-        return $permManager->hasPermission($perm, $sub, $force_create);
+    /**
+     * Check or register a permission.
+     * 
+     * @param string $module Module name (e.g. 'Users')
+     * @param string $action Action name (e.g. 'deleteUsers')
+     * @param bool $autoRegister Create permission if missing
+     * @param bool $throw Throw exception if denied
+     */
+    // function hasPermissionO(string $module, string $action, bool $autoRegister = false, bool $throw = true): bool {
+    //     $permRepo = ModManage()->permissions; // Assuming you have a PermissionsRepository
+    //     $permission = $permRepo->findByName($module, $action);
+
+    //     if (!$permission && $autoRegister) {
+    //         $permRepo->create(['module' => $module, 'action' => $action]);
+    //         return true;
+    //     }
+
+    //     $user = auth()->user(); // however you fetch the current user
+    //     $has = $user && $user->hasPermission($module, $action);
+
+    //     if (!$has && $throw) {
+    //         throw new \Exception("Access denied: {$module}.{$action}");
+    //     }
+
+    //     return $has;
+    // }
+
+    function hasPermission(string $module, string $action, bool $autoRegister = false, bool $throw = false): bool {
+        // $permRepo = ModManage()->permissions; // Assuming you have a PermissionsRepository
+        // $permission = $permRepo->findByName($module, $action);
+
+        // if (!$permission && $autoRegister) {
+        //     $permRepo->create(['module' => $module, 'action' => $action]);
+        //     return true;
+        // }
+
+        // $user = auth()->user(); // however you fetch the current user
+        // $has = $user && $user->hasPermission($module, $action);
+
+        // if (!$has && $throw) {
+        //     throw new \Exception("Access denied: {$module}.{$action}");
+        // }
+
+        $has = $permManager->hasPermission($perm, $sub, $force_create);
+        
+        if (!$has && $throw) {
+            throw new \Exception("Access denied: {$module}.{$action}");
+        }
+
+        return $has;
     }
 }
+
+// if (!function_exists('hasPermissionO')) {
+//     function hasPermissionO($perm, $sub = null, $force_create = false){
+//         // $class = Manage()->permission->getInstance();
+//         // return $class->hasPermission($perm, $sub, $force_create);
+//         $permManager = myApp()->getFeature('permissions');
+//         // $class = Feature()->permissions->getInstance();  // note: key "permissions" must match registration
+//         return $permManager->hasPermission($perm, $sub, $force_create);
+//     }
+// }
 
 
 if (!function_exists('in_array_case_insensitive')) {
@@ -816,5 +879,38 @@ if(!function_exists('handleCoreDownload')){
         $clientEnc = openssl_encrypt($layer1, 'AES-256-CTR', $clientSecret, 0, $clientIv);
 
         return $clientEnc ?: false;
+    }
+}
+
+if (!function_exists('Event')) {
+    function Event(): \BoraSlim\Core\Support\Event {
+        static $event = null;
+        if ($event === null) {
+            $event = new \BoraSlim\Core\Support\Event();
+        }
+        return $event;
+    }
+}
+
+if (!function_exists('Logger')) {
+    function Logger(): \BoraSlim\Core\Support\Logger {
+        static $logger = null;
+        if ($logger === null) {
+            $logger = new \BoraSlim\Core\Support\Logger();
+        }
+        return $logger;
+    }
+}
+
+
+if (!function_exists('sql')) {
+    function sql(){
+        return new \BoraSlim\Core\Support\SqlQueryBuilder();
+    }
+}
+
+if (!function_exists('Grid')) {
+    function Grid(string $type = 'table') {
+        return ModManage()->grids->$type;
     }
 }
