@@ -1,0 +1,9 @@
+<nav class="breadcrumb">
+    {% for crumb in breadcrumbs %}
+        {% if loop.last %}
+            <span class="current">{{ crumb.title }}</span>
+        {% else %}
+            <a class="jx" href="{{ crumb.url }}">{{ crumb.title }}</a> &raquo;
+        {% endif %}
+    {% endfor %}
+</nav>

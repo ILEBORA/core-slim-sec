@@ -1,0 +1,95 @@
+{% block sidebar %}
+<div id="side-bar" class="side-bar viewtype_admin" data-id="client">
+
+    <div class="side-bar-top">
+        {% block sidebar_top %}
+            <div class="logo-name-wrapper">
+                <div class="logo-name">
+                    {% block sidebar_logo %}
+                        <abbr class="fa fa-lock"></abbr>
+                        <span class="logo-name__name">
+                            <span class="time">Role: | {{active_role}}</span>
+                        </span>
+                    {% endblock %}
+                </div>
+
+                {# Optional button if needed #}
+                {% block sidebar_toggle_button %}
+                    {# default empty #}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+
+    <div class="side-bar-tools">
+        {% block sidebar_tools %}
+            <a class="fa fa-refresh" href="javascript:void(0)" onclick="app.refreshMenu('{{auth.role}}')"></a>
+            
+
+            {# if hasRole('Administrator') or hasRole('Developer') #}
+                <select id="changemenu" class="changemenu" onchange="getSelectedValue(this)">
+                    <option value="Client" >Client</option>
+                    <option value="Administrator" selected>Admin</option>
+                </select>
+            {# endif #}
+
+            {% if has_module('Realtime') %}
+                {% include '@realtime/realtime.twig' with {
+                    class: realtime.class,
+                    lvui: realtime.lvui,
+                    count: realtime.count,
+                    id: realtime.id, 
+                    lastID: realtime.lastID, 
+                    userID: realtime.userID,
+                    sessionID: realtime.sessionID,
+                    event: realtime.event,
+                    timer: realtime.timer,
+                    base: base_url,
+                } %}
+            {% endif %}
+
+            <button class="logo-name__button">
+                <i class="fa fa-arrow-left logo-name__icon" id="logo-name__icon"></i>
+                <i class="fa fa-close logo-name__icon_close _sideclose" id="logo-name__icon_close"></i>
+            </button>
+
+            <script>
+                function getSelectedValue(selectElement) {
+                    const selectedValue = selectElement.value;
+                    app.refreshMenu(selectedValue);
+                }
+            </script>
+        {% endblock %}
+    </div>
+
+    <div class="side-bar-content">
+        {% block sidebar_content %}
+            <ul class="features-list">
+                {% block sidebar_menu %}
+                    <div align="center" style="display:none"><img src="assets/images/icons/ajax.gif"></div>  
+                    {% for item in menus.sidebar.roots %}
+                        <li>
+                            <a class="jx" href="{{ item.url }}">{{ item.label }}</a>
+
+                            {% if menus.sidebar.children[item.id] is defined %}
+                            <ul>
+                                {% for child in menus.sidebar.children[item.id] %}
+                                <li><a class="jx" href="{{ child.url }}">{{ child.label }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                {% endblock %}
+            </ul>
+        {% endblock %}
+    </div>
+
+    <div class="side-bar-bottom">
+        {% block sidebar_bottom %}
+            {# Empty by default, can be overridden (e.g. footer links) #}
+        {% endblock %}
+    </div>
+
+</div>
+{% endblock %}

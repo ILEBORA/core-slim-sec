@@ -1,0 +1,32 @@
+{# Base table grid view (grids/table.twig) #}
+this
+<table class="grid-table {{ config.class|default('') }}">
+  <thead>
+    <tr>
+      {% block grid_head %}
+        {% for col in config.columns %}
+          <th>{{ col|capitalize }}</th>
+        {% endfor %}
+      {% endblock %}
+    </tr>
+  </thead>
+
+  <tbody>
+    {% block grid_body %}
+      {% for row in data %}
+        <tr class="table-row">
+          {% for col in config.columns %}
+            <td>{{ attribute(row, col) }}</td>
+          {% endfor %}
+        </tr>
+      {% else %}
+        {% block grid_empty %}
+          <tr><td colspan="{{ config.columns|length }}">No data found</td></tr>
+        {% endblock %}
+      {% endfor %}
+    {% endblock %}
+  </tbody>
+
+  {% block grid_footer %}
+  {% endblock %}
+</table>

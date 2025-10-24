@@ -1,0 +1,56 @@
+{% block topbar %}
+<header class="top-bar">
+    <div class="navbar-header">
+        <div class="burger" id="burger">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </div>
+
+            <a href="" onclick="" class="navbar-brand"><img src="assets/images/branding/icon_wht.png" width="50" class="logo" alt="logo" srcset=""></a>					
+            
+                <div class="brand-slogan d-none d-md-inline-block">Choose Ile<span class="typed">BEST</span></div>					
+                <div class="brand-version d-none d-md-inline-block">
+                    <div class="brand-version d-none d-md-inline-block"><em> v1.0.8</em></div>						</div>
+
+                
+            
+        </div>
+    <div class="logo">
+        {% block topbar_logo %}
+            <img src="assets/images/branding/icon.png" alt="Logo" width="50">
+            <span>Choose IleBEST v1.0.8</span>
+        {% endblock %}
+    </div>
+
+    <nav class="top-nav navbar">
+        <ul>
+            {% block topbar_links %}
+                <li><a class="jx" href="#">Home</a></li>
+                <li><a class="jx" href="#">Services</a></li>
+            {% endblock %}
+
+            <li>
+                {% block topbar_lang %}
+                    <select id="langSelect">
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                    </select>
+                {% endblock %}
+            </li>
+
+            <li class="notifications">
+                {% block topbar_notifications %}
+                    <a href="#"><span class="bell">🔔</span><span class="count">10</span></a>
+                {% endblock %}
+            </li>
+
+            <li class="profile">
+                {% block topbar_profile %}
+                    <img src="assets/images/icons/noavatar.png" alt="Profile" width="40">
+                {% endblock %}
+            </li>
+        </ul>
+    </nav>
+</header>
+{% endblock %}

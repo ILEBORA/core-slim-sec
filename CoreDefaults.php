@@ -1,24 +1,5 @@
 <?php
-/**
- * ================================================================
- *  BoraSlim Secure Distribution
- *  Framework:  ilebora/core-slim-sec
- *  Version:    2.1.1
- *  Build ID:   9BFCA31C1A56
- *  Timestamp:  2025-10-05 09:32:48
- *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
- *  Contact:
- *  support@boracore.co.ke
- *  ileboratech@gmail.com
- *  +254 113 703 323
- * 
- *  Notice:
- *  This file is part of the BoraSlim Framework.
- *  Unauthorized modification or redistribution is prohibited.
- * 
- *  © 2025 ILEBORA Technologies. All Rights Reserved.
- * ================================================================
- */
+// src/Config/CoreDefaults.php
 
 // Only set timezone if not already defined
 if (!ini_get('date.timezone')) {
@@ -53,6 +34,11 @@ if (!ini_get('error_log')) {
 }
 
 ini_set('log_errors_max_len', 1024);
+
+//Debug
+if(!defined('APP_DEBUG')){
+    define('APP_DEBUG', true);
+}
 
 // Define REQUEST_SCHEME only if not defined
 if (!defined('REQUEST_SCHEME')) {

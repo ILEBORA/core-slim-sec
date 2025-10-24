@@ -1,0 +1,211 @@
+{% set title = (page_title|default('Manage Pages')) ~ ' | ' ~ app_name %}
+{% extends 'layouts/base.twig' %}
+
+
+{% block content %}
+<script src="./assets/js/manage-pages.js"></script>
+
+<h1>Manage Pages</h1>
+
+<button id="btnAddPage">Add New Page</button>
+
+<div id="pageList">
+    <ul id="sortablePages">
+        {% for page in pages %}
+            <li class="page-item" data-id="{{ page.id }}">
+                <span>{{ page.title }}</span>
+                <button class="btnAddSubPage" data-parent="{{ page.id }}">Add Subpage</button>
+                {% if page.subpages is defined and page.subpages|length %}
+                    <ul>
+                        {% for sub in page.subpages %}
+                            <li class="page-item" data-id="{{ sub.id }}">
+                                <span>{{ sub.title }}</span>
+                                <button class="btnAddSubPage" data-parent="{{ sub.id }}">Add Subpage</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+document.querySelectorAll('.inline-title, .inline-slug').forEach(input => {
+    input.addEventListener('change', function () {
+        const pageId = this.closest('.page-item').dataset.id;
+        const field = this.dataset.field;
+        const value = this.value;
+
+        fetch('/pages/update-inline', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ id: pageId, field, value })
+        }).then(res => res.json())
+          .then(data => {
+            if (!data.success) alert('Error: ' + data.message);
+        });
+    });
+});
+document.querySelectorAll('.btnDeletePage').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        if (!confirm('Delete this page?')) return;
+
+        fetch('/pages/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ id })
+        }).then(res => res.json())
+          .then(data => {
+            if (data.success) location.reload();
+            else alert('Failed to delete page.');
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize sortable for page list
+    const sortable = new Sortable(document.getElementById('sortablePages'), {
+        group: 'pages',
+        animation: 150,
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        onEnd: function (evt) {
+            const order = [];
+            document.querySelectorAll('#sortablePages > li.page-item').forEach((el, index) => {
+                order.push({
+                    id: el.dataset.id,
+                    position: index + 1
+                });
+            });
+
+            // Send AJAX to update order
+            fetch('manage/pages/sort', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(order),
+            }).then(res => res.json())
+              .then(data => {
+                if(data.success){
+                    console.log('Order saved!');
+                } else {
+                    alert('Failed to save order');
+                }
+              });
+        }
+    });
+
+    // Add New Page button opens modal with new page form
+    document.getElementById('btnAddPage').addEventListener('click', () => {
+        openModal('manage/pages/new');
+    });
+
+    // Add Subpage buttons
+    document.querySelectorAll('.btnAddSubPage').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const parentId = e.target.dataset.parent;
+            openModal('manage/pages/new?parent=' + parentId);
+        });
+    });
+
+    // Modal logic
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modalBody');
+    const closeBtn = modal.querySelector('.close');
+
+    function openModal(url) {
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+            .then(res => res.text())
+            .then(html => {
+                modalBody.innerHTML = html;
+                modal.style.display = 'block';
+            });
+    }
+
+    closeBtn.onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
+</script>
+
+
+<style>
+#sortablePages {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.page-item {
+    margin: 8px 0;
+    padding: 10px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-item ul {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+button {
+    margin-left: 10px;
+}
+
+/* Modal styling */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    max-width: 500px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+
+{% endblock %}

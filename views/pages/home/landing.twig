@@ -1,0 +1,29 @@
+{# pages/home.twig #}
+
+{% set title = (page_title|default('Home')) ~ ' | ' ~ app_name %}
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    {% set curiosity_first = app_settings.show_curiosity_first ?? false %}
+    {% set is_logged_in = isLoggedIn() %}
+
+    {% if is_logged_in %}
+        {# User already logged in – go straight to app/dashboard #}
+        {% include 'sections/landing.twig' %}
+    {% else %}
+        <script>
+            // Defer decision to JS (will read localStorage)
+            window.APP_PREFERS_CURIOSITY = {{ curiosity_first ? 'true' : 'false' }};
+        </script>
+
+        <div id="entry-wrapper">
+            <div id="landing-container" style="display:none;">
+                {% include 'sections/landing.twig' %}
+            </div>
+
+            <div id="curiosity-container" style="display:none;">
+                {% include '@curiosity/curiosity.twig' %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <base href="{{base_url}}">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</head>
+<body>
+    {% include 'partials/overlay.twig' with{
+        current_page: current_page
+    } %}
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>MyApp</h2>
+            <ul>
+                <li class="active" data-page="home">Home</li>
+                <li data-page="reports">Reports</li>
+                <li data-page="settings">Settings</li>
+            </ul>
+        </aside>
+
+        <!-- Main Area -->
+        <div class="main">
+            <!-- Header -->
+            <header class="header">
+                <h1 id="page-title">Home</h1>
+                <button id="logout-btn">Logout</button>
+            </header>
+
+            <!-- Content -->
+            <section id="page-content">
+                {% block content %}{% endblock %}
+            </section>
+        </div>
+    </div>
+</body>
+</html>

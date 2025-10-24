@@ -1,3 +1,20 @@
+## [1.0.23] - 2025-10-24
+- patch version bump
+
+### New Commits
+
+## [1.0.22] - 2025-10-22
+- patch version bump
+
+### New Commits
+0dc5859 Fixed: Session newSession(ACS)
+cb1a9ce New version 1.0.26 with PWA support
+590b849 Added: PWA support
+3f7c5b5 New patch version
+d3e67f5 Fixed: disable logging
+22a3c0d Fixed: view defaults
+080975f Fixed: Null string on appConstants
+
 ## [1.0.21] - 2025-10-09
 - patch version bump
 

@@ -1,0 +1,148 @@
+{# client.twig #}
+{% set app_name = app_name|default('MySite') %}
+{% set page_title = page_title|default('Home') %}
+{% set meta_description = meta_description|default('Welcome to MySite, your go-to source for awesome content.') %}
+{% set meta_keywords = meta_keywords|default('default, keywords, your, site') %}
+{% set meta_author = meta_author|default('Your Company Name') %}
+{% set meta_robots = meta_robots|default('index, follow') %}
+
+{% set base_url = base_url|default('https://mysite.com') %}
+{% set canonical_url = canonical_url is defined
+    ? (canonical_url starts with 'http' ? canonical_url : base_url ~ canonical_url)
+    : base_url
+%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0">
+    <title>{{ title|default(app_name) }}</title>
+    <base href="{{base_url}}">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/branding/favicon.ico">
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="keywords" content="{{ meta_keywords }}">
+    <meta name="author" content="{{ meta_author }}">
+    <meta name="robots" content="{{ meta_robots }}">
+
+    {% if has_module('PWA') %}
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#0077ff">
+        <meta name="app-launch-url" content="intent://ilebora/home#Intent;scheme=ilebora;package=com.android.chrome;end">
+        <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+            .then(() => console.log('Service Worker registered'));
+        }
+        </script>
+    {% endif %}
+
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {# Optional Open Graph tags for social media sharing #}
+    <meta property="og:title" content="{{ page_title ~ ' | ' ~ app_name }}">
+    <meta property="og:description" content="{{ meta_description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:site_name" content="{{ app_name }}">
+    <link rel="stylesheet" href="assets/css/main.css?v={{version}}"/>
+    <link rel="stylesheet" href="assets/client/css/client.bundle.css?v={{version}}">
+    <link rel="stylesheet" href="https://cdn.boracore.co.ke/assets/libs/font-awesome/v5.7.2/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.boracore.co.ke/assets/plugins/unsrtd/bootstrap.min.css">
+    <link class="scc" rel="stylesheet" type="text/css" href="https://cdn.boracore.co.ke/assets/libs/font-awesome/v5.7.2/css/all.css">
+    {{ renderStyles()|raw }}
+    {{ renderInlineStyles()|raw }}
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/vendor/crypto-js.min.js"></script>
+    <script src="assets/js/app.js?v={{version}}&c={{channelID}}"></script>
+    <script src="assets/client/js/client.bundle.js?v={{version}}"></script>
+
+    <script>
+		const acs = '{{access_permissions}}';
+		const acsr = '{{access_role}}';
+        const preferences = {{ prefs|default({
+            theme: 'dark-mode',
+            speech: 'off',
+            sound: 'off',
+            mode: 'off',
+            avatar: 'assets/images/user.jpg'
+        }) | json_encode | raw }};
+	</script>
+</head>
+{% use 'partials/client/top_bar.twig' %}
+{% use 'partials/client/sidebar.twig' %}
+{% use 'partials/client/content.twig' %}
+{% use 'partials/client/footer.twig' %}
+
+<body>
+    {% include 'partials/overlay.twig' with{
+        current_page: current_page
+    } %}
+    {# Sidebar #}
+     {{ block('sidebar') }}
+
+    <div class="main-wrapper">
+        {# Top Bar #}
+        {{ block('topbar') }}
+
+        {# Main Content #}
+        {{ block('container') }}
+
+        {# Footer #}
+         {{ block('footer') }}
+    </div>
+
+
+    <!-- Modal -->
+    <div id="modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+    <!-- Fullscreen Modal -->
+    <div id="fullscreenModal" class="fullscreen-modal" style="display:none;">
+        <div class="fullscreen-modal-content">
+            <span class="close">&times;</span>
+            <div id="fullscreenModalBody"></div>
+        </div>
+    </div>
+
+    <script>
+    function submitForm(formElement) {
+        const formData = new FormData(formElement);
+        const responseBox = document.getElementById('formResponse');
+        console.log(formData);
+        fetch(formElement.action, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.message) {
+                responseBox.textContent = result.message;
+                responseBox.style.color = 'green';
+                formElement.reset();
+            } else {
+                responseBox.textContent = result.error || 'Something went wrong.';
+                responseBox.style.color = 'red';
+            }
+
+            responseBox.style.opacity = 1;
+            setTimeout(() => responseBox.style.opacity = 0, 4000);
+        })
+        .catch(() => {
+            responseBox.textContent = 'Network error.';
+            responseBox.style.color = 'red';
+            responseBox.style.opacity = 1;
+            setTimeout(() => responseBox.style.opacity = 0, 4000);
+        });
+    }
+    </script>
+
+    <script src="assets/js/vendor/libphonenumber-max.js"></script>
+</body>
+</html>

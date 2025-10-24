@@ -1,0 +1,37 @@
+{% block footer %}
+<footer class="footer-area">
+
+    {% block footer_top %}
+        {# Optional area above main footer content (e.g. breadcrumbs, extra nav) #}
+        <ul class="footer_menu">
+        {% for item in menus.footer.roots %}
+            <li>
+                <a href="{{ item.url }}" target="_blank">{{ item.label }}</a>
+            </li>
+        {% endfor %}
+
+        {% if isLoggedIn() %}
+            <li>
+                <a href="javascript:void(0);" data-e-trigger="user.logout">Logout</a>
+            </li>
+        {% endif %}
+        </ul>
+    {% endblock %}
+
+    <div class="footer-content">
+        {% block footer_content %}
+            <p>
+                Copyright © {{ "now"|date("Y") }} | IleBORA | Powered by ILEBORA Tech<br>
+                Built on ILEBORA's BoraCore Slim v{{ core_version }}<br>
+                ☎ +254113703323
+            </p>
+        {% endblock %}
+    </div>
+
+    {% block footer_bottom %}
+        {# Optional area below main footer content (e.g. version info, links) #}
+    {% endblock %}
+    <center><span class="time sse_status">SE::</span></center>
+</footer>
+
+{% endblock %}

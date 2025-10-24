@@ -30,3 +30,6 @@ CORE_CLIENT_ID=your-client-id
 CORE_CLIENT_SECRET=your-secret-key
 CORE_CLIENT_IV=your-initialization-vector
 CORE_CACHE_PATH=/path/to/cache
+
+
+# TODO:: Update new usage cases

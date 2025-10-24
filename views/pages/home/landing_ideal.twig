@@ -1,0 +1,107 @@
+<div id="chat-container"></div>
+<input type="text" id="user-input" placeholder="Type your answer..." />
+<button id="send-btn" class="btn">Send</button>
+
+<script>
+class WebConversationManager {
+  constructor() {
+    this.queue = [];
+    this.active = null;
+  }
+
+  loadCuriosities(curiosityList) {
+    this.queue.push(...curiosityList);
+    this.next();
+  }
+
+  next() {
+    this.active = this.queue.shift();
+    if (this.active) {
+      this.showQuestion(this.active);
+    } else {
+      this.showMessage("You're all set! How may I assist you?");
+    }
+  }
+
+  showQuestion(c) {
+    document.getElementById('chat-container').innerHTML += `
+      <div class="ai-message">${c.questions[0]}</div>
+    `;
+  }
+
+  showMessage(msg) {
+    document.getElementById('chat-container').innerHTML += `
+      <div class="ai-message">${msg}</div>
+    `;
+  }
+
+  handleUserInput(input) {
+    if (!this.active) return;
+
+    const valid = this.validateInput(input, this.active.validation);
+    if (!valid) {
+      console.log(this.active);
+      const errorPrompts = this.active.errorPrompts;
+      const errorMessage = Array.isArray(errorPrompts) && errorPrompts.length > 0
+        ? errorPrompts[Math.floor(Math.random() * errorPrompts.length)]
+        : "Invalid input.";
+      this.showMessage(errorMessage);
+      return;
+    }
+
+    const successPrompts = this.active.successPrompts;
+    const successMessage = Array.isArray(successPrompts) && successPrompts.length > 0
+      ? successPrompts[Math.floor(Math.random() * successPrompts.length)]?.replace("{profile.name}", input)
+      : "Noted!";
+    this.showMessage(successMessage);
+
+    this.next();
+  }
+
+  handleUserInputO(input) {
+    if (!this.active) return;
+
+    // Simplified validation example
+    if (this.active.validation?.type === 'email' && !input.includes('@')) {
+      this.showMessage(this.active.errorPrompts[0]);
+      return;
+    }
+
+    this.showMessage(this.active.successPrompts[0].replace("{profile.name}", input));
+    this.next();
+  }
+
+  validateInput(input, validation) {
+    if (!validation) return true;
+
+    switch (validation.type) {
+      case "email":
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+      case "year":
+        const year = parseInt(input);
+        return year >= 1900 && year <= new Date().getFullYear();
+      case "pin":
+        return /^\d{4,6}$/.test(input);
+      case "color":
+        return /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(input);
+      case "dropdown":
+        return validation.options?.includes(input);
+      default:
+        return input.trim() !== "";
+    }
+  }
+}
+
+const manager = new WebConversationManager();
+
+fetch("/api/curious")
+  .then(res => res.json())
+  .then(data => {
+    manager.loadCuriosities(data);
+  });
+
+document.getElementById("send-btn").addEventListener("click", () => {
+  const input = document.getElementById("user-input").value;
+  manager.handleUserInput(input);
+});
+</script>

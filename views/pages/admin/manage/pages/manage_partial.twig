@@ -1,0 +1,235 @@
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% include "partials/admin/breadcrumb.twig" %}
+
+<script src="./assets/js/manage-pages.js"></script>
+
+<h1>Manage Pages</h1>
+
+<button id="btnAddPage">Add New Page</button>
+
+<div id="pageList">
+    <ul id="sortablePages">
+        {% for page in pages %}
+            <li class="page-item" data-id="{{ page.id }}">
+                <span class="editable-field" data-id="{{ page.id }}" data-field="title">{{ page.title }}</span>
+                <span class="editable-field" data-id="{{ page.id }}" data-field="slug">{{ page.slug }}</span>
+                
+
+                <div>
+                    <button class="btnAddSubPage" data-parent="{{ page.id }}">Add Subpage</button>
+                    <button class="btnDeletePage" data-id="{{ page.id }}">Delete</button>
+                </div>
+
+                {% if page.subpages %}
+                    <ul>
+                        {% for sub in page.subpages %}
+                            <li class="page-item" data-id="{{ sub.id }}">
+                                <span class="editable-field" data-id="{{ sub.id }}" data-field="title">{{ sub.title }}</span>
+                                <span class="editable-field" data-id="{{ sub.id }}" data-field="slug">{{ sub.slug }}</span>
+                                
+
+                                <div>
+                                    <button class="btnAddSubPage" data-parent="{{ sub.id }}">Add Subpage</button>
+                                    <button class="btnDeletePage" data-id="{{ sub.id }}">Delete</button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize sortable for page list
+    const sortable = new Sortable(document.getElementById('sortablePages'), {
+        group: 'pages',
+        animation: 150,
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        onEnd: function (evt) {
+            const order = [];
+            document.querySelectorAll('#sortablePages > li.page-item').forEach((el, index) => {
+                order.push({
+                    id: el.dataset.id,
+                    position: index + 1
+                });
+            });
+
+            // Send AJAX to update order
+            fetch('manage/pages/sort', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(order),
+            }).then(res => res.json())
+              .then(data => {
+                if(data.success){
+                    console.log('Order saved!');
+                } else {
+                    alert('Failed to save order');
+                }
+              });
+        }
+    });
+
+    // Add New Page button opens modal with new page form
+    document.getElementById('btnAddPage').addEventListener('click', () => {
+        openModal('manage/pages/new');
+    });
+
+    // Add Subpage buttons
+    document.querySelectorAll('.btnAddSubPage').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const parentId = e.target.dataset.parent;
+            openModal('manage/pages/new?parent=' + parentId);
+        });
+    });
+
+    
+
+    document.querySelectorAll('.inline-title, .inline-slug').forEach(input => {
+        input.addEventListener('change', function () {
+            const pageId = this.closest('.page-item').dataset.id;
+            const field = this.dataset.field;
+            const value = this.value;
+
+            fetch('manage/pages/update-inline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id: pageId, field, value })
+            }).then(res => res.json())
+            .then(data => {
+                if (!data.success) alert('Error: ' + data.message);
+            });
+        });
+    });
+    document.querySelectorAll('.btnDeletePage').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            if (!confirm('Delete this page?')) return;
+
+            fetch('manage/pages/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ id })
+            }).then(res => res.json())
+            .then(data => {
+                if (data.success) location.reload();
+                else alert('Failed to delete page.');
+            });
+        });
+    });
+
+    document.querySelectorAll('.editable-field').forEach(el => {
+        el.addEventListener('click', () => {
+            if (el.classList.contains('editing')) return;
+
+            const id = el.dataset.id;
+            const field = el.dataset.field;
+            const originalValue = el.textContent.trim();
+
+            // Create input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'inline-editor';
+            input.value = originalValue;
+
+            // Clear and insert input
+            el.textContent = '';
+            el.classList.add('editing');
+            el.appendChild(input);
+            input.focus();
+
+            // Handle blur or submit
+            input.addEventListener('blur', () => saveEdit(el, id, field, input.value, originalValue));
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter') input.blur();
+                else if (e.key === 'Escape') cancelEdit(el, originalValue);
+            });
+        });
+    });
+});
+
+function saveEdit(el, id, field, newValue, originalValue) {
+    el.classList.remove('editing');
+    el.textContent = newValue;
+
+    if (newValue === originalValue) return;
+
+    fetch('manage/pages/update-inline', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ id, field, value: newValue })
+    }).then(res => res.json())
+      .then(data => {
+          if (!data.success) {
+              alert('Update failed: ' + (data.message || 'unknown error'));
+              el.textContent = originalValue;
+          }
+      });
+}
+
+function cancelEdit(el, originalValue) {
+    el.classList.remove('editing');
+    el.textContent = originalValue;
+}
+</script>
+
+
+<style>
+#sortablePages {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.page-item {
+    margin: 8px 0;
+    padding: 10px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-item ul {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+button {
+    margin-left: 10px;
+}
+
+
+</style>
+
+{% endblock %}

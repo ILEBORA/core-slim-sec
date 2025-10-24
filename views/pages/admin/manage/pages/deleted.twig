@@ -1,0 +1,70 @@
+{% set title = (page_title|default('Manage Pages')) ~ ' | ' ~ app_name %}
+{% extends 'layouts/base.twig' %}
+
+
+{% block content %}
+<script src="./assets/js/manage-pages.js"></script>
+<h3>Deleted Pages</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Slug</th>
+            <th>Deleted At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for page in pages %}
+        <tr>
+            <td>{{ page.title }}</td>
+            <td>{{ page.slug }}</td>
+            <td>{{ page.deleted_at|date("Y-m-d H:i") }}</td>
+            <td>
+                <button class="btnRestore" data-id="{{ page.id }}">Restore</button>
+                <button class="btnPurge" data-id="{{ page.id }}">Purge</button>
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">No deleted pages.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.querySelectorAll('.btnRestore').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        fetch('manage/pages/restore', {
+            method: 'POST',
+            body: JSON.stringify({ id }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(res => res.json()).then(data => {
+            if (data.success) location.reload();
+        });
+    });
+});
+
+document.querySelectorAll('.btnPurge').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (!confirm('Permanently delete this page?')) return;
+
+        const id = btn.dataset.id;
+        fetch('manage/pages/purge', {
+            method: 'POST',
+            body: JSON.stringify({ id }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(res => res.json()).then(data => {
+            if (data.success) location.reload();
+        });
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% set title = (page_title|default('Manage Curiosities')) ~ ' | ' ~ app_name %}
+{% extends 'layouts/admin.twig' %}
+
+{% block sidebar_menu2 %}
+    {% for item in menu.sidebar.roots %}
+      <li>
+        <a class="jx" href="{{ item.url }}">{{ item.label }}</a>
+
+        {% if menu.sidebar.children[item.id] is defined %}
+          <ul>
+            {% for child in menu.sidebar.children[item.id] %}
+              <li><a class="jx" href="{{ child.url }}">{{ child.label }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% include "partials/admin/breadcrumb.twig" %}
+
+
+<div class="categories">
+  {% for cat in categories %}
+    <div class="card">
+      <h3>{{ cat.title }}</h3>
+      <a class="jx" href="bo/manage/{{ cat.id }}">Manage {{ cat.title }}</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

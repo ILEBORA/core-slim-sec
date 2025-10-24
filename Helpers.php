@@ -502,11 +502,9 @@ if (!function_exists('View')) {
         $encodedPerms = base64_encode(json_encode($rolePerms));
         $encodedRole = base64_encode(json_encode($currentRole));
 
-        $menus = ModManage()->ui->manager->menu->getMenus();
-
-        $app = ModManage()->ui->manager->buildUIContext();
-
-        $prefs = ModManage()->ui->manager->user->getPrefs(true);
+        $menus = ModManage()?->ui?->manager?->menu?->getMenus() ?? [];
+        $app   = ModManage()?->ui?->manager?->buildUIContext() ?? [];
+        $prefs = ModManage()?->ui?->manager?->user?->getPrefs(true) ?? [];
         
         if ($instance === null) {
             $instance = new View();
@@ -673,8 +671,9 @@ if (!function_exists('hasPermission')) {
         // if (!$has && $throw) {
         //     throw new \Exception("Access denied: {$module}.{$action}");
         // }
+        $permManager = myApp()->getFeature('permissions');
 
-        $has = $permManager->hasPermission($perm, $sub, $force_create);
+        $has = $permManager->hasPermission($module, $action, $autoRegister);
         
         if (!$has && $throw) {
             throw new \Exception("Access denied: {$module}.{$action}");

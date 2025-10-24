@@ -1,0 +1,63 @@
+{# ajax.twig #}
+{% set app_name = app_name|default('MySite') %}
+{% set page_title = page_title|default('Home') %}
+{% set meta_description = meta_description|default('Welcome to MySite, your go-to source for awesome content.') %}
+{% set meta_keywords = meta_keywords|default('default, keywords, your, site') %}
+{% set meta_author = meta_author|default('Your Company Name') %}
+{% set meta_robots = meta_robots|default('index, follow') %}
+
+{% set base_url = base_url|default('https://mysite.com') %}
+{% set canonical_url = canonical_url is defined
+    ? (canonical_url starts with 'http' ? canonical_url : base_url ~ canonical_url)
+    : base_url
+%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+    <title>{{ title|default(app_name) }}</title>
+    <base href="{{base_url}}">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/branding/favicon.ico">
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="keywords" content="{{ meta_keywords }}">
+    <meta name="author" content="{{ meta_author }}">
+    <meta name="robots" content="{{ meta_robots }}">
+
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {# Optional Open Graph tags for social media sharing #}
+    <meta property="og:title" content="{{ page_title ~ ' | ' ~ app_name }}">
+    <meta property="og:description" content="{{ meta_description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:site_name" content="{{ app_name }}">
+    <link rel="stylesheet" href="assets/css/main.css?v={{version}}"/>
+    {{ renderStyles()|raw }}
+    {{ renderInlineStyles()|raw }}
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/app.js?v={{version}}&c={{channelID}}"></script>
+</head>
+<body>
+    {% include 'partials/overlay.twig' with{
+        current_page: current_page
+    } %}
+    <button onclick="loadContent()">Load Dynamic Content</button>
+
+    <div id="target-content">
+        <p>Click the button to load content.</p>
+    </div>
+
+    <script>
+    function loadContent() {
+        fetch('ajax/content')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('target-content').innerHTML = html;
+            });
+    }
+    </script>
+
+</body>
+</html>

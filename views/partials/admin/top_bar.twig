@@ -1,0 +1,53 @@
+{% block topbar %}
+<?php 
+Session()::setItem('pageType','admin');
+$pageType = 'admin';
+?>
+<header class="header viewtype_admin animated fadeIn sticky-header">
+	<nav class="navbar">
+		<div class="container-fluid">
+		<div class="navbar-holder d-flex align-items-center justify-content-between">
+			<div class="navbar-header">
+			    <div class="burger" id="burger">
+                  <span class="burger-line"></span>
+                  <span class="burger-line"></span>
+                  <span class="burger-line"></span>
+                </div>
+				
+                {{ app.site_icon|raw }}
+				
+                {{ app.site_name|raw  }}
+
+                {{ app.site_slogan|raw  }}
+                    
+                {{ app.site_version|raw  }}
+					
+            </div>
+
+			
+			<ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center" style="display:;">
+				{{ app.topbar.menu|raw  }}
+				
+                {% if(isLoggedIn()) %}
+					<div class="user-menu-wrap">
+					    <a class="mini-photo-wrapper" href="javascript:void(0);"><img class="mini-photo ClientUserItemAvatar{{ app.user.id }}" src="{{ app.user.avatar | default('assets/images/icons/noavatar.png') }}" width="36" height="36"/></a>
+					
+					<div class="menu-container">
+						
+						<ul class="user-menu">
+                            {{ app.user.menu|raw  }}
+							
+                            <div class="footer">
+                                {{ app.user.tools|raw  }}
+                            </div>
+						</ul>
+					</div>
+					</div>
+
+                {% endif %}
+			</ul>
+		</div>
+		</div>
+	</nav>
+</header>
+{% endblock %}

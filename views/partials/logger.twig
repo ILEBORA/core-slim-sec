@@ -1,0 +1,15 @@
+<script>
+setInterval(() => {
+    //TODO:: use SSE instead
+    $.get('_console_logs', function (data) {
+        if (data && data.length) {
+            data.forEach(log => {
+                const el = $('<div class="console-line">')
+                    .addClass(log.level.toLowerCase())
+                    .text(`[${log.time}] ${log.level}: ${log.message}`);
+                $('#console_output').append(el);
+            });
+        }
+    });
+}, 3000);
+</script>

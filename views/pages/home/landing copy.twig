@@ -1,0 +1,56 @@
+{# templates/landing.twig #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Welcome to My App</h1>
+    </header>
+
+    <main>
+        <p>This is the landing page.</p>
+
+        {# ✅ Check for curiosity module #}
+        {% if has_module('curiosity') %}
+            <section id="curiosity">
+                <h2>Curiosity Module Available</h2>
+                <p>You can interact with the Curiosity AI below:</p>
+                <div id="curiosity-widget"></div>
+            </section>
+        {% else %}
+            <section id="curiosity-disabled">
+                <h2>Curiosity Not Installed</h2>
+                <p>This feature is currently unavailable.</p>
+            </section>
+        {% endif %}
+
+        {# ✅ Example for future modules #}
+        {% if has_module('chat') %}
+            <section id="chat">
+                <h2>Chat Module Active</h2>
+                <div id="chat-widget"></div>
+            </section>
+        {% endif %}
+
+        {# ✅ Show list of all modules #}
+        <section id="modules-list">
+            <h2>Available Modules</h2>
+            <ul>
+                {% for mod in modules_list() %}
+                    <li>{{ mod }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; {{ "now"|date("Y") }} My App</p>
+    </footer>
+
+</body>
+</html>

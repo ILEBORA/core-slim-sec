@@ -1,0 +1,25 @@
+{% set title = (page_title|default('Manage Curiosities')) ~ ' | ' ~ app_name %}
+{% extends 'layouts/admin.twig' %}
+
+{% block sidebar_menu2 %}
+    <ul>
+        <li><a href="dashboard">Dashboard</a></li>
+        <li><a href="bo/manage" class="active">Manage</a></li>
+    </ul>
+
+    <h3>Modules</h3>
+    <ul>
+        {% for key, module in modules %}
+            <li>
+                <a href="{{ module.route }}">
+                    {{ module.icon }} {{ module.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    Permission Error. 
+    {{message}}
+{% endblock %}

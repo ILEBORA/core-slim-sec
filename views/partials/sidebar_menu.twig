@@ -1,0 +1,15 @@
+
+    <div align="center" style="display:none"><img src="assets/images/icons/ajax.gif"></div>  
+    {% for item in menus.sidebar.roots %}
+        <li>
+            <a class="jx" href="{{ item.url }}">{{ item.label }}</a>
+
+            {% if menus.sidebar.children[item.id] is defined %}
+            <ul>
+                {% for child in menus.sidebar.children[item.id] %}
+                <li class="feature-item"><a class="jx" href="{{ child.url }}">{{ child.label }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
