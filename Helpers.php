@@ -272,33 +272,7 @@ function pass($vars){
 
 //Templating
 function addTemplate($params, $template = null,$module = null){
-    
-    
-    if(!empty($params['image'])){
-        $sectionTemplate = $template ?? "infosection_i";
-    }else{
-        $sectionTemplate = $template ?? "infosection";
-    }
-    
-    $sectionTemplate .= '.php';
-    
-    $registeredVariables = pass($params);
-    
-    return includeSection($registeredVariables,$sectionTemplate,$module);
-}
-
-function includeSection($params, $template, $module = null){
-    
-    $filePath = str_replace("\\", DIRECTORY_SEPARATOR, $template);
-    
-    $modulePath = ($module) ? [str_replace("\\", DIRECTORY_SEPARATOR, BASE_DIR . "/private/src/Modules/".ucfirst($module)."/_shared/layouts/lyt")] : ['assets/views'];
-   
-    //$modulePath 'assets/views'
-    $razr = new \Razr\Engine(new \Razr\Loader\FilesystemLoader($modulePath), '.cache');
-
-    $registeredVariables = pass($params);
-    
-    return html_entity_decode($razr->render($filePath, $registeredVariables),ENT_QUOTES, 'UTF-8');
+    return ModManage()?->ui?->manager?->template->addTemplate($params, $template,$module)??'Template not found!';
 }
 
 
@@ -487,54 +461,57 @@ function breakWith($val) {
 use BoraSlim\Core\View;
 
 if (!function_exists('View')) {
+    // Shared static variable outside both functions
+    static $clientCallbacks = [];
+
+    /**
+     * Returns the singleton View instance.
+     * Allows vendor defaults plus client extensions.
+     */
     function View(): View {
         static $instance = null;
+        global $clientCallbacks; // 👈 ensure same variable
 
-        $app_name = App::config('app_name');
-        $app_name = !empty($app_name) ? $app_name : 'BoraSlim App';
-        $base_url = defined('BASE_URL') ? BASE_URL : '/';
-
-        $rolePermissionManager = myApp()->getFeature('permissions'); //Manage()->permission->getInstance();
-        // dieVal($rolePermissionManager);
-        $rolePerms = $rolePermissionManager->getRoles(true);
-        $currentRole = $rolePermissionManager->getCurrentRole();
-        
-        $encodedPerms = base64_encode(json_encode($rolePerms));
-        $encodedRole = base64_encode(json_encode($currentRole));
-
-        $menus = ModManage()?->ui?->manager?->menu?->getMenus() ?? [];
-        $app   = ModManage()?->ui?->manager?->buildUIContext() ?? [];
-        $prefs = ModManage()?->ui?->manager?->user?->getPrefs(true) ?? [];
-        
         if ($instance === null) {
             $instance = new View();
-            $instance
-                ->share('base_url', $base_url)
-                ->share('app_name', $app_name)
-                ->share('app_version', getVersion())
-                ->share('core_version', getCoreVersion())
-                ->share('access_permissions', $encodedPerms)
-                ->share('access_role', $encodedRole)
-                ->share('auth', [
-                    'role' => $currentRole,
-                    'permissions' => $rolePerms ,
-                    'isGuest' => $currentRole === 'guest',
-                ])
-                ->share('meta_description', 'Learn more about our company and values.')
-                ->share('meta_keywords', 'about, company, values')
-                ->share('meta_author', 'MySite Team')
-                ->share('meta_robots', 'index, follow')
-                ->share('channelID', defined('CHANNEL_ID') ? CHANNEL_ID :'')
-                ->share('redirectDefault', redirectDefault())
 
-                //Extras
-                ->share('app', $app)
-                ->share('menus', $menus)
-                ->share('prefs', $prefs)
-                ;
+            // --- Vendor Defaults ---
+            $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+            $appName = App::config('app_name') ?: 'BoraSlim App';
+
+            $instance
+                ->share('base_url', $baseUrl)
+                ->share('app_name', $appName)
+                ->share('app_version', getVersion())
+                ->share('core_version', getCoreVersion());
+
+            // --- Execute registered client callbacks ---
+            foreach ($clientCallbacks as $callback) {
+                if (is_callable($callback)) {
+                    $callback($instance);
+                }
+            }
         }
 
         return $instance;
+    }
+
+    /**
+     * Registers a client callback to extend View shares.
+     * Can be called multiple times by different modules.
+     */
+    function registerViewShares(callable $callback): void {
+        global $clientCallbacks; // 👈 same variable
+        $clientCallbacks[] = $callback;
+    }
+}
+
+if (!function_exists('viewVar')) {
+    function viewVar(string $key, $default = null)
+    {
+        $view = View();
+        if (!$view) return $default;
+        return $view->get($key, $default);
     }
 }
 
@@ -672,7 +649,7 @@ if (!function_exists('hasPermission')) {
         //     throw new \Exception("Access denied: {$module}.{$action}");
         // }
         $permManager = myApp()->getFeature('permissions');
-
+        
         $has = $permManager->hasPermission($module, $action, $autoRegister);
         
         if (!$has && $throw) {
@@ -766,6 +743,22 @@ if (!function_exists('myApp')) {
             $instance = $app;
         }
         return $instance;
+    }
+}
+
+if (!function_exists('appVar')) {
+    function appVar(?string $key = null, $default = null)
+    {
+        $shared = View()->getShared();
+        return $shared[$key] ?? $default;
+    }
+}
+
+if (!function_exists('meta')) {
+    function meta(string $key, $default = '') {
+        $shared = View()->getShared();
+        return $shared['meta_'.$key]
+            ?? ($shared['seo'][$key] ?? $default);
     }
 }
 
@@ -911,5 +904,21 @@ if (!function_exists('sql')) {
 if (!function_exists('Grid')) {
     function Grid(string $type = 'table') {
         return ModManage()->grids->$type;
+    }
+}
+
+if (!function_exists('safeSelect')) {
+    function safeSelect($table, $exclude = []) {
+        $db = appDB();
+        $colsData = $db->query("SHOW COLUMNS FROM {$table}")->fetch_all(MYSQLI_ASSOC);
+
+        // Extract just the column names
+        $cols = array_column($colsData, 'Field');
+
+        // Remove excluded fields
+        $cols = array_diff($cols, $exclude);
+
+        // Return a comma-separated list
+        return implode(',', $cols);
     }
 }
