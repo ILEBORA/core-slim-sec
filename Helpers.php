@@ -504,7 +504,7 @@ if (!function_exists('View')) {
         global $clientCallbacks; // 👈 same variable
         $clientCallbacks[] = $callback;
     }
-}
+} 
 
 if (!function_exists('viewVar')) {
     function viewVar(string $key, $default = null)
