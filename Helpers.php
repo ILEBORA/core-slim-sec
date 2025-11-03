@@ -144,7 +144,7 @@ function getIfSet(& $var,$default = null){
 }
 function jsonExit($response){
     header("Content-Type:application/json");
-    exit( $response );
+    exit( is_array($response) ? json_encode($response) : $response );
 }
 
 function apiUsage(){
@@ -486,7 +486,7 @@ if (!function_exists('View')) {
                 ->share('core_version', getCoreVersion());
 
             // --- Execute registered client callbacks ---
-            foreach ($clientCallbacks as $callback) {
+            foreach ($clientCallbacks??[] as $callback) {
                 if (is_callable($callback)) {
                     $callback($instance);
                 }
