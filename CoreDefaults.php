@@ -2,9 +2,9 @@
 // src/Config/CoreDefaults.php
 
 // Only set timezone if not already defined
-if (!ini_get('date.timezone')) {
+// if (!ini_get('date.timezone')) {
     date_default_timezone_set("Africa/Nairobi");
-}
+// }
 
 // Default error handling
 error_reporting(E_ALL);

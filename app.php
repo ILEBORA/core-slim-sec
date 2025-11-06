@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.3
- *  Build ID:   591FBEB3F6B3
- *  Timestamp:  2025-11-06 01:04:47
+ *  Build ID:   919CC26A06D5
+ *  Timestamp:  2025-11-06 11:27:05
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -57,7 +57,7 @@ foreach ($systemPaths as $systemFile) {
 define('CORE_SEC_PASSWORD', $_ENV['CORE_CLIENT_SECRET'] ?? 'BoraSlim_Core_v1@Secure');
 define('CORE_CLIENT_ID', $_ENV['CORE_CLIENT_ID'] ?? '');
 define('CORE_CLIENT_IV', $_ENV['CORE_CLIENT_IV'] ?? '');
-define('CORE_SERVER', 'https://boracore.co.ke');
+define('CORE_SERVER', 'https://ilebora.co.ke');
 
 // env var or fixed path outside vendor
 $cacheDir = $_ENV['CORE_CACHE_PATH'] ?? __DIR__ . '/../../../.cache';
@@ -81,6 +81,7 @@ if (!file_exists($versionFile)) {
 // --- Handle missing core ---
 if (!file_exists($cachePath)) {
     $currentVersion = ''; // force download
+    file_put_contents($cachePath, '');
 }
 
 // --- Fetch remote version ---
@@ -95,7 +96,7 @@ $currentVersion = extractVersion($currentVersion);
 
 // --- Auto update if needed ---
 if ($remoteVersion && $currentVersion && version_compare($currentVersion, $remoteVersion, '<')) {
-    error_log("New core version available. Downloading...\n");
+    error_log("New core version $remoteVersion available. Downloading...\n");
 
     if (!isSameOrigin(CORE_SERVER)) {
         $response = @file_get_contents(
@@ -105,20 +106,29 @@ if ($remoteVersion && $currentVersion && version_compare($currentVersion, $remot
         if (function_exists('handleCoreDownload')) {
             $response = handleCoreDownload(CORE_CLIENT_ID);
         } else {
+            error_log("❌ Local download handler not found.");
             die("Local download handler not found.");
         }
     }
 
     if (!$response) {
+        error_log("❌ Failed to download new core.");
         die("Failed to download new core.");
     }
 
     file_put_contents($cachePath, $response);
     file_put_contents($versionFile, $remoteVersion);
+
+    //create a hash
+    $newHash = hash('sha256', $response);
+    file_put_contents($hashPath, $newHash);
+
 }
 
 // --- 🔐 INTEGRITY VERIFICATION ---
 if (!file_exists($cachePath)) {
+    // var_dump(ini_get('error_log'));
+    error_log("❌ Core file missing: $cachePath");
     die("❌ Core file missing: $cachePath");
 }
 
@@ -129,6 +139,7 @@ if (file_exists($hashPath)) {
     $expectedHash = trim(file_get_contents($hashPath));
     if (!hash_equals($expectedHash, $computedHash)) {
         http_response_code(500);
+        error_log("❌ Integrity check failed! Core file may be corrupted or tampered with.");
         die("❌ Integrity check failed! Core file may be corrupted or tampered with.");
     }
 } else {
@@ -137,10 +148,12 @@ if (file_exists($hashPath)) {
         $expectedHash = $match[1];
         if (!hash_equals($expectedHash, $computedHash)) {
             http_response_code(500);
+            error_log("❌ Embedded signature mismatch. Aborting execution.");
             die("❌ Embedded signature mismatch. Aborting execution.");
         }
     } else {
         http_response_code(500);
+        error_log("⚠️ No integrity signature found for core file.");
         die("⚠️ No integrity signature found for core file.");
     }
 }
