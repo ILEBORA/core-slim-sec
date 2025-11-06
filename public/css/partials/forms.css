@@ -1,0 +1,39 @@
+.form-stt-tr{
+    background: bisque;
+    margin-left: 5px;
+}
+
+body.darkmode .form-stt-tr {
+    background: none;
+}
+
+abbr.fa-eye-slash{
+    background: rgb(3, 185, 185);
+    color: #fff;
+}
+
+.input-icon-right{
+    position:absolute;
+    top: 8px;
+    right: 8px;
+    padding: 10px;
+    color:blue;
+    line-height:auto;
+    cursor:pointer;
+    background: rgb(3, 185, 185, 30%);
+}
+
+.input-icon-left{
+    position:absolute;
+    top: 8px;
+    left: 8px;
+    padding: 10px;
+    color:blue;
+    line-height:auto;
+    cursor:pointer;
+    background: #fff;
+}
+
+input:disabled, select:disabled{
+    background: #f2ebeb;
+}

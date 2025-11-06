@@ -1,0 +1,134 @@
+.darkmode .dashboard-counts {
+    color: inherit !important;
+}
+
+
+.dashboard-counts .row {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+}
+
+.dashboard-counts .container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    justify-content: center;
+    padding:10px;
+}
+
+.dashboard-counts .prefix, .dashboard-counts .suffix {
+    margin-right: 5px; 
+    padding:3px;
+    font-size:2em;
+}
+
+.dashboard-counts .suffix{
+    text-align: right;
+}
+
+.dashboard-counts .prefix{
+    text-align: left;
+}
+
+.dashboard-counts .active_content {
+    /* flex-grow:1; */
+    background-color: transparent !important;
+}
+
+.dash-controls-container{
+    display: inline;
+    background: blanchedalmond;
+    padding: 5px;
+    margin: 3px;
+}
+
+.dash-controls-container.expanded{
+    display: block;
+}
+
+.dash-controls-toggle{
+    display: inline-block;
+    cursor: pointer;
+    padding: 2px 10px;
+}
+
+.dash-controls-toggle.opened{
+    background-color:#333;
+    color:#fff;
+}
+
+.dash-controls{
+    display: none;
+    font-size: smaller;
+    padding: 5px;
+}
+
+.dash-controls button{
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+.dash-controls.expanded{
+    display: inline;
+}
+
+.drop {
+    margin: 20px 0;
+    padding: 5px;
+    border: 2px dotted orange;
+    border-radius: 5px;
+}
+
+.drop.hovering {
+    background-color: #F6BF66;
+}
+
+.widget_container{
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    background-color:rgb(234, 242, 247) ;
+    border: 2px rgb(222, 230, 235) solid;
+    padding: 3px;
+}
+.widget_container .name{
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: stretch;
+    display: flex;
+}
+.widget_container .wtitle{
+    flex-grow:1;
+}
+
+.widget_tools {
+    display: none;
+}
+.widget_tools{
+    position: absolute;
+    right: 0;
+    top:0;
+    padding: 3px;
+    background-color: rgb(253, 255, 244);
+}
+
+.widget_section h1 {
+    background-color:rgb(234, 242, 247) ;
+    --tw-text-opacity: 1;
+    color: rgb(30 43 54 / var(--tw-text-opacity));
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    line-height: 55px;
+    margin: 0 0 20px;
+    text-align:center;
+}
+
+.widget_section h2 {
+    text-align:center;
+    font-size: 24px;
+    font-weight: 500;
+}
