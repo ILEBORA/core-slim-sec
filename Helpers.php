@@ -219,7 +219,7 @@ function preparePhone($phone,$int = true){
 
 function jsonResponse($status,$params){
     header("Content-Type:application/json");
-    $response = new \ILEBORA\Response($status);
+    $response = new \BoraSlim\Core\Utils\ResponseMessage($status);
     // dieVal(__gl('siteConfig'));
     // $response->addMessage('systemCode', __gl('siteConfig')['sitemode']); 
     // dieVal($response->getResult());
@@ -920,5 +920,50 @@ if (!function_exists('safeSelect')) {
 
         // Return a comma-separated list
         return implode(',', $cols);
+    }
+}
+
+if (!function_exists('vendor_path')){
+    function vendor_path($relative) {
+        return __DIR__ . "/{$relative}";
+    }
+}
+
+if (!function_exists('public_path')) {
+    function public_path($relative = '') {
+        return 'assets' . ($relative ? '/' . ltrim($relative, '/') : '');
+    }
+}
+
+
+if(!function_exists('autoIncludeCoreJs')){
+    function autoIncludeCoreJs($hooks) {
+        $corePath = vendor_path('public/js/cores');
+
+        $files = glob($corePath . '/*.js');
+        // dieVal($files);
+        foreach ($files as $file) {
+            $name = basename($file, '.js'); // e.g., BoraHooks
+            $hooks->register(strtolower($name), $file);
+        }
+    }
+}
+
+if(!function_exists('autoIncludeCoreCss')){
+    function autoIncludeCoreCss($hooks) {
+        $corePath = vendor_path('public/css/cores');
+
+        $files = glob($corePath . '/*.css');
+        // dieVal($files);
+        foreach ($files as $file) {
+            $name = basename($file, '.css'); // e.g., BoraHooks
+            $hooks->register(strtolower($name), $file);
+        }
+    }
+}
+
+if(!function_exists('Status')){
+    function Status(){
+        return new \BoraSlim\Core\Utils\Status;
     }
 }
