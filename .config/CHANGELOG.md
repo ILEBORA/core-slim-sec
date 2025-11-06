@@ -1,3 +1,15 @@
+## [1.0.24] - 2025-11-06
+- patch version bump
+
+### New Commits
+b8eccf6 Fixed: Core integrity missmatch
+4cfa7d6 Added: Public folder
+aa8e93a Added public folder with js and css - testing
+2da7b06 Fixed: Streamlined core logic flow 1
+5d77c17 Updated: Helpers
+6221f6e New version including more control over view variables
+2d28907 Added: Views
+
 ## [1.0.23] - 2025-10-24
 - patch version bump
 
