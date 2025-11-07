@@ -1,0 +1,42 @@
+/* Overlay + modal */
+.bora-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 9998; display: none;
+}
+.bora-alert {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff; border-radius: 8px;
+  padding: 1.25rem; box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+  z-index: 9999; display: none; min-width: 300px;
+}
+.bora-message { margin-bottom: .5rem; }
+.bora-buttons { text-align: right; margin-top: 1rem; }
+.bora-btn-ok, .bora-btn-cancel { padding: .4rem .9rem; margin-left: .5rem; }
+
+/* Notifier container positions */
+.bora-notifier { position: fixed; z-index: 10020; pointer-events: none; }
+.bora-pos-bottom-right { right: 1rem; bottom: 1rem; }
+.bora-pos-bottom-left  { left: 1rem;  bottom: 1rem; }
+.bora-pos-top-right    { right: 1rem; top: 1rem; }
+.bora-pos-top-left     { left: 1rem;  top: 1rem; }
+.bora-pos-top-center   { left:50%; transform:translateX(-50%); top:1rem; }
+.bora-pos-bottom-center{ left:50%; transform:translateX(-50%); bottom:1rem; }
+
+/* Toasts */
+.bora-toast {
+  display: block; margin: .5rem 0; padding: .65rem 1rem;
+  border-radius: 6px; box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+  pointer-events: auto; max-width: 320px;
+  font-size: .95rem;
+}
+.bora-info    { background: #2f86d6; color: #fff; }
+.bora-success { background: #2ecc71; color: #fff; }
+.bora-error   { background: #e74c3c; color: #fff; }
+.bora-warning { background: #f39c12; color: #111; }
+
+.alertbora-input{
+    width: 100%;
+    text-align: left;
+}

@@ -560,7 +560,7 @@ section{
 $corePath = __DIR__.'/../partials';
 
 $files = glob($corePath . '/*.css');
-// die(print_r($files));
+/* // die(print_r($files)); */
 $out = '';
 foreach ($files as $file) {
     include $file;

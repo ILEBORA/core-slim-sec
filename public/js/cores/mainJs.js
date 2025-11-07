@@ -2302,60 +2302,63 @@ function closeAll(){
 	return;
 }
 
+function vibrate(duration = 200) {
+    if (!('vibrate' in navigator)) {
+        console.warn('Vibration API not supported on this device.');
+        return false;
+    }
+
+    try {
+        // Allow single value or pattern (array)
+        if (Array.isArray(duration) || typeof duration === 'number') {
+            navigator.vibrate(duration);
+            return true;
+        } else {
+            console.error('Invalid vibration pattern:', duration);
+            return false;
+        }
+    } catch (e) {
+        console.error('Vibration failed:', e);
+        return false;
+    }
+}
 //
-// function showAlert(content) {
-// 	var cls = (typeof content.class !== 'undefined') ? content.class : null;
+function showAlert(content, style = 'info', duration = 10) {
+	var cls = (typeof content.class !== 'undefined') ? content.class : null;
 
-//     if(!localStorage.getItem('notifyID_'+cls)){
-//         localStorage.setItem('notifyID_'+cls, 1);
-//     }
+    if(!localStorage.getItem('notifyID_'+cls)){
+        localStorage.setItem('notifyID_'+cls, 1);
+    }
 
-//     var getPrev = localStorage.getItem('notifyID_'+cls);
-//     var newId = (typeof content.id !== 'undefined') ? content.id : null;
+    var getPrev = localStorage.getItem('notifyID_'+cls);
+    var newId = (typeof content.id !== 'undefined') ? content.id : null;
     
-//     if(newId){
-//         console.log(getPrev + '::' + newId);
-//         if (parseInt(getPrev) < parseInt(newId) && typeof content !== 'undefined') {
-//             localStorage.setItem('notifyID_'+cls, newId);
-//             var stt = {};
-//             if (typeof content.title !== 'undefined') {
-//                 stt.title = content.title;
-//             }
-//             if (typeof content.info !== 'undefined') {
-//                 stt.text = content.info;
-//             }
-//             if (typeof content.image !== 'undefined') {
-//                 stt.image = "<img src='" + content.image + "' width='40' '/>";
-//             }
+    if(newId){
+        console.log(getPrev + '::' + newId);
+        if (parseInt(getPrev) < parseInt(newId) && typeof content !== 'undefined') {
+            localStorage.setItem('notifyID_'+cls, newId);
+            var stt = {};
+            if (typeof content.title !== 'undefined') {
+                stt.title = content.title;
+            }
+            if (typeof content.info !== 'undefined') {
+                stt.text = content.info;
+            }
+            if (typeof content.image !== 'undefined') {
+                stt.image = "<img src='" + content.image + "' width='40' '/>";
+            }
 
-//             // Play sound
-//             var audio = new Audio('assets/sound/doink.mp3');
-//             audio.play();
+            // Play sound
+            var audio = new Audio('assets/sound/doink.mp3');
+            audio.play();
 
-// 			$.notify.defaults({
-// 				autoHide: true,
-// 				autoHideDelay: 10000
-// 			});
-            
-//             var notification = $.notify(stt, content.style);
+			alertBora.set('notifierPosition', 'top-right').set('notifierDelay', 4);
 
-// 			// $('.notifyjs-wrapper').last().find('.close-notify').on('click', function() {
-// 			// 	notification.close();
-// 			// });
-
-// 			var notificationId = 'notify-' + Math.random().toString(36).substr(2, 9);
-// 			$('.notifyjs-wrapper').last().addClass(notificationId);
+            var notification = alertBora.notify(stt, style, duration);
 		
-// 			// Find the close button within this specific notification and bind the click event
-// 			$('.' + notificationId).find('.close-notify').on('click', function() {
-// 				// alert('close this');
-// 				notification.close();
-// 			});
-		
-// 			//return notification || null;
-//         }
-//     }
-// }
+			return notification || null;
+        }
+    }
+}
 
 
-            
