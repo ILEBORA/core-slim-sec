@@ -967,3 +967,26 @@ if(!function_exists('Status')){
         return new \BoraSlim\Core\Utils\Status;
     }
 }
+
+use BoraSlim\Core\Database\DBMigrate as DBMigrateClass;
+if (!function_exists('DBMigrate')) {
+    function DBMigrate(): string
+    {
+        // Return the fully qualified class name for static access
+        return DBMigrateClass::class;
+    }
+}
+
+if (!function_exists('csrf_token')) {
+    function csrf_token() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
+        return $_SESSION['csrf_token'];
+    }
+}
