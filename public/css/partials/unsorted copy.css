@@ -1301,7 +1301,6 @@
     color: #fff;
     color: var(--footer-font-color);
     flex-grow : 1;
-    font-size:small;
     /* height: auto !important; */
   }
   
@@ -1336,7 +1335,6 @@
   }
   
   footer.main-footer p {
-    font-size: 0.7em;
     color: #777;
     margin: 0;
   }
@@ -1350,7 +1348,6 @@
   
   @media (min-width: 768px) {
     footer.main-footer p {
-      font-size: 0.9em;
     }
   }
   

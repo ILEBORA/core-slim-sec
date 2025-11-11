@@ -1305,7 +1305,6 @@
     color: #fff;
     color: var(--footer-font-color);
     flex-grow : 1;
-    font-size:small;
     /* height: auto !important; */
   }
   

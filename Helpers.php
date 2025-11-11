@@ -633,7 +633,7 @@ if (!function_exists('hasPermission')) {
     //     return $has;
     // }
 
-    function hasPermission(string $module, string $action, bool $autoRegister = false, bool $throw = false): bool {
+    function hasPermission(string $module, string $action, bool $autoRegister = true, bool $throw = false): bool {
         // $permRepo = ModManage()->permissions; // Assuming you have a PermissionsRepository
         // $permission = $permRepo->findByName($module, $action);
 
@@ -988,5 +988,19 @@ if (!function_exists('csrf_token')) {
         }
 
         return $_SESSION['csrf_token'];
+    }
+}
+
+use BoraSlim\Core\Helpers\RedisCache;
+
+if (!function_exists('RedisCache')) {
+    function RedisCache() {
+        return RedisCache::class;
+    }
+}
+
+if (!function_exists('env')) {
+    function env($key, $default = null) {
+        return getenv($key) ?: ($_ENV[$key] ?? $default);
     }
 }
