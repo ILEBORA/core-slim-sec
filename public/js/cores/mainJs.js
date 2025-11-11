@@ -2362,3 +2362,79 @@ function showAlert(content, style = 'info', duration = 10) {
 }
 
 
+//FormJourney Handler
+// Register the plugin
+var formJourney = addPlugin(
+    BoraPlugin,
+    {
+        pluginName: 'formJourney',
+        journeys: {}, // store the registered journeys
+        init: function() {
+            BoraPlugin.init.call(this); // call base init
+            console.log('formJourney plugin initialized.');
+
+            // Attach a global submit listener for forms with data-ajax="true"
+            var self = this;
+            $(document).on('submit', 'form[data-ajax="true"]', function(e) {
+                e.preventDefault();
+                var $form = $(this);
+                var journey = $form.data('handler') || 'default';
+
+                // Trigger pre-submit hooks if they exist
+                if (typeof appHooks !== 'undefined') {
+                    appHooks.callHook('form:beforeSubmit', $form);
+                }
+
+                // Execute registered journey or default
+                if (self.journeys[journey]) {
+                    self.journeys[journey]($form, function(resp) {
+                        self._afterSubmit($form, resp);
+                    });
+                } else {
+                    self.default($form, function(resp) {
+                        self._afterSubmit($form, resp);
+                    });
+                }
+            });
+        }
+    }
+);
+
+// Add methods
+formJourney.addMethods({
+    registerJourney: function(name, callback) {
+        if (!this.journeys[name]) {
+            this.journeys[name] = callback;
+        }
+    },
+
+    default: function($form, done) {
+        var url = $form.attr('action');
+        var method = $form.attr('method') || 'POST';
+        var data = $form.serialize();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: data,
+            success: function(resp) {
+                console.log('Default form saved', resp);
+                if (typeof done === 'function') done(resp);
+            },
+            error: function(err) {
+                console.error('Form error', err);
+                if (typeof done === 'function') done(err);
+            }
+        });
+    },
+
+    _afterSubmit: function($form, resp) {
+        if (typeof appHooks !== 'undefined') {
+            appHooks.callHook('form:afterSubmit', $form, resp);
+        }
+    }
+});
+
+// Debug & initialize
+formJourney.setDebug(true);
+formJourney.init();
