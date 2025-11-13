@@ -633,7 +633,7 @@ if (!function_exists('hasPermission')) {
     //     return $has;
     // }
 
-    function hasPermission(string $module, string $action, bool $autoRegister = true, bool $throw = false): bool {
+    function hasPermission(string $module, string $action, bool $autoRegister = false, bool $throw = false): bool {
         // $permRepo = ModManage()->permissions; // Assuming you have a PermissionsRepository
         // $permission = $permRepo->findByName($module, $action);
 
@@ -1002,5 +1002,19 @@ if (!function_exists('RedisCache')) {
 if (!function_exists('env')) {
     function env($key, $default = null) {
         return getenv($key) ?: ($_ENV[$key] ?? $default);
+    }
+}
+
+use BoraSlim\Core\Helpers\WithResolver;
+if (!function_exists('With')) {
+    function With($name) {
+        return WithResolver::get($name);
+    }
+}
+
+if(!function_exists('appMode')){
+    function appMode($check = null) {
+        $mode = defined('APP_MODE') ? APP_MODE : 'live';
+        return $check ? $mode === $check : $mode;
     }
 }

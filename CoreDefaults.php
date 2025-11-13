@@ -73,5 +73,14 @@ if (!defined("BASE_DIR")) {
     $_SESSION['BASE_DIR'] = BASE_URL;
 }
 
-// die(BASE_URL);
-//TODO:: start session if user needs
+// Detect application mode
+$mode = $_ENV['APP_MODE'] ?? 'live'; // default to 'live'
+
+// Optionally override via query or CLI
+if (php_sapi_name() === 'cli') {
+    $mode = $argv[1] ?? $mode;
+} elseif (isset($_GET['mode']) && in_array($_GET['mode'], ['live','admin','silent'])) {
+    $mode = $_GET['mode'];
+}
+
+define('APP_MODE', $mode);
