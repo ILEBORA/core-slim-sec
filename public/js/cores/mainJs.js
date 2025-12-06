@@ -1061,7 +1061,40 @@ function ucfirst(str) {
 // }
 
 var i = 0;
-function loadBind(){
+function loadBind(container) {
+    container = container || document;
+
+    var unboundForEach = Array.prototype.forEach,
+        forEach = Function.prototype.call.bind(unboundForEach);
+
+    // Bind submit fns
+    forEach(container.querySelectorAll('[fns]'), function (el) {
+        el.removeEventListener('submit', handlerBestS);
+        el.addEventListener('submit', handlerBestS);
+    });
+
+    // Long press + click
+    forEach(container.querySelectorAll('[fnl]'), function (el) {
+        el.removeEventListener('long-press', handlerLdrLong);
+        el.addEventListener('long-press', handlerLdrLong);
+
+        el.removeEventListener('click', handlerLdr);
+        el.addEventListener('click', handlerLdr);
+    });
+
+    // Live UI
+    forEach(container.querySelectorAll('[lvui]'), function (el) {
+        addToLive.call(el);
+    });
+
+    forEach(container.querySelectorAll('[pitm]'), function (el) {
+        addToLiveTr.call(el);
+    });
+
+    // Lazy loader (now works for AJAX content!)
+    lazyLoad(container);
+}
+function loadBindO(){
 	// console.warn('loadBind','Test');
 	var unboundForEach = Array.prototype.forEach,
 			forEach = Function.prototype.call.bind(unboundForEach);
@@ -1102,6 +1135,9 @@ function loadBind(){
 	forEach(document.querySelectorAll('[pitm]'), function (el) {
 		addToLiveTr.call(el);
 	});
+
+	container = container || document;
+	lazyLoad(container); 
 	
 }
 
@@ -2064,24 +2100,163 @@ $(document).ready(function(){
 	// });
 // });
 
+window._lazyCache = window._lazyCache || new Set();
+
+$(function(){
+	lazyLoad(document);
+})
+
+function lazyLoad(container = document) {
+    let imgs = container.querySelectorAll('img.lazy[data-src]');
+
+    imgs.forEach(function (img) {
+        let real = img.dataset.src;
+        if (!real) return;
+
+        // Wrap automatically if not wrapped
+        let wrap = img.closest('.lazy-wrap');
+        if (!wrap) {
+            wrap = document.createElement('div');
+            wrap.className = 'lazy-wrap loading';
+            img.parentNode.insertBefore(wrap, img);
+            wrap.appendChild(img);
+        } else {
+            wrap.classList.add('loading');
+        }
+
+        // Preserve placeholder size (only if provided)
+        if (!img.style.width && img.width) img.style.width = img.width + 'px';
+        if (!img.style.height && img.height) img.style.height = img.height + 'px';
+
+        // ALREADY LOADED? Use cache
+        if (window._lazyCache.has(real)) {
+            img.src = real;
+            wrap.classList.remove('loading');
+            wrap.classList.add('loaded');
+            return;
+        }
+
+        let pre = new Image();
+        pre.onload = function () {
+            img.src = real;
+            window._lazyCache.add(real);
+            wrap.classList.remove('loading');
+            wrap.classList.add('loaded');
+        };
+
+        pre.onerror = function () {
+            wrap.classList.remove('loading'); // keep placeholder
+        };
+
+        pre.src = real;
+        img.removeAttribute('data-src');
+    });
+}
+
+function lazyLoadO(container = document) {
+    var imgs = container.querySelectorAll
+        ? container.querySelectorAll('img.lazy[data-src]')
+        : [];
+
+    imgs.forEach(function (el) {
+        var real = el.dataset.src;
+        if (!real) return;
+
+        // Already loaded?
+        if (window._lazyCache.has(real)) {
+            el.src = real;
+            return;
+        }
+
+        // Keep original placeholder dimensions
+        if (!el.style.width && el.width) {
+            el.style.width = el.width + 'px';
+        }
+        if (!el.style.height && el.height) {
+            el.style.height = el.height + 'px';
+        }
+
+        var pre = new Image();
+        pre.onload = function () {
+            el.src = real;
+            window._lazyCache.add(real);
+        };
+        pre.src = real;
+    });
+}
+
+// function runLazyLoaderO(container = document) {
+//     var imgs = container.querySelectorAll('img.lazy[data-src]');
+//     if (!imgs.length) return;
+
+//     imgs.forEach(function (el) {
+//         var real = el.dataset.src;
+//         if (!real) return;
+
+//         // Skip if already loaded
+//         if (window._lazyCache.has(real)) {
+//             el.src = real;
+//             return;
+//         }
+
+//         // Preserve dimensions
+//         if (!el.style.width && el.width) el.style.width = el.width + 'px';
+//         if (!el.style.height && el.height) el.style.height = el.height + 'px';
+
+//         var pre = new Image();
+
+//         pre.onload = function () {
+//             el.src = real;
+//             window._lazyCache.add(real);
+//         };
+//         pre.onerror = function () {
+//             // keep placeholder
+//         };
+
+//         pre.src = real;
+//     });
+// }
+
+
+// $(document).ready(function () {
+// 	const observerCallback = function(mutationsList) {
+// 		for (let mutation of mutationsList) {
+// 			if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+// 				loadBind();  // Call your function when a new node is inserted
+// 			}
+// 		}
+// 	};
+
+// 	// Create a new MutationObserver instance
+// 	const observer = new MutationObserver(observerCallback);
+
+// 	// Start observing the document body or a specific element for changes
+// 	observer.observe(document.body, {
+// 		childList: true, // Watches for added or removed nodes
+// 		subtree: true    // Watches all descendant nodes
+// 	});
+
+// });
+
 $(document).ready(function () {
-	const observerCallback = function(mutationsList) {
-		for (let mutation of mutationsList) {
-			if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-				loadBind();  // Call your function when a new node is inserted
-			}
-		}
-	};
+    const observerCallback = function(mutationsList) {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        loadBind(node);   // Only process new node
+                    }
+                });
+            }
+        }
+    };
 
-	// Create a new MutationObserver instance
-	const observer = new MutationObserver(observerCallback);
+    const observer = new MutationObserver(observerCallback);
 
-	// Start observing the document body or a specific element for changes
-	observer.observe(document.body, {
-		childList: true, // Watches for added or removed nodes
-		subtree: true    // Watches all descendant nodes
-	});
-
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 });
 
 function onElementInserted(containerSelector, elementSelector, callback) {
@@ -2438,3 +2613,22 @@ formJourney.addMethods({
 // Debug & initialize
 formJourney.setDebug(true);
 formJourney.init();
+
+
+$.fn.attachDragger = (function(){
+    var attachment = false, lastPosition, position, difference;
+    $( $(this).selector ).on("mousedown mouseup mousemove",function(e){
+        if( e.type == "mousedown" ) attachment = true, lastPosition = [e.clientX, e.clientY];
+        if( e.type == "mouseup" ) attachment = false;
+        if( e.type == "mousemove" && attachment == true ){
+            position = [e.clientX, e.clientY];
+            difference = [ (position[0]-lastPosition[0]), (position[1]-lastPosition[1]) ];
+            $(this).scrollLeft( $(this).scrollLeft() - difference[0] );
+            $(this).scrollTop( $(this).scrollTop() - difference[1] );
+            lastPosition = [e.clientX, e.clientY];
+        }
+    });
+    $(window).on("mouseup", function(){
+        attachment = false;
+    });
+});

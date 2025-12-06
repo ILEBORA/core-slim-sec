@@ -226,13 +226,15 @@ section{
 }
 .image_box, .mr_box{
     width:29%;
-    float:right;
+    /* float:right; */
+    display: inline-flex;
+    background-color: #4d4c4c;
 }
 .info_box{
      width:60%;
     float:left;
-     margin:3px;
-     padding:3px;
+    margin:3px;
+    padding:3px;
 }
 .image_box.l,.info_box.l{
     float:left;
@@ -268,6 +270,7 @@ section{
     overflow:none;
 }
 .inf_cont{
+    display: flex;
     position:relative;
     background:#f3e3f0 url(../images/icons/bck_wht.png) top left repeat;
     background: var(--widgets-info_block-back);

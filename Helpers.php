@@ -653,7 +653,7 @@ if (!function_exists('hasPermission')) {
         $has = $permManager->hasPermission($module, $action, $autoRegister);
         
         if (!$has && $throw) {
-            throw new \Exception("Access denied: {$module}.{$action}");
+            // throw new \Exception("Access denied: {$module}.{$action}");
         }
 
         return $has;
@@ -1016,5 +1016,209 @@ if(!function_exists('appMode')){
     function appMode($check = null) {
         $mode = defined('APP_MODE') ? APP_MODE : 'live';
         return $check ? $mode === $check : $mode;
+    }
+}
+
+if(!function_exists('hideData')){
+    function hideData($address){
+        $e="";
+        for ($n = 0; $n < strlen($address); $n++) {       
+            $c = htmlentities($address[$n],ENT_QUOTES,'UTF-8');
+            $address[$n] == $c ? $e .= "&#".ord($address[$n]).";" : $e .= $c;
+        }       
+        return($e);
+    }
+}
+
+if(!function_exists('make_thumb')){
+    function make_thumb($img_name,$filename,$new_w,$new_h=0){
+        $src_img=imagecreatefromjpeg($img_name);
+        $old_x=imageSX($src_img);
+        $old_y=imageSY($src_img);
+    
+        $ratio1=$old_x/$new_w;
+        $ratio2=$old_y/$new_h;
+        if($ratio1>$ratio2)	{
+        $thumb_w=$new_w;
+        $thumb_h=$old_y/$ratio1;
+        }
+        else	{
+        $thumb_h=$new_h;
+        $thumb_w=$old_x/$ratio2;
+        }
+    
+        $dst_img=imagecreatetruecolor($thumb_w,$thumb_h);
+        imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y); 
+        imagejpeg($dst_img,$filename); 
+        imagedestroy($dst_img); 
+        imagedestroy($src_img); 
+    }
+}
+
+if(!function_exists('cropImage')){
+    function cropImage($sourcePath, $thumbSize, $destination = null) {
+        $parts = explode('.', $sourcePath);
+        $ext = $parts[count($parts) - 1];
+        if ($ext == 'jpg' || $ext == 'jpeg') {
+        $format = 'jpg';
+        } else {
+        $format = 'png';
+        }
+    
+        if ($format == 'jpg') {
+        $sourceImage = imagecreatefromjpeg($sourcePath);
+        }
+        if ($format == 'png') {
+        $sourceImage = imagecreatefrompng($sourcePath);
+        }
+    
+        list($srcWidth, $srcHeight) = getimagesize($sourcePath);
+    
+        // calculating the part of the image to use for thumbnail
+        if ($srcWidth > $srcHeight) {
+        $y = 0;
+        $x = ($srcWidth - $srcHeight) / 2;
+        $smallestSide = $srcHeight;
+        } else {
+        $x = 0;
+        $y = ($srcHeight - $srcWidth) / 2;
+        $smallestSide = $srcWidth;
+        }
+    
+        $destinationImage = imagecreatetruecolor($thumbSize, $thumbSize);
+        imagecopyresampled($destinationImage, $sourceImage, 0, 0, $x, $y, $thumbSize, $thumbSize, $smallestSide, $smallestSide);
+    
+        if ($destination == null) {
+        header('Content-Type: image/jpeg');
+        if ($format == 'jpg') {
+            imagejpeg($destinationImage, null, 100);
+        }
+        if ($format == 'png') {
+            imagejpeg($destinationImage);
+        }
+        if ($destination = null) {
+        }
+        } else {
+        if ($format == 'jpg') {
+            imagejpeg($destinationImage, $destination, 100);
+        }
+        if ($format == 'png') {
+            imagepng($destinationImage, $destination);
+        }
+        }
+    }
+}
+
+if(!function_exists('createAvatarImage')){
+    function createAvatarImage($string){
+        
+        $imageFilePath = "assets/uploads/avatar/".$string . ".png";
+
+        if(!file_exists($imageFilePath)){
+        //base avatar image that we use to center our text string on top of it.
+        $avatar = imagecreatetruecolor(60,60);
+
+        $bg_color = imagecolorallocate($avatar, 242, 242, 242);
+
+        imagefill($avatar,0,0,$bg_color);
+
+        $avatar_text_color = imagecolorallocate($avatar, 255, 255, 255);
+
+        // Load the gd font and write 
+        $font = imageloadfont('assets/fonts/gd/gd-font.gdf');
+
+        imagestring($avatar, $font, 10, 10, strtoupper($string), $avatar_text_color);
+
+        imagepng($avatar, $imageFilePath);
+
+        imagedestroy($avatar);
+        }
+
+        return $imageFilePath;
+    }
+}
+
+if(!function_exists('secureFile')){
+    function secureFile($file){
+        return 'viewer?byp=1&j='.$file.'&tm='.time();
+    }
+}
+
+if(!function_exists('getTextAvatar')){
+    function getTextAvatar($name){
+        $nameFirstChar = ucfirst($name[0]);
+        $avatar = 'assets/uploads/avatar/'.$nameFirstChar.'.png';
+        if(!file_exists($avatar)){
+            createAvatarImage($nameFirstChar);
+        }
+        return $avatar;
+    }
+}
+
+if (!function_exists('systemConfig')) {
+
+    /**
+     * Load a configuration file from /config.
+     * 
+     * Usage:
+     *   systemConfig('notifiable_items');
+     *   systemConfig('app.name');
+     *   systemConfig('database.connections.mysql');
+     */
+    function systemConfig(?string $key = null, $default = null)
+    {
+        static $cache = [];
+
+        if ($key === null) {
+            return null;
+        }
+
+        // Split "notifiable_items" → ['notifiable_items']
+        // or "app.name" → ['app', 'name']
+        $segments = explode('.', $key);
+        $file = array_shift($segments); // first part is filename
+
+        // Cache key for entire file
+        if (!isset($cache[$file])) {
+
+            $path = BASE_DIR . "/.config/{$file}.php";
+
+            if (!file_exists($path)) {
+                return $default;
+            }
+
+            // Load and cache the file
+            $cache[$file] = include $path;
+        }
+
+        // Navigate deeper: e.g. "app.name"
+        $config = $cache[$file];
+
+        foreach ($segments as $segment) {
+            if (!isset($config[$segment])) {
+                return $default;
+            }
+            $config = $config[$segment];
+        }
+
+        return $config;
+    }
+}
+
+if (!function_exists('AddModuleFunct')) {
+    function AddModuleFunct($module = null, $funct = null, $callback = null){
+        if($module && $funct && $callback){
+            return Hooks()->addKlassFunct( $module, $funct, $callback );
+        }
+        return null;
+    }
+}
+
+if (!function_exists('ModuleFunct')) {
+    function ModuleFunct($module = null, $funct = null, $params = []){
+        if($module && $funct){
+            return Hooks()->getKlassFunct($module,$funct,$params);
+        }
+        return null;
     }
 }

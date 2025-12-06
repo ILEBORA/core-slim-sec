@@ -11,7 +11,7 @@
     font-size: 1.4rem;
     color: #ffffff;
     color: var(--sidebar-color);
-    z-index: 5;
+    z-index: 1000 !important;
     border-radius: 0px;
     border-right:0px #fff solid;
     border-right-color: var(--sidebar-border-right-color);

@@ -40,3 +40,18 @@
     width: 100%;
     text-align: left;
 }
+
+
+.bora-prompt input{
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: none;
+    border: solid 1px #ccc;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    padding: 6px 12px;
+    display: block;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
