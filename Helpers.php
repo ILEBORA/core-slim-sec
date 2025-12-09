@@ -1222,3 +1222,24 @@ if (!function_exists('ModuleFunct')) {
         return null;
     }
 }
+
+
+if (!function_exists('formatFileSize')) {
+    function formatFileSize($bytes, $decimals = 2) {
+        $sizeUnits = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        if ($bytes == 0) {
+            return '0 B';
+        }
+        $factor = floor((strlen($bytes) - 1) / 3);
+        $formattedSize = $bytes / pow(1024, $factor);
+        return sprintf("%.{$decimals}f %s", $formattedSize, $sizeUnits[$factor]);
+    }
+}
+
+
+if (!function_exists('formatDateStandard')) {
+    function formatDateStandard($date){
+        // return date( "d/m/Y H:i", $date);
+        return date( $date);
+    }
+}
