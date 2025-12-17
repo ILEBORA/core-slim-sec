@@ -9,6 +9,9 @@ class CallBora {
         this.ondone = null;
         this.onerror = null;
         this.credentials = null; // optional { user, pass }
+        this.downloadEnabled = false;
+        this.downloadFilename = null;
+        this.responseType = null; // null = default jQuery json
     }
 
     setMethod(method) {
@@ -51,6 +54,20 @@ class CallBora {
         return this;
     }
 
+    setDownload(filename = null) {
+        this.downloadEnabled = true;
+        this.downloadFilename = filename; // can be null → server filename used
+        this.responseType = "blob"; // force blob for downloads
+        this.d = ""; // jQuery should NOT parse the response
+        return this;
+    }
+
+    setResponseType(type) {
+        this.responseType = type; // "blob", "arraybuffer", etc.
+        if (type === "blob") this.d = "";
+        return this;
+    }
+
 	prepareUrl(url, prefix){
 		return url.startsWith("http://") || url.startsWith("https://") ? url : prefix + url;
 	}
@@ -65,7 +82,10 @@ class CallBora {
             url: this.prepareUrl(this.url, ''),
             data: this.params,
             headers: this.headers,
-            xhrFields: { withCredentials: true },
+            xhrFields: { 
+                withCredentials: true,
+                responseType: this.responseType || undefined
+            },
             beforeSend: (xhr) => {
                 if (this.credentials) {
                     xhr.setRequestHeader(
@@ -75,7 +95,38 @@ class CallBora {
                 }
             },
             dataType: this.d,
-            success: (data) => {
+            success: (data, status, xhr) => {
+                // Handle automatic download
+                if (this.downloadEnabled) {
+
+                    let blob = data;
+                    // If jQuery didn’t automatically give blob
+                    if (!(blob instanceof Blob)) {
+                        blob = new Blob([data], { type: xhr.getResponseHeader("Content-Type") });
+                    }
+
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    // If filename not provided, use Content-Disposition header
+                    let filename = this.downloadFilename;
+                    const disposition = xhr.getResponseHeader("Content-Disposition");
+                    if (!filename && disposition && disposition.indexOf("filename=") !== -1) {
+                        filename = disposition.split("filename=")[1].replace(/"/g, "");
+                    }
+                    a.download = filename || "download";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    window.URL.revokeObjectURL(url);
+
+                    if (typeof this.callback === "function") {
+                        this.callback({ success: true, downloaded: true });
+                    }
+
+                    return;
+                }
                 if (typeof this.callback === "function") this.callback(data);
             },
             complete: () => {

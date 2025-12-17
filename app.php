@@ -3,9 +3,9 @@
  * ================================================================
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
- *  Version:    2.1.7
- *  Build ID:   2977F48A9D74
- *  Timestamp:  2025-12-09 03:42:28
+ *  Version:    2.1.8
+ *  Build ID:   C9A524C02D23
+ *  Timestamp:  2025-12-17 19:20:41
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke

@@ -285,4 +285,4 @@ if (typeof window !== 'undefined') {
 
 // Initialize plugin (call plugin init)
 BoraAlerts.init();
-alert('here');
+// alert('here');

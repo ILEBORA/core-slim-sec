@@ -1243,3 +1243,15 @@ if (!function_exists('formatDateStandard')) {
         return date( $date);
     }
 }
+
+if (!function_exists('requireToVar')) {
+	function requireToVar($file = null, $args = []){
+		ob_start();
+		extract($args);
+		// die($file);
+		if($file){  
+			require($file);
+			return ob_get_clean();
+		}
+	}
+}

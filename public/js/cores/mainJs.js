@@ -2557,19 +2557,19 @@ var formJourney = addPlugin(
 
                 // Trigger pre-submit hooks if they exist
                 if (typeof appHooks !== 'undefined') {
-                    appHooks.callHook('form:beforeSubmit', $form);
+                    let result = appHooks.callHook('form:beforeSubmit', $form);
+
+					if (result === false) {
+						console.warn("Submission cancelled by beforeSubmit hook.");
+						return; // IMPORTANT: stop here!
+					}
                 }
 
                 // Execute registered journey or default
-                if (self.journeys[journey]) {
-                    self.journeys[journey]($form, function(resp) {
-                        self._afterSubmit($form, resp);
-                    });
-                } else {
-                    self.default($form, function(resp) {
-                        self._afterSubmit($form, resp);
-                    });
-                }
+                let handler = self.journeys[journey] || self.default;
+				handler($form, function(resp) {
+					self._afterSubmit($form, resp);
+				});
             });
         }
     }

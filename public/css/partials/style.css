@@ -308,7 +308,7 @@ content: "";
 display: block;
 }
 
-.thumb {
+.thumbs {
 -webkit-animation: scale 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
 -moz-animation: scale 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
 animation: scale 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
