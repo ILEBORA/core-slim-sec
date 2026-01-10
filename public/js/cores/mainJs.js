@@ -2632,3 +2632,16 @@ $.fn.attachDragger = (function(){
         attachment = false;
     });
 });
+
+//2026
+function uiTargetToClass(target) {
+    if (typeof target !== 'string') return '';
+
+    // Remove trailing slashes
+    target = target.replace(/\/+$/, '');
+
+    // Normalize to CSS-safe class
+    return target
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, '-');
+}

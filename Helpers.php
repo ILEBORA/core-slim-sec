@@ -177,6 +177,9 @@ function getRequest($method = "POST"){
         case 'REQUEST':
             $post = $_REQUEST;
             break;
+        case 'FILES':
+            $post = $_FILES;
+            break;
         default:
             $post = $_POST;
         break;
@@ -189,6 +192,33 @@ function getRequest($method = "POST"){
 
     return $post;
 }
+
+function getRequestN() {
+    $method = $_SERVER['REQUEST_METHOD'];
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    
+    // Handle simple cases
+    if ($method === 'GET')    return $_GET;
+    if ($method === 'POST' && strpos($contentType, 'multipart/form-data') !== false) {
+        return array_merge($_POST, $_FILES); // files + text fields
+    }
+    if ($method === 'POST')   return $_POST;
+    
+    // Handle API verbs (PUT / PATCH / DELETE)
+    if (in_array($method, ['PUT','PATCH','DELETE'])) {
+        parse_str(file_get_contents('php://input'), $data);
+        return $data ?: [];
+    }
+
+    // Handle JSON bodies
+    if (strpos($contentType, 'application/json') !== false) {
+        return json_decode(file_get_contents('php://input'), true) ?? [];
+    }
+
+    // Fallback
+    return $_REQUEST;
+}
+
 
 
 function getRequestValues($value, $item = "", $blank = false, $default = null){
@@ -260,6 +290,10 @@ function userID():string
     }
     
     return (string) $userID; 
+}
+
+function sessionID(){
+    return getIfSet($_SESSION['client'],'123');
 }
 
 function pass($vars){
@@ -1254,4 +1288,46 @@ if (!function_exists('requireToVar')) {
 			return ob_get_clean();
 		}
 	}
+}
+
+if (!function_exists('mHelper')){
+    /**
+     * @return HelperProxy
+     */
+    function mHelper(): \BoraSlim\Core\Support\HelperResolver
+    {
+        return \BoraSlim\Core\Support\HelperResolver::class;
+    }
+}
+
+//2025 Dec
+function tap(mixed $value, callable $callback): mixed {
+    $callback($value);
+    return $value;
+}
+
+//Cache 
+function cache(): \App\Cache\Cache
+{
+    return new \App\Cache\Cache();
+}
+
+function cache_get(string $key, mixed $default = null): mixed {
+    return cache()->get($key, $default);
+}
+
+function cache_set(string $key, mixed $value, int $ttl = 60): void {
+    cache()->set($key, $value, $ttl);
+}
+
+function cache_remember(string $key, int $ttl, callable $callback): mixed {
+    return cache()->remember($key, $ttl, $callback);
+}
+
+function cache_remember_forever(string $key, callable $callback): mixed {
+    return cache()->rememberForever($key, $callback);
+}
+
+function cache_forget(string $key): void {
+    cache()->delete($key);
 }
