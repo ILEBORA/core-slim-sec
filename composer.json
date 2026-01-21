@@ -39,7 +39,7 @@
       "@composer dump-autoload -o",
       "BoraSlim\\Core\\Tools\\AssetPublisher::publish"
     ]
-  },
+  }, 
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true,
