@@ -51,7 +51,7 @@
     },
     "ilebora-assets": {
       "from": "public",
-      "to": "public/assets"
+      "to": "assets/core"
     }
   },
   "keywords": ["framework", "bora", "php", "core", "slim", "ilebora", "ile bora", "the best"]
