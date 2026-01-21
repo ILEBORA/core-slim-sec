@@ -1,0 +1,20 @@
+/* themes.css */
+
+/* DEFAULT (light) */
+.grids[data-theme="light"] .grid-card {
+  background: #ffffff;
+  color: #111111;
+  border-color: #e5e7eb;
+}
+
+/* DARK */
+.grids[data-theme="dark"] .grid-card {
+  background: #1f2937;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+/* ACCENT */
+.grids[data-theme="accent"] .grid-card {
+  border-left: 4px solid #4f46e5;
+}

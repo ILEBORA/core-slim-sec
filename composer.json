@@ -32,10 +32,12 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "@composer dump-autoload -o"
+      "@composer dump-autoload -o",
+      "BoraSlim\\Core\\Tools\\AssetPublisher::publish"
     ],
     "post-update-cmd": [
-      "@composer dump-autoload -o"
+      "@composer dump-autoload -o",
+      "BoraSlim\\Core\\Tools\\AssetPublisher::publish"
     ]
   },
   "config": {
@@ -46,6 +48,10 @@
   "extra": {
     "branch-alias": {
       "dev-main": "1.0-dev"
+    },
+    "ilebora-assets": {
+      "from": "public",
+      "to": "public/assets"
     }
   },
   "keywords": ["framework", "bora", "php", "core", "slim", "ilebora", "ile bora", "the best"]

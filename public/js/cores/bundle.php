@@ -2,7 +2,7 @@
 require  __DIR__ . '/../../../vendor/autoload.php';
 
 // use BoraSlim\Core\Utils\EnvLoader;
-EnvLoader::load(__DIR__ . '/../../../', 'core-landing');
+EnvLoader::load(__DIR__ . '/../../../', 'wahenga');
 
 $apiBase = rtrim(BASE_URL, '/') .'/api';
 $apiVersion = 'v1';

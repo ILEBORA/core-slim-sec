@@ -103,7 +103,19 @@
 
 /* Overlay + modal */
 .bora-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 9998; display:none; }
-.bora-alert-v2 { position: fixed; top:50%; left:50%; transform: translate(-50%,-50%); background:#fff; border-radius:8px; padding:1.25rem; box-shadow:0 8px 40px rgba(0,0,0,.18); z-index:9999; display:none; min-width:320px; }
+.bora-alert-v2 { 
+  position: fixed; 
+  top:50%; 
+  left:50%; 
+  /* transform: translate(-50%,-50%);  */
+  background:#fff; 
+  border-radius:8px; 
+  padding:1.25rem; 
+  box-shadow:0 8px 40px rgba(0,0,0,.18); 
+  z-index:9999; 
+  display:none; 
+  min-width:320px; 
+}
 .bora-message { margin-bottom: .5rem; }
 .bora-buttons { text-align:right; margin-top:1rem; }
 .bora-btn-ok, .bora-btn-cancel { padding: .45rem .9rem; margin-left:.5rem; border-radius:6px; border: none; cursor:pointer; }

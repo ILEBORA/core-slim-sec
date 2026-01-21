@@ -1,6 +1,7 @@
 // Base popup class
 class BoraPopup {
     constructor(options = {}) {
+        this._id = 'boraPopup_' + Math.random().toString(36).slice(2);
         this.options = Object.assign({
             containerId: 'bora_popup',
             onOpen: null,
@@ -9,6 +10,7 @@ class BoraPopup {
         }, options);
 
         this.init();
+        console.count('BoraPopup constructed');
     }
 
     init() {
@@ -35,14 +37,35 @@ class BoraPopup {
         this.$tabs = this.$popup.find('.chat_hd_tbs');
         this.$close = this.$popup.find('.chat_close .bck');
 
-        this.$close.on('click', () => this.close());
-        this.$popup.on('click', (e) => {
+        this.$close.on(`click.${this._id}`, () => this.close());
+                this.$popup.on(`click.${this._id}`, (e) => {
             if ($(e.target).is(this.$popup)) this.close();
         });
 
-        $(document).on('keyup', (e) => {
+        $(document).on(`keyup.${this._id}`, (e) => {
             if (e.key === "Escape") this.close();
         });
+    }
+
+    destroy() {
+        console.log('DESTROY::' + this._id);
+        // Unbind namespaced events
+        this.$close.off(`.${this._id}`);
+        this.$popup.off(`.${this._id}`);
+        $(document).off(`.${this._id}`);
+
+        // Remove DOM entirely
+        this.$popup.remove();
+
+        // Kill references
+        this.$popup = null;
+        this.$append = null;
+        this.$tabs = null;
+        this.$close = null;
+
+        if (mPGs.activePopup === this) {
+            mPGs.activePopup = null;
+        }
     }
 
     open(urlOrHtml, callback) {
@@ -63,10 +86,9 @@ class BoraPopup {
 
     close() {
         this.$popup.fadeOut(200, () => {
-            this.$append.empty();
-            this.$tabs.empty();
             $('body').css('overflow', '');
             if (this.options.onClose) this.options.onClose();
+             this.destroy();
         });
     }
 

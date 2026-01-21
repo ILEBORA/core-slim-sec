@@ -20,7 +20,6 @@ var BoraAlertsV2 = addPlugin('BoraAlertsV2', {
     container: 'body',
     html: false,
     noButtons: false,
-    showCancelButton: false,
     style: '',
     okText: 'OK',
     cancelText: 'Cancel',
@@ -200,8 +199,6 @@ BoraAlertsV2.addMethods({
     if(!settings.noButtons){
       if (type !== 'alert') buttons.append(this.cancelButton);
       buttons.append(this.okButton);
-    }else if(settings.showCancelButton){
-      buttons.append(this.cancelButton);
     }
     // Append
     $(settings.container).append(this.overlay).append(this.modal);
@@ -212,23 +209,22 @@ BoraAlertsV2.addMethods({
     if ($.fn.center) this.modal.center();
 
     // Submit = OK
-    this.modal.on('submit.BoraAlertsV2', (e) => {
+    this.okButton.on('click.BoraAlertsV2', (e) => {
+    //this.modal.on('submit.BoraAlertsV2', (e) => {
+      // 🔥 If the form has data-bora-skip, do NOT hijack submit
+      if ($(e.target).is('[data-bora-skip]')) return; 
+
       e.preventDefault();
-      // alert(type);
       if (type === 'prompt') {
         var data = this.modal.serializeArray();
-        console.log(data);
         data.forEach(function (item) {
           values[item.name] = item.value;
         });
-        console.log(values);
-        // alert('here');
       } else {
         values = null;
       }
-      
-      defer.resolve(values);
       this.hide(settings);
+      defer.resolve(values);
     });
 
     // Cancel
@@ -282,32 +278,34 @@ BoraAlertsV2.addMethods({
     return promise;
   },
 
-  close(){
-    this.hide(settings);
-    if(typeof defer != 'undefined'){
-      defer.reject();
-    }
-  },
+  update(newHtml, opts = {}) {
+    // If modal isn't open, don't explode
+    if (!this.modal) return this;
 
-  update(newHtml, opts = {}) { // If modal isn't open, don't explode
-    if (!this.modal) return this; 
-    const msg = this.modal.find('.bora-message'); 
-    const prompt = this.modal.find('.bora-prompt'); 
-    const buttons = this.modal.find('.bora-buttons'); 
-    // Choose where to render (full replace, prompt-only, or message-only) 
-    if (opts.target === 'prompt') { 
-      prompt.html(newHtml); 
-    } else if (opts.target === 'message') { 
-      msg.html(newHtml); 
-    } else if (opts.target === 'buttons' && !opts.noButtons) { 
-      buttons.html(newHtml); 
-    } else { 
-      // Full content swap (most common case) 
-      msg.empty(); prompt.empty(); 
-      msg.html(newHtml); 
-    } // Re-center if needed 
-    if ($.fn.center) this.modal.center(); 
-    return this; 
+    const msg     = this.modal.find('.bora-message');
+    const prompt  = this.modal.find('.bora-prompt');
+    const buttons = this.modal.find('.bora-buttons');
+
+    // Choose where to render (full replace, prompt-only, or message-only)
+    if (opts.target === 'prompt') {
+      prompt.html(newHtml);
+    } 
+    else if (opts.target === 'message') {
+      msg.html(newHtml);
+    } 
+    else if (opts.target === 'buttons' && !opts.noButtons) {
+      buttons.html(newHtml);
+    } 
+    else {
+      // Full content swap (most common case)
+      msg.empty();
+      prompt.empty();
+      msg.html(newHtml);
+    }
+
+    // Re-center if needed
+    if ($.fn.center) this.modal.center();
+    return this;
   },
 
   hide(options) {
@@ -329,8 +327,6 @@ BoraAlertsV2.addMethods({
     this.okButton = null;
     this.cancelButton = null;
     this.__loading = false;
-    $('.bora-alert').remove();
-    $('.bora-overlay').remove();
   },
 
   alert(message, options) { return this.show('alert', message, options); },

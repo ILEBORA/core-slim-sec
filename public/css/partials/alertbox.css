@@ -5,11 +5,18 @@
   z-index: 9998; display: none;
 }
 .bora-alert {
-  position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff; border-radius: 8px;
-  padding: 1.25rem; box-shadow: 0 6px 30px rgba(0,0,0,0.2);
-  z-index: 9999; display: none; min-width: 300px;
+  position: fixed; 
+  top: 50%; 
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.25rem; 
+  box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+  z-index: 9999; 
+  display: none; 
+  min-width: 300px;
+  max-width: 700px;
 }
 .bora-message { margin-bottom: .5rem; }
 .bora-buttons { text-align: right; margin-top: 1rem; }

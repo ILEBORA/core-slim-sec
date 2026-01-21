@@ -200,7 +200,7 @@ class FilesystemLoader implements LoaderInterface
 
             throw $e;
         }
-
+        
         if (!isset($this->paths[$namespace])) {
             $this->errorCache[$name] = \sprintf('There are no registered paths for namespace "%s".', $namespace);
 

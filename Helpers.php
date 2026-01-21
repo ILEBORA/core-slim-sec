@@ -21,7 +21,6 @@
  */
 use BoraSlim\Core\App;
 use BoraSlim\Core\DB;
-use BoraSlim\Core;
 
 if (!function_exists('newSession')) {
     function newSession(array $settings = []) {
@@ -46,6 +45,15 @@ if (!function_exists('newSession')) {
 
             session_start();
         }
+    }
+}
+
+use BoraSlim\Core\Support\Session;
+
+if (!function_exists('Session')) {
+    function Session(): string
+    {
+        return Session::class;
     }
 }
 
@@ -1330,4 +1338,16 @@ function cache_remember_forever(string $key, callable $callback): mixed {
 
 function cache_forget(string $key): void {
     cache()->delete($key);
+}
+
+if(!function_exists('abort')){
+    function abort(int $status, string $message = '')
+    {
+        http_response_code($status);
+        echo json_encode([
+            'ok' => false,
+            'error' => $message
+        ]);
+        exit;
+    }
 }
