@@ -1,32 +1,77 @@
-{# Base table grid view (grids/table.twig) #}
-this
-<table class="grid-table {{ config.class|default('') }}">
-  <thead>
-    <tr>
-      {% block grid_head %}
-        {% for col in config.columns %}
-          <th>{{ col|capitalize }}</th>
+{# Base Table Grid View (grids/table.twig) #}
+<div class="grid-wrapper" data-grid-type="{{grid.type|default('table')}}" data-grid-id="{{ grid.id|default('') }}" data-grid-unique="{{ config.unique }}">
+  <table 
+    class="grid-table table {{ config.class|default('') }}"
+    data-grid-unique="{{ config.unique }}"
+    data-grid="{{ config.type|default('table') }}"
+    table-responsive table-opt-margin table-striped table-sm 
+  >
+    <thead>
+      <tr class="grid-item">
+        {% block grid_head %}
+          {% for col in config.columns %}
+            <th>{{ col|capitalize }}</th>
+          {% endfor %}
+        {% endblock %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% block grid_body %}
+
+        {% for row in data.data %}
+          <tr>
+            {% for col in config.columns %}
+              <td>{{ attribute(row, col)|raw }}</td>
+            {% endfor %}
+          </tr>
+        {% else %}
+          {% block grid_empty %}
+            <tr><td colspan="{{ config.columns|length }}">No data found</td></tr>
+          {% endblock %}
         {% endfor %}
       {% endblock %}
-    </tr>
-  </thead>
+    </tbody>
 
-  <tbody>
-    {% block grid_body %}
-      {% for row in data %}
-        <tr class="table-row">
-          {% for col in config.columns %}
-            <td>{{ attribute(row, col) }}</td>
-          {% endfor %}
+    {% block grid_footer %}
+      <tfoot>
+        <tr>
+          <td colspan="{{ config.columns|length }}">
+		  	
+          </td>
         </tr>
-      {% else %}
-        {% block grid_empty %}
-          <tr><td colspan="{{ config.columns|length }}">No data found</td></tr>
-        {% endblock %}
-      {% endfor %}
+      </tfoot>
     {% endblock %}
-  </tbody>
+  </table>
+</div>
 
-  {% block grid_footer %}
-  {% endblock %}
-</table>
+
+{[ pagination|raw ]}
+
+
+<style>
+.grid-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.pagination-controls a {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ddd;
+  margin: 0 0.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.pagination-controls a.active, .pagination-controls button.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+</style>
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script>
+
+</script>

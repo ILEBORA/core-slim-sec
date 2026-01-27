@@ -1,0 +1,52 @@
+<h1 class="page-title">Admin Interface Not Available</h1>
+
+<div class="alert alert-warning">
+    <strong>{{ module.name }}</strong> does not expose an administrative interface.
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Module</th>
+        <td>{{ module.name }}</td>
+    </tr>
+    <tr>
+        <th>Version</th>
+        <td>{{ module.version }}</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>
+            {% if module.enabled %}
+                <span class="badge bg-success">Enabled</span>
+            {% else %}
+                <span class="badge bg-danger">Disabled</span>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Admin Declared</th>
+        <td>
+            {% if module.hasAdmin() %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<p class="text-muted mt-3">
+    This usually means one of the following:
+</p>
+
+<ul class="text-muted">
+    <li>The module is backend-only</li>
+    <li>The module has not implemented an admin controller</li>
+    <li>The admin capability is disabled in <code>meta()</code></li>
+</ul>
+
+<div class="mt-4">
+    <span onclick="appUI.content.loadPage('bo/control')" class="btn btn-secondary">
+        Back to Modules
+    </span>
+</div>
