@@ -1353,14 +1353,38 @@ if(!function_exists('abort')){
 }
 
 /* Translator */
+if (!function_exists('i18n_current_lang')) {
+    function i18n_current_lang(): string
+    {
+        // EARLY bootstrap (before myApp / ModManage)
+        if (!empty($_SESSION['siteprefs']['lang'])) {
+            return $_SESSION['siteprefs']['lang'];
+        }
+
+        // LATE runtime (after app is ready)
+        // if (function_exists('myApp')) {
+        //     try {
+        //         return ModManage()->ui->manager->getSitePrefs()['lang'] ?? 'en';
+        //     } catch (\Throwable $e) {}
+        // }
+
+        return 'en';
+    }
+}
+
 use BoraSlim\Core\I18n\I18nBootstrap;
+if(!function_exists('getTranslator')){
+    function getTranslator(){
+        return I18nBootstrap::translator();
+    }
+}
+
 if(!function_exists('__t')){
     function __t(string $key, ?string $lang = null): string
     {
         $translator = I18nBootstrap::translator();
-        $configs = ModManage()->ui->manager->getSitePrefs();
 
-        $lang ??= $configs ['lang'] ?? 'en';
+        $lang = i18n_current_lang();
 
         return $translator->translate($key, $lang);
     }
@@ -1372,9 +1396,8 @@ if (!function_exists('i18n_register_core')) {
     {
         $translator = I18nBootstrap::translator();
         $loader     = I18nBootstrap::loader();
-        $configs    = ModManage()->ui->manager->getSitePrefs();
 
-        $lang = $configs['lang'] ?? 'en';
+        $lang = i18n_current_lang();
 
         // Always register merged EN
         $translator->register(
@@ -1397,9 +1420,8 @@ if (!function_exists('i18n_register_module')) {
     {
         $translator = I18nBootstrap::translator();
         $loader     = I18nBootstrap::loader();
-        $configs    = ModManage()->ui->manager->getSitePrefs();
 
-        $lang = $configs['lang'] ?? 'en';
+        $lang = i18n_current_lang();
         $domain = strtolower($module);
 
         $translator->register(
