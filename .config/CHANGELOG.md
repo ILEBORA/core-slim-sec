@@ -20,8 +20,8 @@ aa8e93a Added public folder with js and css - testing
 
 ### New Commits
 0dc5859 Fixed: Session newSession(ACS)
-cb1a9ce New version 1.0.26 with PWA support
-590b849 Added: PWA support
+cb1a9ce New version 1.0.26 with Pwa support
+590b849 Added: Pwa support
 3f7c5b5 New patch version
 d3e67f5 Fixed: disable logging
 22a3c0d Fixed: view defaults
