@@ -1,5 +1,4 @@
 <?php
-use EnvLoader;
 
 class AppJsKernel
 {
@@ -9,12 +8,12 @@ class AppJsKernel
 
     public function __construct(
         string $rootDir,
-        string $env = 'wahenga'
+        string $env = 'boraslim'
     ) {
         $this->root = rtrim($rootDir, '/');
         $this->env  = $env;
 
-        EnvLoader::load($this->root, $this->env);
+        // EnvLoader::load($this->root, $this->env);
     }
 
     /**
@@ -40,7 +39,7 @@ class AppJsKernel
     protected function bootstrap(): void
     {
         require_once __DIR__ . '/JsHooks.php';
-        require_once __DIR__ . '/helpers.php';
+        require_once __DIR__ . '/assets_helper.php';
         require $this->root . '/src/engine.php';
     }
 

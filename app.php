@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.9
- *  Build ID:   BD527A0E03CF
- *  Timestamp:  2026-01-27 15:38:51
+ *  Build ID:   3F4CB230C41B
+ *  Timestamp:  2026-01-30 12:45:42
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -193,6 +193,17 @@ if (
 
 try {
     eval($decrypted);
+
+    $manifest = require 'asset-manifest.php';
+    if (($manifest['asset_api'] ?? 0) < \BoraSlim\Core\Assets\AssetContract::REQUIRED_ASSET_API) {
+        throw new RuntimeException(
+            sprintf(
+                'Core asset repo outdated. Required asset API %d, found %d. Run composer update.',
+                \BoraSlim\Core\Assets\AssetContract::REQUIRED_ASSET_API,
+                $manifest['asset_api'] ?? 0
+            )
+        );
+    }
 } catch (Throwable $e) {
     die("Core execution error: " . $e->getMessage());
 }

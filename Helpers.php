@@ -1351,3 +1351,80 @@ if(!function_exists('abort')){
         exit;
     }
 }
+
+/* Translator */
+use BoraSlim\Core\I18n\I18nBootstrap;
+if(!function_exists('__t')){
+    function __t(string $key, ?string $lang = null): string
+    {
+        $translator = I18nBootstrap::translator();
+        $configs = ModManage()->ui->manager->getSitePrefs();
+
+        $lang ??= $configs ['lang'] ?? 'en';
+
+        return $translator->translate($key, $lang);
+    }
+}
+
+
+if (!function_exists('i18n_register_core')) {
+    function i18n_register_core(string $domain): void
+    {
+        $translator = I18nBootstrap::translator();
+        $loader     = I18nBootstrap::loader();
+        $configs    = ModManage()->ui->manager->getSitePrefs();
+
+        $lang = $configs['lang'] ?? 'en';
+
+        // Always register merged EN
+        $translator->register(
+            $domain,
+            'en',
+            $loader->loadMergedCore($domain, 'en')
+        );
+
+        if ($lang !== 'en') {
+            $messages = $loader->loadMergedCore($domain, $lang);
+            if ($messages) {
+                $translator->register($domain, $lang, $messages);
+            }
+        }
+    }
+}
+
+if (!function_exists('i18n_register_module')) {
+    function i18n_register_module(string $module): void
+    {
+        $translator = I18nBootstrap::translator();
+        $loader     = I18nBootstrap::loader();
+        $configs    = ModManage()->ui->manager->getSitePrefs();
+
+        $lang = $configs['lang'] ?? 'en';
+        $domain = strtolower($module);
+
+        $translator->register(
+            $domain,
+            'en',
+            $loader->loadModule($domain, 'en')
+        );
+
+        if ($lang !== 'en') {
+            $messages = $loader->loadModule($domain, $lang);
+            if ($messages) {
+                $translator->register($domain, $lang, $messages);
+            }
+        }
+    }
+}
+
+use BoraSlim\Core\Contracts\Modules\ModuleService;
+if (!function_exists('i18n_register_auto')) {
+    function i18n_register_auto(ModuleService $service): void
+    {
+        if ($service->isCore()) {
+            i18n_register_core($service->getDomain());
+        } else {
+            i18n_register_module($service->getName());
+        }
+    }
+}
