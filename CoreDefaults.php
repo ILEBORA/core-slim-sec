@@ -83,4 +83,6 @@ if (php_sapi_name() === 'cli') {
     $mode = $_GET['mode'];
 }
 
+//Constants
 define('APP_MODE', $mode);
+(!defined('CORE_PUBLIC_PATH')) ? define('CORE_PUBLIC_PATH', '/vendor/ilebora/core-slim-sec/public/core') : '';

@@ -1,3 +1,27 @@
+## [1.0.46] - 2026-01-30
+- patch version bump
+
+### New Commits
+9165e8c Fixed core
+f2f568e Testing language translation
+31a86c8 New stable tests
+2db70da Testing Jskennel
+928751d Test AssetPublisher 2
+292835a Test AssetPublisher
+ee75a22 Added Asset Publisher
+ff6eb9f Test sync
+5a3ee24 New version
+04a3f0f Updates: New Helper methods formatFileSize
+3150589 New version
+943abac Added: User models
+8c41f6c Added: widgets.css, dashboard.css, popup.css and  BoraPopup + .md
+2a62088 Added Journey Plugin to cores
+cdc984b Added journey plugin
+8b70a41 Fixed ModuleLayerController added
+2d76449 Synced the repo public folder for assets
+c8a5297 Added DB Migrate to module boot logic
+110f433 Fixed: Core integrity missmatch 2
+
 ## [1.0.24] - 2025-11-06
 - patch version bump
 
