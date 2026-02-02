@@ -1,27 +1,27 @@
 {
-    "control.accept": "Ombi limekubaliwa",
-    "control.created": "Rasilimali imeundwa kikamilifu",
-    "control.updated": "Rasilimali imesasishwa kikamilifu",
-    "control.deleted": "Rasilimali imefutwa kikamilifu",
+    "accept": "Ombi limekubaliwa",
+    "created": "Rasilimali imeundwa kikamilifu",
+    "updated": "Rasilimali imesasishwa kikamilifu",
+    "deleted": "Rasilimali imefutwa kikamilifu",
 
-    "control.unauthorized": "Uthibitisho wa mtumiaji unahitajika",
-    "control.forbidden": "Huruhusiwi kufikia rasilimali hii",
-    "control.permission": "Huna ruhusa ya kutosha kuchukua hatua hii",
+    "unauthorized": "Uthibitisho wa mtumiaji unahitajika",
+    "forbidden": "Huruhusiwi kufikia rasilimali hii",
+    "permission": "Huna ruhusa ya kutosha kuchukua hatua hii",
 
-    "control.module_exists": "Moduli tayari ipo",
-    "control.module_not_found": "Moduli haijapatikana",
-    "control.module_disabled": "Moduli imezimwa",
-    "control.module_locked": "Moduli imefungwa",
+    "module_exists": "Moduli tayari ipo",
+    "module_not_found": "Moduli haijapatikana",
+    "module_disabled": "Moduli imezimwa",
+    "module_locked": "Moduli imefungwa",
 
-    "control.invalid_module_data": "Taarifa za moduli si sahihi",
-    "control.invalid_action": "Hatua iliyoombwa si halali",
-    "control.invalid_template": "Mipangilio ya kiolezo si sahihi",
-    "control.invalid_invitation": "Mwaliko si halali au muda wake umeisha",
-    "control.method_not_allowed": "Mbinu ya HTTP hairuhusiwi kwa anwani hii",
-    "control.action_not_allowed": "Hatua hairuhusiwi katika hali ya sasa",
+    "invalid_module_data": "Taarifa za moduli si sahihi",
+    "invalid_action": "Hatua iliyoombwa si halali",
+    "invalid_template": "Mipangilio ya kiolezo si sahihi",
+    "invalid_invitation": "Mwaliko si halali au muda wake umeisha",
+    "method_not_allowed": "Mbinu ya HTTP hairuhusiwi kwa anwani hii",
+    "action_not_allowed": "Hatua hairuhusiwi katika hali ya sasa",
 
-    "control.conflict": "Ombi linakinzana na hali ya sasa ya mfumo",
-    "control.operation_failed": "Utekelezaji wa operesheni umeshindikana",
-    "control.internal_error": "Hitilafu ya ndani ya mfumo imetokea",
-    "control.service_unavailable": "Huduma haipatikani kwa muda huu"
+    "conflict": "Ombi linakinzana na hali ya sasa ya mfumo",
+    "operation_failed": "Utekelezaji wa operesheni umeshindikana",
+    "internal_error": "Hitilafu ya ndani ya mfumo imetokea",
+    "service_unavailable": "Huduma haipatikani kwa muda huu"
 }

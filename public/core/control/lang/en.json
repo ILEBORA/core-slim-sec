@@ -1,27 +1,27 @@
 {
-    "control.accept": "Request accepted",
-    "control.created": "Resource created successfully",
-    "control.updated": "Resource updated successfully",
-    "control.deleted": "Resource deleted successfully",
+    "accept": "Request accepted",
+    "created": "Resource created successfully",
+    "updated": "Resource updated successfully",
+    "deleted": "Resource deleted successfully",
 
-    "control.unauthorized": "Authentication required",
-    "control.forbidden": "Access to this resource is forbidden",
-    "control.permission": "You do not have sufficient permission to perform this action",
+    "unauthorized": "Authentication required",
+    "forbidden": "Access to this resource is forbidden",
+    "permission": "You do not have sufficient permission to perform this action",
 
-    "control.module_exists": "Module already exists",
-    "control.module_not_found": "Module not found",
-    "control.module_disabled": "Module is disabled",
-    "control.module_locked": "Module is locked",
+    "module_exists": "Module already exists",
+    "module_not_found": "Module not found",
+    "module_disabled": "Module is disabled",
+    "module_locked": "Module is locked",
 
-    "control.invalid_module_data": "Invalid module data provided",
-    "control.invalid_action": "Invalid action requested",
-    "control.invalid_template": "Invalid template configuration",
-    "control.invalid_invitation": "Invalid or expired invitation",
-    "control.method_not_allowed": "HTTP method not allowed for this endpoint",
-    "control.action_not_allowed": "Action not allowed in the current state",
+    "invalid_module_data": "Invalid module data provided",
+    "invalid_action": "Invalid action requested",
+    "invalid_template": "Invalid template configuration",
+    "invalid_invitation": "Invalid or expired invitation",
+    "method_not_allowed": "HTTP method not allowed for this endpoint",
+    "action_not_allowed": "Action not allowed in the current state",
 
-    "control.conflict": "Request conflicts with current system state",
-    "control.operation_failed": "Operation failed to complete",
-    "control.internal_error": "An internal system error occurred",
-    "control.service_unavailable": "Service is temporarily unavailable"
+    "conflict": "Request conflicts with current system state",
+    "operation_failed": "Operation failed to complete",
+    "internal_error": "An internal system error occurred",
+    "service_unavailable": "Service is temporarily unavailable"
 }
