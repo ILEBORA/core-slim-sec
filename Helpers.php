@@ -289,7 +289,7 @@ function userIP(){
 
 function userID():string
 {
-    $userID = ''; //TODO:: get userID
+    $userID = $_SESSION['id']??''; //TODO:: get userID
 
     if (isset($_SESSION['access_token'])) {
         $payload = \App\Utils\Utils::validToken($_SESSION['access_token']);

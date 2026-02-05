@@ -4,21 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
     <title>Access Denied</title>
-    <base href="{{base_url}}">
+    <base href="/">
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/branding/favicon.ico">
-    <meta name="description" content="{{ meta_description }}">
-    <meta name="keywords" content="{{ meta_keywords }}">
-    <meta name="author" content="{{ meta_author }}">
-    <meta name="robots" content="{{ meta_robots }}">
+    <meta name="description" content="error">
+    <meta name="keywords" content="error">
+    <meta name="author" content="ilebora">
+    <meta name="robots" content="">
 
-    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="canonical" href="/">
 
-    {# Optional Open Graph tags for social media sharing #}
-    <meta property="og:title" content="{{ page_title ~ ' | ' ~ app_name }}">
-    <meta property="og:description" content="{{ meta_description }}">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ canonical_url }}">
-    <meta property="og:site_name" content="{{ app_name }}">
+    <meta property="og:url" content="">
+    <meta property="og:site_name" content="">
     
     <style>
         body {
@@ -62,20 +61,20 @@
 <body>
     <div class="notice">
         <h1>🚫 Access Denied</h1>
-        <p>{{message|default('You do not have permission to view this page.')}}</p>
+        <p>Session Expired!</p>
         <div class="redirect">
             Redirecting you to the homepage in 
-            <span id="countdown">{{ redirectDelay / 1000 }}</span> seconds...
+            <span id="countdown">10000</span> seconds...
         </div>
-        <a href="{{ redirectUrl }}" class="btn" onclick="redirectTo('{{ redirectUrl }}',true); return false;">
+        <a href="" class="btn" onclick="redirectTo('',true); return false;">
             Go Back to Home
         </a>
     </div>
 
     <script>
-        let countdown = {{ redirectDelay / 1000 }};
+        let countdown = 10000;
         let countdownEl = document.getElementById('countdown');
-        let redirectUrl = "{{ redirectUrl }}";
+        let redirectUrl = "";
 
         function redirectTo(url, force = false) {
             if (force) {

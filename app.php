@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   E06FFABD1E4A
- *  Timestamp:  2026-02-02 10:08:59
+ *  Build ID:   51AFD75BE4CA
+ *  Timestamp:  2026-02-05 09:45:14
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -138,7 +138,7 @@ $computedHash = hash('sha256', $encrypted);
 if (file_exists($hashPath)) {
     $expectedHash = trim(file_get_contents($hashPath));
     if (!hash_equals($expectedHash, $computedHash)) {
-        http_response_code(500);
+        //http_response_code(500);
         error_log("❌ Integrity check failed! Core file may be corrupted or tampered with.");
         die("❌ Integrity check failed! Core file may be corrupted or tampered with.");
     }
@@ -147,12 +147,12 @@ if (file_exists($hashPath)) {
     if (preg_match('/SHA256:\s*([a-f0-9]{64})/i', $encrypted, $match)) {
         $expectedHash = $match[1];
         if (!hash_equals($expectedHash, $computedHash)) {
-            http_response_code(500);
+            //http_response_code(500);
             error_log("❌ Embedded signature mismatch. Aborting execution.");
             die("❌ Embedded signature mismatch. Aborting execution.");
         }
     } else {
-        http_response_code(500);
+        //http_response_code(500);
         error_log("⚠️ No integrity signature found for core file.");
         die("⚠️ No integrity signature found for core file.");
     }
@@ -182,7 +182,7 @@ if (
     !preg_match('/namespace\s+[a-zA-Z0-9_\\\\]+;/', $decrypted)
 ) {
     $errorFile = __DIR__ . '/resources/core-decryption-error.html';
-    http_response_code(500);
+    //http_response_code(500);
     if (file_exists($errorFile)) {
         readfile($errorFile);
     } else {
@@ -191,8 +191,61 @@ if (
     exit;
 }
 
+// ==============================
+// 🔐 JS CORE LOADER (NO EXECUTION)
+// ==============================
+
+$jsCoreDecrypted = null;
+
+if (file_exists($jsCachePath)) {
+
+    $jsEncrypted = file_get_contents($jsCachePath);
+    $jsComputedHash = hash('sha256', $jsEncrypted);
+
+    if (file_exists($jsHashPath)) {
+        $jsExpectedHash = trim(file_get_contents($jsHashPath));
+
+        if (!hash_equals($jsExpectedHash, $jsComputedHash)) {
+            //http_response_code(500);
+            error_log("❌ JS Core integrity check failed.");
+            // die("❌ JS Core integrity check failed.");
+        }
+    } else {
+        //http_response_code(500);
+        error_log("❌ JS Core hash missing.");
+        die("❌ JS Core hash missing.");
+    }
+
+    // Decrypt JS core
+    $jsCoreDecrypted = openssl_decrypt(
+        $jsEncrypted,
+        'AES-256-CTR',
+        $clientSecret,
+        0,
+        $clientIv
+    );
+
+    // Sanity checks (VERY important)
+    if (
+        $jsCoreDecrypted === false ||
+        !is_string($jsCoreDecrypted) ||
+        strlen(trim($jsCoreDecrypted)) < 50 ||
+        !str_contains($jsCoreDecrypted, '@bora:chunk start')
+    ) {
+        //http_response_code(500);
+        error_log("❌ JS Core decryption sanity check failed.");
+        die("❌ JS Core decryption sanity check failed.");
+    }
+
+} else {
+    // JS core optional, but log loudly
+    error_log("⚠️ JS Core not found. UI capabilities will be limited.");
+}
+
 try {
     eval($decrypted);
+
+    $GLOBALS['__BORA_JS_CORE__'] = $jsCoreDecrypted;
 
     $manifest = require 'asset-manifest.php';
     if (($manifest['asset_api'] ?? 0) < \BoraSlim\Core\Assets\AssetContract::REQUIRED_ASSET_API) {

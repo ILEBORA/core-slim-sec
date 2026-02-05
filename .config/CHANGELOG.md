@@ -1,3 +1,10 @@
+## [1.0.47] - 2026-02-05
+- patch version bump
+
+### New Commits
+6f45486 Fixes
+8d53e7c Fixed: @coreassets path missmatch
+
 ## [1.0.46] - 2026-01-30
 - patch version bump
 
