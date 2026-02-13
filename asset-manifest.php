@@ -1,7 +1,7 @@
 <?php
 return array (
-  'asset_api' => 3,
-  'generated_at' => '2026-02-05T09:45:15+03:00',
+  'asset_api' => 4,
+  'generated_at' => '2026-02-13T13:05:03+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (
@@ -9,6 +9,12 @@ return array (
     array (
       'js' => true,
       'css' => false,
+      'img' => false,
+    ),
+    'CoreBilling' => 
+    array (
+      'js' => true,
+      'css' => true,
       'img' => false,
     ),
     'Form' => 
@@ -24,6 +30,12 @@ return array (
       'img' => false,
     ),
     'People' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'System' => 
     array (
       'js' => true,
       'css' => true,

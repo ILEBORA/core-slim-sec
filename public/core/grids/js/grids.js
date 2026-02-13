@@ -1,6 +1,6 @@
 /**
  * Core Grids Plugin
- * Location: assets/core/grids/js/grids.js
+ * Location: assets/core/grids/js/grids.js k
  */
 
 appUI.grids = addPlugin(
@@ -158,3 +158,4 @@ appUI.grids = addPlugin(
 // Optional
 appUI.grids.setDebug(true);
 appUI.grids.init();
+// alert('Grids core 4');

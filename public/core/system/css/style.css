@@ -1,0 +1,19 @@
+ul.perm-list{
+    padding: 2px;
+}
+ul.perm-list li{
+    list-style: none;
+    padding:5px;
+}
+ul.perm-list.inner  li{
+    border:1px #ccc dotted;
+}
+ul.perm-list li.active{
+    background:#FFCC33;
+    margin-bottom: 1px;
+}
+
+ul.perm-list li.active.completed{
+    background:#33ff33;
+    margin-bottom: 1px;
+} 

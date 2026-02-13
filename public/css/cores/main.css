@@ -156,7 +156,7 @@ i,b,em{
 section{
     border-radius:0 !important;
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .container .content-section:nth-child(odd) {

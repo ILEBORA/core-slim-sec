@@ -137,7 +137,7 @@
 .bora-notifier { position: fixed; z-index: 10020; pointer-events: none; }
 .bora-pos-bottom-right { right: 1rem; bottom: 1rem; }
 .bora-pos-bottom-left  { left: 1rem; bottom: 1rem; }
-.bora-pos-top-right    { right: 1rem; top: 1rem; }
+.bora-pos-top-right    { right: 1rem; top: 3rem; }
 .bora-pos-top-left     { left: 1rem; top: 1rem; }
 .bora-pos-top-center   { left:50%; transform:translateX(-50%); top:1rem; }
 .bora-pos-bottom-center{ left:50%; transform:translateX(-50%); bottom:1rem; }

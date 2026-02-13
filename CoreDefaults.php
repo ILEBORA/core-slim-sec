@@ -85,4 +85,4 @@ if (php_sapi_name() === 'cli') {
 
 //Constants
 define('APP_MODE', $mode);
-(!defined('CORE_PUBLIC_PATH')) ? define('CORE_PUBLIC_PATH', 'vendor/ilebora/core-slim-sec/public/core') : '';
+(!defined('CORE_PUBLIC_PATH')) ? define('CORE_PUBLIC_PATH', '/vendor/ilebora/core-slim-sec/public/core') : '';

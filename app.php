@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   51AFD75BE4CA
- *  Timestamp:  2026-02-05 09:45:14
+ *  Build ID:   7F9437E3C1F6
+ *  Timestamp:  2026-02-13 13:05:03
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -70,6 +70,9 @@ $hashPath    = $cachePath . '.hash';
 $versionFile = $cacheDir . '/.core.version';
 $defaultVersion = 'v1.0.0';
 
+$jsCachePath = $cacheDir . '/.js-core.cached.bora';
+$jsHashPath    = $cachePath . '.js-core.cached.bora.hash';
+
 // --- Version setup ---
 if (!file_exists($versionFile)) {
     file_put_contents($versionFile, $defaultVersion);
@@ -123,6 +126,32 @@ if ($remoteVersion && $currentVersion && version_compare($currentVersion, $remot
     $newHash = hash('sha256', $response);
     file_put_contents($hashPath, $newHash);
 
+    // Dublicate for JS
+    if (!isSameOrigin(CORE_SERVER)) {
+        $response = @file_get_contents(
+            CORE_SERVER . "/download-js?client_id=" . urlencode(CORE_CLIENT_ID)
+        );
+    } else {
+        if (function_exists('handleCoreDownload')) {
+            $response = handleCoreDownload(CORE_CLIENT_ID);
+        } else {
+            error_log("❌ Local download handler not found.");
+            die("Local download handler not found.");
+        }
+    }
+
+    if (!$response) {
+        error_log("❌ Failed to download new core.");
+        die("Failed to download new core.");
+    }
+
+    file_put_contents($jsCachePath, $response);
+    // file_put_contents($versionFile, $remoteVersion);
+
+    //create a hash
+    $newHash = hash('sha256', $response);
+    file_put_contents($jsHashPath, $newHash);
+
 }
 
 // --- 🔐 INTEGRITY VERIFICATION ---
@@ -156,6 +185,36 @@ if (file_exists($hashPath)) {
         error_log("⚠️ No integrity signature found for core file.");
         die("⚠️ No integrity signature found for core file.");
     }
+}
+function secureEval(string $code): void
+{
+    if (debugDetected()) {
+        throw new \RuntimeException("Debug environment detected.");
+    }
+
+    eval($code);
+}
+function debugDetected(): bool
+{
+    return extension_loaded('xdebug')
+        || ini_get('xdebug.mode')
+        //|| ini_get('display_errors') === '1'
+        ;
+}
+$signatureFile = __DIR__ . '/app.sig';
+if (!file_exists($signatureFile)) {
+    die("Missing loader signature.");
+}
+$signature = base64_decode(file_get_contents($signatureFile));
+$data = file_get_contents(__FILE__);
+$ok = openssl_verify(
+    $data,
+    $signature,
+    $publicKey,
+    OPENSSL_ALGO_SHA256
+);
+if ($ok !== 1) {
+    die("Loader integrity compromised.");
 }
 
 // Validate
@@ -243,9 +302,13 @@ if (file_exists($jsCachePath)) {
 }
 
 try {
-    eval($decrypted);
+    secureEval($decrypted);
+    $decrypted = str_repeat("\0", strlen($decrypted));
+    unset($decrypted);
 
     $GLOBALS['__BORA_JS_CORE__'] = $jsCoreDecrypted;
+    $jsCoreDecrypted = str_repeat("\0", strlen($jsCoreDecrypted));
+    unset($jsCoreDecrypted);
 
     $manifest = require 'asset-manifest.php';
     if (($manifest['asset_api'] ?? 0) < \BoraSlim\Core\Assets\AssetContract::REQUIRED_ASSET_API) {
@@ -260,5 +323,4 @@ try {
 } catch (Throwable $e) {
     die("Core execution error: " . $e->getMessage());
 }
-
 
