@@ -7,6 +7,7 @@ EnvLoader::load(__DIR__ . '/../../../', 'wahenga');
 $apiBase = rtrim(BASE_URL, '/') .'/api';
 $apiVersion = 'v1';
 ?>
+
 class BoraConfig {
     static API_BASE = "<?= $apiBase ?>";
     static API_VERSION = "<?= $apiVersion ?>";

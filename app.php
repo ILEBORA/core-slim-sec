@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   F04584B6B3C6
- *  Timestamp:  2026-02-13 13:33:36
+ *  Build ID:   6D5E9B817C47
+ *  Timestamp:  2026-02-13 14:43:12
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -71,7 +71,7 @@ $versionFile = $cacheDir . '/.core.version';
 $defaultVersion = 'v1.0.0';
 
 $jsCachePath = $cacheDir . '/.js-core.cached.bora';
-$jsHashPath    = $cachePath . '.hash';
+$jsHashPath    = $jsCachePath . '.hash';
 
 // --- Version setup ---
 if (!file_exists($versionFile)) {
@@ -215,6 +215,8 @@ $ok = openssl_verify(
     OPENSSL_ALGO_SHA256
 );
 if ($ok !== 1) {
+    error_log("Integrity failure detected");
+    @file_get_contents(CORE_SERVER."/tamper?client=" . CORE_CLIENT_ID);
     die("Loader integrity compromised.");
 }
 unset($signature, $data);
@@ -222,7 +224,7 @@ unset($signature, $data);
 // Validate
 $clientIv = hex2bin(CORE_CLIENT_IV);
 $clientSecret = CORE_SEC_PASSWORD;
-if (strlen($clientSecret) < 32 || strlen($clientSecret) < 32) {
+if (strlen($clientSecret) < 32 || strlen($clientIv) < 16) {
     throw new \RuntimeException("Invalid client secret or IV format.");
 }
 

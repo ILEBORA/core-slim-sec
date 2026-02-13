@@ -158,4 +158,3 @@ appUI.grids = addPlugin(
 // Optional
 appUI.grids.setDebug(true);
 appUI.grids.init();
-// alert('Grids core 4');
