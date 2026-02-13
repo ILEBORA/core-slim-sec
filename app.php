@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   66F9FEBF2B2D
- *  Timestamp:  2026-02-13 13:30:55
+ *  Build ID:   F04584B6B3C6
+ *  Timestamp:  2026-02-13 13:33:36
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -288,10 +288,10 @@ if (file_exists($jsCachePath)) {
 
     // Sanity checks (VERY important)
     if (
-        $jsCoreDecrypted === false ||
-        !is_string($jsCoreDecrypted) ||
-        strlen(trim($jsCoreDecrypted)) < 50 ||
-        !str_contains($jsCoreDecrypted, '@bora:chunk start')
+        $jsCoreDecrypted === false 
+        || !is_string($jsCoreDecrypted)
+        || strlen(trim($jsCoreDecrypted)) < 50
+        //|| !str_contains($jsCoreDecrypted, '@bora:chunk start')
     ) {
         //http_response_code(500);
         error_log("❌ JS Core decryption sanity check failed.");
