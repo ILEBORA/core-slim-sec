@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   7F9437E3C1F6
- *  Timestamp:  2026-02-13 13:05:03
+ *  Build ID:   5023C25483F2
+ *  Timestamp:  2026-02-13 13:25:06
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -207,6 +207,7 @@ if (!file_exists($signatureFile)) {
 }
 $signature = base64_decode(file_get_contents($signatureFile));
 $data = file_get_contents(__FILE__);
+$publicKey = base64_decode('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdThqVE5ZZzF3RmsxeFdaYzdsa0UNCktUUTNDSlczb2JTYkcwcmdDUVlsZVRMNU1ZZEdpcEt3UVI3QWxrcWNNYTFxdVc4Z1VnVDFZcFhYNEE2Qkg3bk0NCk9obDJpaG5GRTVva05MZGxBbFJPdFI0ek56UFhnbEVtT3B3b0xWZ3NmajVWcnFsVnkxcGJ5UmFWS3pxT3VhRTQNCnZUa1RtajhUdVgrazN1U0tKNnFtWnVSRFlZV0h0eDlaazY2dVZlWnFzL1F4SU5qaHNjRzFPUlEzV00yaTFZNWsNCnBtQVJ6VUxqeW5hcVFLMmJ0UFhYQ1NDUmdKeTJ5RFBIR2RPMVFDRWM1d1pQeE1sMzlmTWMzOU5aQmlXeGVSNG4NCjBDVjlyME5IMFA5TDZwTDg4bVQ0RWl6c0NLVWxCL3ZFSkl6TjRKa3ZzWUFDczFEOXNnbU9YS1Jvbm9WbkRRM00NCnhRSURBUUFCDQotLS0tLUVORCBQVUJMSUMgS0VZLS0tLS0NCg==')
 $ok = openssl_verify(
     $data,
     $signature,
@@ -216,6 +217,7 @@ $ok = openssl_verify(
 if ($ok !== 1) {
     die("Loader integrity compromised.");
 }
+unset($signature, $data);
 
 // Validate
 $clientIv = hex2bin(CORE_CLIENT_IV);
@@ -323,4 +325,5 @@ try {
 } catch (Throwable $e) {
     die("Core execution error: " . $e->getMessage());
 }
+
 
