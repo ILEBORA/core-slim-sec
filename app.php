@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   F40219F7286D
- *  Timestamp:  2026-02-13 13:28:02
+ *  Build ID:   66F9FEBF2B2D
+ *  Timestamp:  2026-02-13 13:30:55
  *  License:    Proprietary - Unauthorized modification or redistribution prohibited.
  *  Contact:
  *  support@boracore.co.ke
@@ -71,7 +71,7 @@ $versionFile = $cacheDir . '/.core.version';
 $defaultVersion = 'v1.0.0';
 
 $jsCachePath = $cacheDir . '/.js-core.cached.bora';
-$jsHashPath    = $cachePath . '.js-core.cached.bora.hash';
+$jsHashPath    = $cachePath . '.hash';
 
 // --- Version setup ---
 if (!file_exists($versionFile)) {
