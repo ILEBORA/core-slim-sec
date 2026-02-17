@@ -1,0 +1,187 @@
+<?php 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+register_shutdown_function(function () {
+    $err = error_get_last();
+    if ($err) {
+        file_put_contents(
+            __DIR__ . '/../../../../../../../.logs/sse_fatal.log',
+            print_r($err, true),
+            FILE_APPEND
+        );
+    }
+});
+
+
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+// die('here');
+// use BoraSlim\Core\Utils\EnvLoader;
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+require __DIR__ . '/../../../../../../../src/engine.php';
+
+//Proceed
+use BoraSlim\Core\Modules\Realtime\Utils\SSE;
+use BoraSlim\Core\Modules\Realtime\Utils\StopSSEException;
+use BoraSlim\Core\Modules\Realtime\Utils\Event;
+
+// header('Content-type: text/css');
+// header('Cache-control: must-revalidate');
+
+header('Content-Type: text/event-stream');
+header('Cache-Control: no-cache');
+header('Connection: keep-alive');
+header('X-Accel-Buffering: no'); 
+
+$req = json_decode(base64_decode($_GET['req']),true);
+
+$userID     = isset($req['userID']) ? $req['userID'] : 'guest';
+$sessionID  = isset($req['sessionID']) ? $req['sessionID'] : 'null';
+$timer      = isset($req['timer']) ? $req['timer'] : 10;
+$timer      = (int) ($timer * 1000);
+// die($userID );
+
+$ackFile = BASE_DIR."/.realtime/state/{$userID}_{$sessionID}.json";
+$acked = is_file($ackFile)
+    ? json_decode(file_get_contents($ackFile), true)
+    : [];
+
+$lastSent = $acked;
+// dieVal($lastSent);
+
+ // RELEASE SESSION LOCK IMMEDIATELY
+session_write_close();
+ignore_user_abort(true);
+
+function callApiB($method, $url, $params = []){
+    $ch = curl_init();
+
+    switch ($method)
+    {
+        case "POST":
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            if($params){
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+            }
+            break;
+        case "PUT":
+            curl_setopt($ch, CURLOPT_PUT, 1);
+            break;
+        default:
+            if ($params)
+                $url = sprintf("%s?%s", $url, http_build_query($params));
+    }
+
+    // 2. Set options
+    curl_setopt($ch, CURLOPT_URL, $url); // "http://localhost/wahenga/api/modules/realtime/semain/98c26ca6dbe57a3da6ef067dcc3b15eb/updatesmain/notify"); // Target URL
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string instead of outputting it directly
+    // For self-signed SSL certificates on localhost, you might need:
+    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+    // 3. Execute the cURL request
+    $response = curl_exec($ch);
+
+    // Check for errors
+    if ($response === false) {
+        $result = 'cURL Error: ' . curl_error($ch);
+    } else {
+        // Process the response (e.g., decode JSON)
+        $result = $response;
+    }
+
+    // 4. Close the cURL session
+    curl_close($ch);
+
+    return $result;
+}
+
+function isJson($string): bool {
+    json_decode($string);
+    return (json_last_error() === JSON_ERROR_NONE);
+}
+
+$callback = function () use (&$lastSentm, $ackFile) {
+    $req = json_decode(base64_decode($_GET['req']),true);
+    // dieVal($req);
+    
+    $itemID     = isset($req['id']) ? $req['id'] : 1;
+    $lastID     = isset($req['lastID']) ? $req['lastID'] : 1;
+    $userID     = isset($req['userID']) ? $req['userID'] : 'guest';
+    $sessionID  = isset($req['sessionID']) ? $req['sessionID'] : 'null';
+    $event      = isset($req['event']) ? $req['event'] : 'noevent';
+    $base      = isset($req['base']) ? $req['base'] : '';
+    $base       = !empty($base) ? $base : BASE_URL;
+
+    $since = is_file($ackFile)
+        ? json_decode(file_get_contents($ackFile), true)
+        : [];
+
+    // $since = isset($req['since']) ? $req['since'] : []; 
+
+    // $cookies    = isset($_COOKIE['lvui']) ? $_COOKIE['lvui'] : '' ;
+    // $widgets    = isset($_COOKIE['lvui_widgets']) ? $_COOKIE['lvui_widgets'] : [] ;
+
+    $out = $event;
+
+    // die($_ENV['SE_BASE']);
+    // die(BASE_URL);
+    
+
+    // die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
+    // die("http://localhost/wahenga/api/v1/se_main/".$sessionID."/".$event."/notify");
+
+    if(empty($base)){
+        $base = getIfSet($_ENV['SE_BASE'],'http://localhost/wahenga/');
+    }
+    // die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
+
+    $params = [
+            'CRON_MODE' => getenv('CRON_MODE'),
+            'token' => 'test',
+            'acs' => 123,
+            'itemID' => $itemID,
+            'lastID' => $lastID,
+            'userID' => $userID,
+            'sessionID' => $sessionID,
+            'event' => $event,
+            // 'cookies' => $cookies,
+            // 'widgets' => $widgets,
+            'base'  => $base,
+            'since' => $since
+        ];
+        
+    $url = $base."api/modules/realtime/semain/".$sessionID."/".$event."/notify";
+
+    $out =  callApiB('POST',$url, $params);
+    // dieVal($out);
+    if(isJson($out)){
+        $out = json_decode($out,true);
+    }else{
+        error_log("SSE Error:: ".$out);
+        $out = [];
+        return false;
+    }
+
+    if (empty($out)) {
+        return false; // Return false if no new messages
+    }
+
+    $shouldStop = false; // Stop if something happens or to clear connection, browser will retry
+    if ($shouldStop) {
+        throw new StopSSEException();
+    }
+
+    return [
+        'event' => $event,
+        'data'  => $out,
+        // 'versions' => $lastSent
+    ];
+};
+
+$listener = isset($req['event']) ? $req['event'] : 'noevent';
+// die($listener);
+(new SSE(new Event($callback, $listener, $timer)))->start(10);

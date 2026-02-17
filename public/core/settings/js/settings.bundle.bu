@@ -1,0 +1,37 @@
+<?php
+require  __DIR__ . '/../../../../vendor/autoload.php';
+
+// use BoraSlim\Core\Utils\EnvLoader;
+EnvLoader::load(__DIR__ . '/../../../../', 'wahenga');
+
+// die('here');
+// die(BASE_URL);
+
+$apiBase = rtrim(BASE_URL, '/') .'/api';
+$apiVersion = 'v1';
+// Output as JS constants
+?>
+
+class SettingsConfig {
+    //Here
+    static API_BASE = "<?= $apiBase ?>";
+    static API_VERSION = "<?= $apiVersion ?>";
+
+    static get endpoint() {
+        return `${this.API_BASE}/${this.API_VERSION}`;
+    }
+}
+<?php
+// enforce load order
+$files = [
+    "script.js",   // finally the module logic
+];
+
+$base = __DIR__; // current folder
+foreach ($files as $file) {
+    $path = "$base/$file";
+    if (file_exists($path)) {
+        readfile($path);
+        echo "\n";
+    }
+}

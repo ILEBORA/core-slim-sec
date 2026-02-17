@@ -1,0 +1,66 @@
+{# Base Gallery Grid View (grids/gallery.twig) #}
+<div class="grid-wrapper" data-grid-type="gallery" data-grid-id="{{ config.id|default('') }}" data-grid-unique="{{ config.unique }}">
+  <div class="grid-gallery {{ config.class|default('') }}">
+    {% block grid_body %}
+      {% for item in data.data %}
+        <div class="grid-photo grid-item" data-id="{{ item.id|default(loop.index) }}">
+          <img src="{{ attribute(item, config.image_field|default('image')) }}" alt="{{ item.title|default('Item') }}">
+          <div class="photo-caption">
+            {{ item.title|default(attribute(item, config.title_field|default('name'))) }}
+          </div>
+        </div>
+      {% else %}
+        <div class="grid-empty">No images found</div>
+      {% endfor %}
+    {% endblock %}
+  </div>
+
+  {% block grid_footer %}
+    <div class="grid-footer">
+      {% block grid_pagination %}
+        {% include "grids/partials/pagination.twig" with {config:config, gridType:'card'} %}
+      {% endblock %}
+    </div>
+  {% endblock %}
+</div>
+
+<style>
+.grid-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.grid-photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.grid-photo img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+.grid-photo:hover img {
+  transform: scale(1.05);
+}
+.photo-caption {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: .5rem;
+  text-align: center;
+}
+.grid-empty {
+  text-align: center;
+  color: #888;
+  padding: 2rem;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+</script>

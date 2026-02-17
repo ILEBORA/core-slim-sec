@@ -1,0 +1,167 @@
+
+       <?php //die($sliderSettings['autoplay']);?>
+       
+       <style>
+            .thumbcard {
+                position: relative;
+                background-color: #f8f8f8;
+                border-radius: 8px;
+                padding: 0px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+
+            .swiper-container {
+                width: auto;
+                padding: 20px 0;
+            }
+
+            .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+
+            .swiper-slide{
+                display: flex;
+                flex-direction: column; /* Arrange content inside each slide vertically */
+                justify-content: center; /* Center content vertically if desired */
+                align-items: center; /* Center content horizontally if needed */
+                
+                min-height: 300px; /* Set minimum height for each slide */
+                height: 100%; /* Each slide should take up the full height */
+                box-sizing: border-box;/* Make sure padding and borders are included in the height */
+            }
+
+            .swiper-button-next, .swiper-button-prev {
+                color: #333; /* Style navigation buttons */
+            }
+            .ncard .description {
+                position: absolute;
+                top: 50%; /* Initially center vertically */
+                left: 50%; /* Initially center horizontally */
+                transform: translate(-50%, -50%);
+                background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                opacity: 0; /* Hidden by default */
+                visibility: hidden; /* Hidden by default */
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+
+            .ncard:hover .description,
+            .ncard:focus .description {
+                opacity: 1;
+                visibility: visible; /* Show description on hover/focus */
+            }
+
+            /*Flip*/
+
+            .flip {
+                perspective: 1000px; /* Enables the 3D flip effect */
+                height: 100%; /* Make the card fill the entire slide */
+                padding:1px !important;
+            }
+
+            .flip-card {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+
+            .flip-card-inner {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                transition: transform 0.6s ease-in-out;
+                transform-style: preserve-3d;
+                min-height: 300px;
+            }
+
+            .flip-card-front, .flip-card-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden; /* Hide the back when it's not flipped */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            .flip-card-front {
+                background-color: white; /* Solid white front */
+                color: #333; /* Dark text for contrast */
+                border: 1px solid #ccc; /* Optional subtle border */
+            }
+
+            .flip-card-back {
+                background-color: #007BFF; /* Solid blue back */
+                color: white;
+                transform: rotateY(180deg); /* Flip the back 180 degrees */
+                font-size: 1.2rem;
+            }
+
+            .flip-card:hover .flip-card-inner,
+            .flip-card:focus .flip-card-inner {
+                transform: rotateY(180deg); /* Rotate to show the back on hover */
+            }
+        </style>
+        
+        <!-- Swiper -->
+        <div class="swiper-container" id="swiper-{{ sliderID }}">
+            <span class="tools">{{ tools }}</span>
+            <div class="swiper-wrapper">
+                @foreach($items as $item)
+                    <?php echo $item;?>
+                @endforeach
+            </div>
+            <div class="swiper-pagination swiper-pagination-{{ sliderID }} "></div>
+            <div class="swiper-button-next swiper-button-next-{{ sliderID }} "></div>
+            <div class="swiper-button-prev swiper-button-prev-{{ sliderID }} "></div>
+        </div>
+
+            
+
+    <script>
+        // document.addEventListener("DOMContentLoaded", function() {
+            var autoplay = <?php echo is_array($sliderSettings['autoplay']) ? json_encode($sliderSettings['autoplay']) : $sliderSettings['autoplay']; ?>;
+        var swiper = new Swiper('#swiper-<?php echo $sliderID; ?>', {
+            loop: <?php echo $sliderSettings['loop'] === 'true' ? 'true' : 'false'; ?>,
+            autoplay: autoplay,
+            speed: <?php echo $sliderSettings['speed']; ?>,
+            slidesPerView: <?php echo $sliderSettings['slidesPerView']; ?>,
+            spaceBetween: <?php echo $sliderSettings['spaceBetween']; ?>,
+            effect: '<?php echo $sliderSettings['effect']; ?>',
+            breakpoints: <?php echo json_encode($breakpointSettings);?>,
+            direction: '<?php echo $sliderSettings['direction']; ?>',
+            grabCursor: <?php echo $sliderSettings['grabCursor'] === 'true' ? 'true' : 'false'; ?>,
+            centeredSlides: <?php echo $sliderSettings['centeredSlides'] === 'true' ? 'true' : 'false'; ?>,
+            keyboard: <?php echo $sliderSettings['keyboard'] === 'true' ? 'true' : 'false'; ?>,
+            mousewheel: <?php echo $sliderSettings['mousewheel'] === 'true' ? 'true' : 'false'; ?>,
+            loopFillGroupWithBlank: <?php echo $sliderSettings['loopFillGroupWithBlank'] === 'true' ? 'true' : 'false'; ?>,
+            autoHeight: <?php echo $sliderSettings['autoHeight'] === 'true' ? 'true' : 'false'; ?>,
+            pagination: {
+                el: '.swiper-pagination-<?php echo $sliderID; ?>',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next-<?php echo $sliderID; ?>',
+                prevEl: '.swiper-button-prev-<?php echo $sliderID; ?>',
+            }
+        });
+
+        if(typeof appSliders != 'undefined'){
+            appSliders.addBreakPointSettings('<?php echo $sliderID; ?>',<?php echo json_encode($breakpointSettings);?>);
+        }
+
+    // });
+    </script>
+

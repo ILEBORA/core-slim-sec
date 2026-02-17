@@ -1,0 +1,22 @@
+<footer class="footer-area viewtype_guest  animated fadeIn">
+    <?php 
+        $footer_menu    = ($fm = ActiveModule('Menuitem',[getIfSet($menu,'footer'),'title'])) ? $fm->getFooterMenu() : '';
+        $social_links   = ($sl = ActiveModule('Links')) ? $sl->showAppLinks() : '';
+
+        $build_details = $this->ui->addTemplate([
+            'copyright_name' => strtoupper(PROJECTNAME),
+            'copyright_date' => date("Y"),
+            'core_name' => ucfirst(CORE_V),
+            'core_link' => md5(CORE_V),
+            'default_link' => 'https://ilebora.com',
+        ],'themes/default/build', 'Themes');
+
+
+        echo addTemplate([
+            'build_details' => $build_details,
+            'footer_menu' => getIfSet($footer_menu,''),
+            'social_links' => getIfSet($social_links,''),
+            
+        ],'themes/default/footer','Themes');
+    ?>
+</footer>

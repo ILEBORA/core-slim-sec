@@ -1,17 +1,29 @@
 <?php
 return array (
   'asset_api' => 4,
-  'generated_at' => '2026-02-13T14:43:12+03:00',
+  'generated_at' => '2026-02-17T06:00:34+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (
     'Control' => 
     array (
       'js' => true,
-      'css' => false,
+      'css' => true,
       'img' => false,
     ),
     'CoreBilling' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Dashboards' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Firewall' => 
     array (
       'js' => true,
       'css' => true,
@@ -35,7 +47,31 @@ return array (
       'css' => true,
       'img' => false,
     ),
+    'Realtime' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Settings' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
     'System' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Ui' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Users' => 
     array (
       'js' => true,
       'css' => true,

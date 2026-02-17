@@ -1,5 +1,0 @@
-# <FilesMatch "^.*?dir.*?$">
-# SetHandler php5-script
-# </FilesMatch>
-RewriteRule ^main\.css$ main.php [L]
-RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]

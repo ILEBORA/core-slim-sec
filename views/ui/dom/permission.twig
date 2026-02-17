@@ -1,0 +1,8 @@
+<!-- ILEBORA 2022-01-30 14:41:45 -->
+<li class="{{class}}" id="perm-{{role_id}}-{{perm_id}}" > 
+    <span style="float:right;">
+        {{tools|raw}}
+    </span>
+    <input type="checkbox" data-role="{{role_id}}" onclick="return cPerm(this,event); return false;" data-perm="{{perm_id}}" id="input{{role_name}}-{{perm_id}}" name="input{{role_name}}-{{perm_id}}" {{checked}} /> 
+    {{permission|raw}}
+</li>

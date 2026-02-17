@@ -1,5 +1,0 @@
-{
-    "control.module_exists": "Module exists",
-    "control.module_notfound": "Module not found",
-    "control.permission_error": "You do not have sufficient permission for action"
-}
