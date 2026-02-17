@@ -8,7 +8,7 @@
 if(jQuery) (function($) {
   'use strict';
 
-  var modal;
+  var modal; 
   var style;
   var overlay;
   var okButton;
