@@ -1,0 +1,35 @@
+<div class="container">
+    <h2>Security Settings</h2>
+
+    <div class="security-block">
+        <h3>Multi-Factor Authentication</h3>
+
+        {% if mfa.enabled %}
+            <p class="status success">
+                MFA is enabled
+            </p>
+
+            <button class="btn danger" id="disable-mfa">
+                Disable MFA
+            </button>
+        {% else %}
+            <p class="status warning">
+                MFA is not enabled
+            </p>
+
+            <button class="btn primary" id="enable-mfa">
+                Enable MFA
+            </button>
+        {% endif %}
+    </div>
+
+    <div id="mfa-setup" style="display:none;"></div>
+</div>
+<script>
+$('#enable-mfa').on('click', function () {
+    $.get('api/modules/settings/setup-totp', function (resp) {
+        $('#mfa-setup').html(resp.html).show();
+    });
+});
+</script>
+

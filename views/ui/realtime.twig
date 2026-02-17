@@ -1,0 +1,56 @@
+<bora-lvui class="{{ class }} {{ lvui }}" blvui="{{ lvui }}" data-id="LiveAcc" pointer>
+    {{count}}
+</bora-lvui>
+<style>
+.realtime_class{
+    width: 20px;
+    color: black;
+    font-size: small;
+    float: right;
+    background: #ccc;
+}
+</style>
+<script>
+$(function () {
+
+    // Guard: Realtime module must exist
+    if (!app || !app.SSE) return;
+
+    /**
+     * Subscribe ONLY if this tab is leader
+     * Leader election is handled globally
+     */
+    function startSSEIfLeader() {
+        if (!window.isSseLeader || !window.isSseLeader()) {
+            return;
+        }
+
+        // Ensure clean state
+        app.SSE.closeConnecton();
+
+        app.SSE.subscribe({
+            id: "{{ id|default('') }}",
+            userID: "{{ userID|default('') }}",
+            sessionID: "{{ sessionID|default('') }}",
+            event: "{{ event|default('updatesmain') }}",
+            timer: {{ timer|default(20) }},
+            base: "{{ baseURL|default('') }}",
+
+            // 🔐 optional but recommended
+            leaderEpoch: window.getLeaderEpoch?.()
+        });
+    }
+
+    /**
+     * React to leadership changes
+     * (covers tab close, crash, foreground switch)
+     */
+    const leaderCheckInterval = setInterval(() => {
+        if (window.isSseLeader && window.isSseLeader()) {
+            startSSEIfLeader();
+            clearInterval(leaderCheckInterval);
+        }
+    }, 500);
+
+});
+</script>

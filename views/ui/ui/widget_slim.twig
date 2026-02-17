@@ -1,0 +1,61 @@
+{# Count item widget #}
+
+{% if statusmode != "" %}
+    {% set statustitle = "<h2 class='mode_text'>Item flagged: #{statusmode}</h2>" %}
+    {% set itemtitle = "Item not visible without permissions." %}
+{% else %}
+    {% set statustitle = "" %}
+    {% set itemtitle = "" %}
+{% endif %}
+
+<div class="col-xl-6 col-md-6 col-12 widget_container {{ statusmode }} dwidget{{ id }}"
+     data-typ="{{ class }}"
+     pointer
+     fnl="{{ link }}"
+     title="{{ itemtitle }}"
+>
+    <span class="widget_tools">{{ tools|raw }}</span>
+
+    <div class="wrapper count-title d-flex w-full">
+        <div class="icon"><i class="icon-list"></i></div>
+
+        <div class="name">
+            {{ statustitle|raw }}
+
+            <strong class="wtitle text-uppercase">{{ title }}</strong>
+            <span>{{ desc|raw }}</span>
+
+            <div class="container">
+                <div class="prefix">{{ preffix }}</div>
+
+                <div class="active_content">
+                    <div class="count-number {{ lvui }}"
+                         lvui="{{ lvui }}"
+                         data-id="LiveAcc"
+                         pointer
+                    >
+                        {{ content|raw }}
+                    </div>
+                </div>
+
+                <div class="suffix">{{ suffix }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        if (typeof draggable !== 'undefined') {
+            $('.widget_container').draggable({
+                handle: '.handle',
+                revert: true,
+                placeholder: true,
+                droptarget: '.drop',
+                drop: function(evt, droptarget) {
+                    $(this).appendTo(droptarget).draggable('destroy');
+                }
+            });
+        }
+    });
+</script>
