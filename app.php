@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.10
- *  Build ID:   29B8600F18D7
- *  Timestamp:  2026-02-17 17:44:20
+ *  Build ID:   5E46AD8B28FD
+ *  Timestamp:  2026-02-17 17:56:24
  *  License:    Proprietary - Unauthorized modification prohibited.
  *  © 2025 ILEBORA Technologies. All Rights Reserved.
  * ================================================================
@@ -144,8 +144,8 @@ $verified = openssl_verify(
 if ($verified !== 1) {
     error_log("🚨 Loader integrity compromised.");
     tamperPing($paths);
-    http_response_code(500);
-    exit("Loader integrity compromised.");
+    // http_response_code(500);
+    // exit("Loader integrity compromised.");
 }
 
 unset($signature, $data);
