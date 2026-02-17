@@ -1,0 +1,29 @@
+/* .lead { font-size: 1.5rem; font-weight: 300; } */
+/* .main-wrapper{ margin: 150px auto; max-width: 960px; color: #000; } */
+/* .container { margin: 150px auto; max-width: 960px; color: #000; } */
+.main-wrapper{
+	transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  border-radius:0px;
+  
+}
+
+/* If Side-bar*/
+
+div.side-bar + div.main-wrapper{
+  margin-left: 23.2rem;
+}
+
+div.side-bar + div.main-wrapper.sd_collapse{
+    margin-left: 6.4rem;
+}
+
+div.side-bar.sideActive + div.main-wrapper{
+  margin-left: 0;
+}
+
+div.side-bar.sideActive + div.main-wrapper.sd_collapse{
+    margin-left: 0;
+}

@@ -1,0 +1,48 @@
+/* NOTIFICATIONS */
+.notifications li{
+	position: relative;
+	overflow:hidden;
+	background:#f8f8dd ;
+	border:0px solid #eae8eb;
+	margin-bottom:5px;
+	
+	cursor: pointer;
+	display:flex;
+	padding:10px;
+}
+
+.notifications li:hover{
+	background:#e4e4cc ;
+}
+
+.notifications li.unseen{
+	background:#aeece4 ;
+	border:0px solid #eae8eb;
+}
+
+.notifications li.unread{
+	background:#aeecc8 ;
+	border:0px solid #eae8eb;
+}
+
+.notifications li.unread:hover,.notifications li.unseen:hover{
+	background:#9efac4;
+	border:0px solid #eae8eb;
+}
+
+.notifications li.error{
+	background:#f7c0a6 ;
+	border:1px solid #e2a082;
+	padding:3px;
+	font-size: smaller;
+}
+
+.notify-content{
+	flex-grow:1;
+	/* padding:10px; */
+}
+
+.notify-tools{
+	flex-grow:0;
+	padding:2px;
+}

@@ -156,7 +156,7 @@ if (getCookie('persistSess') != 1) {
         alertBora.notify('Session Expired!', 'error', 20);
         mPGs.logoutUser();
     });
-}
+} }});
 JS;
         }
     }

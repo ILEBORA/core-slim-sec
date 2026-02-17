@@ -1,0 +1,27 @@
+.column-container-title{
+    color:rgb(163, 167, 190);
+    border-bottom:0px #ccc solid;
+    background: #fbe6c7;
+    margin-bottom:5px;
+    font-size:x-large;
+    padding: 3px 10px;
+}
+
+.column-container-content{
+    background: #edf7f9;
+}
+
+.item-container-title{
+    color:#fff;
+    border-bottom:0px #ccc solid;
+    background: #8f8e8d;
+    margin-bottom:5px;
+    font-size:x-large;
+    padding: 3px 10px;
+}
+
+.content-section {
+    padding: 50px 20px;
+    max-width: 1200px;
+    margin: auto;
+}

@@ -1,0 +1,227 @@
+/*
+  * ==========================================================
+  *      DASHBOARD COUNTS
+  * ==========================================================
+  */
+  .dashboard-counts .row{
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .5rem;
+    width:100%;
+  }
+  
+  .dashboard-counts {
+    color: #333;
+  }
+
+  .darkmode .dashboard-counts {
+    color: inherit !important;
+}
+  
+  .dashboard-counts .count-title span {
+    /* font-size: 0.8em; */
+    color: inherit;
+    display: block;
+  }
+  
+  .dashboard-counts .count-title i {
+    font-size: 1.5em;
+    color: #33b35a;
+  }
+  
+  .dashboard-counts .icon {
+    margin-right: 10px;
+  }
+  
+  .dashboard-counts strong {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #555;
+    display: block;
+  }
+  
+  .dashboard-counts .count-number {
+    font-size: 2.2em;
+    font-weight: 300;
+  }
+  
+  .dashboard-counts.stats{
+    margin:10px;
+    background:#d6e1e7;
+  }
+  
+  /* DASHBOARD COUNTS MEDIAQUERIES ------------------------- */
+  @media (max-width: 991px) {
+    .dashboard-counts div[class*='col-'] {
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard-counts strong {
+      font-size: 1em;
+    }
+    .dashboard-counts span {
+      /* font-size: 0.9em; */
+    }
+    .dashboard-counts .count-number {
+      font-size: 3em;
+    }
+    
+  }
+
+
+  /*
+  * ==========================================================
+  *      DASHBOARD WIDGETS COUNTS
+  * ==========================================================
+  */
+  .dashwidgets-counts .row{
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .5rem;
+    width:100%;
+  }
+  
+  .dashwidgets-counts {
+    color: #333;
+  }
+  
+  .dashwidgets-counts .count-title span {
+    font-size: 0.8em;
+    color: #aaa;
+    display: block;
+  }
+  
+  .dashwidgets-counts .count-title i {
+    font-size: 1.5em;
+    color: #33b35a;
+  }
+  
+  .dashwidgets-counts .icon {
+    margin-right: 10px;
+  }
+  
+  .dashwidgets-counts strong {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #555;
+    display: block;
+  }
+  
+  .dashwidgets-counts .count-number {
+    font-size: 2.2em;
+    font-weight: 300;
+  }
+  
+  .dashwidgets-counts.stats{
+    margin:10px;
+    background:#d6e1e7;
+  }
+  
+  /* DASHBOARD COUNTS MEDIAQUERIES ------------------------- */
+  @media (max-width: 991px) {
+    .dashwidgets-counts div[class*='col-'] {
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .dashwidgets-counts strong {
+      font-size: 1em;
+    }
+    .dashwidgets-counts span {
+      /* font-size: 0.9em; */
+    }
+    .dashwidgets-counts .count-number {
+      font-size: 3em;
+    }
+    
+  }
+  
+  /*
+  * ==========================================================
+  *     DASHBOARD HEADER
+  * ==========================================================
+  */
+  .dashboard-header {
+    background: #fff;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dashboard-header .check-lists {
+    margin-top: 20px;
+  }
+  
+  .dashboard-header .check-lists label {
+    font-size: 0.75em;
+  }
+  
+  .dashboard-header .pie-chart {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .dashboard-header p {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #888;
+  }
+  
+  .dashboard-header li {
+    margin-bottom: 10px;
+  }
+  
+  /* DASHBOARD HEADER MEDIAQUERIES ------------------------- */
+  @media (max-width: 991px) {
+    .dashboard-header {
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .dashboard-header div[class*='col-'] {
+      margin-bottom: 30px;
+    }
+    .dashboard-header div[class*='col-']:last-of-type {
+      margin-bottom: 0;
+    }
+    .dashboard-header .card {
+      background: #fff;
+      padding: 30px;
+      -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      height: 100%;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard-header p {
+      font-size: 0.9em;
+    }
+    .dashboard-header h2 {
+      font-size: 1.3rem;
+    }
+    .dashboard-header .check-lists label {
+      font-size: 0.85em;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .dashboard-header {
+      margin-bottom: 30px;
+    }
+    .dashboard-header .card {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      margin-bottom: 0;
+    }
+  }
+  

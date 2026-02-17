@@ -1,0 +1,17 @@
+.inline-block{
+    display: inline-block;
+}
+
+.badge_td{
+    display: inline-block;
+    padding: .344rem .625rem;
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .313rem;
+    background-color: blueviolet;
+}

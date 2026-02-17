@@ -1,0 +1,89 @@
+body.overlay-visible{
+	overflow: hidden;
+}
+
+/* .mn-overlay{
+	display:none;
+
+    flex-direction: column;
+    justify-content: flex-start;
+	
+    height: auto;
+	background: #ccc; 
+	background-color: var(--body-overlay-back) ;
+	background-image: url(../../../assets/images/branding/icon_wht.png),url(../../../assets/images/icons/ajax.gif);
+	background-position: center center, 50% 60%;
+	background-repeat:no-repeat;
+
+	position: fixed;
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	right:0;
+	bottom:0;
+	z-index: 101;
+}
+
+.mn-overlay.visible{
+	display: flex;
+}
+
+
+.mn-overlay.active{
+	position: fixed;
+	display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+} */
+
+.mn-overlay {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--body-overlay-back, #fff);
+    z-index: 1001;
+}
+
+.mn-overlay.visible {
+    display: flex;
+}
+
+.overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.overlay-logo img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.overlay-version abbr {
+    color: var(--body-overlay-color, #ccc);
+    font-size: small;
+    margin-bottom: 20px;
+}
+
+.overlay-loader img {
+    margin-bottom: 20px;
+}
+
+.overlay-message .message {
+    color: var(--body-overlay-color, #ccc);
+    font-size: small;
+}
+
+body > .mn-overlay.active{
+  height:100vh;
+  overflow: hidden;
+}
