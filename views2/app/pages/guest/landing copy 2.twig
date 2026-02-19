@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Adaptive Bot Intro</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #output {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+      width: 80%;
+    }
+    input {
+      font-size: 1.5rem;
+      padding: 10px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid white;
+      color: white;
+      text-align: center;
+      width: 60%;
+    }
+    input::placeholder {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<div id="output">Have we met before? (yes/no)</div>
+<input type="text" id="input" placeholder="Type here and press Enter" autofocus />
+
+<script>
+  const output = document.getElementById("output");
+  const input = document.getElementById("input");
+
+  let state = 'init';
+  let tempName = '';
+  let tempEmail = '';
+  let tempPin = '';
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  if (userData && userData.email && userData.name) {
+    output.textContent = `Welcome back, ${userData.name}! Ready to continue?`;
+    state = 'done';
+  }
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const val = input.value.trim();
+      input.value = "";
+
+      if (state === 'init') {
+        if (val.toLowerCase() === 'no') {
+          output.textContent = "Great! What's your name?";
+          state = 'get_name';
+        } else if (val.toLowerCase() === 'yes') {
+          output.textContent = "Please enter your email:";
+          state = 'get_email_existing';
+        } else {
+          output.textContent = "Please type 'yes' or 'no'.";
+        }
+      }
+
+      else if (state === 'get_name') {
+        tempName = val;
+        output.textContent = "Now, enter your email:";
+        state = 'get_email_new';
+      }
+
+      else if (state === 'get_email_new') {
+        tempEmail = val;
+        output.textContent = "Set a 4-digit PIN for next time:";
+        state = 'set_pin';
+      }
+
+      else if (state === 'set_pin') {
+        if (/^\d{4}$/.test(val)) {
+          tempPin = val;
+          localStorage.setItem("userData", JSON.stringify({
+            name: tempName,
+            email: tempEmail,
+            pin: tempPin
+          }));
+          output.textContent = `Thanks ${tempName}, you're all set!`;
+          state = 'done';
+        } else {
+          output.textContent = "Please enter a 4-digit PIN.";
+        }
+      }
+
+      else if (state === 'get_email_existing') {
+        tempEmail = val;
+        output.textContent = "Enter your 4-digit PIN:";
+        state = 'verify_pin';
+      }
+
+      else if (state === 'verify_pin') {
+        const stored = JSON.parse(localStorage.getItem("userData"));
+        if (stored && stored.email === tempEmail && stored.pin === val) {
+          output.textContent = `Welcome back, ${stored.name}!`;
+          state = 'done';
+        } else {
+          output.textContent = "Incorrect email or PIN. Try again.";
+          state = 'get_email_existing';
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

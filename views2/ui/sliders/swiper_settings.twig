@@ -1,0 +1,202 @@
+<!-- Form for customizing all Swiper settings -->
+<form method="post" id="settingsForm" action="">
+    <?php
+    //Default Table items
+    echo '<h2>Slide Details</h2>';
+    $tdItems = '';
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'title',
+        'title' => 'Name',
+        'value' => $itemDetails['title']
+    ],'dom/tables/details_full_td');
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'version',
+        'title' => 'Version',
+        'value' => $itemDetails['version']
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'date_added',
+        'title' => 'Date Added',
+        'value' => simpleDate($itemDetails['date_added'])
+    ],'dom/tables/details_full_td'); 
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'date_modified',
+        'title' => 'Date Modified',
+        'value' => simpleDate($itemDetails['date_modified'])
+    ],'dom/tables/details_full_td'); 
+
+    
+    $editBtn = (ModulePerm('Sliders','edit')) 
+        ?
+        '<button id="newrl"
+            class="custom-button-link btn small btn-success"  
+            onclick="diagPop.close(); mPGs.klassPopup(\'Sliders\',\'edit\','.$itemDetails['id'].',\'edit\');">
+            Edit Slider
+        </button>' 
+        : '';
+
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => '',
+        'title' => '',
+        'value' => $editBtn
+    ],'dom/tables/details_full_td'); 
+
+    //Add to details template
+    $rr = array(
+        'id' => $itemDetails['id'],
+        'title' => ucfirst($itemDetails['name']),
+        'td_items' => $tdItems,  
+        'tools' => ''  
+    );
+
+    echo addTemplate($rr, 'dom/tables/details_full');
+
+    //End Default
+
+    //Customize Table
+    echo '<h2>Customize Settings</h2>';
+
+    $tdItems = '<input type="hidden" id="id" name="id" value="'.$sliderID.'">';
+    
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'loop',
+        'title' => 'Loop',
+        'value' => '<input type="checkbox" id="loop" name="loop" '.($sliderSettings['loop'] == 'true' ? 'checked' : '').' >'
+    ],'dom/tables/details_full_td');
+
+    
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'autoplay',
+        'title' => 'Autoplay (JSON format):',
+        'value' => '<input type="text" id="autoplay" name="autoplay" value='.json_encode($sliderSettings['autoplay']).' >'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'speed',
+        'title' => 'Speed (in ms):',
+        'value' => '<input type="number" id="speed" name="speed" min="100" max="5000" step="100" value="'.$sliderSettings['speed'].'">'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'slidesPerView',
+        'title' => 'Slides Per View:',
+        'value' => '<input type="number" id="slidesPerView" name="slidesPerView" min="1" value="'.$sliderSettings['slidesPerView'].'">'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'spaceBetween',
+        'title' => 'Space Between (px):',
+        'value' => '<input type="number" id="spaceBetween" name="spaceBetween" min="0" value="'.$sliderSettings['spaceBetween'].'">'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'effect',
+        'title' => 'Effect',
+        'value' => '<select id="effect" name="effect">
+                        <option value="slide" '.($sliderSettings['effect'] == 'slide' ? 'selected' : '').'>Slide</option>
+                        <option value="fade" '.($sliderSettings['effect'] == 'fade' ? 'selected' : '').'>Fade</option>
+                        <option value="cube" '.($sliderSettings['effect'] == 'cube' ? 'selected' : '').'>Cube</option>
+                        <option value="coverflow" '.($sliderSettings['effect'] == 'coverflow' ? 'selected' : '').'>Coverflow</option>
+                        <option value="flip" '.($sliderSettings['effect'] == 'flip' ? 'selected' : '').' >Flip</option>
+                    </select>'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'direction',
+        'title' => 'Direction:',
+        'value' => '<select id="direction" name="direction">
+                        <option value="horizontal" '.($sliderSettings['direction'] == 'horizontal' ? 'selected' : '').' >Horizontal</option>
+                        <option value="vertical" '.($sliderSettings['direction'] == 'vertical' ? 'selected' : '').' >Vertical</option>
+                    </select>'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'grabCursor',
+        'title' => 'Grab Cursor:',
+        'value' => '<input type="checkbox" id="grabCursor" name="grabCursor" '.($sliderSettings['grabCursor'] == 'true' ? 'checked' : '').'>'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'centeredSlides',
+        'title' => 'Centered Slides:',
+        'value' => '<input type="checkbox" id="centeredSlides" name="centeredSlides" '.($sliderSettings['centeredSlides'] == 'true' ? 'checked' : '').' >'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'keyboard',
+        'title' => 'Keyboard Control:',
+        'value' => '<input type="checkbox" id="keyboard" name="keyboard" '.($sliderSettings['keyboard'] == 'true' ? 'checked' : '').' >'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'mousewheel',
+        'title' => 'Mousewheel Control:',
+        'value' => '<input type="checkbox" id="mousewheel" name="mousewheel" '.($sliderSettings['mousewheel'] == 'true' ? 'checked' : '').' >'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'loopFillGroupWithBlank',
+        'title' => 'Loop Fill Group With Blank:',
+        'value' => '<input type="checkbox" id="loopFillGroupWithBlank" name="loopFillGroupWithBlank" '.($sliderSettings['loopFillGroupWithBlank'] == 'true' ? 'checked' : '').' >'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'autoHeight',
+        'title' => 'Auto Height:',
+        'value' => '<input type="checkbox" id="autoHeight" name="autoHeight" '.($sliderSettings['autoHeight'] == 'true' ? 'checked' : '').' >'
+    ],'dom/tables/details_full_td');
+
+    $breakpoints = '<div id="breakpointsContainer">';
+    foreach ($breakpointSettings as $breakpoint => $stt) {
+        $breakpoints .= '<div class="breakpoint" data-id="'.$sliderID.'" data-breakpoint="'.$breakpoint.'">
+                            <h3>Breakpoint '.$breakpoint.'px</h3>
+                            <label for="breakpoint_'.$breakpoint.'_slidesPerView">Slides Per View:</label>
+                            <input type="number" id="breakpoint_'.$breakpoint.'_slidesPerView" name="breakpoint_'.$breakpoint.'_slidesPerView" value="'.$stt['slidesPerView'].'">
+                            
+                            <label for="breakpoint_'.$breakpoint.'_spaceBetween">Space Between:</label>
+                            <input type="number" id="breakpoint_'.$breakpoint.'_spaceBetween" name="breakpoint_'.$breakpoint.'_spaceBetween" value="'.$stt['spaceBetween'].'">
+                            
+                            <button type="button" class="deleteBreakpointButton" data-id="'.$breakpoint.'" onclick="removeBreakpoint">Delete Breakpoint</button>
+                        </div>
+        ';
+    }
+    $breakpoints .= '</div>';
+    $breakpoints .= '<button type="button" data-id="'.$sliderID.'" id="addBreakpointButton" onclick="appSliders.addBreakpoint(this)" class="custom-button-link btn small btn-success">Add Breakpoint</button>';
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'breakpoints',
+        'title' => 'Breakpoints',
+        'value' => $breakpoints
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => '',
+        'title' => '',
+        'value' => '...'
+    ],'dom/tables/details_full_td');
+
+    $tdItems .= $this->ui->addTemplate([
+        'name' => 'submit',
+        'title' => '',
+        'value' => '<button type="button" data-id="'.$sliderID.'" class="custom-button-link btn small btn-success" onclick="appSliders.saveSettings(this)">Save Settings</button>'
+    ],'dom/tables/details_full_td');
+
+
+
+    //Add to details template
+    $rr = array(
+        'id' => $itemDetails['id'],
+        'title' => ucfirst($itemDetails['name']),
+        'td_items' => $tdItems,  
+        'tools' => ''  
+    );
+
+    echo addTemplate($rr, 'dom/tables/details_full');
+
+    ?>
+
+</form>

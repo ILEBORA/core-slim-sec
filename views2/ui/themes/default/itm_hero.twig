@@ -1,0 +1,45 @@
+@if($action_btn_text == "")
+@set($buttonText="Get Started")
+@else
+@set($buttonText=$action_btn_text)
+@endif
+<section id="hero-section" class="hero content-section">
+    <style>
+        .hero {
+        text-align: center;
+        padding: 100px 20px;
+        }
+        .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        }
+        .hero p {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        }
+        .hero .cta-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        }
+        
+        footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #4CAF50;
+        color: white;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+<h1>{{ title }}</h1>
+<p>{{ desc }}</p>
+<span class="cta-btn">
+    <scroll-link class="bck-mnu" target="pricing-section" timer="500" offset="80" style="cursor: pointer;">{{ buttonText }}</scroll-link>
+</span>
+</section>

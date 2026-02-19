@@ -1,0 +1,22 @@
+{# pages/home.twig #}
+
+{% set title = (page_title|default('Home')) ~ ' | ' ~ app_name %}
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    {% if has_module('Curiosity') and not isLoggedIn() %}
+        {% include '@curiosity/curiosity.twig' with {
+            app_version: app_version,
+            hero_title: hero_title,
+            hero_subtitle: hero_subtitle,
+            hero_button_text: hero_button_text
+        } %}
+    {% endif %}
+    
+    {#% include 'sections/call-to-action.twig' with{
+        partners: partners
+    } %#}
+
+    {#% include 'widgets/newsletter.twig' %#}
+
+{% endblock %}

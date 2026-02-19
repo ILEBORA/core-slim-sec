@@ -1,0 +1,16 @@
+{
+    "ok": "Successful",
+
+    "forbidden": "Forbidden",
+    "inbox.not_found": "Not found",
+    "method_not_allowed": "Method not allowed",
+
+    "invalid_payload": "Invalid Payload",
+    "empty_message": "Empty Message",
+
+    "thread_already_exists": "Thread already exists",
+    "message_send_failed": "Message send failed",
+    "thread_create_failed": "Thread create failed",
+
+    "mark_read_failed": "Mark Read Failed"
+}

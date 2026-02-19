@@ -1,0 +1,18 @@
+<h1>People</h1>
+
+<form method="get" action="portal/people/search">
+    <input type="text" name="q" placeholder="Search by name..." />
+    <button type="submit">Search</button>
+</form>
+
+<ul class="people-list">
+{% for person in people %}
+    <li>
+        <a href="portal/person/{{ person.id }}">
+            {{ person.first_name }} {{ person.last_name }}
+        </a>
+        {% if person.is_placeholder %}<span class="tag">placeholder</span>{% endif %}
+        {% if person.is_deceased %}<span class="tag deceased">†</span>{% endif %}
+    </li>
+{% endfor %}
+</ul>

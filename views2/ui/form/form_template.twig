@@ -1,0 +1,13 @@
+<form method="{{ method }}" {{ autocomplete }} data-p="{{ data_p }}" {{ action }} {{ onsubmit }} {{ fn }} id="{{ data_p }}{{ name }}" name="{{ name }}" enctype="multipart/form-data">
+        <table id="{{ id }}" width="{{ width }}" class="{{ class }}">
+            {{ items }}
+        </table>
+</form>
+<script>
+$(document).ready(function(){
+        if(typeof 'EInput' === 'function'){
+            EInput.initForm();
+        }
+        menuFX('#{{ name }} table tr:not(.hide)', 'fadeInUp');
+    });
+</script>'

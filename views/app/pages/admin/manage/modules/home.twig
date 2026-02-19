@@ -1,0 +1,21 @@
+{% set title = (page_title|default('Manage Modules')) ~ ' | ' ~ app_name %}
+{% extends 'app/layouts/admin.twig' %}
+
+{% block content %}
+
+{% include "app/partials/admin/breadcrumb.twig" %}
+
+
+<table>
+  <thead><tr><th>Name</th><th>Enabled</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for module in items %}
+    <tr>
+      <td>{{ module.name }}</td>
+      <td>{{ module.enabled ? 'Yes' : 'No' }}</td>
+      <td><a class="jx" href="bo/manage/modules/{{ module.name|lower }}">Manage</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

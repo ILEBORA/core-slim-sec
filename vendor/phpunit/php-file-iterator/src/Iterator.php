@@ -15,7 +15,7 @@ use function realpath;
 use function str_ends_with;
 use function str_replace;
 use function str_starts_with;
-use AppendIterator;
+use BoraSlim\Core\AppendIterator;
 use FilterIterator;
 use SplFileInfo;
 

@@ -1,0 +1,175 @@
+<style>
+body {
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.settings-menu {
+    /* position: relative; */
+    display: inline-flex;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index: 9;
+    margin-left: 2rem;
+    margin-right: 0.5rem;
+    margin-left: auto;
+    align-items: center;
+}
+
+.settings-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.dropdown-tools {
+    display: none;
+    position: absolute;
+    top: 59px;
+    right: 8px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1;
+    width: auto;
+}
+
+.dropdown-tools.is-active {
+    display: block;
+}
+
+.icon-menu {
+    display: flex;
+    grid-template-columns: repeat(2, 50px);
+    grid-gap: 20px;
+}
+
+.icon-menu-item {
+    text-align: center;
+    cursor: pointer;
+}
+
+.icon-menu-item i {
+    font-size: 20px;
+    color: #333;
+}
+
+.icon-menu-item p {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #555;
+    text-align:center;
+}
+
+hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.menu-item p, label {
+    margin: 0;
+    color: #555;
+}
+
+.lang-picker{
+    font-size: small;
+}
+
+</style>
+<div class="settings-menu">
+    <i class="fa fa-cog settings-icon"></i>
+    <div class="dropdown-tools">
+        <div class="icon-menu">
+            
+
+            <?php 
+                echo ActiveModule('Themes')->getModeSettingsMini();
+                echo ActiveModule('Themes')->getLangSettingsMini();
+            
+            ?>
+            <?php
+            if(__gl('User')::getSession()){
+                echo '<div class="icon-menu-item">
+                    <i class="fa fa-user"></i>
+                    <p>'.__t('menu_profile', '', [] ,'Profile').'</p>
+                </div>
+                <div class="icon-menu-item">
+                    <i class="fa fa-bell"></i>
+                    <p>'.__t('menu_notifications', '', [] ,'Notifications').'</p>
+                </div>
+                <div class="icon-menu-item">
+                    <i class="fa fa-lock"></i>
+                    <p>'.__t('menu_security', '', [] ,'Security').'</p>
+                </div>
+                <div class="icon-menu-item" onclick="mPGs.logoutUser()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <p>'.__t('menu_logout', '', [] ,'Logout').'</p>
+                </div>';
+            }else{
+                if(hasPermission('ClientLogin', 'requestLogin')){
+                    echo '<div class="icon-menu-item" onclick="lnk(\'p:g-r:login\')">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <p>'.__t('menu_login', '', [] ,'Login').'</p>
+                    </div>';
+                }
+            }?>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const settingsIcon = document.querySelector('.settings-icon');
+    const dropdown = document.querySelector('.dropdown-tools');
+    // const darkModeToggle = document.getElementById('darkModeToggle');
+    // const languageSelect = document.getElementById('languageSelect');
+
+    // Toggle the 'is-active' class on the dropdown when settings icon is clicked
+    settingsIcon.addEventListener('click', function (e) {
+        dropdown.classList.toggle('is-active');
+        e.stopPropagation(); // Prevent the click from propagating to the document
+    });
+
+    // Close the dropdown when clicking outside of it
+    document.addEventListener('click', function () {
+        if (dropdown.classList.contains('is-active')) {
+            dropdown.classList.remove('is-active');
+        }
+    });
+
+    // Prevent the dropdown from closing when clicking inside of it
+    dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    // // Dark mode toggle
+    // darkModeToggle.addEventListener('change', function () {
+    //     if (this.checked) {
+    //         document.body.classList.add('dark-mode');
+    //     } else {
+    //         document.body.classList.remove('dark-mode');
+    //     }
+    // });
+
+    // // Language selection (for demonstration purposes)
+    // languageSelect.addEventListener('change', function () {
+    //     const selectedLanguage = this.value;
+    //     alert(`Language changed to: ${selectedLanguage}`);
+    // });
+});
+</script>

@@ -1,0 +1,10 @@
+{# partials/admin/content.twig #}
+{% block container %}
+<main id="page_content" class="main-content">
+    {% include "app/partials/header/submenus.twig" with {submenus : submenus} %}
+    {% block content %}
+        Default content
+    {% endblock %}
+</main>
+
+{% endblock %}

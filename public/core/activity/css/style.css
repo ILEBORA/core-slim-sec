@@ -1,0 +1,521 @@
+/* ===============================
+   Timeline Layout
+================================ */
+
+.timeline {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 12px;
+}
+
+.timeline-composer {
+    background: var(--card-bg, #fff);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.composer-placeholder {
+    padding: 10px 12px;
+    background: #f0f2f5;
+    border-radius: 20px;
+    color: #555;
+    cursor: pointer;
+}
+
+/* ===============================
+   Feed Items
+================================ */
+
+.timeline-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.activity-item {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.04),
+        0 8px 24px rgba(0,0,0,.03);
+    transition: box-shadow .15s ease, transform .15s ease;
+    border: 1px #ccc solid;
+}
+
+.activity-item:hover {
+    box-shadow:
+        0 4px 8px rgba(0,0,0,.06),
+        0 12px 32px rgba(0,0,0,.06);
+}
+
+/* Body */
+.activity-body {
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 6px 0 10px;
+    color: #222;
+    word-wrap: break-word;
+}
+
+/* Mentions / Hashtags */
+.activity-body a.mention {
+    color: var(--accent);
+    font-weight: 500;
+}
+.activity-body a.hashtag {
+    color: var(--accent);
+}
+
+/* ===============================
+   Snapshots / Media
+================================ */
+
+.activity-snapshot {
+    margin: 8px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.activity-snapshot img {
+    width: 100%;
+    display: block;
+}
+
+/* ===============================
+   Meta Row
+================================ */
+
+.activity-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #666;
+    margin-top: 6px;
+}
+
+/* ===============================
+   Actions
+================================ */
+
+.activity-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 10px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0,0,0,.05);
+}
+
+.activity-actions a,
+.reaction-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.activity-actions a:hover,
+.reaction-trigger:hover {
+    background: #f0f2f5;
+}
+
+.reaction-trigger.active {
+    color: #e0245e;
+}
+
+/* Thread */
+.activity-thread{
+    padding: 10px;
+}
+
+/* ===============================
+   Comments
+================================ */
+
+.comments {
+    margin-top: 8px;
+}
+
+.comment-body {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+.send-comment {
+    margin-top: 6px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent, #333);
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ===============================
+   Loading
+================================ */
+
+.timeline-loading {
+    text-align: center;
+    padding: 12px;
+    color: #666;
+}
+
+/* ===============================
+   Activity Header
+================================ */
+
+.activity-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.activity-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.activity-author {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.activity-author a {
+    color: #050505;
+    text-decoration: none;
+}
+
+.activity-author a:hover {
+    text-decoration: underline;
+}
+
+.activity-username {
+    font-size: 13px;
+    color: #888;
+}
+
+.activity-time {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.activity-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.mention {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.hashtag {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/*
+    STORIES
+*/
+.stories-rail {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.story-item {
+    width: 72px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.story-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-item.seen .story-avatar {
+    border-color: #ccc;
+}
+
+.story-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.story-label {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.story-create .plus {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.bora-loading {
+    text-align:center;
+    padding:20px;
+}
+.spinner {
+    width:32px; height:32px;
+    border:4px solid #d9b3a9;
+    border-top-color:#965a4c;
+    border-radius:50%;
+    margin:0 auto 10px;
+    animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+
+/* POSTS */
+.bora-post-form {
+    background: #e9a18a;
+    padding: 20px;
+    border-radius: 12px;
+    color: #4a2e2a;
+    font-family: sans-serif;
+}
+.bora-post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: #ddd;
+    border-radius: 50%;
+}
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #c18171;
+    resize: none;
+}
+.attachments button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a2e2a;
+    margin-right: 10px;
+}
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.cancel-btn {
+    background: white;
+    border: 1px solid #4a2e2a;
+    padding: 10px 24px;
+    border-radius: 8px;
+}
+.post-btn {
+    background: #9b5847;
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+}
+
+
+/* Comment */
+.comment-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-size: 14px;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-avatar img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.comment-meta strong {
+    font-weight: 600;
+}
+
+.comment-meta .time {
+    color: #888;
+    font-size: 12px;
+}
+
+.comment-text {
+    line-height: 1.45;
+    word-wrap: break-word;
+}
+
+.comment-text a.mention {
+    color: #1d9bf0;
+    text-decoration: none;
+}
+
+.comment-text a.hashtag {
+    color: #1d9bf0;
+    text-decoration: none;
+}
+
+.comment-actions {
+    margin-top: 6px;
+    font-size: 12px;
+}
+
+.comment-actions a {
+    color: #666;
+    text-decoration: none;
+    margin-right: 12px;
+}
+
+.comment-actions a:hover {
+    text-decoration: underline;
+}
+
+.comment-replies {
+    margin-left: 46px; /* avatar width + gap */
+    margin-top: 8px;
+}
+.comment-replies .comment-replies {
+    margin-left: 32px;
+}
+
+.comment-item:hover {
+    background: rgba(0,0,0,0.02);
+}
+
+#threadComments {
+    padding: 8px 0;
+}
+
+
+/* React */
+.reaction-box {
+    position: relative;
+    display: inline-block;
+}
+
+.reaction-trigger {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.reaction-picker {
+    position: absolute;
+    bottom: 140%;
+    left: 0;
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.12),
+        0 12px 28px rgba(0,0,0,.12);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px) scale(.95);
+    transition: all .15s ease;
+}
+
+.reaction-box.open .reaction-picker {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.act-react {
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform .12s ease;
+}
+
+.act-react:hover {
+    transform: scale(1.25);
+}
+
+.reactions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.reaction-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: #f0f2f5;
+    border-radius: 999px;
+    font-size: 13px;
+    color: #333;
+}
+
+
+@media (max-width: 520px) {
+    .activity-item {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .activity-body {
+        font-size: 14.5px;
+    }
+
+    .activity-actions {
+        gap: 10px;
+    }
+}

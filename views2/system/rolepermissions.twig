@@ -1,0 +1,192 @@
+<div class="main_container details_box">
+<div style="background: url(assets/images/icons/bck_wht.png) top left repeat;padding:3px;">
+<h1>Users Access Control </h1>
+
+
+    {{ edit_roles_button|raw }}
+    
+    
+    <div>
+
+    <table class="pm" width="100%">
+        <tbody>
+            <tr>
+                <td class="custom-lable" style="text-align:right;width:50px;">Role: </span></td>
+                <td style="text-align:left;">
+                    <select id="roletype" name="roletype" class="custom-input" style="width:250px;" >
+                        <option value="blank">Select Role</option>
+                        {{ roletype_options|raw }}
+                    </select>
+                </td>                
+            </tr>
+            <tr>
+                <td style="text-align:right;vertical-align: top;" text-align="right" class="custom-lable">Permissions: </span></td>
+                <td style="text-align:left;">
+                    <select id="roleperm" name="roleperm" class="custom-input" style="width:250px;">
+                        <option value="blank">Select Permission</option>
+                    </select>
+
+                    <ul id="permission_block" class="perm-list accordion"></ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+</div>
+</div>
+
+<script>
+$(document).ready(function(){
+   
+    var resID = $('#permission_block');
+    resID.html('');
+
+    $('#roletype').select2();
+    $('#roleperm').select2();
+    $('#roletype').change(function(){
+        var rid = $(this).val();
+        // var rnm = $(this).text();
+        if(rid != 0){
+            var myData ={id:rid};
+            
+            resID.html('<div align="center"><img src="assets/images/icons/ajax.gif"/></div>');
+
+            new CallBora("api/modules/system/permissions")
+                .setMethod("POST")
+                .setParams({id:rid})
+                .setCallback((res) => {
+                    //appHooks.callHook('after.logout');
+                    //redirectTo('', true);
+                    resID.html('');
+                    $('#roleperm').html(res.data);
+                })
+                .setDone(() => {
+                    console.log("Request finished");
+                    // alert(rd('uID'));
+                    //if(typeof authChannel !== 'undefined'){
+                    //    authChannel.postMessage({cmd:'logout',usr:rd('bID')});
+                    //}
+                })
+                .setError((xhr) => console.error("Error:", xhr))
+                .build();
+        }
+    });
+
+    $('#roleperm').change(function(){
+        var rid = $('#roletype').val();
+        var pid = $(this).val();
+        // var rnm = $(this).text();
+        if(rid != 0){
+            var myData ={id:rid,pid:pid};
+            
+            resID.html('<div align="center"><img src="assets/images/icons/ajax.gif"/></div>');
+
+            new CallBora("api/modules/system/permissions/list")
+                .setMethod("POST")
+                .setParams({id:rid,pid:pid})
+                .setCallback((res) => {
+                    //appHooks.callHook('after.logout');
+                    //redirectTo('', true);
+                    resID.html(res.data);
+                })
+                .setDone(() => {
+                    console.log("Request finished");
+                    // alert(rd('uID'));
+                    //if(typeof authChannel !== 'undefined'){
+                    //    authChannel.postMessage({cmd:'logout',usr:rd('bID')});
+                    //}
+                })
+                .setError((xhr) => console.error("Error:", xhr))
+                .build();
+
+           
+        }
+    });
+
+
+    $('#newrl').on('click', function() {
+        var ths = $(this);
+        $.alertable.prompt('<h2>Alert:</h2>You need <i>elevated<i> permssion:', {
+            html: true,
+            prompt:
+            '<input type="password" class="alertable-input" name="pss" placeholder="Password">' +
+            '<h2>New Role Details</h2>' +
+            '<input type="text" class="alertable-input" name="rolename" placeholder="Page Name">'
+            
+        }).then(function(det) {
+            det['pss'] = md5(det['pss'].trim());
+            $.ajax({
+                type: "POST", 
+                url: rd('prjFolder')+'/admn/role/add',
+                data:Object.assign({},det),
+                dataType: 'json',
+                success: function(data){			
+                    if(data.response == "perm"){
+                        alertBora.alert('Wrong password!');
+                        alertBora.notify("Error: Wrong Password!", 'error');
+                    }else if(data.response == "success"){
+                        alertBora.alert('Success: Role Added!');
+                        alertBora.notify("Success: Role Added!", 'success');
+                        $('#roletype').append(data.data);
+                    }else if(data.response == 'exists'){
+                        alertBora.alert('Error: Role already exists!');
+                        alertBora.notify("Error: Role already exists!", 'error');
+                    }else if(data.response == 'notset'){
+                        alertBora.alert('Error: Rolename not set!');
+                        alertBora.notify("Error: Rolename not set!", 'error');
+                    }else{
+                        alertBora.alert('Oops! Something went wrong!');
+                        alertBora.notify("Error: Something went wrong!", 'error');
+                        
+                    }
+                }
+            });
+        }, function() {
+            // logTest('Role Add canceled');
+        });
+    });
+
+
+}); //END READY
+
+function cPerm(obj,e){
+    // e.preventDefault();
+    var stt = ($(obj).prop('checked')) ? 1 : 0;
+    var role = $(obj).attr('data-role');
+    var perm = $(obj).attr('data-perm');
+    var myData ={stt:stt,role:role,perm:perm};
+    var pLi = $('#perm-'+role+'-'+perm);
+
+    new CallBora("api/modules/system/permissions/update")
+                .setMethod("POST")
+                .setParams({stt:stt,role:role,perm:perm})
+                .setCallback((res) => {
+                    //appHooks.callHook('after.logout');
+                    //redirectTo('', true);
+                    if(res.success){
+                        if(res.stt==1){
+                            pLi.addClass('active');
+                        }else{
+                            pLi.removeClass('active');
+                        }
+                        alertBora.notify(res.message, 'success', 40);
+                        //alertifyReset();
+                        //alertify.success("Updated...");
+                    }else{
+                        alertBora.notify(res.message, 'error', 40);
+                    }
+                })
+                .setDone(() => {
+                    console.log("Request finished");
+                    // alert(rd('uID'));
+                    //if(typeof authChannel !== 'undefined'){
+                    //    authChannel.postMessage({cmd:'logout',usr:rd('bID')});
+                    //}
+                })
+                .setError((xhr) => console.error("Error:", xhr))
+                .build();
+}
+
+
+</script>

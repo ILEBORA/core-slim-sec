@@ -1,0 +1,48 @@
+<h1>Modules</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Version</th>
+    <th>Status</th>
+    <th>Admin</th>
+  </tr>
+
+  {% for m in modules %}
+  <tr>
+    <td><strong>{{ m.name }}</strong></td>
+    <td>{{ m.version }}</td>
+
+    <td>
+        {% if m.enabled %}
+            <span class="badge bg-success">Enabled</span>
+        {% else %}
+            <span class="badge bg-danger">Disabled</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if m.hasAdmin() %}
+            <span class="badge bg-success">Yes</span>
+        {% else %}
+            <span class="badge bg-secondary">No</span>
+        {% endif %}
+    </td>
+
+    {% set hits = usage[m.id] ?? 0 %}
+    <td>
+        {% if hits > 0 %}
+            <span class="badge bg-info">{{ hits }}</span>
+        {% elseif m.enabled %}
+            <span class="badge bg-warning text-dark">idle</span>
+        {% else %}
+            —
+        {% endif %}
+    </td>
+
+    <td>
+        {# actions here #}
+    </td>
+</tr>
+  {% endfor %}
+</table>

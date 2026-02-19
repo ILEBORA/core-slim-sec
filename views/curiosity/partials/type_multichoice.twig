@@ -1,0 +1,5 @@
+<div id="user-input" class="multichoice">
+    {% for option in options %}
+        <button data-value="{{ option.value }}">{{ option.label }}</button>
+    {% endfor %}
+</div>

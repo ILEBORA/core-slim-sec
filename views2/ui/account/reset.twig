@@ -1,0 +1,22 @@
+<section class="auth-form reset">
+  <h2>Reset Your Password</h2>
+  <p>Enter your new password below.</p>
+
+  <form id="resetForm" data-action="{{ action }}" method="post" class="ajax-form">
+    <input type="hidden" name="token" value="{{ token|default('') }}">
+
+    <div class="form-group">
+      <label>New Password</label>
+      <input type="password" name="password" required>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" name="password_confirm" required>
+    </div>
+
+    <button type="submit" class="btn-primary w-full">Update Password</button>
+  </form>
+
+  {% include 'account/_auth_links.twig' with { page: 'reset' } %}
+</section>

@@ -1,0 +1,66 @@
+{# Base Card Grid View (grids/card.twig) #}
+<div class="grid-wrapper" data-grid-type="card" data-grid-id="{{ config.id|default('') }}" data-grid-unique="{{ config.unique }}">
+  <div class="grid-cards {{ config.class|default('') }}">
+    {% block grid_body %}
+      {% for item in data.data %}
+        {% include 'grids/card-item.twig' with {
+            item: item,
+            config: config,
+            grid: grid
+        } %}
+      {% else %}
+        {% block grid_empty %}
+          <div class="grid-empty">No data available</div>
+        {% endblock %}
+      {% endfor %}
+    {% endblock %}
+  </div>
+
+  {% block grid_footer %}
+    <div class="grid-footer">
+      {% block grid_pagination %}
+        {{ pagination|raw }}
+      {% endblock %}
+    </div>
+  {% endblock %}
+</div>
+
+<style>
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+.grid-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  transition: transform 0.2s ease;
+}
+.grid-card:hover {
+  transform: translateY(-3px);
+}
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: .25rem;
+}
+.grid-card .label {
+  font-weight: 600;
+  color: #555;
+}
+.grid-card .value {
+  color: #222;
+}
+.grid-empty {
+  text-align: center;
+  grid-column: 1 / -1;
+  padding: 2rem;
+  color: #999;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+</script>

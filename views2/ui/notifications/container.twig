@@ -1,0 +1,62 @@
+<div class="container">
+    <h2>{{ title }} <abbr class="total_logs badge grey">{{ count }}</abbr></h2>
+    <div id="notificaions_logs" class="notifications"><center style="padding:20px;"><img src="assets//images/icons/ajax.gif"/></center></div>
+    <div style="margin-top: 10px;">
+        <button id="prev-btn">Previous</button>
+        <button id="next-btn">Next</button>
+    </div>
+<div>
+
+<script>
+$(document).ready(function() {
+    let offset = 0;
+    const limit = {{ per_page | default(10)}};
+
+    function loadNotifyLogs() {
+        $.get('api/modules/notifications/load', { offset, limit }, function(response) {
+            const data = response.rows;
+            let rowsHtml = '';
+
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(row => {
+                    rowsHtml += row; // each row is already an HTML string
+                });
+                $('#notificaions_logs').html(rowsHtml);
+            }
+
+            $('#prev-btn').prop('disabled', offset === 0);
+            $('#next-btn').prop('disabled', !response.hasMore);
+
+            const totalRows = response.totalRows;
+            $('.total_logs').html(totalRows);
+
+            //Reset 
+            $('.log_new_notifications').html(0).attr('data-count', 0);
+
+        }, 'json');
+    }
+
+    $('#next-btn').click(function() {
+        offset += limit;
+        loadNotifyLogs();
+    });
+
+    $('#prev-btn').click(function() {
+        if (offset >= limit) {
+            offset -= limit;
+            loadNotifyLogs();
+        }
+    });
+
+    $('.notifyli').on('click',function(){
+        if($(this).hasClass('unseen')){
+            $(this).removeClass('unseen');
+        }
+    })
+
+
+    // Initial load
+    loadNotifyLogs();
+
+});
+</script>

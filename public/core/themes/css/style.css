@@ -1,0 +1,32 @@
+/*Themes Styles*/
+.well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}
+.input-group-addon, .input-group-btn {
+    white-space: nowrap; 
+    vertical-align: middle;
+}
+.input-group-addon {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form_loading { position:absolute; }
+td .lable-rpt {
+    text-align:right;
+    min-width:100px;
+    border-right:2px #ccc solid;
+    padding-right:10px;
+}
+td .item-rpt { text-align:left; font-weight:bold; }
+td h4.title-rpt { padding:10px; }

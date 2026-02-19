@@ -1,0 +1,10 @@
+{% block submenus %}
+    {{submenus|raw}}
+{% endblock %}
+
+{% block content %}
+    {% include "app/partials/client/breadcrumb.twig" %}
+
+    {{content|raw}}
+    
+{% endblock %}

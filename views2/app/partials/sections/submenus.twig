@@ -1,0 +1,8 @@
+<section class="submenu-area">
+        <div id="injectSub" class="container sub_menu animated" style="display: block;">
+            {% block submenus %}
+                {{submenus|raw}}
+            {% endblock %}
+        </div> 
+        <div id="injectSubChild" class="container sub_menu_child" style="display: block;"></div> 
+</section>

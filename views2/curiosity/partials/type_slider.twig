@@ -1,0 +1,29 @@
+<div id="user-input" class="slider">
+    <input type="range" id="slider-range"
+           name="{{ elem_key }}" 
+           min="{{ min|default(0) }}" 
+           max="{{ max|default(100) }}" 
+           value="{{ value|default(50) }}">
+    <span class="slider-value">{{ value|default(50) }}</span>
+</div>
+
+<button id="send-btn" class="btn">Submit</button>
+
+<script>
+ILEBORA.use('assets/js/jquery.js', function() {
+    var $slider = $('#slider-range');
+    var $display = $('#user-input.slider .slider-value');
+
+    // live update display
+    $slider.on('input change', function() {
+        $display.text($(this).val());
+    });
+
+    // submit on button click
+    $('#send-btn').off('click.slider').on('click.slider', function(e) {
+        e.preventDefault();
+        var val = $slider.val();
+        manager.handleUserInput(val); // 🔥 send value
+    });
+});
+</script>

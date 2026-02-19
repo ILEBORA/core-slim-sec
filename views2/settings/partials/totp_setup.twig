@@ -1,0 +1,28 @@
+<h4>Set up Authenticator App</h4>
+
+<img src="{{ qr }}" alt="Scan QR code">
+
+<p>
+    Or enter this code manually:
+    <code>{{ secret }}</code>
+    <br>
+    <code>{{ lable }}</code>
+    <br>
+    <code>{{ appName }}</code>
+</p>
+
+<input type="text" id="totp-code" placeholder="6-digit code">
+
+<button id="confirm-totp">Confirm</button>
+
+<script>
+$('#confirm-totp').on('click', function () {
+    $.post('api/modules/settings/totpconfirm', {
+        code: $('#totp-code').val()
+    }, function (resp) {
+        if (resp.success) {
+            location.reload();
+        }
+    });
+});
+</script>

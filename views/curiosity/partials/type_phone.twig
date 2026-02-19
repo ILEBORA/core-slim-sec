@@ -1,0 +1,44 @@
+<!-- Phone field -->
+<input type="tel" id="user-input" placeholder="Enter your phone number" autofocus>
+
+<!-- Phone icon (if you’re using font-awesome or similar) -->
+<i class="fa fa-phone phone-icon"></i>
+
+<!-- Include intl-tel-input CSS/JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+
+<script>
+ILEBORA.use('https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js',function(){
+    // Initialize phone input
+    const input = document.querySelector("#user-input");
+    const iti = window.intlTelInput(input, {
+        initialCountry: "ke",    // default to Kenya 🇰🇪
+        separateDialCode: true,  // show +254 separately
+        preferredCountries: ["ke", "us", "gb"],
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // for formatting/validation
+    });
+
+    // Autofocus when loaded
+    setTimeout(() => {
+        input.focus();
+    }, 100);
+
+    // Example: get number on submit
+    $("#send-btn").on("click", function(){
+        let fullNumber = iti.getNumber();
+        console.log("Full phone:", fullNumber);
+    });
+});
+</script>
+
+<style>
+/* quick styling */
+.phone-icon {
+    position: absolute;
+    margin-left: -30px;
+    margin-top: 10px;
+    color: #666;
+}
+</style>
+
+<button id="send-btn" class="btn">Send</button>

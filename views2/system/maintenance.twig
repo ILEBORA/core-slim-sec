@@ -1,0 +1,180 @@
+<h2>Backup and restore</h2>
+<style>
+    table.logs {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table.logs th, table.logs td {
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+    table.logs th{
+        border: 1px #b8d0e9 solid; 
+        text-align: center;
+        background: rgb(55, 55, 114);
+        font-weight: bold;
+        border-radius: 0;
+        color: #fff;
+    }
+</style>
+<div class="toolbar">
+<button id="create-backup-btn" class="btn small btn-success">Create New Backup</button>
+</div>
+
+<div class="content-section-wrapper" style="border-color: white;">
+<table class="logs table-opt-margin">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>IP</th>
+            <th>File</th>
+            <th>Size</th>
+            <th>Status</th>
+            <th>Date Added</th>
+            <th class="center fixed table-opt">Options</th>
+        </tr>
+    </thead>
+    <tbody id="backup-logs-body"></tbody>
+</table>
+</div>
+<div style="margin-top: 10px;">
+    <button id="prev-btn">Previous</button>
+    <button id="next-btn">Next</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+    let offset = 0;
+    const limit = 5;
+
+    function loadBackupLogs() {
+        $.get('api/modules/system/maintenance/load', { offset, limit }, function(response) {
+            const data = response.rows;
+            let rowsHtml = '';
+            
+            if (data.length > 0) {
+                data.forEach(row => {
+                    rowsHtml += `
+                        <tr>
+                            <td>${row.id}</td>
+                            <td>${row.userIP}</td>
+                            <td>${row.file}</td>
+                            <td>${row.size_formatted}</td>
+                            <td>${row.status}</td>
+                            <td>${row.date_added_formatted}</td>
+                            <td style="text-align:center;" class="table-opt">
+                                <img class="optionsButton" src="assets/images/icons/more.png" onclick="mPGs.showOptionsMenu(this)">
+                                <nav class="optionsMenu" data-id="1">
+                                    <li class="item restore-backup-btn" data-id="${row.id}">Restore</li>
+                                    <li class="item delete-backup-btn" data-id="${row.id}">Delete</li>
+                                </nav>
+                            </td>
+                        </tr>`;
+                });
+                $('#backup-logs-body').html(rowsHtml);
+            }
+
+            $('#prev-btn').prop('disabled', offset === 0);
+            $('#next-btn').prop('disabled', !response.hasMore);
+        }, 'json');
+    }
+
+    $('#next-btn').click(function() {
+        offset += limit;
+        loadBackupLogs();
+    });
+
+    $('#prev-btn').click(function() {
+        if (offset >= limit) {
+            offset -= limit;
+            loadBackupLogs();
+        }
+    });
+    
+    
+                
+            
+    $('#create-backup-btn').click(function(e) {
+        e.preventDefault();
+        alertBora.confirm('<h2>Create New Backup?</h2>', { 
+            html: true,
+            okName: 'Yes',
+            cancelName: 'No'
+        }).then(function() {
+            $.ajax({
+                url: 'api/modules/system/maintenance/backup',
+                method: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        let row = `<tr class="emphasize">
+                            <td>${response.data.id}</td>
+                            <td>${response.data.userIP}</td>
+                            <td>${response.data.file}</td>
+                            <td>${response.data.size}</td>
+                            <td>${response.data.status}</td>
+                            <td>${response.data.date_added}</td>
+                            <td><button class="item restore-backup-btn" data-id="${response.data.id}">Restore<br><span class="btn_loading_${response.data.id}"></span></button></td>
+                        </tr>`;
+                        $('table tbody').prepend(row);
+                        alertBora.alert('Backup created successfully!');
+                    } else {
+                        alertBora.alert('Backup creation failed.');
+                    }
+                },
+                error: function() {
+                    alertBora.alert('Request failed.');
+                }
+            });
+        });
+    });
+
+    // Delegated click for dynamically created restore buttons
+    $(document).on('click', '.restore-backup-btn', function(e) {
+        e.preventDefault();
+        const id = $(this).data('id');
+        // const btnLoading = $('.btn_loading_' + id);
+
+        alertBora.prompt('<h2>Caution:</h2>You need <i>elevated<i> permission to Restore backup item (Cannot be undone).', {
+            html: true,
+            prompt: '<input type="password" class="alertbora-input" name="pss" placeholder="Password">'
+        }).then(function(det) {
+            det['pss'] = md5(det['pss'].trim());
+            det['id'] = id;
+
+            // btnLoading.html('<img src="assets/images/icons/ajax.gif"/>');
+            // $('.mn-overlay').show();
+            // $('body').css('overflow', 'hidden');
+            // mPGs.showOverlay('Please wait...');
+            overlayLoader.show('Please wait...');
+            $.ajax({
+                url: 'api/modules/system/maintenance/restore/' + id,
+                method: 'POST',
+                dataType: 'json',
+                data: Object.assign({}, det),
+                success: function(response) {
+                    if (response.success) {
+                        alertBora.alert(response.message);
+                    } else {
+                        alertBora.alert('Error: ' + response.message);
+                    }
+                    // btnLoading.html('');
+
+                    overlayLoader.hide();
+                },
+                error: function() {
+                    alertBora.alert('Request failed.');
+                    // btnLoading.html('');
+                    overlayLoader.hide();
+                }
+            });
+        });
+    });
+
+    
+
+    // Initial load
+    loadBackupLogs();
+});
+
+</script>

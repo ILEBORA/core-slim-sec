@@ -1,0 +1,13 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipeline;
+
+$pipeline = new AssetPipeline(__DIR__, 'js');
+
+$pipeline
+    ->add('inbox.js')
+    ->add('chat.js')
+    ->add('realtime.js')
+    ->send();

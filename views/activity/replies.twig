@@ -1,0 +1,32 @@
+<div class="activity-thread" data-activity="{{ itemId }}">
+
+    {# Activity summary (hydrated via JS) #}
+    <button>Go Back</button>
+    <div id="threadActivity"></div>
+
+    {# Comment composer #}
+    <div class="thread-composer">
+        <input type="text" name="parent_id" value="{{ parent_id }}"/>
+        <textarea
+            id="threadCommentBody"
+            placeholder="Post your reply"></textarea>
+        <button id="threadSendComment">
+            Reply
+        </button>
+    </div>
+
+    {# Comments list #}
+    <div id="threadComments" class="thread-comments"></div>
+
+</div>
+
+<script>
+$(function(){
+    Thread.init(false);
+    const ctx = window.__diagContext || {};
+
+    if (ctx.state?.focus === 'composer') {
+        $('#threadCommentBody').focus();
+    }
+})
+</script>

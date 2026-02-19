@@ -1,0 +1,10 @@
+<a href="javascript:void(0)" onclick="{{ link }}" 
+    class="menu-block m-center wow bounceInRight animated" 
+    timer="500" offset="80" 
+    data-wow-delay="<?php echo (0.1*$i).'s';?>" 
+    style="visibility: visible; animation-delay: <?php echo (0.1*$i).'s';?>; cursor: pointer;"
+    >
+    {{ title }}
+    <i id="menu_loading_{{ page }}" class="menu_loading"></i>
+    <span {{ badge }} class="menu_badge_{{ page }} badge"></span>
+</a>

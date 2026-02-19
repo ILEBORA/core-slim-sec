@@ -1,0 +1,15 @@
+{% set curiosity_first = app_settings.show_curiosity_first ?? false %}
+<script>
+    // Defer decision to JS (will read localStorage)
+    window.APP_PREFERS_CURIOSITY = {{ curiosity_first ? 'true' : 'false' }};
+</script>
+
+<div id="entry-wrapper">
+    <div id="landing-container" style="display:none;">
+        {% include 'landing.twig' %}
+    </div>
+
+    <div id="curiosity-container" style="display:none;">
+        {% include 'curiosity.twig' %}
+    </div>
+</div>

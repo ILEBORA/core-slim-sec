@@ -1,0 +1,47 @@
+<!-- Pickr assets -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
+
+<input type="color" id="user-input" class="curiosity-input" value="#3498db">
+<!-- Target element -->
+<div id="user-input-target"></div>
+
+<script>
+ILEBORA.use('https://cdn.jsdelivr.net/npm/@simonwep/pickr',function(){
+    const pickr = Pickr.create({
+        el: '#user-input-target',
+        theme: 'classic', // 'classic', 'monolith', 'nano'
+        default: '#3498db',
+        swatches: [
+            '#1abc9c', '#16a085', '#f39c12',
+            '#e74c3c', '#8e44ad', '#2ecc71'
+        ],
+        components: {
+            // Main components
+            preview: true,
+            opacity: true,
+            hue: true,
+
+            // Input / interaction
+            interaction: {
+                hex: true,
+                rgba: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    pickr.on('save', (color) => {
+        console.log('Event: "save"', color);
+        const hex = color.toHEXA().toString();
+
+        // Update hidden input value
+        $('#user-input').val(hex);
+
+        // Change background of picker element
+        $('#color-picker').css('background-color', hex);
+    });
+});
+</script>
+
+<button id="send-btn" class="btn">Send</button>

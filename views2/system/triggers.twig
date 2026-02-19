@@ -1,0 +1,102 @@
+<h2 class="page-title">Database Triggers</h2>
+
+<div class="card">
+    <div class="card-header">
+        <strong>Installed Triggers</strong>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Event</th>
+                <th>Table</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for t in triggers %}
+            <tr>
+                <td>{{ t.trigger_name }}</td>
+                <td>{{ t.eventType }}</td>
+                <td>{{ t.tableName }}</td>
+                <td>
+                    <button class="btn-sm btn-danger uninstall-btn" data-name="{{ t.trigger_name }}">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-center">No triggers installed.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="card mt-4">
+    <div class="card-header">
+        <strong>Install New Triggers</strong>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr><th>Item</th><th>Table</th><th>Notify On</th><th></th></tr>
+        </thead>
+
+        <tbody>
+        {% for item, config in items %}
+            <tr>
+                <td>{{ item }}</td>
+                <td>{{ config.table }}</td>
+                <td>
+                    <label><input type="checkbox" class="ntf" value="insert"> Insert</label>
+                    <label><input type="checkbox" class="ntf" value="update"> Update</label>
+                    <label><input type="checkbox" class="ntf" value="delete"> Delete</label>
+                </td>
+                <td>
+                    <button class="btn-sm btn-primary install-btn"
+                        data-item="{{ item }}"
+                        data-table="{{ config.table }}">
+                        Install
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+$(document).on("click", ".install-btn", function() {
+    let row = $(this).closest("tr");
+    let types = [];
+
+    row.find(".ntf:checked").each(function() {
+        types.push($(this).val());
+    });
+
+    $.post("api/modules/system/triggers/install", {
+        item: $(this).data("item"),
+        table: $(this).data("table"),
+        types: types
+    }, function(res){
+        alert(res.message.join("\n"));
+        window.location.reload();
+    });
+});
+
+
+$(document).on("click", ".uninstall-btn", function() {
+    if(!confirm("Delete this trigger?")) return;
+
+    $.post("api/modules/system/triggers/uninstall", {
+        trigger: $(this).data("name")
+    }, function(res){
+        alert(res.message);
+        window.location.reload();
+    });
+});
+</script>

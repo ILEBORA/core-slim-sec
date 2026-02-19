@@ -1,0 +1,38 @@
+{# Timeline Wrapper #}
+<div class="timeline">
+    {{lvui|raw}}
+    {# Composer placeholder (future use) #}
+    <div class="timeline-composer">
+        <div class="composer-placeholder">
+            What’s on your mind?
+        </div>
+    </div>
+
+    {# Feed #}
+    <div
+        id="activityFeedNew"
+        class="timeline-feed activityFeedNew"
+        data-scope="{{ scope|default('home') }}"
+    >
+        {# JS injects items here #}
+    </div>
+    <div
+        id="activityFeed"
+        class="timeline-feed"
+        data-scope="{{ scope|default('home') }}"
+    >
+        {# JS injects items here #}
+    </div>
+
+    {# Loading indicator #}
+    <div class="timeline-loading" style="display:none;">
+        Loading…
+    </div>
+
+</div>
+
+<script>
+$(function(){
+    ActivityFeed.init();
+});
+</script>

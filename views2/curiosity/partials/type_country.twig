@@ -1,0 +1,50 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<select id="user-input">
+    <option value="" disabled selected>Select option...</option>
+    {% for opt in options %}
+        {% if opt is iterable %}
+            {# Case 2: object/assoc array #}
+            <option value="{{ opt.value is defined ? opt.value : (opt.id is defined ? opt.id : loop.index) }}">
+                {{ opt.label is defined ? opt.label : (opt.name is defined ? opt.name : opt|first) }}
+            </option>
+        {% else %}
+            {# Case 1: flat string #}
+            <option value="{{ opt|lower }}">{{ opt }}</option>
+        {% endif %}
+    {% endfor %}
+</select>
+
+
+<script>
+ILEBORA.use('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', function() {
+    $('#user-input').select2({
+        placeholder: "Select your country",
+        allowClear: true,
+        ajax: {
+            url: 'api/modules/curiosity/countries',   // <-- make sure leading slash is there
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term || '' // search term
+                };
+            },
+            processResults: function (data) {
+                // If your PHP already returns { results: [...] }, just return data
+                if (data.results) {
+                    return data;
+                }
+                // Otherwise map it manually
+                return {
+                    results: data.map(function (item) {
+                        return { id: item.id, text: item.text }; // <- use `id`, not `pid`
+                    })
+                };
+            }
+        }
+    });
+});
+</script>
+
+<button id="send-btn" class="btn">Send</button>

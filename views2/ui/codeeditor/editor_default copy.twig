@@ -1,0 +1,179 @@
+<?php 
+$class = ActiveModule('codeeditor');
+$constants = $class->getModuleConstants();
+?>
+
+<link rel="stylesheet" href="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/css/style.min.css" />
+<link rel="stylesheet" href="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/css/codemirror.min.css" />
+<link rel="stylesheet" href="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/css/lint.min.css">
+<link rel="stylesheet" href="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/css/dialog.min.css">
+<link rel="stylesheet" href="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/css/iziToast.min.css">
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/jquery.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/popper.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/bootstrap.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/jstree.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/codemirror.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/javascript.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/css.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/php.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/xml.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/htmlmixed.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/markdown.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/clike.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/jshint.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/jsonlint.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/lint.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/javascript-lint.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/json-lint.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/css-lint.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/search.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/searchcursor.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/jump-to-line.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/dialog.min.js"></script>
+<script src="https://projects.ilebora:8081/core2_v1.0.1/src/coremodules/devtools/v1_0/codeeditor/v1_0/private/addons/js/iziToast.min.js"></script>
+
+<div class="container-fluid">
+
+    <div class="row p-3">
+        <div class="col-md-3">
+            <!-- http://github.com/hamidsamak/pheditor -->
+            <h1><a href="#" target="_blank" title="Editor <?= $constants::VERSION ?>">Editor</a></h1>
+            <?php //die('here');?>
+        </div>
+        <div class="col-md-9">
+            <div class="float-left">
+                <div class="dropdown float-left">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="fileMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">File</button>
+                    <div class="dropdown-menu" aria-labelledby="fileMenu">
+                        <?php if (in_array('newfile', $class->permissions)) { ?>
+                            <a class="dropdown-item new-file" href="javascript:void(0);">New File <span class="float-right text-secondary">N</span></a>
+                        <?php } ?>
+
+                        <?php if (in_array('newdir', $class->permissions)) { ?>
+                            <a class="dropdown-item new-dir" href="javascript:void(0);">New Directory</a>
+                        <?php } ?>
+
+                        <?php if (in_array('uploadfile', $class->permissions)) { ?>
+                            <a class="dropdown-item upload-file" href="javascript:void(0);">Upload File <span class="float-right text-secondary">U</span></a>
+                        <?php } ?>
+
+                        <?php if (in_array('newfile', $class->permissions) || in_array('newdir', $class->permissions)) { ?>
+                            <div class="dropdown-divider"></div>
+                        <?php } ?>
+
+                        <?php if (in_array('newfile', $class->permissions) || in_array('editfile', $class->permissions)) { ?>
+                            <a class="dropdown-item save disabled" href="javascript:void(0);">Save <span class="float-right text-secondary">S</span></a>
+                        <?php } ?>
+
+                        <?php if (in_array('deletefile', $class->permissions) || in_array('deletedir', $class->permissions)) { ?>
+                            <a class="dropdown-item delete disabled" href="javascript:void(0);">Delete <span class="float-right text-secondary">D</span></a>
+                        <?php } ?>
+
+                        <?php if (in_array('renamefile', $class->permissions) || in_array('renamedir', $class->permissions)) { ?>
+                            <a class="dropdown-item rename disabled" href="javascript:void(0);">Rename <span class="float-right text-secondary">R</span></a>
+                        <?php } ?>
+
+                        <a class="dropdown-item reopen disabled" href="javascript:void(0);">Re-open <span class="float-right text-secondary">O</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item close disabled" href="javascript:void(0);">Close <span class="float-right text-secondary">C</span></a>
+                    </div>
+                </div>
+                <span id="path" class="btn float-left"></span>
+            </div>
+
+            <div class="float-right">
+                <?php if (in_array('changepassword', $class->permissions)) { ?><a href="javascript:void(0);" class="change-password btn btn-sm btn-primary">Password</a> &nbsp; <?php } ?><a href="<?= $_SERVER['PHP_SELF'] ?>?logout=1" class="btn btn-sm btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row px-3">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+            <div id="files" class="card">
+                <div class="card-block"><?= files($constants::MAIN_DIR) ?></div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 col-md-9 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-block">
+                    <div id="loading">
+                        <div class="lds-ring">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <textarea id="editor" data-file="" class="form-control"></textarea>
+                    <input id="digest" type="hidden" readonly>
+                </div>
+            </div>
+        </div>
+
+        <?php if (in_array('terminal', $class->permissions) !== false) : ?>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div id="terminal">
+                            <div>
+                                <button type="button" class="btn btn-light float-right ml-1 clear" style="display: none;">Clear</button>
+                                <button type="button" class="btn btn-light float-right ml-1 copy" style="display: none;">Copy to clipboard</button>
+                                <button type="button" class="btn btn-light float-right ml-1 fullscreen" style="display: none;">Full Screen</button>
+                                <span class="toggle" data-toggle="collapse" data-target="#prompt">Terminal</span>
+                                <div style="clear:both"></div>
+                            </div>
+                            <div id="prompt" class="collapse">
+                                <pre></pre>
+                                <input name="command" type="text" value="" class="command" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </div>
+
+</div>
+
+<div class="alert"></div>
+
+<form method="post">
+    <input name="action" type="hidden" value="upload-file">
+    <input name="destination" type="hidden" value="">
+
+    <div class="modal" id="uploadFileModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload File</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input name="uploadfile[]" type="file" value="" multiple>
+                    </div>
+                    <?php
+
+                    if (function_exists('ini_get')) {
+                        $sizes = [
+                            ini_get('post_max_size'),
+                            ini_get('upload_max_filesize')
+                        ];
+
+                        $max_size = max($sizes);
+
+                        echo '<small class="text-muted">Maximum file size: ' . $max_size . '</small>';
+                    }
+
+                    ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

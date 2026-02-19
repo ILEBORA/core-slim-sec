@@ -1,0 +1,9 @@
+{% extends 'layouts/admin.twig' %}
+{% block submenus %}
+    {{submenus|raw}}
+{% endblock %}
+{% block content %}
+    {% include "app/partials/admin/breadcrumb.twig" %}
+
+    {{content|raw}}
+{% endblock %}

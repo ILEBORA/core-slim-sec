@@ -1,0 +1,107 @@
+{# 
+  Expected:
+  pages = hierarchical tree:
+  [
+    {
+      id: 1,
+      title: "Dashboard",
+      route: "bo",
+      children: [...]
+    }
+  ]
+#}
+
+<div class="page-sort-container">
+
+    <ul class="page-sort-root" id="page-sort-root">
+
+        {% macro render_nodes(nodes) %}
+            {% import _self as tree %}
+
+            {% for node in nodes %}
+                <li class="page-node"
+                    data-id="{{ node.id }}">
+
+                    <div class="page-node-item">
+                        <span class="drag-handle">☰</span>
+
+                        <span class="page-title">
+                            {{ node.title ?: 'Untitled' }}
+                        </span>
+
+                        <small class="text-muted">
+                             &nbsp;/{{ node.route }} {{ node.sort_order }}
+                        </small>
+                    </div>
+
+                    {% if node.children is defined and node.children|length > 0 %}
+                        <ul class="page-children">
+                            {{ tree.render_nodes(node.children) }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% endmacro %}
+
+        {% import _self as tree %}
+        {{ tree.render_nodes(pages) }}
+
+    </ul>
+
+</div>
+
+{# Hidden field for submission #}
+<input type="hidden" name="tree_structure" id="tree_structure">
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+
+$(function(){
+    initPageSorter();
+});
+function initPageSorter() {
+
+    const nestedSortables = document.querySelectorAll('.page-sort-root, .page-children');
+
+    nestedSortables.forEach(el => {
+       new Sortable(el, {
+           group: 'nested',
+           animation: 150,
+           handle: '.drag-handle',
+           fallbackOnBody: true,
+           swapThreshold: 0.65
+       });
+    });
+
+}
+
+function serializeTree(root) {
+    let result = [];
+
+    root.querySelectorAll(':scope > li').forEach(li => {
+        const id = li.dataset.id;
+
+        const childUl = li.querySelector(':scope > ul');
+        const children = childUl ? serializeTree(childUl) : [];
+
+        result.push({
+            id: parseInt(id),
+            children: children
+        });
+    });
+
+    return result;
+}
+
+document.querySelector('form').addEventListener('submit', function () {
+    const root = document.getElementById('page-sort-root');
+    const structure = serializeTree(root);
+
+    document.getElementById('tree_structure').value =
+        JSON.stringify(structure);
+
+    
+});
+
+
+</script>

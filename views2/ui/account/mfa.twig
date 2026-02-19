@@ -1,0 +1,54 @@
+<div class="mfa-wrapper">
+  <h2>Two-Factor Authentication</h2>
+
+  <?php if ($method === 'totp'): ?>
+      <p>Please open your authenticator app and enter the 6-digit code:</p>
+  <?php elseif ($method === 'sms'): ?>
+      <p>We’ve sent a verification code to your phone number.</p>
+  <?php else: ?>
+      <p>We’ve sent a verification code to your email address.</p>
+  <?php endif; ?>
+
+  <form id="mfa_form" method="post">
+      <label for="mfa_code">Verification Code</label>
+      <input type="text" id="mfa_code" name="mfa_code" maxlength="6" required />
+
+      <button type="submit" class="btn btn-primary">Verify</button>
+
+      <div id="mfa_feedback" class="text-sm mt-2"></div>
+  </form>
+
+  <div class="text-xs text-muted mt-3">
+      Code expires in <span id="mfa_timer">{{expiresIn}}</span> seconds.
+  </div>
+</div>
+
+<script>
+$(function() {
+  // countdown
+  let secs = parseInt($('#mfa_timer').text());
+  const timer = setInterval(() => {
+    if (--secs <= 0) {
+      clearInterval(timer);
+      $('#mfa_timer').text('expired');
+    } else {
+      $('#mfa_timer').text(secs);
+    }
+  }, 1000);
+
+  // form submission
+  $('#mfa_form').on('submit', function(e) {
+    e.preventDefault();
+    const code = $('#mfa_code').val();
+
+    $.post('api/modules/ui/access/verify', { mfa_code: code }, function(res) {
+      if (res.success) {
+        $('#mfa_feedback').text('✅ Verified! Redirecting...');
+        setTimeout(() => window.location.href = res.redirect, 1000);
+      } else {
+        $('#mfa_feedback').text('❌ ' + res.message);
+      }
+    }, 'json');
+  });
+});
+</script>

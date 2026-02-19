@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">
+        <strong>Most Used Modules</strong>
+    </div>
+
+    <div class="card-body p-0">
+        {% if modules is empty %}
+            <div class="p-3 text-muted text-center">
+                No usage data available
+            </div>
+        {% else %}
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th class="text-end">Hits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for m in modules %}
+                    <tr>
+                        <td>{{ m.name }}</td>
+                        <td class="text-end">
+                            {{ m.hits }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>

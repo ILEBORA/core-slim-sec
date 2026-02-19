@@ -1,0 +1,309 @@
+<script type="text/template" id="tpl-inbox-message">
+    {{ source('inbox/render/message/bubble.twig') }}
+</script>
+
+<div class="inbox-layout" data-view="{{data_view|default('list')}}">
+    {{lvui|raw}}
+    <aside class="inbox-sidebar">
+        <h3>Inbox</h3>
+        <div class="thread-search">
+            <input
+                type="search"
+                placeholder="Search conversations…"
+                aria-label="Search inbox"
+            >
+            <button
+                class="filter-unread"
+                aria-pressed="false"
+                title="Show unread only">
+                ●
+            </button>
+        </div>
+        <div class="thread-filters">
+            <button data-type="all" class="active">All</button>
+            <button data-type="direct">Direct</button>
+            <button data-type="group">Groups</button>
+        </div>
+        <ul class="thread-list" lvui="inbox_threads">
+            {% for thread in threads %}
+                <li class="thread-item {{ thread.unread_count ? 'unread' : '' }}"
+                    data-thread="{{ thread.thread_id }}">
+
+                    <div class="avatar">
+                        <span class="status-dot online"></span>
+                    </div>
+
+                    <div class="meta">
+                        <div class="title">
+                            {{ thread.title ?? 'Conversation' }}
+                        </div>
+
+                        <div class="preview">
+                            {{ thread.last_message_body|default('No messages yet') }}
+                        </div>
+                    </div>
+
+                    <div class="stats">
+                        {% if thread.unread_count %}
+                            <span class="badge">{{ thread.unread_count }}</span>
+                        {% endif %}
+                        <time>{{ thread.last_message_at|date('H:i') }}</time>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <main class="inbox-content">
+        {% block inbox_content %}
+            {% if threads is empty %}
+                <div class="empty-state inbox-empty">
+                    <h3>No conversations yet</h3>
+                    <p>Start a new conversation to begin chatting.</p>
+
+                    <button class="btn btn-primary"
+                            onclick="InboxUI.startConversation()">
+                        Start a conversation
+                    </button>
+                </div>
+            {% else %}
+            sss
+                <div class="empty-state">
+                    Select a conversation
+                </div>
+            {% endif %}
+        {% endblock %}
+    </main>
+
+    <button
+        class="fab-new-thread"
+        aria-label="New conversation"
+        title="New conversation">
+        +
+    </button>
+
+
+    <div class="inbox-composer" hidden>
+        <div class="composer-backdrop"></div>
+
+        <div class="composer-sheet">
+            <header>
+                <h4>New conversation</h4>
+                <button class="close">×</button>
+            </header>
+
+            <div class="composer-body">
+
+                <input
+                    type="search"
+                    class="participant-search"
+                    placeholder="Search people…"
+                    autocomplete="off"
+                >
+
+                <ul class="participant-results">
+                    <!-- dynamically populated -->
+                </ul>
+
+            </div>
+
+            <footer>
+                <button class="start-btn" disabled>
+                    Start
+                </button>
+            </footer>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+//let ldr = 1
+//alert(ldr);
+//ldr++;
+document.addEventListener('click', e => {
+    const item = e.target.closest('.thread-item');
+    if (!item) return;
+
+    const threadId = item.dataset.thread;
+    if (!threadId) return;
+
+    // UI state
+    const layout = document.querySelector('.inbox-layout');
+    layout?.setAttribute('data-view', 'thread');
+
+    // Mark active
+    document
+        .querySelectorAll('.thread-item.active')
+        .forEach(el => el.classList.remove('active'));
+    item.classList.add('active');
+
+    //Load thread content
+    appInbox.openThread(threadId);
+
+    //Update URL (no reload)
+    history.pushState(
+        { threadId },
+        '',
+        `portal/inbox/show/${threadId}`
+    );
+
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.back-btn')) return;
+
+    const layout = document.querySelector('.inbox-layout');
+    layout?.setAttribute('data-view', 'list');
+});
+
+document.addEventListener('click', e => {
+    const btn = e.target.closest('.fab-new-thread');
+    if (!btn) return;
+
+    const layout = document.querySelector('.inbox-layout');
+    const view = layout?.getAttribute('data-view');
+
+    if (view === 'thread') {
+        // Optional: go back first
+        layout.setAttribute('data-view', 'list');
+    }
+
+    // Open new conversation flow
+    appInbox.openNewThread();
+});
+
+
+
+
+(function () {
+    const searchInput = document.querySelector('.thread-search input');
+    const unreadBtn   = document.querySelector('.filter-unread');
+    const list        = document.querySelector('.thread-list');
+
+    if (!searchInput || !unreadBtn || !list) return;
+
+    function applyFilters() {
+        const q = searchInput.value.trim().toLowerCase();
+        const unreadOnly = unreadBtn.getAttribute('aria-pressed') === 'true';
+        
+
+        list.querySelectorAll('.thread-item').forEach(item => {
+            const title   = item.querySelector('.title')?.textContent ?? '';
+            const preview = item.querySelector('.preview')?.textContent ?? '';
+            const unread  = item.classList.contains('unread');
+
+            const matchesText =
+                (title + ' ' + preview).toLowerCase().includes(q);
+
+            const matchesUnread =
+                !unreadOnly || unread;
+
+            const activeType =
+                document.querySelector('.thread-filters .active')
+                    ?.dataset.type ?? 'all';
+
+            const matchesType =
+                activeType === 'all' ||
+                item.dataset.type === activeType;
+
+            //item.style.display =
+            //  matchesText && matchesUnread ? '' : 'none';
+
+            item.style.display =
+                matchesText && matchesUnread && matchesType ? '' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+
+    unreadBtn.addEventListener('click', () => {
+        const active =
+            unreadBtn.getAttribute('aria-pressed') === 'true';
+
+        unreadBtn.setAttribute(
+            'aria-pressed',
+            (!active).toString()
+        );
+
+        applyFilters();
+    });
+
+    document.querySelectorAll('.thread-filters button')
+        .forEach(btn => {
+            btn.addEventListener('click', () => {
+                document
+                    .querySelector('.thread-filters .active')
+                    ?.classList.remove('active');
+
+                btn.classList.add('active');
+                applyFilters();
+            });
+        });
+})();
+
+(function () {
+    const list = document.querySelector('.thread-list');
+    if (!list) return;
+
+    function visibleItems() {
+        return [...list.querySelectorAll('.thread-item')]
+            .filter(i => i.style.display !== 'none');
+    }
+
+    document.addEventListener('keydown', e => {
+        if (!['ArrowUp', 'ArrowDown', 'Enter'].includes(e.key)) return;
+
+        const items = visibleItems();
+        if (!items.length) return;
+
+        let index = items.findIndex(i =>
+            i.classList.contains('selected')
+        );
+
+        if (e.key === 'ArrowDown') {
+            index = Math.min(index + 1, items.length - 1);
+        }
+
+        if (e.key === 'ArrowUp') {
+            index = Math.max(index - 1, 0);
+        }
+
+        if (e.key === 'Enter' && index >= 0) {
+            items[index].click();
+            return;
+        }
+
+        items.forEach(i => i.classList.remove('selected'));
+        items[index]?.classList.add('selected');
+        items[index]?.scrollIntoView({ block: 'nearest' });
+    });
+})();
+
+window.InboxUI = {
+    startConversation() {
+        // simplest possible v1
+        fetch('api/modules/inbox/thread', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                thread_type: 'chat',
+                title: 'New Conversation'
+            })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success && res.data.thread) {
+                window.location.href = 'portal/inbox/' + res.data.thread.id;
+            }
+        });
+    }
+};
+
+//
+$(function(){
+    appInbox.init();
+    appInbox.focus();
+});
+</script>

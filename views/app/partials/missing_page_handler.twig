@@ -1,0 +1,40 @@
+<div class="notice" id="missing-handler-{{ slug }}">
+    ⚠️ Missing Page Handler: You can create <code>{{ className }}PageHandler</code> in <code>App/Managers/Pages</code>.<br>
+    👉 Try: <code>php console make:page-handler {{ slug }}</code><br><br>
+
+    <button class="btn-create" data-slug="{{ slug }}">Create Handler</button>
+    <button class="btn-ignore" data-slug="{{ slug }}">Ignore</button>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-create').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const slug = this.dataset.slug;
+            fetch('dev-tools/create-handler', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug })
+            }).then(() => {
+                document.getElementById(`missing-handler-${slug}`).style.display = 'none';
+            });
+        });
+    });
+
+    document.querySelectorAll('.btn-ignore').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const slug = this.dataset.slug;
+            fetch('dev-tools/ignore-handler', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug })
+            }).then(() => {
+                document.getElementById(`missing-handler-${slug}`).style.display = 'none';
+            });
+        });
+    });
+});
+</script>

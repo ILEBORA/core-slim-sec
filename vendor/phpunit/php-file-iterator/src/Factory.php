@@ -18,7 +18,7 @@ use function glob;
 use function is_dir;
 use function is_string;
 use function realpath;
-use AppendIterator;
+use BoraSlim\Core\AppendIterator;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

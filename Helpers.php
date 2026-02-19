@@ -292,7 +292,7 @@ function userID():string
     $userID = $_SESSION['id']??''; //TODO:: get userID
 
     if (isset($_SESSION['access_token'])) {
-        $payload = \App\Utils\Utils::validToken($_SESSION['access_token']);
+        $payload = \BoraSlim\Core\Modules\App\Utils\Utils::validToken($_SESSION['access_token']);
         $user = $payload['user'];
         $userID = $user['id'];
     }
@@ -691,6 +691,8 @@ if (!function_exists('hasPermission')) {
         //     throw new \Exception("Access denied: {$module}.{$action}");
         // }
         $permManager = myApp()->getFeature('permissions');
+        $module = strtolower($module);
+        $action = strtolower($action);
         
         $has = $permManager->hasPermission($module, $action, $autoRegister);
         
@@ -822,8 +824,8 @@ if (!function_exists('appConstants')) {
      */ 
     function appConstants(?string $key = null)
     {
-        $class = class_exists(\App\Config\Constants::class)
-            ? \App\Config\Constants::class
+        $class = class_exists(\BoraSlim\Core\Modules\App\Config\Constants::class)
+            ? \BoraSlim\Core\Modules\App\Config\Constants::class
             : \BoraSlim\Core\Config\Constants::class;
 
         // If no key is provided, return the class itself
@@ -842,8 +844,8 @@ if (!function_exists('appConstants')) {
 
 
 if(!function_exists('Redirect')){
-    function Redirect() : \App\Utils\Redirect{
-        return new \App\Utils\Redirect();
+    function Redirect() : \BoraSlim\Core\Modules\App\Utils\Redirect{
+        return new \BoraSlim\Core\Modules\App\Utils\Redirect();
     }
 }
 
@@ -865,7 +867,7 @@ if(!function_exists('CryptoJSAesEncrypt')){
 
 if(!function_exists('Hooks')){
     function Hooks(){
-        return \App\Utils\Hooks::getInstance();
+        return \BoraSlim\Core\Modules\App\Utils\Hooks::getInstance();
     }
 }
 
@@ -1315,9 +1317,9 @@ function tap(mixed $value, callable $callback): mixed {
 }
 
 //Cache 
-function cache(): \App\Cache\Cache
+function cache(): \BoraSlim\Core\Modules\App\Cache\Cache
 {
-    return new \App\Cache\Cache();
+    return new \BoraSlim\Core\Modules\App\Cache\Cache();
 }
 
 function cache_get(string $key, mixed $default = null): mixed {
@@ -1439,7 +1441,7 @@ if (!function_exists('i18n_register_module')) {
     }
 }
 
-use BoraSlim\Core\Contracts\Modules\ModuleService;
+use BoraSlim\Core\Kernel\Modules\ModuleService;
 if (!function_exists('i18n_register_auto')) {
     function i18n_register_auto(ModuleService $service): void
     {

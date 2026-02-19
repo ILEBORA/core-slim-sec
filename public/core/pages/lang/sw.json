@@ -1,0 +1,22 @@
+{
+  "accept": "Kitendo kimefaulu",
+  "created": "Ukurasa umeundwa kwa mafanikio",
+  "updated": "Ukurasa umehaririwa kwa mafanikio",
+  "deleted": "Ukurasa umefutwa kwa mafanikio",
+
+  "not_found": "Ukurasa haujapatikana",
+  "forbidden": "Huna ruhusa ya kufikia ukurasa huu",
+  "method_not_allowed": "Kitendo hiki hakiruhusiwi",
+
+  "invalid_data": "Taarifa za ukurasa si sahihi",
+  "invalid_route": "Njia (route) iliyobainishwa si sahihi",
+  "duplicate_route": "Tayari kuna ukurasa wenye njia hii",
+
+  "invalid_parent": "Ukurasa mzazi uliobainishwa si sahihi",
+  "circular_reference": "Muundo wa ukurasa una mzunguko usioruhusiwa",
+
+  "type_not_found": "Aina ya ukurasa haijapatikana",
+  "invalid_type": "Aina ya ukurasa si sahihi",
+
+  "inactive": "Ukurasa huu hauko hai kwa sasa"
+}

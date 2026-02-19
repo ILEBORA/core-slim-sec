@@ -1,0 +1,126 @@
+<div class="scene banner-image">
+    <div class="cube tilt rotating">
+      <div class="cube__face cube__face--front"><img src="assets/images/branding/3d/front1.png"></div>
+      <div class="cube__face cube__face--back"><img src="assets/images/branding/3d/back1.png"></div>
+      <div class="cube__face cube__face--right"><img src="assets/images/branding/3d/right1.png"></div>
+      <div class="cube__face cube__face--left"><img src="assets/images/branding/3d/left1.png"></div>
+      <div class="cube__face cube__face--top"><img src="assets/images/branding/3d/top1.png" style="display:;"></div>
+      <div class="cube__face cube__face--bottom"><img src="assets/images/branding/3d/bottom1.png" style="display:;"></div>
+    </div>
+  </div>
+  <div class="controls" style="display:none">
+    <p class="radio-group">
+        <label>
+        <input type="radio" name="rotate-cube-side" value="front"  /> front
+        </label>
+        <label>
+        <input type="radio" name="rotate-cube-side" value="right" /> right
+        </label>
+        <label>
+        <input type="radio" name="rotate-cube-side" value="back" /> back
+        </label>
+        <label>
+        <input type="radio" name="rotate-cube-side" value="left" /> left
+        </label>
+        <label>
+        <input type="radio" name="rotate-cube-side" value="top" /> top
+        </label>
+        <label>
+        <input type="radio" name="rotate-cube-side" value="bottom" /> bottom
+        </label>
+        <label>
+        <input type="radio" name="rotate-cube-side" value="tilt" checked /> tilt
+        </label>
+    </p>
+    
+
+    <p>
+        <label>
+        perspective
+        <input class="perspective-range" type="range" min="1" max="1000" value="400" data-units="px" />
+        </label>
+    </p>
+    <p>
+        <label>
+        perspective-origin x
+        <input class="origin-x-range" type="range" min="0" max="100" value="50" data-units="%" />
+        </label>
+    </p>
+    <p>
+        <label>
+        perspective-origin y
+        <input class="origin-y-range" type="range" min="0" max="100" value="50" data-units="%" />
+        </label>
+    </p>
+    <p>
+        <label>
+        Spin cube
+        <input class="spin-cube-checkbox" type="checkbox" />
+        </label>
+    </p>
+    <p>
+        <label>
+        Backface visible
+        <input class="backface-checkbox" type="checkbox" checked />
+        </label>
+    </p>
+
+   
+</div>
+ <p class="spin-stats"><span id="spin-count">0</span></p>
+
+<script>
+        const cube = document.querySelector('.cube');
+        const spinCountDisplay = document.getElementById('spin-count');
+        let spinCount = 0;
+
+        // Listen for each animation iteration
+        cube.addEventListener('animationiteration', () => {
+            spinCount++;
+            spinCountDisplay.textContent = spinCount;
+        });
+
+
+        
+//   const cube = document.getElementById('cube');
+//   let isDragging = false;
+//   let previousMouseX = 0;
+//   let previousMouseY = 0;
+//   let rotationX = 0; // Track rotation around the X-axis
+//   let rotationY = 0; // Track rotation around the Y-axis
+
+//   // Start dragging
+//   cube.addEventListener('mousedown', (e) => {
+//       isDragging = true;
+//       previousMouseX = e.clientX;
+//       previousMouseY = e.clientY;
+//       cube.style.transition = 'none'; // Disable smooth transition during drag
+//   });
+
+//   // Dragging
+//   document.addEventListener('mousemove', (e) => {
+//       if (!isDragging) return;
+
+//       const deltaX = e.clientX - previousMouseX; // Mouse movement in the X direction
+//       const deltaY = e.clientY - previousMouseY; // Mouse movement in the Y direction
+
+//       rotationY += deltaX * 0.5; // Adjust sensitivity
+//       rotationX -= deltaY * 0.5; // Adjust sensitivity
+
+//       cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+//       previousMouseX = e.clientX;
+//       previousMouseY = e.clientY;
+//   });
+
+//   // Stop dragging
+//   document.addEventListener('mouseup', () => {
+//       if (isDragging) {
+//           isDragging = false;
+//           cube.style.transition = 'transform 0.3s ease-out'; // Smooth transition on release
+//       }
+//   });
+</script>
+    </script>
+
+

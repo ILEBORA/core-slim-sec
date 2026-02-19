@@ -1,0 +1,11 @@
+<div id="grids-root"></div>
+
+<script type="module">
+import { registerGridsWithBora } from "./assets/core/grids/js/bora-adapter.js";
+
+registerGridsWithBora(window.BoraPluginV2);
+
+BoraPluginV2.use("grids", {
+    container: "#grids-root"
+});
+</script>

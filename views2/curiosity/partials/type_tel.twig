@@ -1,0 +1,10 @@
+<div id="user-input" class="tel-input">
+    <input 
+        type="tel" 
+        name="{{ elem_key }}" 
+        placeholder="{{ placeholder|default('Enter your phone number') }}" 
+        pattern="[0-9+ ]{7,15}" 
+        inputmode="tel"
+    />
+    <button id="send-btn" class="btn">Submit</button>
+</div>

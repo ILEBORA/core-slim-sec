@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<input type="text" id="user-input"  class="curiosity-input" placeholder="Select a date" >
+
+<script>
+ILEBORA.use('https://cdn.jsdelivr.net/npm/flatpickr',function(){
+    flatpickr("#user-input", {
+        dateFormat: "Y-m-d",
+        allowInput: true
+    });
+});
+</script>
+
+<button id="send-btn" class="btn">Send</button>

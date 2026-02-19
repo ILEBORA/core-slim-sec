@@ -1,0 +1,34 @@
+<script src="assets/js/vendor/crypto-js.min.js"></script>
+
+<div class="curiosity_overlay" onclick="navigator.vibrate(200);">
+	<button data-e-trigger="curiosity.close">Close</button> 
+	<button id="logout-btn" data-e-trigger="user.logout" style="display:none;">Logout</button>
+	<div id="chat-container">
+		<div class="ai-message">
+			<div class="ai-icon">
+				<img src="assets/images/branding/icon.png"/>
+			</div>
+			<div class="ai-bubble"></div>
+		</div>
+    </div>
+	<div class="curiosity-input">
+		<div id="input-container" class="input">
+			
+		</div>
+		
+		
+	</div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const token = localStorage.getItem("auth.token");
+
+    // Show logout if token exists and is not empty/null
+    if (token && token.trim() !== "" && token !== "null") {
+        logoutBtn.style.display = "inline-block";
+    }
+});
+</script>

@@ -1,0 +1,106 @@
+{% if options is not empty %}
+<div class="page-actions f-right">
+
+    <button class="kebab-btn" aria-label="Page options">
+        <span class="kebab-icon">⋮</span>
+    </button>
+
+    <div class="kebab-dropdown">
+
+        {% if options.current is defined and options.current|length > 0 %}
+            <div class="dropdown-section">
+                <div class="dropdown-title">Current Page</div>
+
+                <ul class="dropdown-list">
+                    {% for item in options.current %}
+                        <li>
+                            <span href="#"
+                               data-action="{{ item.action }}"
+                               class="{{ item.class|default('') }}">
+                                {{ item.label }}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if options.current is defined 
+              and options.settings is defined
+              and options.current|length > 0
+              and options.settings|length > 0 %}
+            <div class="dropdown-divider"></div>
+        {% endif %}
+
+        {% if options.settings is defined and options.settings|length > 0 %}
+            <div class="dropdown-section">
+                <div class="dropdown-title">Page Structure</div>
+
+                <ul class="dropdown-list">
+                    {% for item in options.settings %}
+                        <li>
+                            <span href="#"
+                               data-action="{{ item.action }}"
+                               class="{{ item.class|default('') }}">
+                                {{ item.label }}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endif %}
+
+
+
+<script>
+const CURRENT_PAGE_ID = '{{item.id}}';
+$(document).on('click', '.kebab-btn', function (e) {
+    e.stopPropagation();
+    $('.kebab-dropdown').toggle();
+});
+
+$(document).on('click', function () {
+    $('.kebab-dropdown').hide();
+});
+
+$(document).on('click', '.kebab-dropdown span', function (e) {
+    e.preventDefault();
+
+    const action = $(this).data('action');
+    handlePageAction(action);
+});
+
+function handlePageAction(action) {
+
+    switch (action) {
+
+        case 'edit':
+            mPGs.openPageEditor(CURRENT_PAGE_ID);
+            break;
+
+        case 'add-subpage':
+            mPGs.openSubpageModal(CURRENT_PAGE_ID);
+            break;
+
+        case 'arrange':
+            mPGs.openArrangeUI(CURRENT_PAGE_ID);
+            break;
+
+        case 'toggle-status':
+            mPGs.togglePageStatus(CURRENT_PAGE_ID);
+            break;
+
+        case 'settings':
+            mPGs.openMotherPageSettings(CURRENT_PAGE_ID);
+            break;
+
+        case 'delete':
+            mPGs.confirmDelete(CURRENT_PAGE_ID);
+            break;
+    }
+}
+</script>

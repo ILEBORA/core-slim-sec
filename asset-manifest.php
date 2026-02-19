@@ -1,10 +1,22 @@
 <?php
 return array (
   'asset_api' => 4,
-  'generated_at' => '2026-02-17T17:56:25+03:00',
+  'generated_at' => '2026-02-19T10:57:24+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (
+    'Activity' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Comm' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
     'Control' => 
     array (
       'js' => true,
@@ -12,6 +24,12 @@ return array (
       'img' => false,
     ),
     'CoreBilling' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Curiosity' => 
     array (
       'js' => true,
       'css' => true,
@@ -41,7 +59,31 @@ return array (
       'css' => true,
       'img' => false,
     ),
+    'Inbox' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Notifications' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Pages' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
     'People' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Pwa' => 
     array (
       'js' => true,
       'css' => true,
@@ -59,7 +101,19 @@ return array (
       'css' => true,
       'img' => false,
     ),
+    'Support' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
     'System' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Themes' => 
     array (
       'js' => true,
       'css' => true,

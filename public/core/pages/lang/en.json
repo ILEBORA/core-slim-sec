@@ -1,0 +1,22 @@
+{
+  "accept": "Action successful",
+  "created": "Page created successfully",
+  "updated": "Page updated successfully",
+  "deleted": "Page deleted successfully",
+
+  "not_found": "Page not found",
+  "forbidden": "You do not have permission to access this page",
+  "method_not_allowed": "This action is not allowed",
+
+  "invalid_data": "Invalid page data provided",
+  "invalid_route": "Invalid route specified",
+  "duplicate_route": "A page with this route already exists",
+
+  "invalid_parent": "Invalid parent page selected",
+  "circular_reference": "Circular page hierarchy detected",
+
+  "type_not_found": "Page type not found",
+  "invalid_type": "Invalid page type specified",
+
+  "inactive": "This page is currently inactive"
+}

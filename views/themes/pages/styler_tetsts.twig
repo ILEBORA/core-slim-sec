@@ -1,0 +1,268 @@
+{% block content %}
+<div class="main_container details_box">
+    <div style="background: url('assets/images/icons/bck_wht.png') top left repeat; padding:3px;">
+        <h1>Theme Styler</h1>
+
+        {% if hasPermission('Themes', 'viewThemes', true) %}
+            <div>
+                <table class="pm" width="100%">
+                    <tbody>
+                        <tr>
+                            <td class="custom-lable" style="text-align:right;width:50px;">Theme:</td>
+                            <td style="text-align:left;">
+                                <select id="themeselector" name="themeselector" class="custom-input" style="width:250px;">
+                                    <option value="0">Select Theme</option>
+                                    {% for id, title in themeOptions %}
+                                         <option value="{{ id }}" {% if id == currentTheme %}selected{% endif %}>{{ title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>{{ buttons.addThemeBtn|raw }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="custom-lable" style="text-align:right;vertical-align:top;">Item:</td>
+                            <td style="text-align:left;">
+                                <select id="themeitem" name="themeitem" class="custom-input" style="width:250px;">
+                                    <option value="blank">Select Item</option>
+                                </select>
+                            </td>
+                            <td>{{ buttons.addItemBtn|raw }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="custom-lable" style="text-align:right;vertical-align:top;">Style:</td>
+                            <td><ul id="themestyle_block" class="perm-list accordion"></ul></td>
+                            <td>{{ buttons.addItemStyleBtn|raw }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span onclick="pop();">Test</span>
+                <span id="confirmAction">Confirm</span>
+
+                <a href="about/help" class="popup-trigger" data-popup-title="Account Settings">
+                Open Settings
+                </a>
+
+                <br>
+                <button id="btnAboutPopup">Open About Popup</button>
+                <button id="btnHelpPopup">Open Help</button>
+                <button id="btnPrivacyPopup">Open Privacy</button>
+
+                <br>
+                <button id="btnDynamicPopup">Open Dynamic Popup</button>
+            </div>
+        {% else %}
+            <p>You do not have permission to view this page!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+$(document).ready(function(){
+
+
+
+    const themeEditor = $('#themestyle_block');
+    themeEditor.html('');
+
+    //$('#themeselector').select2();
+    //$('#themeitem').select2();
+
+    $('#themeselector').trigger('change');
+
+    $('#themeselector').change(function(){
+        const rid = $(this).val();
+        if(rid != 0){
+            themeEditor.html('<div align="center"><img src="assets/images/icons/ajax.gif"/></div>');
+            new CallBora("api/modules/themes/sections")
+            .setMethod("POST")
+            .setParams({id:rid})
+            .setCallback((res) => {
+                themeEditor.html('');
+                $('#themeitem').html(res.data);
+            })
+            .setDone(() => {
+                console.log("Request finished");
+                
+            })
+            .setError((xhr) => console.error("Error:", xhr))
+            .build();
+        }
+    });
+
+    $('#themeitem').change(function(){
+        const rid = $('#themeselector').val();
+        const pid = $(this).val();
+        if(rid != 0){
+            themeEditor.html('<div align="center"><img src="assets/images/icons/ajax.gif"/></div>');
+            new CallBora("api/modules/themes/items")
+            .setMethod("POST")
+            .setParams({id:rid,sid:pid})
+            .setCallback((res) => {
+                themeEditor.html(res.data);
+            })
+            .setDone(() => {
+                console.log("Request finished");
+                
+            })
+            .setError((xhr) => console.error("Error:", xhr))
+            .build();
+        }
+    });
+
+    
+});
+ 
+//var myPop = boraPopup.create('myPop');
+//    myPop.init();
+
+const popup = new BoraPopup();
+
+$(document).on('click', '.popup-trigger', function (e) {
+  e.preventDefault();
+  const url = $(this).attr('href');
+  const title = $(this).data('popup-title') || 'Popup';
+  popup.open(url, title);
+});
+
+$(function () {
+    // Initialize popup
+    const popup = new BoraPopup({
+        containerId: 'bora_popup',
+        onOpen: () => console.log('Popup opened'),
+        onLoaded: (url) => console.log('Popup content loaded from:', url),
+        onClose: () => console.log('Popup closed')
+    });
+
+    // Example 1: Load About/Test popup with tabs
+    $('#btnAboutPopup').on('click', function () {
+        popup.open('about/test');
+    });
+
+    // Example 2: Load Help popup (no tabs)
+    $('#btnHelpPopup').on('click', function () {
+        popup.open('about/help');
+    });
+
+    // Example 3: Load Privacy popup (no tabs)
+    $('#btnPrivacyPopup').on('click', function () {
+        popup.open('about/privacy');
+    });
+});
+
+
+$(function () {
+    const popup = new BoraPopup({
+        containerId: 'bora_popup',
+        onLoaded: (url) => console.log('Loaded:', url),
+        onClose: () => console.log('Closed popup'),
+    });
+
+    // Cache store for tab content
+    popup._tabCache = {};
+
+    // Open button for testDynamic
+    $('#btnDynamicPopup').on('click', function () {
+        popup.open('about/testDynamic', function() {
+            const $activeTab = popup.$tabs.find('a.active');
+            if ($activeTab.length) popup.tryLoadTabContent($activeTab);
+        });
+    });
+    
+
+    // ✅ Listen for in-content tab switches (buttons, links, etc.)
+    $(document).on('click', '.goto-tab', function(e) {
+        e.preventDefault();
+        const targetTab = $(this).data('tab');
+        if (targetTab) popup.goToTab(targetTab);
+    });
+
+   
+});
+
+
+
+function pop2(){
+    const popup = new BoraPopup({
+        animation: 'slide',
+        cacheTabs: true,
+        onOpen: () => console.log('Popup opened'),
+        onLoaded: (url) => console.log('Loaded:', url),
+        onClose: () => console.log('Closed'),
+        onTabChange: (tab) => console.log('Switched to tab:', tab)
+    });
+
+    // HTML content directly
+    $('#openProfile').on('click', () => popup.open('<div>Profile Info</div>'));
+
+    // Or load external HTML
+    $('#openSettings').on('click', () => popup.open('/ajax/settings.html'));
+}
+
+function pop(){
+    //const popup = BoraPopup.getInstance();
+    //popup.open('/account/settings');
+    //popup.open('<div class="popup-append"><h3>Hello!</h3></div>');
+    const popup = new BoraPopup({
+        onOpen: () => console.log('Popup opened'),
+        onLoaded: (url) => console.log('Content loaded:', url),
+        onTabSwitch: (tab) => console.log('Switched tab:', tab),
+        onClose: () => console.log('Popup closed')
+    });
+    popup.open('about/test');
+    // Initialize
+//boraPopup.setupLibrary('body');
+
+// Create
+//const accountPop = boraPopup.create('accountPopup');
+//accountPop.init();
+
+// Set up open callback with tab setup
+//accountPop.onOpenCallback = function() {
+//  accountPop.addTabs([
+//    { name: 'Dashboard', tab: 'dash', active: true, link: 'accountPopup.loadTab("dash")' },
+//    { name: 'Billing', tab: 'billing', link: 'accountPopup.loadTab("billing")' },
+//    { name: 'Support', tab: 'support', link: 'accountPopup.loadTab("support")' }
+//  ]);
+//  accountPop.loadTab('dash');
+//};
+
+// Custom tab loader
+//accountPop.loadTab = function(tabName) {
+//  const $append = this.targetObj.find('.popup-append');
+//  $append.html('<div class="loading">Loading ' + tabName + '...</div>');
+//  $.get('/account/' + tabName, html => $append.html(html));
+//};
+
+// Open popup
+//accountPop.open({ color: '#fff', t: 'dash', typ: 'default' });
+
+}
+
+$('#confirmAction').on('click', function() {
+    boraPopup.show(`
+        <div class="bora-dialog">
+            <h3>Confirm Action</h3>
+            <p>Are you sure you want to continue?</p>
+            <div class="btns">
+                <button id="confirmYes">Yes</button>
+                <button id="confirmNo">No</button>
+            </div>
+        </div>
+    `);
+
+    $(document).on('click', '#confirmYes', function() {
+        boraPopup.hide($('.bora-popup'), $('.bora-overlay'));
+        console.log('Confirmed!');
+    });
+
+    $(document).on('click', '#confirmNo', function() {
+        boraPopup.hide($('.bora-popup'), $('.bora-overlay'));
+    });
+});
+</script>
+{% endblock %}

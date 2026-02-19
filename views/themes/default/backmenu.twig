@@ -1,0 +1,37 @@
+<style>
+.back-menu{
+    position:sticky;
+    top:70px;
+    width:100%;
+    background:#fff !important;
+    z-index:13;
+}
+
+body.dark-mode .back-menu{
+    background:#333 !important;
+}
+
+
+.back-item-menu{
+    display:inline;
+}
+
+.bck-mnu{
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+scroll-link.active {
+    /* color: red; Highlight color */
+    font-weight: bold;
+}
+
+</style>
+
+<div class="back-menu prevent-select">
+    <ul class="bpage breadcrumb">
+        <li><a onclick="{{ onclick }}"> {{ title }}</a></li>
+    </ul>
+    <nav class="back-item-menu " class="fixed"></nav>
+</div>
