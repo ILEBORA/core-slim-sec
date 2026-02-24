@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IleBora App Launcher</title>
-  <link rel="manifest" href="/manifest.json">
+  <base href="{{ baseUrl }}">
+  <link rel="manifest" href="{{ baseUrl }}manifest.json">
   <meta name="theme-color" content="#0057ff">
   <style>
     body {
@@ -62,7 +63,7 @@
   <p>Scan this QR code to launch the IleBora App instantly.</p>
   <canvas id="qr"></canvas>
   <button id="openAppBtn">Open App Now</button>
-  <footer>© 2025 IleBora Technologies</footer>
+  <footer>© {{ year|date('Y') }} IleBora Technologies</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
   <script>
@@ -80,14 +81,14 @@
       window.location.href = appLink;
       // Fallback to web if not installed
       setTimeout(() => {
-        window.location.href = "https://ilebora.co.ke/?utm_source=qrlauncher";
+        window.location.href = "{{ baseUrl|default('https://ilebora.co.ke/') }}?utm_source=qrlauncher";
       }, 2000);
     }, 1000);
 
     document.getElementById('openAppBtn').onclick = () => {
       window.location.href = appLink;
       setTimeout(() => {
-        window.location.href = "https://ilebora.co.ke/?utm_source=qrmanual";
+        window.location.href = "{{ baseUrl|default('https://ilebora.co.ke/') }}?utm_source=qrmanual";
       }, 2000);
     };
   </script>

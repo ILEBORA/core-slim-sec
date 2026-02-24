@@ -18,7 +18,6 @@
     },
     "files": [
       "EnvLoader.php",
-      "AppJsKernel.php",
       "CoreDefaults.php",
       "Helpers.php",
       "app.php"

@@ -94,6 +94,28 @@ var appNotifications = addPlugin(
     }
 );
 
+appUI.notifications = addPlugin(
+    BoraPlugin,
+    {
+        pluginName: 'notifications_ui',
+
+        unreadCount: 0,
+
+        init() {
+            BoraPlugin.init.call(this);
+            
+        },
+        clear(elem){
+            alert('appUI Notifications Clear '+elem);
+        },
+        increment(elem){
+            alert('appUI Notifications Increment '+elem);
+        }
+
+    }
+);
+
+
 // Init globally
 document.addEventListener('DOMContentLoaded', () => {
     appUI.notifications.init();

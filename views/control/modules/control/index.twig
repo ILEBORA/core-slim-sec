@@ -63,12 +63,12 @@
             </td>
 
             <td>
-                {% if m.enabled and adminAvailable %}
-                    <a href="/bo/modules/{{ m.adminPath() }}"
+                {# if m.enabled and adminAvailable #}
+                    <a href="bo/{{ m.name|lower|replace({' ': '-'}) }}"
                        class="btn btn-sm btn-primary">
-                        Open
+                        Open 
                     </a>
-                {% endif %}
+                {# endif #}
 
                 {% if not m.is_core %}
                     {% if m.enabled %}

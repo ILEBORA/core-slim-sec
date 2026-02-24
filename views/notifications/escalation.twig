@@ -1,0 +1,66 @@
+<div class="container">
+    <h2>Escalation Monitoring</h2>
+
+    <div class="dashboard-grid">
+
+        {{ widget('notification_escalation_overview_widget') }}
+        {{ widget('notification_escalation_backlog_widget') }}
+        {{ widget('notification_channel_health_widget') }}
+
+    </div>
+
+    <hr>
+    
+    <h2>Escalating Notifications</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Priority</th>
+                <th>Stage</th>
+                <th>Created</th>
+                <th>Next Escalation (sec)</th>
+                <th>SLA Breache</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for n in notifications %}
+            <tr class="
+                {% if n.priority == 'critical' %} severity-critical
+                {% elseif n.priority == 'high' %} severity-high
+                {% elseif n.priority == 'normal' %} severity-normal
+                {% else %} severity-low
+                {% endif %}
+            ">
+                <td>{{ n.id }}</td>
+                <td>{{ n.priority }}</td>
+                <td>{{ n.escalation_stage }}</td>
+                <td>{{ n.created_at }}</td>
+                <td style="display:none;">
+                    {% set elapsed = (date().timestamp - date(n.created_at).timestamp) %}
+                    {{ elapsed }}
+                </td>
+                <td>
+                    {% if n.next_in is not null %}
+                        {{ n.next_in }} sec → {{ n.next_channel }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if n.sla_breached %}
+                        <span class="sla-breached">BREACHED</span>
+                    {% else %}
+                        <span class="sla-ok">OK</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+setTimeout(() => location.reload(), 30000);
+</script>

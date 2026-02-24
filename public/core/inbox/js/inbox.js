@@ -235,6 +235,11 @@ const appInbox = addPlugin(
             item.find('.badge').remove();
             // appUI.notifications.clear('inbox');
 
+            const thread = document.querySelector('.thread-view');
+            if(thread){
+                 thread.setAttribute('data-thread', threadId);
+            }
+
             //
             const header = document.querySelector('.thread-header');
             if(header){

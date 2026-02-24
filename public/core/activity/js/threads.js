@@ -1,3 +1,4 @@
+alert('thread');
 const Thread = {
     activityId: null,
     loading: false,

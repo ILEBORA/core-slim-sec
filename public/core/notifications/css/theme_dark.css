@@ -1,0 +1,79 @@
+/* ============================= */
+/* DARK MODE DASHBOARD STYLING  */
+/* ============================= */
+
+body.dark-mode {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+/* Widget Cards */
+body.dark-mode .widget {
+    background: #1e293b;
+    border: 1px solid #2c3a52;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .widget h3 {
+    color: #f1f5f9;
+    border-bottom: 1px solid #2c3a52;
+}
+
+/* Tables */
+body.dark-mode .table {
+    background: #1e293b;
+}
+
+body.dark-mode .table thead {
+    background: #162032;
+}
+
+body.dark-mode .table th {
+    color: #cbd5e1;
+    border-bottom: 1px solid #2c3a52;
+}
+
+body.dark-mode .table td {
+    border-bottom: 1px solid #2c3a52;
+}
+
+body.dark-mode .table tr:hover {
+    background: #243249;
+}
+
+/* Severity Rows */
+body.dark-mode .severity-critical {
+    background: rgba(255, 0, 0, 0.08);
+    border-left: 5px solid #ef4444;
+}
+
+body.dark-mode .severity-high {
+    background: rgba(255, 165, 0, 0.08);
+    border-left: 5px solid #f59e0b;
+}
+
+body.dark-mode .severity-normal {
+    background: rgba(59, 130, 246, 0.08);
+    border-left: 5px solid #3b82f6;
+}
+
+body.dark-mode .severity-low {
+    background: rgba(148, 163, 184, 0.05);
+    border-left: 5px solid #64748b;
+}
+
+/* SLA Badge */
+body.dark-mode .sla-breached {
+    background: #ef4444;
+    color: #fff;
+}
+
+body.dark-mode .sla-ok {
+    color: #22c55e;
+}
+
+/* Metrics */
+body.dark-mode .metric {
+    color: #38bdf8;
+    text-shadow: 0 0 8px rgba(56,189,248,0.4);
+}

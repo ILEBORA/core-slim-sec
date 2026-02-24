@@ -1,0 +1,38 @@
+<div class="container">
+    <h2>Notification Delivery Logs</h2>
+
+    <div class="dashboard-grid">
+
+        {{ widget('notification_success_rate') }}
+        {{ widget('notification_avg_delivery_time') }}
+        {{ widget('notification_channel_health_widget') }}
+
+    </div>
+
+    <hr>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Channel</th>
+                <th>Status</th>
+                <th>Attempt</th>
+                <th>Error</th>
+                <th>Started</th>
+                <th>Finished</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr class="{{ log.status }}">
+                <td>{{ log.channel }}</td>
+                <td>{{ log.status }}</td>
+                <td>{{ log.attempt }}</td>
+                <td>{{ log.error ?? '-' }}</td>
+                <td>{{ log.started_at }}</td>
+                <td>{{ log.finished_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

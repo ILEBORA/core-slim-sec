@@ -4,7 +4,7 @@ EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
 use BoraSlim\Core\Assets\AssetPipeline;
 
-$pipeline = new AssetPipeline(__DIR__, 'js');
+$pipeline = new AssetPipeline(__DIR__, 'js', 'users');
 
 $pipeline
     ->add('script.js')

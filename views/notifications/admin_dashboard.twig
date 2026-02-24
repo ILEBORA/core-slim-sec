@@ -1,0 +1,12 @@
+<div class="container">
+    <h2>Notifications Admin</h2>
+
+    <div class="grid">
+        {{ widget('queue_health_widget')|raw }}
+        {{ widget('notification_success_rate')|raw }}
+        {{ widget('notification_avg_delivery_time')|raw }}
+    </div>
+
+    <a class="jx" href="bo/notifications/logs">View Delivery Logs</a>  |  <a class="jx" href="bo/notifications/escalation">Delivery Escalation Logs</a>
+
+</div>

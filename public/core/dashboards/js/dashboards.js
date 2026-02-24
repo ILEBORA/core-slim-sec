@@ -1,6 +1,6 @@
 
 var appWidgets = addPlugin('appWidgets', {
-    pluginName: 'settappWidgetsings',
+    pluginName: 'appWidgets',
     b: 0,
     saving: false,
     init() {
@@ -84,3 +84,5 @@ $(function(){
         });
     });
 });
+
+alert('dashboard');

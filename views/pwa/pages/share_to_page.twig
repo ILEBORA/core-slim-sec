@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Share to IleBora</title>
+<base href="{{ baseUrl }}">
 <style>
   body { font-family: system-ui; padding: 1em; }
   .user-list { margin-top: 1em; }
@@ -51,14 +52,14 @@ contacts.forEach(user => {
 
 function sendToUser(userId) {
   const payload = { userId, text, title, file };
-  fetch("/api/share-to-user", {
+  fetch("{{baseUrl}}api/share-to-user", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   }).then(res => res.json())
     .then(r => {
       alert("Shared to " + r.username + " successfully!");
-      window.location.href = "/app/chat?user=" + userId;
+      window.location.href = "{{baseUrl}}chat?user=" + userId;
     });
 }
 </script>

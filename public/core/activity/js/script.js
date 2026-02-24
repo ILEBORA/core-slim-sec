@@ -150,3 +150,4 @@ formJourney.registerJourney('timeline.add0', function($form, done) {
 		}
 	});
 });
+alert('Activity');

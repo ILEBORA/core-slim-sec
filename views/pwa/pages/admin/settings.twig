@@ -1,0 +1,83 @@
+<div class="container">
+    {{ form|raw }}
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5>Visual Assets</h5>
+
+            <div class="row text-center">
+
+                <div class="col-md-3">
+                    <h6>Icon 192x192</h6>
+                    <img src="{{ icons.192.src ?? (core_path ~'/pwa/icons/android-icon-192x192.png') }}"
+                        class="img-fluid mb-2 border">
+                    <input type="file"
+                        data-type="icon"
+                        data-variant="192"
+                        class="pwa-upload form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <h6>Icon 512x512</h6>
+                    <img src="{{ icons.512.src ?? (core_path ~'/pwa/icons/512x512.png') }}"
+                        class="img-fluid mb-2 border">
+                    <input type="file"
+                        data-type="icon"
+                        data-variant="512"
+                        class="pwa-upload form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <h6>Wide Screenshot</h6>
+                    <img src="{{ screenshots.wide.src ?? (core_path ~'/pwa/screenshots/home-wide.png') }}"
+                        class="img-fluid mb-2 border">
+                    <input type="file"
+                        data-type="screenshot"
+                        data-variant="wide"
+                        class="pwa-upload form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <h6>Mobile Screenshot</h6>
+                    <img src="{{ screenshots.mobile.src ?? (core_path ~'/pwa/screenshots/home-mobile.png') }}"
+                        class="img-fluid mb-2 border">
+                    <input type="file"
+                        data-type="screenshot"
+                        data-variant="mobile"
+                        class="pwa-upload form-control">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $('.pwa-upload').on('change', function() {
+
+        const file = this.files[0];
+        if (!file) return;
+
+        const type = $(this).data('type');
+        const variant = $(this).data('variant');
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+            url: `api/modules/pwa/upload/${type}/${variant}`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                if (res.success) {
+                    location.reload();
+                } else {
+                    alert(res.message);
+                }
+            }
+        });
+    });
+</script>

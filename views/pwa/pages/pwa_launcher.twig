@@ -4,7 +4,8 @@
   <meta name="theme-color" content="#0057ff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Launching IleBora App...</title>
-  <link rel="manifest" href="/manifest.json">
+  <base href="{{ baseUrl }}">
+  <link rel="manifest" href="{{ baseUrl }}manifest.json">
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -52,7 +53,7 @@
   </div>
 
   <script>
-    const appURL = 'https://ilebora.co.ke/?utm_source=launcher';
+    const appURL = '{{ baseUrl|default('https://ilebora.co.ke/') }}?utm_source=launcher';
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       window.navigator.standalone;
@@ -64,7 +65,7 @@
       // Try to open automatically
       setTimeout(() => {
         window.location.href = appURL;
-      }, 1000);
+      }, 20000);
     }
 
     document.getElementById('openAppBtn').onclick = () => {

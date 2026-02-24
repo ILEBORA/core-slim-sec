@@ -1,0 +1,290 @@
+<div class="container animated fadeIn">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>PWA Module</h2>
+        <a class="jxbtn btn-primary " href="bo/pwa/settings">
+            <i class="fa fa-cog"></i> Edit Settings
+        </a>
+    </div>
+
+    {# ============================= #}
+    {# STATUS CARDS                #}
+    {# ============================= #}
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h6>Manifest</h6>
+                    <p class="text-muted mb-1">{{ manifest_url }}</p>
+                    <span class="badge bg-success">Available</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h6>Service Worker</h6>
+                    <p class="text-muted mb-1">Version: {{ cache_version }}</p>
+                    <span class="badge bg-success">Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h6>Push Notifications</h6>
+                    {% if push_enabled %}
+                        <span class="badge bg-success">Enabled</span>
+                    {% else %}
+                        <span class="badge bg-danger">Disabled</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h6>Subscriptions</h6>
+                    <h4>{{ subscription_count }}</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    {# ============================= #}
+    {# ACTION BUTTONS              #}
+    {# ============================= #}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <h5>Actions</h5>
+
+            <button id="bumpPwa" class="btn btn-warning">
+                <i class="fa fa-refresh"></i> Bump Cache Version
+            </button>
+
+            <button id="testPwaPush" class="btn btn-success">
+                <i class="fa fa-bell"></i> Send Test Push
+            </button>
+
+            <button id="clearPwaSubscription" class="btn btn-danger">
+                <i class="fa fa-trash"></i> Clear Subscriptions
+            </button>
+
+            <button id="resetPwa" class="btn btn-danger">
+                Reset to Defaults
+            </button>
+
+            <button id="generateVapid" class="btn btn-secondary">
+                Generate VAPID Keys
+            </button>
+
+        </div>
+    </div>
+
+
+    {# ============================= #}
+    {# SUBSCRIPTIONS TABLE         #}
+    {# ============================= #}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <h5>Recent Subscriptions</h5>
+
+            <table class="table table-striped subscriptions">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Endpoint</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for sub in subscriptions %}
+                        <tr class="row_{{ sub.id }}">
+                            <td>{{ sub.user_id ?: 'Guest' }}</td>
+                            <td class="text-muted small">
+                                {{ sub.endpoint|slice(0,60) ~ '...' }}
+                            </td>
+                            <td>{{ sub.created_at }}</td>
+                            <td>
+                                <button data-id="{{ sub.id }}" class="delSub btn btn-sm btn-outline-danger">
+                                   Remove
+                                </button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">
+                                No subscriptions found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+    {# ============================= #}
+    {# DIAGNOSTICS (OPTIONAL)      #}
+    {# ============================= #}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5>Diagnostics</h5>
+
+            <ul class="list-unstyled mb-0">
+                <li>
+                    HTTPS:
+                    {% if https %}
+                        <span class="text-success">OK</span>
+                    {% else %}
+                        <span class="text-danger">Required</span>
+                    {% endif %}
+                </li>
+                <li>
+                    VAPID Keys:
+                    {% if push_enabled %}
+                        <span class="text-success">Configured</span>
+                    {% else %}
+                        <span class="text-danger">Missing</span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+$('#bumpPwa').on('click', function(){
+    alertBora.confirm('Are you <em>really</em> sure?', {
+            html: true
+    }).autoCancel(10)
+    .then(function() {
+        // Proceed
+        $.post('api/modules/pwa/settings/bump', function(data){
+            if(data.success){
+                alertBora.notify(data.message??'Success', 'success', 10);
+                location.reload();
+            }else{
+                alertBora.notify(data.message??'An error occured.', 'error', 10);
+            }
+        });
+    }, function() {
+        logTest('Confirmation canceled');
+    });
+
+});
+
+$('#testPwaPush').on('click', function(){
+    alertBora.confirm('Are you <em>really</em> sure?', {
+            html: true
+    }).autoCancel(20)
+    .then(function() {
+        // Proceed
+        $.post('api/modules/pwa/test-push', function(data){
+            if(data.success){
+                alertBora.notify(data.message??'Success', 'success', 10);
+            }else{
+                alertBora.notify(data.message??'An error occured.', 'error', 10);
+            }
+        });
+    }, function() {
+        logTest('Confirmation canceled');
+    });
+    
+});
+
+$('#clearPwaSubscription').on('click', function(){
+    alertBora.confirm('Are you <em>really</em> sure?', {
+            html: true
+    }).autoCancel(20)
+    .then(function() {
+        // Proceed
+        $.post('api/modules/pwa/subscription-clear', function(data){
+            if(data.success){
+                alertBora.notify(data.message??'Success', 'success', 10);
+            }else{
+                alertBora.notify(data.message??'An error occured.', 'error', 10);
+            }
+        });
+    }, function() {
+        logTest('Confirmation canceled');
+    });
+});
+
+$('#resetPwa').on('click', function(){
+    alertBora.confirm('Are you <em>really</em> sure?', {
+            html: true
+    }).autoCancel(20)
+    .then(function() {
+        // Proceed
+        $.post('api/modules/pwa/settings/reset', function(data){
+            if(data.success){
+                alertBora.notify(data.message??'Success', 'success', 10);
+                location.reload();
+            }else{
+                alertBora.notify(data.message??'An error occured.', 'error', 10);
+            }
+        });
+    }, function() {
+        logTest('Confirmation canceled');
+    });
+});
+
+$('#generateVapid').on('click', function(){
+    alertBora.confirm('Are you <em>really</em> sure?', {
+            html: true
+    }).autoCancel(20)
+    .then(function() {
+        // Proceed
+        $.post('api/modules/pwa/settings/generate-vapid', function(data){
+            if(data.success){
+                alertBora.notify(data.message??'Success', 'success', 10);
+                location.reload();
+            }else{
+                alertBora.notify(data.message??'An error occured.', 'error', 10);
+            }
+        });
+    }, function() {
+        logTest('Confirmation canceled');
+    });
+});
+
+$('.delSub').on('click', function(){
+    var id = $(this).data('id');
+    
+    alertBora.confirm('Are you <em>really</em> sure?', {
+            html: true
+    }).autoCancel(20)
+    .then(function() {
+        // Proceed 
+        $.post('api/modules/pwa/subscriptions/delete/'+id, function(data){
+            if(data.success){
+                alertBora.notify(data.message??'Success', 'success', 10);
+                //location.reload();
+                $('tr.row_'+id).fadeOut('slow');
+            }else{
+                alertBora.notify(data.message??'An error occured.', 'error', 10);
+            }
+        });
+    }, function() {
+        logTest('Confirmation canceled');
+    });
+});
+</script>

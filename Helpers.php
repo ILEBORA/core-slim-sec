@@ -1024,7 +1024,7 @@ if (!function_exists('DBMigrate')) {
 if (!function_exists('csrf_token')) {
     function csrf_token() {
         if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+            // session_start();
         }
 
         if (empty($_SESSION['csrf_token'])) {
