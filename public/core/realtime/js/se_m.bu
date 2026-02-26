@@ -161,7 +161,7 @@ $callback = function () use (&$lastSentm, $ackFile) {
     if(isJson($out)){
         $out = json_decode($out,true);
     }else{
-        error_log("SSE Error:: ".$out);
+        //error_log("SSE Error:: ".$out);
         $out = [];
         return false;
     }

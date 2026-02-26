@@ -3,9 +3,9 @@
  * ================================================================
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
- *  Version:    2.1.10
- *  Build ID:   26C002C3951E
- *  Timestamp:  2026-02-24 22:12:00
+ *  Version:    2.1.12
+ *  Build ID:   D433AD781D74
+ *  Timestamp:  2026-02-26 23:09:23
  *  License:    Proprietary - Unauthorized modification prohibited.
  *  © 2025 ILEBORA Technologies. All Rights Reserved.
  * ================================================================
@@ -22,10 +22,19 @@ use Dotenv\Dotenv;
 $basePath = realpath(__DIR__ . '/../../../../');
 
 if (!defined('CORE_SECURE_APP_FOLDER')) {
-    if(isset($_SERVER['PRJCT_MUST_BE_SET'])){
-        define('PRJCT_MUST_BE_SET', $_SERVER['PRJCT_MUST_BE_SET']);
+
+    // Resolve project value from all possible sources
+    $project =
+        $_SERVER['PRJCT_MUST_BE_SET'] ??
+        getenv('PRJCT_MUST_BE_SET') ??
+        null;
+
+    if ($project !== null) {
+        define('PRJCT_MUST_BE_SET', $project);
+        define('CORE_SECURE_APP_FOLDER', 'secure/' . $project);
+    } else {
+        define('CORE_SECURE_APP_FOLDER', 'secure/core-landing');
     }
-    define('CORE_SECURE_APP_FOLDER', isset($_SERVER['PRJCT_MUST_BE_SET']) ? 'secure/'.$_SERVER['PRJCT_MUST_BE_SET'] : 'secure/core-landing');
 }
 
 $envPath = realpath($basePath . '/' . CORE_SECURE_APP_FOLDER);

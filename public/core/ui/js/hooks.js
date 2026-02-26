@@ -31,6 +31,10 @@ appHooks.addHook("form:afterSubmit", ($form, resp) => {
         var esc = $.Event("keydown", { keyCode: 27 });
         $("body").trigger(esc);
     }
+
+    if(resp.success){
+        $form.reset();
+    }
 });
 // alert('here');
 

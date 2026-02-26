@@ -330,69 +330,13 @@ $(document).on('click', '.act-react', function () {
         reaction: reaction
     });
 });
-// $(document).on('click', '.act-react', function (e) {
-//     e.preventDefault();
-
-//     const $btn     = $(this);
-//     const reaction = $btn.data('reaction');
-
-//     const $item    = $btn.closest('.activity-item');
-//     const id       = $item.data('id');
-
-//     const $reactionEl = $item.find(
-//         `.reaction[data-reaction="${reaction}"]`
-//     );
-
-//     const $countEl = $reactionEl.find('.count');
-//     const current  = parseInt($countEl.text(), 10) || 0;
-
-//     const alreadyReacted = $btn.hasClass('active');
-
-//     const url = `api/modules/activity/${alreadyReacted ? 'unreact' : 'react'}`;
-
-//     // Optimistic UI
-//     $btn.toggleClass('active', !alreadyReacted);
-//     $countEl.text(alreadyReacted ? current - 1 : current + 1);
-
-//     $.post(url, {
-//         activity_id: id,
-//         reaction: reaction
-//     }).fail(() => {
-//         // Rollback on failure
-//         $btn.toggleClass('active', alreadyReacted);
-//         $countEl.text(current);
-//     });
-// });
-
-// $(document).on('click', '.act-like', function (e) {
-//     e.preventDefault();
-
-//     const $item = $(this).closest('.activity-item');
-//     const id = $item.data('id');
-//     const liked = $(this).text() === 'Unlike'; 
-
-//     $.post(`api/modules/activity/${liked ? 'unreact' : 'react'}`, {
-//         activity_id: id,
-//         reaction: 'like'
-//     });
-// });
-
+console.log('here');
 // ------------------------------------------------------------
 // Comments (inline)
 // ------------------------------------------------------------
 
 $(document).on('click', '.act-comment', function (e) {
     e.preventDefault();
-
-    // const $item = $(this).closest('.activity-item');
-    // const $comments = $item.find('.comments');
-
-    // if ($comments.find('textarea').length) return;
-
-    // $comments.prepend(`
-    //     <textarea class="comment-body"></textarea>
-    //     <button class="send-comment">Send</button>
-    // `);
 
     const activityId = $(this)
         .closest('.activity-item')

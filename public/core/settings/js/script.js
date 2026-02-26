@@ -29,3 +29,5 @@
             });
     };
 }( window.mPGs = window.mPGs || {}, jQuery ));
+
+alert('Settings');

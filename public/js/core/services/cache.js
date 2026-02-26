@@ -1,3 +1,4 @@
+
 function _loadCacheScript(l,obj,v,a){
     logTest('Here _loadCacheScript '+ obj);
     var b=document.createElement("script");
@@ -17,7 +18,7 @@ function _loadCacheScript(l,obj,v,a){
         }
     }
     b = null;
-}
+};
 function _injectScript(c,euri,e,a){
     logTest('Here _injectScript '+ euri);
     var b = document.createElement("script");
@@ -35,7 +36,7 @@ function _injectScript(c,euri,e,a){
     b=null;
     c.version != e && localStorage.removeItem(euri); 
     a&&a();
-}
+};
 
 function requireScript(obj){
     logTest('Here '+ obj.id);
