@@ -10,5 +10,5 @@ $pipeline
     ->add('script.js')
     ->add('activity.js')
     ->add('thread.js')
-    ->add('stories.js')
+    ->add('plugin/stories.js')
     ->send();

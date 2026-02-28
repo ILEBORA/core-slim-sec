@@ -1,82 +1,135 @@
-//Hooks
-class BoraHooks {
-    constructor() {
-        this.hooks = {};
-    }
+__BORA_REGISTER_SERVICE__('hooks', function(scope){
 
-    addHook(name, func, priority = 10) {
-        if (!this.hooks[name]) this.hooks[name] = [];
-        this.hooks[name].push({ func, priority });
-        // Keep hooks sorted by priority (descending: 100 runs before 10)
-        this.hooks[name].sort((a, b) => b.priority - a.priority);
-    }
+    class BoraHooks {
 
-    removeHook(name, func) {
-        if (this.hooks[name]) {
-            this.hooks[name] = this.hooks[name].filter(hook => hook.func !== func);
+        constructor() {
+            this.hooks = new Map();
         }
-    }
 
-    callHook(name, ...params) {
-        const hooks = this.hooks[name];
-        if (hooks) {
-            for (const { func } of hooks) {
+        /* =========================
+           REGISTRATION
+        ========================= */
+
+        add(name, func, priority = 10) {
+
+            if(!this.hooks.has(name)){
+                this.hooks.set(name, []);
+            }
+
+            const list = this.hooks.get(name);
+
+            list.push({ func, priority });
+
+            // Higher priority first
+            list.sort((a, b) => b.priority - a.priority);
+
+            return this;
+        }
+
+        remove(name, func){
+
+            if(!this.hooks.has(name)) return this;
+
+            const filtered = this.hooks
+                .get(name)
+                .filter(h => h.func !== func);
+
+            this.hooks.set(name, filtered);
+
+            return this;
+        }
+
+        clear(name){
+            this.hooks.delete(name);
+            return this;
+        }
+
+        has(name){
+            return this.hooks.has(name) && this.hooks.get(name).length > 0;
+        }
+
+        get(name){
+            return this.hooks.get(name) || [];
+        }
+
+        mock(name, fn){
+            this.hooks.set(name, [{ func: fn, priority: 1000 }]);
+        }
+
+        /* =========================
+           EXECUTION
+        ========================= */
+
+        call(name, ...params){
+
+            if(!this.hooks.has(name)) return;
+
+            for(const { func } of this.hooks.get(name)){
+
                 try {
                     func(...params);
-                } catch (error) {
-                    console.error(`Error in ${name} hook:`, error);
+                }
+                catch(error){
+
+                    console.error(`[Hook Error: ${name}]`, error);
+
+                    // Optional: forward to logger service
+                    const logger = scope.getService('logger');
+                    if(logger && logger.error){
+                        logger.error('Hook failure', { name, error });
+                    }
                 }
             }
         }
-    }
 
-    async callHookAsync(name, ...params) {
-        const hooks = this.hooks[name];
-        if (hooks) {
-            for (const { func } of hooks) {
+        async callAsync(name, ...params){
+
+            if(!this.hooks.has(name)) return;
+
+            for(const { func } of this.hooks.get(name)){
+
                 try {
                     await func(...params);
-                } catch (error) {
-                    console.error(`Error in async ${name} hook:`, error);
+                }
+                catch(error){
+
+                    console.error(`[Async Hook Error: ${name}]`, error);
+
+                    const logger = scope.getService('logger');
+                    if(logger && logger.error){
+                        logger.error('Async hook failure', { name, error });
+                    }
                 }
             }
         }
     }
 
-    hasHook(name) {
-        return !!this.hooks[name]?.length;
-    }
+    /* ==================================================
+       RETURN SINGLETON INSTANCE
+    ================================================== */
 
-    getHooks(name) {
-        return this.hooks[name] || [];
-    }
-
-    clearHook(name) {
-        delete this.hooks[name];
-    }
-}
-
-const appHooks = new BoraHooks();
+    return new BoraHooks();
+});
 
 
 // appHooks.addHook("log", console.log);
-// // appHooks.callHook("log", "This is a log message.");
+// // appHooks.call("log", "This is a log message.");
 // appHooks.addHook("config:update", (key, value) => {
 //     // Update application configuration
 //     // Example: config[key] = value;
 // });
-// // appHooks.callHook("config:update", "theme", "dark");
+// // appHooks.call("config:update", "theme", "dark");
 // //Testing
 // appHooks.addHook("test:mock", (eventName, mockFunction) => {
 //     // Mock behavior for testing
 //     appHooks.hooks[eventName] = [mockFunction];
 // });
-// appHooks.callHook("test:mock", "apiCall", () => console.log("Mock API call"));
+// appHooks.call("test:mock", "apiCall", () => console.log("Mock API call"));
 
 // appHooks.addHook("alt", alert);
-// // appHooks.callHook("alt", console.log); //Add Multiple
-// // appHooks.callHook("alt", alert); //Add Multiple
-// appHooks.callHook("alt", "this");
+// // appHooks.call("alt", console.log); //Add Multiple
+// // appHooks.call("alt", alert); //Add Multiple
+// appHooks.call("alt", "this");
 
 // // Add hooks for beforeSave and afterSave
 // appHooks.addHook("beforeSave", (data) => {
@@ -93,12 +146,12 @@ const appHooks = new BoraHooks();
 // var data = {test:'testing'};
 
 // // Execute hooks before saving
-// appHooks.callHook("beforeSave", data);
+// appHooks.call("beforeSave", data);
 
 // // Save data
 
 // // Execute hooks after saving
-// appHooks.callHook("afterSave", data);
+// appHooks.call("afterSave", data);
 
 // //Analytics 
 // appHooks.addHook("analytics", (eventName, eventData) => {
@@ -106,9 +159,9 @@ const appHooks = new BoraHooks();
 // });
 // // Trigger analytics tracking
 // var eventData = {test:'testing'};
-// appHooks.callHook("analytics", "UserAction", eventData);
+// appHooks.call("analytics", "UserAction", eventData);
 
-// appHooks.callHook("alt", "this");
+// appHooks.call("alt", "this");
 // //End Hooks
 
 // //More testing
@@ -129,8 +182,8 @@ const appHooks = new BoraHooks();
 // const user = { authenticated: true, permissions: ["read", "write"] };
 // const resource = "write";
 
-// appHooks.callHook("authenticate", user);
-// appHooks.callHook("authorize", user, resource);
+// appHooks.call("authenticate", user);
+// appHooks.call("authorize", user, resource);
 
 
 // // Real-time Updates with WebSockets
@@ -140,7 +193,7 @@ const appHooks = new BoraHooks();
 // });
 
 // const newData = { /* new data */ };
-// appHooks.callHook("realtimeUpdate", newData);
+// appHooks.call("realtimeUpdate", newData);
 
 
 // // Error Handling and Monitoring
@@ -155,7 +208,7 @@ const appHooks = new BoraHooks();
 //     // Code that might throw an error
 //     throw new Error("Something went wrong");
 // } catch (error) {
-//     appHooks.callHook("error", error);
+//     appHooks.call("error", error);
 // }
 
 
@@ -174,7 +227,7 @@ const appHooks = new BoraHooks();
 // const cart = { /* shopping cart data */ };
 // const order = { /* order data */ };
 
-// appHooks.callHook("beforeCheckout", cart);
+// appHooks.call("beforeCheckout", cart);
 // // Checkout process
-// appHooks.callHook("afterCheckout", order);
+// appHooks.call("afterCheckout", order);
 

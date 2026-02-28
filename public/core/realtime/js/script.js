@@ -136,20 +136,6 @@ setInterval(() => {
         }
     }
 }, HEARTBEAT_MS);
-// setInterval(() => {
-//     if (tryBecomeLeader()) {
-//         isLeader = true;
-
-//         // Refresh heartbeat if still leader
-//         const lock = readLock();
-//         if (lock.tabId === TAB_ID) {
-//             lock.ts = now();
-//             writeLock(lock);
-//         }
-//     } else {
-//         isLeader = false;
-//     }
-// }, HEARTBEAT_MS);
 
 /* ---------- Optional: Clean Handoff on Close ---------- */
 window.addEventListener('beforeunload', () => {
@@ -171,78 +157,6 @@ if (window.REALTIME_DEBUG) {
     window.tryBecomeLeader = tryBecomeLeader;
 }
 
-
-//Realtime Poller
-// let pollInterval = 1000;
-// let lastEventId = 0;
-
-// function poll() {
-//     fetch(`api/modules/realtime/poll?since=${lastEventId}`)
-//         .then(r => r.json())
-//         .then(data => {
-//             const events = data.events || [];
-
-//             // 🔥 THIS IS THE MISSING PIECE
-//             events.forEach(e => {
-//                 if (!e.channel || !e.payload) return;
-
-//                 lastEventId = Math.max(lastEventId, e.id);
-//                 // Dispatch to BoraHooks
-//                 console.log('[poller] dispatching', 'realtime:' + e.channel);
-//                 appHooks.callHook(
-//                     'realtime:' + e.channel,
-//                     e.payload
-//                 );
-//             });
-
-//             // Adaptive polling
-//             if (events.length === 0) {
-//                 pollInterval = Math.min(pollInterval + 500, 5000);
-//             } else {
-//                 pollInterval = 1000;
-//             }
-
-//             setTimeout(poll, pollInterval);
-//         })
-//         .catch(() => {
-//             // Backoff on error
-//             pollInterval = Math.min(pollInterval + 1000, 10000);
-//             setTimeout(poll, pollInterval);
-//         });
-// }
-
-// // poll();
-// window.RealtimePoller = {
-//     start() {
-//         poll();
-//     }
-// };
-
-// TODO:: move poll logic to SSE
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Hooks should already be registered at this point
-//     setTimeout(() => {
-//         RealtimePoller.start();
-//     }, 0);
-// });
-
-
-// TODO:: try SSE
-// const source = new EventSource('api/modules/realtime/stream');
-
-// source.addEventListener('message', e => {
-//     const data = JSON.parse(e.data);
-
-//     appHooks.callHook(
-//         'realtime:' + data.channel,
-//         data.payload
-//     );
-// });
-
-// source.onerror = () => {
-//     console.warn('SSE disconnected, retrying...');
-// };
-
 let lastEventId = 0;
 // TODO:: move to fact bus
 FactBus.on('realtime.events', function (event) {
@@ -255,18 +169,10 @@ FactBus.on('realtime.events', function (event) {
         // Dispatch to BoraHooks
         // console.log('ELEMENT::',e);
         console.log('[poller] dispatching', 'realtime:' + e.channel);
-        appHooks.callHook(
+        appHooks.call(
             'realtime:' + e.channel,
             e.payload
         );
     });
-    // const { channel, payload } = event;
-    // if (!channel || !payload) return;
-
-    // // 🔥 This is the SAME logic poll() used to have
-    // const hook = 'realtime:' + channel;
-
-    // console.log('[realtime-router] dispatching', hook, payload.type);
-
-    // appHooks.callHook(hook, payload);
+    
 });

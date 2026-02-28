@@ -1065,12 +1065,13 @@ if(!function_exists('autoIncludeCoreJs')){
 
 if(!function_exists('autoIncludeCoreCss')){
     function autoIncludeCoreCss($hooks) {
-        $corePath = vendor_path('public/css/cores');
+        $corePath = vendor_path('public/css');
 
         $files = glob($corePath . '/*.css');
-        // dieVal($files);
+        dieVal($files);
         foreach ($files as $file) {
             $name = basename($file, '.css'); // e.g., BoraHooks
+            // dieVal($name);
             $hooks->register(strtolower($name), $file);
         }
     }

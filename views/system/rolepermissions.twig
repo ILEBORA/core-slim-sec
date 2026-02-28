@@ -56,7 +56,7 @@ $(document).ready(function(){
                 .setMethod("POST")
                 .setParams({id:rid})
                 .setCallback((res) => {
-                    //appHooks.callHook('after.logout');
+                    //appHooks.call('after.logout');
                     //redirectTo('', true);
                     resID.html('');
                     $('#roleperm').html(res.data);
@@ -86,7 +86,7 @@ $(document).ready(function(){
                 .setMethod("POST")
                 .setParams({id:rid,pid:pid})
                 .setCallback((res) => {
-                    //appHooks.callHook('after.logout');
+                    //appHooks.call('after.logout');
                     //redirectTo('', true);
                     resID.html(res.data);
                 })
@@ -162,7 +162,7 @@ function cPerm(obj,e){
                 .setMethod("POST")
                 .setParams({stt:stt,role:role,perm:perm})
                 .setCallback((res) => {
-                    //appHooks.callHook('after.logout');
+                    //appHooks.call('after.logout');
                     //redirectTo('', true);
                     if(res.success){
                         if(res.stt==1){

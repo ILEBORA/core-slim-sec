@@ -37,7 +37,7 @@ $(document).on('submit', 'form', function (e) {
 		.setParams(form.serialize())
 		.setCallback((res) => {
 			if (res.success) {
-				appHooks.callHook('after.login');
+				appHooks.call('after.login');
 				alertBora.notify('Successful login...', 'success', 3);
 				overlayLoader.show('Logging in...');
 				window.location.href = res.lnk || '';

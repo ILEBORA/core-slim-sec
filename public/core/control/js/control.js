@@ -16,3 +16,5 @@ var modControl = addPlugin('modControl', {
         mPGs.klassPopup('control', 'module', moduleId, 'edit', null, null, { action:action, module_id: moduleId });
     }
 });
+
+alert('Control...');

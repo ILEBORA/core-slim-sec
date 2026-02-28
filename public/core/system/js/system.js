@@ -7,7 +7,7 @@
                 .setMethod("POST")
                 .setParams({stt:stt,id:id})
                 .setCallback((res) => {
-                    //appHooks.callHook('after.logout');
+                    //appHooks.call('after.logout');
                     //redirectTo('', true);
                     if(res.success){
                         alertBora.notify(res.message, 'success', 40);
@@ -27,3 +27,6 @@
 
     };
 // }( window.mPGs = window.mPGs || {}, jQuery ));
+
+
+alert('Here audit...');

@@ -89,7 +89,9 @@ class BoraLvui extends HTMLElement {
 // Register the custom element
 customElements.define('bora-lvui', BoraLvui);
 
-const FactBus = (function () {
+const FactBusX = __BORA_APP__.service('factbus');
+
+const FactBusO = (function () {
     const handlers = {};
 
     function on(type, fn) {

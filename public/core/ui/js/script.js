@@ -217,7 +217,7 @@ appUI.dropDown.init();
                             .setMethod("POST")
                             .setParams(Object.assign({},det))
                             .setCallback((data) => {
-                                // appHooks.callHook('user.logout');
+                                // appHooks.call('user.logout');
                                  mPGs.uploaded = "";
                                 //Update options
                                 if(data.success){
@@ -257,7 +257,7 @@ appUI.dropDown.init();
                 .setMethod("POST")
                 .setParams({fl:mPGs.uploaded,typ:typ})
                 .setCallback((data) => {
-                    // appHooks.callHook('user.logout');
+                    // appHooks.call('user.logout');
                     mPGs.uploaded = "";
                     console.log('purged...');
                 })
@@ -906,3 +906,5 @@ function evaluateDependencies($form, debug = false) {
         }
     });
 }
+
+alert('Here UI...');

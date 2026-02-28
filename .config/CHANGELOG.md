@@ -1,3 +1,9 @@
+## [1.0.49] - 2026-02-28
+- patch version bump
+
+### New Commits
+975b556 New permission core
+
 ## [1.0.48] - 2026-02-24
 - patch version bump
 

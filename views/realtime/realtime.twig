@@ -86,30 +86,38 @@ window.REALTIME_DEBUG = false; // disable in prod
 <script>
 $(function () {
 
-    if (!app || !app.SSE) return;
+    const app = window.__BORA_APP__;
+    const leader = app?.service('realtime.leader');
+    const sse = app?.service('realtime.sse');
+
+    if (!leader || !sse) return;
 
     function startSSEIfLeader() {
-        if (!window.isSseLeader?.()) return;
 
-        app.SSE.closeConnecton();
+        if (!leader.isLeader()) return;
 
-        app.SSE.subscribe({
+        sse._raw?.closeConnecton?.(); // if needed
+
+        sse.subscribe({
             id: "{{ id|default('') }}",
             userID: "{{ userID|default('') }}",
             sessionID: "{{ sessionID|default('') }}",
             event: "{{ event|default('updatesmain') }}",
             timer: {{ timer|default(20) }},
             base: "{{ baseURL|default('') }}",
-            leaderEpoch: window.getLeaderEpoch?.()
+            leaderEpoch: leader.getEpoch()
         });
     }
 
-    const check = setInterval(() => {
-        if (window.isSseLeader?.()) {
+    app.on('realtime:leader-change', ({ isLeader }) => {
+        if (isLeader) {
             startSSEIfLeader();
-            clearInterval(check);
         }
-    }, 500);
+    });
+
+    if (leader.isLeader()) {
+        startSSEIfLeader();
+    }
 
 });
 </script>
@@ -120,27 +128,32 @@ $(function () {
     const $lvui = $('bora-lvui[blvui]');
     if (!$lvui.length) return;
 
+    const app = window.__BORA_APP__;
+    const leader = app?.service('realtime.leader');
+
+    if (!leader) return;
+
     function apply(isLeader) {
         $lvui
             .toggleClass('realtime-leader', isLeader)
             .toggleClass('realtime-follower', !isLeader);
     }
 
-    // initial state
-    if (window.isSseLeader) {
-        apply(window.isSseLeader());
+    function applyState() {
+        apply(leader.isLeader());
     }
 
-    // react to leadership changes
-    document.addEventListener('realtime:leader-change', e => {
-        apply(e.detail.isLeader);
+    applyState();
+
+    app.on('realtime:leader-change', ({ isLeader }) => {
+        apply(isLeader);
     });
 });
 </script>
 
 <script>
 (function () {
-
+    if (!window.__BORA_APP__) return;
     if (!window.REALTIME_DEBUG) return;
 
     const el = document.createElement('div');
@@ -173,18 +186,20 @@ $(function () {
     const $force  = el.querySelector('[data-force]');
 
     function refresh() {
-        const isL = window.isSseLeader?.();
+        const app = window.__BORA_APP__;
+        const leader = app?.service('realtime.leader');
+        const sse = app?.service('realtime.sse');
 
-        $tab.textContent = window.getTabId?.() || '—';
-        $leader.textContent = isL ? 'YES' : 'NO';
-        $epoch.textContent = window.getLeaderEpoch?.() ?? '—';
-        $sse.textContent = app?.SSE?.ths_source ? 'CONNECTED' : 'IDLE';
+        const isL = leader?.isLeader();
+        $tab.textContent = leader?.getTabId?.() || '—';
+        $epoch.textContent = leader?.getEpoch?.() ?? '—';
+        $sse.textContent = sse?._raw?.ths_source ? 'CONNECTED' : 'IDLE';
 
         el.classList.toggle('rt-leader', !!isL);
     }
 
     refresh();
-    document.addEventListener('realtime:leader-change', refresh);
+    app.on('realtime:leader-change', refresh);
 
     $force.onclick = () => {
         if (!window.tryBecomeLeader) return;

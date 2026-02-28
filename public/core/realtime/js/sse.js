@@ -279,86 +279,12 @@ var appSE = function AppSe(fl){
             JSON.stringify(versions)
         );
 
-        // Send ACK to server (fire-and-forget)
-        // fetch('api/modules/realtime/ackwrite', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         userID: self.userID,
-        //         sessionID: self.sessionID,
-        //         versions: versions
-        //     })
-        // }).catch(() => {
-        //     // Intentionally silent:
-        //     // if ACK fails, SSE will resend → correctness preserved
-        // });
     };
 
-    // this.updateWidgetVersions = function(lvui) {
-    //     console.log('UPDATE Widget',lvui);
-    //     let versions = app.getCookie('lvui_versions') || '{}';
-    //         versions = app.safeParse(versions);
-    //     console.log('VERSIONS:: ',versions);
-
-    //     Object.keys(lvui).forEach(name => {
-    //         versions[name.toLowerCase()] = lvui[name].version;
-    //     });
-
-    //     document.cookie = 'lvui_versions=' + JSON.stringify(versions);
-        
-    //     localStorage.setItem('local',versions);
-        
-    //     // document.cookie = 'lvui_versions=' +
-    //     //     btoa(JSON.stringify(versions));//'; path=/';
-    //     // self.pause();
-    //     // self.closeConnecton();
-    //     // self.subscribe(self.lastParams, self.successCallback, self.errorCallback);
-    //     var local = localStorage.getItem('lvui_versions')
-    //     if(versions != local){
-    //         fetch('api/modules/realtime/ackwrite', {
-    //             method: 'POST',
-    //             body: JSON.stringify({
-    //                 userID:self.userID,
-    //                 sessionID:self.sessionID,
-    //                 versions: versions
-    //             })
-    //         });
-    //     }
-            
-    // };
     
 };
 
 
-
-
-
-
-// function handleFact(msg) {
-//     switch (msg.type) {
-
-//         case 'tree.node.updated':
-//             familyTree.updateNode(msg.data.id, msg.data);
-//             break;
-
-//         case 'tree.graph.invalidated':
-//             familyTree.reloadTree();
-//             break;
-
-//         case 'lvui.updated':
-//             self.lvuiUpdator(msg);
-//             break;
-
-//         default:
-//             console.debug('Unhandled fact:', msg.type, msg);
-//     }
-
-//     if (msg.meta && msg.meta.v) {
-//         self.lastVersion = msg.meta.v;
-//     }
-// }
 
 function handleLegacy(resp) {
     // This is basically your old logic
@@ -379,33 +305,33 @@ function handleLegacy(resp) {
 }
 
 // Realtime module JS
-app.SSE = new appSE('se_m.bu');
+// app.SSE = new appSE('se_m.bu');
 
 // 🔑 announce capability
-app.provide('sse', app.SSE);
+// app.provide('sse', app.SSE);
 
 
 
-FactBus.on('lvui.updated', function (event) {
-    console.log('Fact:: lvui.updated');
-    // ACK versions (leader or not — idempotent)
-    app.SSE.updateWidgetVersions(event);
+// FactBus.on('lvui.updated', function (event) {
+//     console.log('Fact:: lvui.updated');
+//     // ACK versions (leader or not — idempotent)
+//     app.SSE.updateWidgetVersions(event);
 
-    // Apply UI updates
-    liveUiUpdates(event, false);
-});
+//     // Apply UI updates
+//     liveUiUpdates(event, false);
+// });
 
-FactBus.on('lvui.updatetr', function (event) {
-    console.log('Fact:: lvui.updatedtr');
-    app.SSE.updateWidgetVersions(event);
-    liveUpdateTable(
-        event.table,
-        event.items,
-        event.funct
-    );
+// FactBus.on('lvui.updatetr', function (event) {
+//     console.log('Fact:: lvui.updatedtr');
+//     app.SSE.updateWidgetVersions(event);
+//     liveUpdateTable(
+//         event.table,
+//         event.items,
+//         event.funct
+//     );
 
-    liveUpdatePitm(
-        event.items,
-        event.funct
-    );
-});
+//     liveUpdatePitm(
+//         event.items,
+//         event.funct
+//     );
+// });

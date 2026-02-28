@@ -41,3 +41,5 @@ formJourney.registerJourney('notifications.admin.send', function($form, done) {
 		}
 	});
 });
+
+alert('Here notification...');

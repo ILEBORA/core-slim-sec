@@ -7,9 +7,12 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'js', 'realtime');
 
 $pipeline
+    ->add('services/factbus.js')
     ->add('elements.js')
     ->add('sse.js')
-    ->add('script.js')
-    ->add('realtime.sse.js')
+    ->add('services/realtime.leader.js')
+    ->add('services/realtime.sse.js')     // NEW: sse service
+    ->add('plugins/realtime.core.js')
+    ->add('plugins/realtime.transport.js')// replaces realtime.sse.js
 
     ->send();

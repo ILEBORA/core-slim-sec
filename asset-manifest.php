@@ -1,11 +1,17 @@
 <?php
 return array (
   'asset_api' => 4,
-  'generated_at' => '2026-02-26T23:09:24+03:00',
+  'generated_at' => '2026-02-28T16:16:01+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (
     'Activity' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Audit' => 
     array (
       'js' => true,
       'css' => true,

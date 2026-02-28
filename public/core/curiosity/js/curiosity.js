@@ -93,11 +93,11 @@ var curiosity = addPlugin(
         },
         start(){
             //Call curiosity start trigger
-             appHooks.callHook('curiosity.start');
+             appHooks.call('curiosity.start');
         },
         close(){
             //Close curiosity trigger
-            appHooks.callHook('curiosity.close');
+            appHooks.call('curiosity.close');
         }
         
     }

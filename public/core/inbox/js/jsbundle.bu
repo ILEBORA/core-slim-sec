@@ -7,7 +7,8 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'js', 'inbox');
 
 $pipeline
-    ->add('inbox.js')
-    ->add('chat.js')
-    ->add('realtime.js')
+    ->add('inbox.js')           // Main plugin
+    ->add('inbox-composer.js')  // Composer plugin
+    ->add('chat.js')            // UI extras
+    ->add('realtime.js')        // Realtime integration
     ->send();
