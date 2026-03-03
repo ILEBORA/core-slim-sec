@@ -3,6 +3,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
     const $ = scope.getService('jquery');
     const hooks = scope.getService('hooks');
     const navigation = scope.getService('navigation');
+    const context = __BORA_APP__.service('context');
 
     let sidebar, main, dropMenu, burger;
     let isOpen = false;
@@ -14,7 +15,9 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         dropMenu = $('.menu-container');
         burger = $('#burger');
 
-        bindEvents();
+        $(function(){
+            bindEvents();
+        });
 
         console.log('[Sidebar] mounted');
     }
@@ -67,9 +70,59 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         hooks.add('page.beforeLoad', handleBeforeLoad);
         hooks.add('page.afterLoad', handleAfterLoad);
         hooks.add('page.loaded', handlePageLoaded);
+        // alert(window.location);
+        // Also handle initial load
+        setActiveFromRoute(window.location);
+
+        document.addEventListener('change', function(e){
+
+            if (!e.target.matches('#changemenu')) return;
+
+            const face = e.target.value;
+
+            __BORA_APP__.service('context').set(face);
+            window.APP_CURRENT_ROLE = face;
+            $('[data-refresh-menu]').data('role', face);
+        });
+
+        document.addEventListener('click', function(e){
+
+            const btn = e.target.closest('[data-refresh-menu]');
+            if (!btn) return;
+
+            e.preventDefault();
+
+            const role = btn.dataset.role || window.APP_CURRENT_ROLE;
+
+            __BORA_APP__.service('menu').refresh(role);
+        });
+
+        // React to changes
+        __BORA_APP__.on('context.changed', applyFace);
+
+        // Apply initial state
+        applyFace(context.get());
+
+
+    }
+
+    function applyFace(face){
+        document.body.classList.remove(
+            'face-Client',
+            'face-Administrator',
+            'face-default'
+        );
+        document.body.classList.add(`face-${face}`);
+
+        document.querySelectorAll('[data-refresh-menu]')
+        .forEach(el => {
+            el.setAttribute('data-role', face);
+        });
+
     }
 
     function toggleSidebar(){
+        console.log('Bugger');
         sidebar.toggleClass('sideActive');
         main.toggleClass('sideActive');
         isOpen = sidebar.hasClass('sideActive');
@@ -102,28 +155,65 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
     }
 
     function handleAfterLoad(url){
-        // $('.features-item').removeClass('loading');
+        $('.features-item').removeClass('loading');
     }
 
     function handlePageLoaded(url){
 
-        const current = normalizeUrl(url || window.location.pathname);
-
+        const current = normalizeUrl(url || window.location.location);
+        // alert(url);
         $('.features-item').each(function(){
-            const linkUrl = normalizeUrl($(this).data('url'));
+            const linkUrl = $(this).data('url');
             if (linkUrl === current){
                 $('.features-item').removeClass('active');
                 $(this).addClass('active');
                 return false;
             }
         });
+
+        setActiveFromRoute(url);
     }
 
-    function normalizeUrl(url){
-        return url
-            .replace(window.location.origin, '')
-            .split('?')[0]
-            .replace(/\/$/, '');
+    function normalizeUrl(fullUrl){
+        const base = window.__APP_BASE_PATH__ || '';
+
+        if (!fullUrl) return '/';
+
+        fullUrl = String(fullUrl);
+
+        if (base && fullUrl.startsWith(base)){
+            fullUrl = fullUrl.slice(base.length);
+        }
+
+        // remove query
+        fullUrl = fullUrl.split('?')[0];
+
+        // if (!fullUrl.startsWith('/')){
+        //     fullUrl = '/' + fullUrl;
+        // }
+
+        return fullUrl || '';
+    }
+
+    function setActiveFromRoute(currentUrl){
+        
+        const cleanRoute = normalizeUrl(currentUrl);
+        // alert(cleanRoute);
+        $(function(){
+            document.querySelectorAll('.features-item').forEach(item => {
+
+                const dataUrl = item.getAttribute('data-url') ??'';
+                // alert(dataUrl+' :: '+ cleanRoute);
+                if (!dataUrl) return;
+
+                // Prefix match
+                if (cleanRoute === dataUrl){
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
     }
 
     return { mount, unmount };

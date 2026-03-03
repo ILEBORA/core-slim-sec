@@ -8,7 +8,7 @@ __BORA_REGISTER_PLUGIN__('InboxComposer', function(scope){
     function mount(){
         el = document.querySelector('.inbox-composer');
         if(!el) return;
-
+        alert('here');
         bind();
     }
 

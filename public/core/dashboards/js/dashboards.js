@@ -1,88 +1,146 @@
+__BORA_REGISTER_SERVICE__('dashboards', function(scope){
 
-var appWidgets = addPlugin('appWidgets', {
-    pluginName: 'appWidgets',
-    b: 0,
-    saving: false,
-    init() {
+    const capability = scope.getService('capability');
 
-    }
-});
+    /*
+    |--------------------------------------------------------------------------
+    | Internal API exposed to optional features
+    |--------------------------------------------------------------------------
+    */
 
-// settings.registerElement();
-// settings.initElements();
-appWidgets.addMethods({
-    
-});
+    const api = {
 
+        bindClick(selector, handler){
+            document.addEventListener('click', function(e){
+                const el = e.target.closest(selector);
+                if(!el) return;
+                handler(el);
+            });
+        },
 
-(function() {
-    // appWidgets.registerFunc('manageWidgets',function(){
-    //     console.log('Register manageWidgets');
-		// Toggle dash controls when container is clicked
-        $(document).on('click', '.dash-controls-toggle', function() {
-            $(this).toggleClass('opened');
-            var cont = $(this).parent('.dash-controls-container');
-                cont.toggleClass('expanded');
-                cont.find('.dash-controls').toggleClass('expanded');
-                // Adjust container height based on content visibility
-                
-                cont.find('.dash-controls-toggle i').toggleClass('fa-cogs fa-times');
-        });
-        
-        // Show tools on hover
-        $(document).on('mouseenter', '.widget_container', function() {
-            // When mouse enters the container
-            $(this).find('.widget_tools').show();
-        });
-    
-        $(document).on('mouseleave', '.widget_container', function() {
-            // When mouse leaves the container
-            $(this).find('.widget_tools').hide();
-        });
-    // });
-
-    // this.manageWidgets = function(obj){
-    //     alert('manageWidgets widget');
-    // };
-
-    
-
-}).apply(appWidgets);
-
-console.log('TODO::Fix Manage Widgets here');
-
-$(function(){
-    // $(".dashboard-counts .row").sortable({
-    //     // axis: "y", // Allow sorting only vertically
-    //     containment: "parent", // Constrain sorting within the parent element
-    //     cursor: "move", // Change cursor to indicate draggable
-    //     tolerance: "pointer", // Make the mouse pointer sensitive to the draggable item
-    // }).disableSelection(); // Prevent text selection while dragging
-    ILEBORA.use('assets/js/draggable', function() {
-        if(typeof draggable !== 'undefined'){
-            if(typeof draggable !== 'undefined'){
-                $('.widget_container').draggable({
-                    handle: '.handle', 
-                    revert: true,
-                    placeholder: true,
-                    // connectToSortable: ".dashboard-counts .row",
-                    // helper: "clone", // Create a clone of the dragged item
-                    // revert: "invalid" ,
-                    // droptarget: '.drop',
-                    // drop: function(evt, droptarget) {
-                    //     $(this).appendTo(droptarget).draggable('destroy');
-                    // }
-                });
-            }
+        getWidgets(){
+            return document.querySelectorAll('.widget_container');
         }
 
-        $(".parent").droppable({
-            accept: '.drop',
-            drop: function(event, ui) {
-            $(this).append($(ui.draggable));
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Core Dashboard Behaviour (Preserved From Old Script)
+    |--------------------------------------------------------------------------
+    */
+
+    function bindCoreControls(){
+
+        // Toggle dashboard control panel
+        document.addEventListener('click', function(e){
+
+            const toggle = e.target.closest('.dash-controls-toggle');
+            if(!toggle) return;
+
+            toggle.classList.toggle('opened');
+
+            const container = toggle.closest('.dash-controls-container');
+            if(!container) return;
+
+            container.classList.toggle('expanded');
+
+            const controls = container.querySelector('.dash-controls');
+            if(controls) controls.classList.toggle('expanded');
+
+            const icon = toggle.querySelector('i');
+            if(icon){
+                icon.classList.toggle('fa-cogs');
+                icon.classList.toggle('fa-times');
             }
         });
-    });
-});
 
-alert('dashboard');
+        // Hover tools (no jQuery required)
+        document.addEventListener('mouseover', function(e){
+            const container = e.target.closest('.widget_container');
+            if(!container) return;
+
+            const tools = container.querySelector('.widget_tools');
+            if(tools) tools.style.display = 'block';
+        });
+
+        document.addEventListener('mouseout', function(e){
+            const container = e.target.closest('.widget_container');
+            if(!container) return;
+
+            const tools = container.querySelector('.widget_tools');
+            if(tools) tools.style.display = 'none';
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Draggable Initialization (Preserved)
+    |--------------------------------------------------------------------------
+    */
+
+    function initDraggable(){
+
+        if(typeof ILEBORA === 'undefined') return;
+
+        ILEBORA.use('assets/js/draggable', function(){
+
+            if(typeof draggable === 'undefined') return;
+
+            const widgets = document.querySelectorAll('.widget_container');
+
+            widgets.forEach(el => {
+                $(el).draggable({
+                    handle: '.handle',
+                    revert: true,
+                    placeholder: true
+                });
+            });
+
+            $('.parent').droppable({
+                accept: '.drop',
+                drop: function(event, ui){
+                    $(this).append($(ui.draggable));
+                }
+            });
+
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Init
+    |--------------------------------------------------------------------------
+    */
+
+    function init(){
+
+        console.log('[Dashboards] initializing');
+
+        bindCoreControls();
+        initDraggable();
+
+        // Expose capability AFTER base is ready
+        capability?.provide('dashboards.ready', api);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Init When DOM Ready
+    |--------------------------------------------------------------------------
+    */
+
+    if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', init);
+        // $(function(){
+        //     init();
+        // });
+    } else {
+        init();
+    }
+
+    return {
+        api
+    };
+
+});

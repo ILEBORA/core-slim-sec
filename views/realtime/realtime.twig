@@ -21,12 +21,12 @@
     text-align: center;
 }
 
-bora-lvui.realtime-follower {
+bora-lvui.realtime_class.realtime-follower {
     background: #ccc;
     color: #000;
 }
 
-bora-lvui.realtime-leader {
+bora-lvui.realtime_class.realtime-leader {
     background: #4caf50;
     color: #fff;
     box-shadow: 0 0 0 2px rgba(76,175,80,0.4);
@@ -89,7 +89,8 @@ $(function () {
     const app = window.__BORA_APP__;
     const leader = app?.service('realtime.leader');
     const sse = app?.service('realtime.sse');
-
+    leader.start();
+    console.log('Leader::',leader);
     if (!leader || !sse) return;
 
     function startSSEIfLeader() {

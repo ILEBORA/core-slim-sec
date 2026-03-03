@@ -23,7 +23,6 @@ __BORA_REGISTER_PLUGIN__(
         ========================= */
 
         function mount(){
-
             loadPermissions();
 
             registerRouteGuards();

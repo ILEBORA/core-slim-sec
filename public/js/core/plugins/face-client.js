@@ -3,21 +3,17 @@ __BORA_REGISTER_PLUGIN__(
     function(scope){
 
         const layouts = scope.getPlugin('Layouts');
-        const navigation = scope.getService('navigation');
 
-        return { mount, unmount };
-
-        function mountO(){
+        function mount(){
 
             layouts?.mount();
 
-            // Client-specific bindings
-            navigation.go(window.location.pathname);
+            console.log('[ClientFace] mounted');
         }
 
         return { mount };
     },
     {
-        requires:['Layouts','navigation']
+        requires:['Layouts']
     }
 );

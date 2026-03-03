@@ -42,4 +42,4 @@ formJourney.registerJourney('notifications.admin.send', function($form, done) {
 	});
 });
 
-alert('Here notification...');
+// alert('Here notification...');

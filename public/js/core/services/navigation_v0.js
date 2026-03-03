@@ -2,16 +2,13 @@ __BORA_REGISTER_SERVICE__(
     'navigation',
     function(scope){
 
-        const state   = scope.getService('state');
-        const router  = scope.getService('router');
-        const hooks   = scope.getService('hooks');
-        const meta    = scope.getService('meta');
+        const state  = scope.getService('state');
+        const router = scope.getService('router');
+        const hooks  = scope.getService('hooks');
+        const meta   = scope.getService('meta');
 
-        const app     = window.__BORA_APP__;
-        const overlay = () => app?.plugin?.('Overlay');
-
-        let currentRoute = normalizeUrl(window.location);
-        let currentXHR   = null;
+        let currentRoute = window.location.pathname;
+        let currentAbort = null;
 
         /* --------------------------------------------------
          * Helpers
@@ -21,54 +18,40 @@ __BORA_REGISTER_SERVICE__(
             return url.split('?')[0].replace(/\/+$/, '');
         }
 
-        function normalizeUrl(fullUrl){
-            const base = window.__APP_BASE_PATH__ || '';
-
-            if (!fullUrl) return '/';
-
-            fullUrl = String(fullUrl);
-
-            if (base && fullUrl.startsWith(base)){
-                fullUrl = fullUrl.slice(base.length);
-            }
-
-            // remove query
-            fullUrl = fullUrl.split('?')[0];
-
-            // if (!fullUrl.startsWith('/')){
-            //     fullUrl = '/' + fullUrl;
-            // }
-
-            return fullUrl || '';
-        }
-
         function executeScripts(container){
+
             const scripts = container.querySelectorAll('script');
 
             scripts.forEach(oldScript => {
+
                 const newScript = document.createElement('script');
+
                 if (oldScript.src) {
                     newScript.src = oldScript.src;
                 } else {
                     newScript.textContent = oldScript.textContent;
                 }
-                console.log('newScript:: ',newScript);
+
                 document.body.appendChild(newScript);
                 oldScript.remove();
             });
         }
 
         function injectScripts(htmlString){
+
             const wrapper = document.createElement('div');
             wrapper.innerHTML = htmlString;
 
             wrapper.querySelectorAll('script').forEach(script => {
+
                 const newScript = document.createElement('script');
+
                 if (script.src) {
                     newScript.src = script.src;
                 } else {
                     newScript.textContent = script.textContent;
                 }
+
                 document.body.appendChild(newScript);
             });
         }
@@ -82,6 +65,11 @@ __BORA_REGISTER_SERVICE__(
                 if (response.blocks.submenus !== undefined){
                     const el = document.querySelector('.submenu-area .sub_menu');
                     if (el) el.innerHTML = response.blocks.submenus;
+                }
+
+                if (response.blocks.sidebar_menu !== undefined){
+                    const el = document.querySelector('.features-list');
+                    // if (el) el.innerHTML = response.blocks.sidebar_menu;
                 }
 
                 if (response.blocks.content !== undefined){
@@ -110,62 +98,26 @@ __BORA_REGISTER_SERVICE__(
             }
         }
 
-        /* --------------------------------------------------
-         * XHR WITH PROGRESS
-         * -------------------------------------------------- */
+        async function fetchJson(url){
 
-        function fetchJson(url){
-
-            if (currentXHR){
-                currentXHR.abort();
+            if (currentAbort){
+                currentAbort.abort();
             }
 
-            return new Promise((resolve, reject)=>{
+            currentAbort = new AbortController();
 
-                const xhr = new XMLHttpRequest();
-                currentXHR = xhr;
-
-                xhr.open('GET', url + '?t=1', true);
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-                xhr.onprogress = function(e){
-
-                    if (!e.lengthComputable) return;
-
-                    const percent = Math.round((e.loaded / e.total) * 100);
-
-                    const ov = overlay();
-                    if (ov && ov.setProgress){
-                        ov.setProgress(percent);
-                    }
-                };
-
-                xhr.onload = function(){
-
-                    if (xhr.status >= 200 && xhr.status < 300){
-
-                        try {
-                            const json = JSON.parse(xhr.responseText);
-                            resolve(json);
-                        } catch(err){
-                            reject(err);
-                        }
-
-                    } else {
-                        reject(new Error('HTTP ' + xhr.status));
-                    }
-                };
-
-                xhr.onerror = function(){
-                    reject(new Error('Network error'));
-                };
-
-                xhr.onabort = function(){
-                    reject({ name:'AbortError' });
-                };
-
-                xhr.send();
+            const response = await fetch(url + '?t=1', {
+                headers: {
+                    'X-Requested-With':'XMLHttpRequest'
+                },
+                signal: currentAbort.signal
             });
+
+            if (!response.ok){
+                throw new Error('HTTP ' + response.status);
+            }
+
+            return response.json();
         }
 
         /* --------------------------------------------------
@@ -192,9 +144,6 @@ __BORA_REGISTER_SERVICE__(
 
             hooks?.call?.('page.beforeLoad', cleanUrl);
 
-            const ov = overlay();
-            ov?.show?.('Loading...', { progress: 5 });
-
             try {
 
                 const json = await fetchJson(cleanUrl);
@@ -202,8 +151,6 @@ __BORA_REGISTER_SERVICE__(
                 if (!json.ok){
                     throw new Error('Invalid response');
                 }
-
-                ov?.setProgress?.(90);
 
                 renderPage(json);
 
@@ -217,12 +164,8 @@ __BORA_REGISTER_SERVICE__(
 
                 state?.set?.('route', cleanUrl);
 
-                ov?.setProgress?.(100);
-
                 hooks?.call?.('page.afterLoad', cleanUrl, json);
                 hooks?.call?.('page.loaded', cleanUrl);
-
-                ov?.hide?.(true);
 
                 return json;
 
@@ -233,8 +176,6 @@ __BORA_REGISTER_SERVICE__(
                 }
 
                 hooks?.call?.('page.loadError', cleanUrl, err);
-                ov?.hide?.(true);
-
                 console.error('[Navigation error]', err);
                 throw err;
             }
@@ -252,31 +193,18 @@ __BORA_REGISTER_SERVICE__(
             return go(url);
         }
 
-        function normalizeUrl(fullUrl){
-            const base = window.__APP_BASE_PATH__ || '';
-
-            if (!fullUrl) return '/';
-
-            fullUrl = String(fullUrl);
-
-            if (base && fullUrl.startsWith(base)){
-                fullUrl = fullUrl.slice(base.length);
-            }
-
-            // remove query
-            fullUrl = fullUrl.split('?')[0];
-
-            // if (!fullUrl.startsWith('/')){
-            //     fullUrl = '/' + fullUrl;
-            // }
-
-            return fullUrl || '';
-        }
+        /* --------------------------------------------------
+         * History Listener
+         * -------------------------------------------------- */
 
         window.addEventListener('popstate', async (e)=>{
-            const url = e.state?.url || normalizeUrl(window.location);
+            const url = e.state?.url || window.location.pathname;
             await go(url, { replace:true });
         });
+
+        /* --------------------------------------------------
+         * Public API
+         * -------------------------------------------------- */
 
         return {
             go,

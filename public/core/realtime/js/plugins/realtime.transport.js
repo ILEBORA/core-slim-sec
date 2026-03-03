@@ -27,5 +27,5 @@ function(scope){
 },
 {
     requires:['realtime.sse','realtime.leader'],
-    activateOn:(route)=>route.startsWith('/portal')
+    activateOn:(route)=>route.startsWith('portal')
 });

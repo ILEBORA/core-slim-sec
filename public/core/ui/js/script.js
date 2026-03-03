@@ -490,7 +490,7 @@ appUI.dropDown.init();
                 console.log('Popup content loaded from:', url);
                 // If callbackPipe exists, inject it into the popup DOM
                 if (mPGs.callbackPipe) {
-                    alert('Context');
+                    // alert('Context');
                     // const params = new URLSearchParams(mPGs.callbackPipe).toString();
                     // popUrl += "?" + params;
                     // alert('Here'+popUrl);
@@ -907,4 +907,4 @@ function evaluateDependencies($form, debug = false) {
     });
 }
 
-alert('Here UI...');
+// alert('Here UI...');

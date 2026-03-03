@@ -230,7 +230,7 @@ class WebConversationManager {
         if(escalateLevel){
             this.escalateCuriosity();
             console.warn('escalation 1', this.queue.length, escalateLevel);
-            alert('Here',escalateLevel);
+            // alert('Here',escalateLevel);
         }else{
             MemoryStore.set("curiosity.level.escalate",0,false);
         }
@@ -646,7 +646,7 @@ class WebConversationManager {
     }
 
     async signupRequest(email, pin, terms){
-        alert('here signupRequest');
+        // alert('here signupRequest');
         console.log(email, pin, terms);
         (async()=> {
             const success = await registerUser();

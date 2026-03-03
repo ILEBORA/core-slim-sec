@@ -2,25 +2,26 @@ __BORA_REGISTER_PLUGIN__(
 'Inbox',
 function(scope){
 
-    const hooks = scope.getService('hooks');
-    const callbora = scope.getService('callbora');
+    const hooks      = scope.getService('hooks');
+    const callbora   = scope.getService('callbora');
+    const navigation = scope.getService('navigation');
 
     let threadId = null;
+    let mounted  = false;
     let mainUserId = window.MAIN_USER_ID ?? null;
-    let soundOn = true;
 
-    let mounted = false;
-
-    /* =========================
+    /* ==========================================
        LIFECYCLE
-    ========================= */
+    ========================================== */
 
     function mount(){
 
-        if(mounted) return;
+        if (mounted) return;
         mounted = true;
 
+        bindUI();
         resolveThreadFromRoute();
+
         hooks.add('realtime:*', handleRealtimeWildcard);
 
         console.log('[Inbox] mounted');
@@ -28,7 +29,7 @@ function(scope){
 
     function unmount(){
 
-        if(!mounted) return;
+        if (!mounted) return;
         mounted = false;
 
         hooks.remove('realtime:*', handleRealtimeWildcard);
@@ -38,37 +39,69 @@ function(scope){
         console.log('[Inbox] unmounted');
     }
 
-    /* =========================
-       ROUTE RESOLUTION
-    ========================= */
+    /* ==========================================
+       ROUTE HANDLING
+    ========================================== */
+
+    function normalizeUrl(fullUrl){
+        const base = window.__APP_BASE_PATH__ || '';
+
+        if (!fullUrl) return '/';
+
+        fullUrl = String(fullUrl);
+
+        if (base && fullUrl.startsWith(base)){
+            fullUrl = fullUrl.slice(base.length);
+        }
+
+        // remove query
+        fullUrl = fullUrl.split('?')[0];
+
+        // if (!fullUrl.startsWith('/')){
+        //     fullUrl = '/' + fullUrl;
+        // }
+
+        return fullUrl || '';
+    }
 
     function resolveThreadFromRoute(){
 
-        const url = window.location.pathname;
-        const match = url.match(/\/portal\/inbox\/show\/(\d+)/);
+        const url = normalizeUrl(window.location); alert(url);
+        const match = url.match(/\portal\/inbox\/show\/(\d+)/);
 
-        if(!match) return;
+        if (!match) {
+            setView('list');
+            return;
+        }
 
         threadId = match[1];
-        initThreadView(threadId);
+        setView('thread');
+        loadThread(threadId);
     }
 
-    /* =========================
-       THREAD INIT
-    ========================= */
+    function openThread(id){
 
-    function initThreadView(id){
+        if (!id) return;
+
+        navigation.go(`portal/inbox/show/${id}`);
+    }
+
+    /* ==========================================
+       THREAD LOADING
+    ========================================== */
+
+    function loadThread(id){
 
         const container = document.querySelector('.messages');
-        if(!container) return;
+        if (!container) return;
 
         container.innerHTML = `<div class="loading">Loading conversation…</div>`;
 
         new CallBora(`api/modules/inbox/view-thread/${id}`)
             .setMethod("GET")
-            .setParams({})
             .setCallback((res)=>{
-                if(!res.success){
+
+                if (!res.success){
                     container.innerHTML = `<p>Failed to load thread</p>`;
                     return;
                 }
@@ -80,130 +113,168 @@ function(scope){
                 messages.forEach(msg=>{
                     container.insertAdjacentHTML(
                         'beforeend',
-                        InboxTemplate.renderMessage(msg)
+                        renderMessage(msg)
                     );
                 });
 
                 scrollBottom();
-                bindThreadUI(id, res);
+                bindThreadMeta(id, res);
+
             })
             .build();
     }
 
-    /* =========================
-       REALTIME
-    ========================= */
+    /* ==========================================
+       UI BINDING
+    ========================================== */
 
-    function handleRealtimeWildcard(eventName, e){
-
-        if(!mounted) return;
-        if(!eventName.startsWith('realtime:inbox:')) return;
-
-        if(eventName === `realtime:inbox:thread:${threadId}`){
-            handleThreadRealtime(e);
-        }
-
-        if(eventName === `realtime:inbox:user:${mainUserId}`){
-            handleUserRealtime(e);
-        }
+    function bindUI(){
+        alert('inbox');
+        document.addEventListener('click', handleClick);
+        document.addEventListener('keydown', handleKeyNav);
     }
 
-    function handleThreadRealtime(e){
+    function handleClick(e){
 
-        if(!e?.type) return;
+        const threadItem = e.target.closest('.thread-item');
+        if (threadItem){
 
-        switch(e.type){
+            const id = threadItem.dataset.thread;
+            if (!id) return;
 
-            case 'message.sent':
-                appendMessage(e, {
-                    isMe: e.sender_id === mainUserId
-                });
-                break;
-
-            case 'typing.start':
-                showTyping();
-                break;
-
-            case 'typing.stop':
-                hideTyping();
-                break;
-        }
-    }
-
-    function handleUserRealtime(e){
-
-        if(e.type !== 'thread.bumped') return;
-
-        bumpThread(e.thread_id, e);
-    }
-
-    /* =========================
-       UI LOGIC
-    ========================= */
-
-    function appendMessage(message, { isMe = false } = {}){
-
-        const container = document.querySelector('.messages');
-        if(!container || !message?.body) return;
-
-        if(message.id &&
-           container.querySelector(`[data-message="${message.id}"]`)
-        ){
+            highlightThread(threadItem);
+            openThread(id);
             return;
         }
 
-        const el = document.createElement('div');
-        el.className = 'message ' + (isMe ? 'outgoing' : 'incoming');
-        if(message.id) el.dataset.message = message.id;
+        const backBtn = e.target.closest('.back-btn');
+        if (backBtn){
+            setView('list');
+            navigation.go('portal/inbox');
+            return;
+        }
 
-        el.innerHTML = `
-            <div class="bubble">${escape(message.body)}</div>
-        `;
+        const startBtn = e.target.closest('[data-action="inbox:start"]');
+        if (startBtn){
+            startConversation();
+            return;
+        }
 
-        container.appendChild(el);
-        scrollBottom();
-
-        if(soundOn && !isMe){
-            new Audio('assets/sound/doink.mp3').play();
+        const fab = e.target.closest('.fab-new-thread');
+        if (fab){
+            startConversation();
+            return;
         }
     }
 
-    function bumpThread(threadId, data){
+    function handleKeyNav(e){
 
-        const item = document.querySelector(
-            `.thread-item[data-thread="${threadId}"]`
+        if (!['ArrowUp','ArrowDown','Enter'].includes(e.key)) return;
+
+        const list = document.querySelector('.thread-list');
+        if (!list) return;
+
+        const items = [...list.querySelectorAll('.thread-item')]
+            .filter(i => i.style.display !== 'none');
+
+        if (!items.length) return;
+
+        let index = items.findIndex(i => i.classList.contains('selected'));
+
+        if (e.key === 'ArrowDown') index = Math.min(index + 1, items.length - 1);
+        if (e.key === 'ArrowUp')   index = Math.max(index - 1, 0);
+
+        if (e.key === 'Enter' && index >= 0){
+            items[index].click();
+            return;
+        }
+
+        items.forEach(i => i.classList.remove('selected'));
+        items[index]?.classList.add('selected');
+        items[index]?.scrollIntoView({ block: 'nearest' });
+    }
+
+    function highlightThread(item){
+
+        document
+            .querySelectorAll('.thread-item.active')
+            .forEach(el => el.classList.remove('active'));
+
+        item.classList.add('active');
+    }
+
+    function setView(view){
+
+        const layout = document.querySelector('.inbox-layout');
+        layout?.setAttribute('data-view', view);
+    }
+
+    /* ==========================================
+       REALTIME
+    ========================================== */
+
+    function handleRealtimeWildcard(eventName, e){
+
+        if (!mounted) return;
+        if (!eventName.startsWith('realtime:inbox:')) return;
+
+        if (eventName === `realtime:inbox:thread:${threadId}`){
+            appendMessage(e);
+        }
+    }
+
+    /* ==========================================
+       MESSAGE RENDERING
+    ========================================== */
+
+    function renderMessage(msg){
+
+        const tpl = document.getElementById('tpl-inbox-message');
+        if (!tpl) return '';
+
+        return tpl.innerHTML
+            .replace(/\{\{\s*body\s*\}\}/g, escape(msg.body ?? ''));
+    }
+
+    function appendMessage(msg){
+
+        const container = document.querySelector('.messages');
+        if (!container) return;
+
+        container.insertAdjacentHTML(
+            'beforeend',
+            renderMessage(msg)
         );
-        if(!item) return;
 
-        item.parentNode.prepend(item);
-        item.classList.add('unread');
-    }
-
-    function bindThreadUI(threadId, res){
-        const composer = document.querySelector('.composer');
-        if (composer) {
-            composer.setAttribute('data-thread', threadId);
-        }
-
-        const headerEl = document.querySelector('.thread-header h4');
-        if (headerEl) {
-            headerEl.textContent = res?.data?.thread?.title ?? 'Conversation';
-        }
+        scrollBottom();
     }
 
     function scrollBottom(){
+
         const c = document.querySelector('.messages-cont');
-        if(c) c.scrollTop = c.scrollHeight + 40;
+        if (c) c.scrollTop = c.scrollHeight + 40;
     }
 
-    function showTyping(){
-        document.querySelector('.typing-indicator')
-            ?.removeAttribute('hidden');
-    }
+    /* ==========================================
+       START CONVERSATION
+    ========================================== */
 
-    function hideTyping(){
-        document.querySelector('.typing-indicator')
-            ?.setAttribute('hidden', true);
+    function startConversation(){
+
+        fetch('api/modules/inbox/thread', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                thread_type: 'chat',
+                title: 'New Conversation'
+            })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success && res.data.thread){
+                openThread(res.data.thread.id);
+            }
+        });
     }
 
     function escape(text){
@@ -216,7 +287,7 @@ function(scope){
 
 },
 {
-    requires:['hooks','callbora','permissions','face'],
-    activateOn: (route) => route.startsWith('/portal/inbox'),
+    requires:['hooks','callbora','permissions','face','navigation'],
+    activateOn: (route) => route.startsWith('portal/inbox'),
     permission: { group:'inbox', sub:'view' }
 });

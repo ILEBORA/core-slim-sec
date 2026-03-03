@@ -160,9 +160,11 @@
             return Object.freeze({
                 getService,
                 hasService,
+                getPlugin,
                 on,
                 emit,
-                config
+                config,
+                runtimeInstance: publicAPI
             });
         }
 
@@ -207,28 +209,28 @@
             return resolved;
         }
 
-        function handlePluginActivationO(route){
+        // function handlePluginActivationO(route){
 
-            plugins.forEach((instance, name)=>{
+        //     plugins.forEach((instance, name)=>{
 
-                const meta = pluginMeta.get(name);
+        //         const meta = pluginMeta.get(name);
 
-                if(!meta?.activateOn) return;
+        //         if(!meta?.activateOn) return;
 
-                const shouldBeActive = meta.activateOn(route);
+        //         const shouldBeActive = meta.activateOn(route);
 
-                if(shouldBeActive && !instance.__active){
-                    instance.mount?.();
-                    instance.__active = true;
-                }
+        //         if(shouldBeActive && !instance.__active){
+        //             instance.mount?.();
+        //             instance.__active = true;
+        //         }
 
-                if(!shouldBeActive && instance.__active){
-                    instance.unmount?.();
-                    instance.__active = false;
-                }
+        //         if(!shouldBeActive && instance.__active){
+        //             instance.unmount?.();
+        //             instance.__active = false;
+        //         }
 
-            });
-        }
+        //     });
+        // }
 
         function integratePending(){
 
@@ -255,46 +257,67 @@
 
             pendingPlugins.clear();
 
-            evaluatePluginActivation(window.location.pathname);
+            evaluatePluginActivation(normalizeUrl(window.location));
         }
-        function integratePendingO(){
+        // function integratePendingO(){
 
-            if(!started){
-                console.warn('Runtime not started yet.');
-                return;
+        //     if(!started){
+        //         console.warn('Runtime not started yet.');
+        //         return;
+        //     }
+
+        //     // SERVICES
+        //     pendingServices.splice(0).forEach(s => {
+
+        //         if(services.has(s.name)){
+        //             console.warn(`Service "${s.name}" already exists.`);
+        //             return;
+        //         }
+
+        //         validateRequires(s.meta?.requires, services);
+
+        //         const instance = s.factory(createScope());
+        //         services.set(s.name, instance);
+        //     });
+
+        //     // PLUGINS
+        //     pendingPlugins.splice(0).forEach(p => {
+
+        //         if(instances.has(p.name)){
+        //             console.warn(`Plugin "${p.name}" already exists.`);
+        //             return;
+        //         }
+
+        //         validateRequires(p.meta?.requires, services, instances);
+
+        //         const instance = p.factory(createScope());
+        //         instances.set(p.name, instance);
+
+        //         if(instance?.init){
+        //             instance.init();
+        //         }
+        //     });
+        // }
+
+        function normalizeUrl(fullUrl){
+            const base = window.__APP_BASE_PATH__ || '';
+
+            if (!fullUrl) return '/';
+
+            fullUrl = String(fullUrl);
+
+            if (base && fullUrl.startsWith(base)){
+                fullUrl = fullUrl.slice(base.length);
             }
 
-            // SERVICES
-            pendingServices.splice(0).forEach(s => {
+            // remove query
+            fullUrl = fullUrl.split('?')[0];
 
-                if(services.has(s.name)){
-                    console.warn(`Service "${s.name}" already exists.`);
-                    return;
-                }
+            // if (!fullUrl.startsWith('/')){
+            //     fullUrl = '/' + fullUrl;
+            // }
 
-                validateRequires(s.meta?.requires, services);
-
-                const instance = s.factory(createScope());
-                services.set(s.name, instance);
-            });
-
-            // PLUGINS
-            pendingPlugins.splice(0).forEach(p => {
-
-                if(instances.has(p.name)){
-                    console.warn(`Plugin "${p.name}" already exists.`);
-                    return;
-                }
-
-                validateRequires(p.meta?.requires, services, instances);
-
-                const instance = p.factory(createScope());
-                instances.set(p.name, instance);
-
-                if(instance?.init){
-                    instance.init();
-                }
-            });
+            return fullUrl || '';
         }
 
         function evaluatePluginActivation(route){
@@ -303,18 +326,20 @@
             const face  = services.get('face');
 
             plugins.forEach((plugin, name) => {
-
+                console.log('PLUGIN::',name);
                 const meta = pluginMeta.get(name);
                 if(!meta) return;
 
                 let shouldActivate = true;
 
                 if(meta.activateOn){
+                    // alert(route);
                     shouldActivate = meta.activateOn(route);
                 }
 
                 if(shouldActivate && meta.permission){
                     const {group, sub} = meta.permission;
+                    // alert('Permission:: '+group+'::'+sub);
                     shouldActivate = perms?.can(group, sub) === true;
                 }
 
@@ -334,42 +359,42 @@
 
             });
         }
-        function evaluatePluginActivationO(route){
+        // function evaluatePluginActivationO(route){
 
-            const perms = services.get('permissions');
-            const face  = services.get('face');
+        //     const perms = services.get('permissions');
+        //     const face  = services.get('face');
 
-            instances.forEach((plugin, name) => {
+        //     instances.forEach((plugin, name) => {
 
-                const meta = pluginMeta.get(name);
-                if(!meta) return;
+        //         const meta = pluginMeta.get(name);
+        //         if(!meta) return;
 
-                let shouldActivate = true;
+        //         let shouldActivate = true;
 
-                // Route condition
-                if(meta.activateOn){
-                    shouldActivate = meta.activateOn(route);
-                }
+        //         // Route condition
+        //         if(meta.activateOn){
+        //             shouldActivate = meta.activateOn(route);
+        //         }
 
-                // Permission condition
-                if(shouldActivate && meta.permission){
-                    const {group, sub} = meta.permission;
-                    shouldActivate = perms?.can(group, sub) === true;
-                }
+        //         // Permission conditionFF
+        //         if(shouldActivate && meta.permission){
+        //             const {group, sub} = meta.permission;
+        //             shouldActivate = perms?.can(group, sub) === true;
+        //         }
 
-                // Face condition (optional future)
-                if(shouldActivate && meta.face){
-                    shouldActivate = face.current() === meta.face;
-                }
+        //         // Face condition (optional future)
+        //         if(shouldActivate && meta.face){
+        //             shouldActivate = face.current() === meta.face;
+        //         }
 
-                if(shouldActivate){
-                    plugin.mount?.();
-                } else {
-                    plugin.unmount?.();
-                }
+        //         if(shouldActivate){
+        //             plugin.mount?.();
+        //         } else {
+        //             plugin.unmount?.();
+        //         }
 
-            });
-        }
+        //     });
+        // }
 
         function validateRequires(requires = [], servicesMap, pluginMap){
 
@@ -397,6 +422,22 @@
                         el.remove();
                     }
                 });
+        }
+
+        function loadScriptOnce(src){
+            return new Promise((resolve, reject)=>{
+
+                if(document.querySelector(`script[src="${src}"]`)){
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
         }
 
         /* =========================
@@ -472,18 +513,19 @@
 
             if(state){
                 state.subscribe('route', (route)=>{
+                    // alert('subscribe:: '+route);
                     evaluatePluginActivation(route);
                 });
 
                 // evaluate once on boot
-                evaluatePluginActivation(window.location.pathname);
+                evaluatePluginActivation(normalizeUrl(window.location));
             }
 
             Object.freeze(services);
             Object.freeze(plugins);
         }
 
-        return Object.freeze({
+        const publicAPI = {
             start,
             plugin:getPlugin,
             service:getService,
@@ -491,12 +533,14 @@
             lock,
             on,
             emit,
-            // handlePluginActivation,
+            loadScriptOnce,
             sanity,
             isStarted:()=>started,
             _registerPlugin,
             _registerService
-        });
+        };
+
+        return Object.freeze(publicAPI);
     }
 
     global.BoraRuntime = BoraRuntime;

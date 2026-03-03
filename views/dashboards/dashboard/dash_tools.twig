@@ -8,16 +8,18 @@
     <!-- Dash Controls -->
     <div class="dash-controls">
         <span class="tools f-right">
-            {{title}} | <button onclick="
-                                    mPGs.klassPopup(
-                                            'dashboards',
-                                            'dashpagewidgets',
-                                            '{{id}}',          // item id
-                                            'add',     // form action
-                                            () => console.log('Opening edit form...'),
-                                            () => console.log('Edit closed.')
-                                        );
-                                    ">Add Widgets</button> | <button onclick="lnk('p:bo-r:manage-sb:dashwidgets')">Manage Widgets</button> 
+            {{title}} | <button
+    data-popup
+    data-mode="form"
+    data-module="dashboards"
+    data-group="dashpagewidgets"
+    data-id="{{id}}"
+    data-tab="add"
+    data-size="lg">
+    Add Widget
+</button> | <button data-nav="bo/manage/dashwidgets" >Manage Widgets</button> | <a data-nav="/delete/12" data-confirm="Delete this item?">
+    Delete
+</a>
         </span>
     </div>
 </div>

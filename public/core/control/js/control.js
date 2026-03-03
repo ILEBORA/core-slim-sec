@@ -17,4 +17,4 @@ var modControl = addPlugin('modControl', {
     }
 });
 
-alert('Control...');
+// alert('Control...');

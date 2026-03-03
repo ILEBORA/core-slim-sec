@@ -24,16 +24,17 @@ appHooks.addHook("form:afterSubmit", ($form, resp) => {
 
     if(resp.redirect){
         // overlayLoader.show('Loading...');
-        appUI.content.loadPage(resp.redirect);
+        Bora.navigate(resp.redirect);
     }
+
     if(resp.esc){
-        mPGs.activePopup.close();
-        var esc = $.Event("keydown", { keyCode: 27 });
-        $("body").trigger(esc);
+        alert('esc');
+        __BORA_APP__.service('hooks')?.call('esc');
     }
 
     if(resp.success){
-        $form.reset();
+        // $form.reset();
+        $form[0]?.reset();
     }
 });
 // alert('here');

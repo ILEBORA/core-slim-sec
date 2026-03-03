@@ -2563,7 +2563,7 @@ var formJourney = addPlugin(
 
                 // Trigger pre-submit hooks if they exist
                 if (typeof appHooks !== 'undefined') {
-                    let result = appHooks.call('form:beforeSubmit', $form);
+                    let result = appHooks.callHook('form:beforeSubmit', $form);
 
 					if (result === false) {
 						console.warn("Submission cancelled by beforeSubmit hook.");
@@ -2611,7 +2611,7 @@ formJourney.addMethods({
 
     _afterSubmit: function($form, resp) {
         if (typeof appHooks !== 'undefined') {
-            appHooks.call('form:afterSubmit', $form, resp);
+            appHooks.callHook('form:afterSubmit', $form, resp);
         }
     },
 	// Add this inside `formJourney.addMethods({...})`
@@ -2623,7 +2623,7 @@ formJourney.addMethods({
 
 		// Pre-submit hooks (just like auto mode)
 		if (typeof appHooks !== 'undefined') {
-			let result = appHooks.call('form:beforeSubmit', $form);
+			let result = appHooks?.call('form:beforeSubmit', $form);
 			if (result === false) {
 				console.warn("Manual journey cancelled by beforeSubmit hook.");
 				return false;

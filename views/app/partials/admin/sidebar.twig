@@ -23,9 +23,9 @@
 
     <div class="side-bar-tools">
         {% block sidebar_tools %}
-            <a class="fa fa-refresh" href="javascript:void(0)" onclick="app.refreshMenu('{{auth.role}}')"></a>
-            &nbsp;
             {% if hasRole('Administrator') or hasRole('Developer') %}
+                 <a class="fa fa-refresh" href="javascript:void(0)" data-refresh-menu data-role="{{active_role}}"></a>
+                &nbsp;
                 {% include 'app/partials/faces.twig' with{
                     face: face
                 } %}

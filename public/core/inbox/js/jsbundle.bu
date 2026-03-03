@@ -9,6 +9,7 @@ $pipeline = new AssetPipeline(__DIR__, 'js', 'inbox');
 $pipeline
     ->add('inbox.js')           // Main plugin
     ->add('inbox-composer.js')  // Composer plugin
+    ->('inbox-actions.js')
     ->add('chat.js')            // UI extras
     ->add('realtime.js')        // Realtime integration
     ->send();

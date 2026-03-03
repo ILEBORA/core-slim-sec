@@ -51,5 +51,5 @@ function(scope){
 },
 {
     requires:['realtime.leader','hooks','events'],
-    activateOn:(route)=> route.startsWith('/portal')
+    activateOn:(route)=> route.startsWith('portal')
 });

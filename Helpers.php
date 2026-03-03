@@ -1011,8 +1011,8 @@ if(!function_exists('autoIncludeCoreJs')){
 
             $file = $corePath . '/' . $meta['file'];
 
-            if (!file_exists($file)) continue;
-            error_log("Register file:: $name :: $file");
+            if (!file_exists($file)){error_log("Error Registering file:: $name :: $file"); continue;}
+            // error_log("Register file:: $name :: $file");
             $hooks->register($name, $file);
         }
 
@@ -1065,13 +1065,12 @@ if(!function_exists('autoIncludeCoreJs')){
 
 if(!function_exists('autoIncludeCoreCss')){
     function autoIncludeCoreCss($hooks) {
-        $corePath = vendor_path('public/css');
+        $corePath = vendor_path('public/css/cores');
 
         $files = glob($corePath . '/*.css');
-        dieVal($files);
+        // dieVal($files);
         foreach ($files as $file) {
             $name = basename($file, '.css'); // e.g., BoraHooks
-            // dieVal($name);
             $hooks->register(strtolower($name), $file);
         }
     }
@@ -1520,6 +1519,58 @@ if (!function_exists('i18n_register_auto')) {
             i18n_register_core($service->getDomain());
         } else {
             i18n_register_module($service->getName());
+        }
+    }
+}
+
+if (!function_exists('isLoggedIn')) {
+    function isLoggedIn(): bool
+    {
+        try {
+
+            $app = myApp();
+
+            if (!$app) {
+                return false;
+            }
+
+            $usersFeature = $app->getFeature('users');
+
+            if (!$usersFeature) {
+                return false;
+            }
+
+            return (bool) $usersFeature->isAuthenticated();
+
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+}
+
+if (!function_exists('isAdmin')) {
+    function isAdmin(): bool
+    {
+        try {
+
+            $users = With('users');
+
+            if (!$users) {
+                return false;
+            }
+
+            $manager = method_exists($users, 'getManager')
+                ? $users->getManager()
+                : null;
+
+            if (!$manager) {
+                return false;
+            }
+
+            return (bool) $manager->hasRole('administrator');
+
+        } catch (\Throwable $e) {
+            return false;
         }
     }
 }

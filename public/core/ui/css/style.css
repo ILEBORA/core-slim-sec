@@ -96,8 +96,8 @@
     border-top-color: #5176db;
 }
 .sub_menu a {
-    float: left;
-    display: block;
+    /* float: left; */
+    display: inline-block;
     color: var(--sub-menu-color, #fff) !important;
     text-align: center;
     padding: var(--sub-menu-padding, 5px);
@@ -753,8 +753,13 @@ table.bordered td:last {
 
 /*Page Styles*/
 .page-actions {
-    position: relative;
+    position: absolute;
     display: inline-block;
+    right:0px;
+}
+
+.sub_menu.container{
+    position: relative;
 }
 
 .kebab-btn {

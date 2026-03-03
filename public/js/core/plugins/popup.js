@@ -2,6 +2,7 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
 
     const $ = scope.getService('jquery');
     const events = scope.getService('events'); // optional
+    const dismiss = scope.getService('dismiss');
 
     /* ==================================================
        CLASS
@@ -10,7 +11,6 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
     class BoraPopup {
 
         constructor(options = {}) {
-
             this._id = 'boraPopup_' + Math.random().toString(36).slice(2);
 
             this.options = Object.assign({
@@ -67,9 +67,6 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
                 if ($(e.target).is(this.$popup)) this.close();
             });
 
-            $(document).on(`keyup.${this._id}`, (e) => {
-                if (e.key === "Escape") this.close();
-            });
         }
 
         /* =========================
@@ -79,6 +76,8 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
         show() {
             this.$popup.fadeIn(200);
             $('body').css('overflow', 'hidden');
+
+            dismiss?.register(this);
 
             if (this.options.onOpen) this.options.onOpen();
 
@@ -100,6 +99,8 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
         }
 
         destroy() {
+
+            dismiss?.unregister(this);
 
             this.$close.off(`.${this._id}`);
             this.$popup.off(`.${this._id}`);

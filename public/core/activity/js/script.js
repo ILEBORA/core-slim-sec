@@ -26,7 +26,7 @@ async function loadAndPromptDelayed(url, fallbackHtml = "<p>Not found.</p>") {
         console.log('VALUES:: ', det);
         // det['typ'] = typ;
         // det['itm'] = itm;
-        alert('Here');
+        // alert('Here');
      });
 
     try {
@@ -150,4 +150,4 @@ formJourney.registerJourney('timeline.add0', function($form, done) {
 		}
 	});
 });
-alert('Activity');
+// alert('Activity');

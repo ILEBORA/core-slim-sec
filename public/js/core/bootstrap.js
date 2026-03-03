@@ -62,6 +62,14 @@
         back:     navigation?.back
     });
 
+    //
+    const hooks = app.service('hooks');
+
+    $(document).on('keyup', (e)=>{
+        if(e.key === 'Escape'){
+            hooks.call('esc');
+        }
+    });
 
     /* =========================================================
        4. LEGACY EXPOSURE HELPER (Bootstrap-only)
@@ -151,8 +159,22 @@
         exposeLegacy('BoraPopup', popupPlugin.create);
     }
 
+    console.log(app.plugins);
+    console.log(app.plugin('BoraAlertsV2'));
     const eventsPlugin = app.plugin('BoraEventsV5');
     exposeLegacy('BoraEvents', eventsPlugin);
+    eventsPlugin.init();
+
+    const uiActions = app.service('ui.actions');
+    uiActions?.init();
+
+
+    const overlayLoader = app.plugin('Overlay');
+    // if(overlayLoader){
+        overlayLoader.show('Saving data...');
+        overlayLoader.setProgress(60);
+        // overlay.hide();
+    // }
 
 
     /* =========================================================
@@ -220,5 +242,10 @@
     if(typeof app.emit === 'function'){
         app.emit('runtime:ready');
     }
+
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     const nav = __BORA_APP__.service('navigation');
+    //     setActiveFromRoute(window.location.pathname);
+    // });
 
 })(window);

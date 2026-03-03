@@ -129,7 +129,7 @@ return [
     ],
 
     'jobqueue' => [
-        'file'     => 'services/jobQueue.js',
+        'file'     => 'services/job-queue.js',
         'version'  => '1.0.0',
         'priority' => 31,
         'requires' => ['runtime','callbora']
@@ -142,17 +142,80 @@ return [
         'requires' => ['runtime']
     ],
 
+    'menu' => [
+        'file'     => 'services/menu.js',
+        'version'  => '1.0.0',
+        'priority' => 33,
+        'requires' => ['runtime']
+    ],
+
+    'context' => [
+        'file'     => 'services/context.js',
+        'version'  => '1.0.0',
+        'priority' => 34,
+        'requires' => ['runtime']
+    ],
+
+    'popup.service' => [
+        'file'     => 'services/popup.js',
+        'version'  => '1.0.0',
+        'priority' => 35,
+        'requires' => ['runtime']
+    ],
+
+    'capability' => [
+        'file'     => 'services/capability.js',
+        'version'  => '1.0.0',
+        'priority' => 36,
+        'requires' => ['runtime']
+    ],
+
+    
+    'ui.actions' => [
+        'file'     => 'services/ui.actions.js',
+        'version'  => '1.0.0',
+        'priority' => 37,
+        'requires' => ['runtime']
+    ],
+
+    'permissions' => [
+        'file'     => 'services/permissions.js',
+        'version'  => '1.0.0',
+        'priority' => 38,
+        'requires' => ['runtime']
+    ],
+
+    'dismiss' => [
+        'file'     => 'services/dismiss.js',
+        'version'  => '1.0.0',
+        'priority' => 39,
+        'requires' => ['runtime']
+    ],
     
 
     /* ==================================================
        CORE PLUGINS (UI Layer – Controlled)
     ================================================== */
 
-    'popup' => [
-        'file'     => 'plugins/popup.js',
+    'events' => [
+        'file'     => 'plugins/events.js',
         'version'  => '1.0.0',
         'priority' => 40,
-        'requires' => ['runtime']
+        'requires' => ['jquery','runtime']
+    ],
+
+    'popup.plugin' => [
+        'file'     => 'plugins/popup.js',
+        'version'  => '1.0.0',
+        'priority' => 41,
+        'requires' => ['jquery','runtime','events']
+    ],
+
+    'navigation.plugin' => [
+        'file'     => 'plugins/navigation.js',
+        'version'  => '1.0.0',
+        'priority' => 42,
+        // 'requires' => ['jquery','runtime','events','navigation']
     ],
 
     'alerts' => [
@@ -177,25 +240,25 @@ return [
     ],
 
     'layouts' => [
-        'file'     => 'plugin/layouts.js',
+        'file'     => 'plugins/layouts.js',
         'version'  => '1.0.0',
         'priority' => 57,
     ],
 
     'face-guest' => [
-        'file'     => 'plugin/face-guest.js',
+        'file'     => 'plugins/face-guest.js',
         'version'  => '1.0.0',
         'priority' => 57,
     ],
 
     'face-client' => [
-        'file'     => 'plugin/plugins.js',
+        'file'     => 'plugins/face-client.js',
         'version'  => '1.0.0',
         'priority' => 58,
     ],
 
-    'face-adnin' => [
-        'file'     => 'app/face-adnin.js',
+    'face-admin' => [
+        'file'     => 'app/face-admin.js',
         'version'  => '1.0.0',
         'priority' => 59,
     ],
@@ -206,9 +269,17 @@ return [
         'priority' => 60,
     ],
 
+    'navigation-binder' => [
+        'file'     => 'plugins/navigation-binder.js',
+        'version'  => '1.0.0',
+        'priority' => 61,
+    ],
 
-    
-
+    'overlay' => [
+        'file'     => 'plugins/overlay.js',
+        'version'  => '1.0.0',
+        'priority' => 61,
+    ],
 
     /* ==================================================
        APPLICATION LAYER (Project Specific)

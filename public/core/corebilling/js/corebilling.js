@@ -1,1 +1,1 @@
-alert('core billing');
+// alert('core billing');

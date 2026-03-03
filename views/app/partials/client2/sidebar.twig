@@ -23,11 +23,12 @@
 
     <div class="side-bar-tools">
         {% block sidebar_tools %}
-            <a class="fa fa-refresh" href="javascript:void(0)" onclick="app.refreshMenu('{{auth.role}}')"></a>
             
 
             {# if hasRole('Administrator') or hasRole('Developer') #}
-                <select id="changemenu" class="changemenu" onchange="getSelectedValue(this)">
+            <a class="fa fa-refresh" href="javascript:void(0)" data-refresh-menu data-role="{{active_role}}"></a>
+            
+                <select id="changemenu" class="changemenu">
                     <option value="Client" >Client</option>
                     <option value="Administrator" selected>Admin</option>
                 </select>

@@ -1,1 +1,1 @@
-alert('View Dashboards');
+// alert('View Dashboards');

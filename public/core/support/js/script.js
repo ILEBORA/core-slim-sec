@@ -3,4 +3,4 @@ $(function(){
     alertBora.notify('Support Module active!', 'success', 5);
 });
 
-alert('Support...');
+// alert('Support...');
