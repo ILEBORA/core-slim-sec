@@ -1,0 +1,53 @@
+<div class="activity-composer">
+
+    <div class="composer-header">
+        <img src="{{ user.avatar }}" class="avatar">
+        <span class="composer-user">{{ user.name }}</span>
+    </div>
+
+    <textarea
+        name="content"
+        placeholder="What's on your mind?"
+        class="composer-text"
+        required
+    ></textarea>
+
+    <div class="composer-preview"></div>
+
+    <input type="hidden" name="attachments" id="composerAttachments">
+
+    <div class="composer-tools">
+        <button type="button" class="tool-btn attach-photo">
+            📷 Photo
+        </button>
+
+        <button type="button" class="tool-btn attach-video">
+            🎥 Video
+        </button>
+
+        <button type="button" class="tool-btn attach-link">
+            🔗 Link
+        </button>
+    </div>
+
+    <div class="composer-footer">
+
+        <select name="visibility">
+            <option value="public">Public</option>
+            <option value="friends">Friends</option>
+            <option value="private">Only Me</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Post
+        </button>
+
+    </div>
+
+    <input type="file"
+           id="composerUpload"
+           hidden
+           accept="image/*,video/*"
+           multiple>
+
+</div>

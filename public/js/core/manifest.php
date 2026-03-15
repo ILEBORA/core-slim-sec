@@ -185,10 +185,31 @@ return [
         'requires' => ['runtime']
     ],
 
-    'dismiss' => [
-        'file'     => 'services/dismiss.js',
+    'ui.stack' => [
+        'file'     => 'services/ui.stack.js',
         'version'  => '1.0.0',
         'priority' => 39,
+        'requires' => ['runtime']
+    ],
+
+    'ui.dismissable' => [
+        'file'     => 'services/ui.dismissable.js',
+        'version'  => '1.0.0',
+        'priority' => 40,
+        'requires' => ['runtime']
+    ],
+
+    'ui.element.dismiss' => [
+        'file'     => 'services/ui.element.dismiss.js',
+        'version'  => '1.0.0',
+        'priority' => 41,
+        'requires' => ['runtime']
+    ],
+
+    'preferences' => [
+        'file'     => 'services/preferences.js',
+        'version'  => '1.0.0',
+        'priority' => 42,
         'requires' => ['runtime']
     ],
     
@@ -280,7 +301,7 @@ return [
         'version'  => '1.0.0',
         'priority' => 61,
     ],
-
+    
     /* ==================================================
        APPLICATION LAYER (Project Specific)
     ================================================== */
@@ -295,6 +316,12 @@ return [
         'file'     => 'app/mainjs.js',
         'version'  => '1.0.0',
         'priority' => 75,
+    ],
+
+    'config' => [
+        'file' => '__inline__',
+        'priority' => 76,
+        'requires' => ['mainjs']
     ],
 
     'plugins' => [

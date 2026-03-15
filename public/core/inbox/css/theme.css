@@ -1,0 +1,21 @@
+:root {
+    --inbox-primary: #2563eb;
+    --inbox-bg: #f9fafb;
+    --bubble-outgoing: #2563eb;
+    --bubble-incoming: #ffffff;
+}
+
+body.dark {
+    --inbox-bg: #0f172a;
+    --bubble-outgoing: #134e4a;
+    --bubble-incoming: #1e293b;
+}
+
+body.dark {
+    --inbox-bg: #0f172a;
+    --bubble-outgoing: #134e4a;
+    --bubble-incoming: #1e293b;
+    --bubble-text: #e2e8f0;
+    --bubble-meta: #94a3b8;
+    --tick-read: #38bdf8;
+}

@@ -1,0 +1,52 @@
+<div class="dropdown-panel notifications" data-notifications-panel>
+
+    <div class="dropdown-header">
+        Notifications
+    </div>
+
+    <div class="dropdown-body">
+
+        <div class="notifications-list"></div>
+
+        <div class="notifications-loading">
+            <img src="assets/images/icons/ajax.gif" width="16">
+        </div>
+
+    </div>
+
+    <div class="dropdown-footer">
+        <center>
+        <button data-nav="portal/notifications" data-e-click="DropdownPanel.closePanel()">View all</button>
+        </center>
+    </div>
+
+</div>
+
+<script>
+function loadNotifications(offset = 0){
+
+    const panel = $('[data-notifications-panel]');
+    const list  = panel.find('.notifications-list');
+    const loader = panel.find('.notifications-loading');
+
+    loader.show();
+
+    $.get('api/modules/notifications/load',{
+        offset: offset,
+        limit: 10
+    }).done(function(resp){
+
+        loader.hide();
+
+        if(!resp.rows) return;
+
+        resp.rows.forEach(row=>{
+            list.append(row);
+        });
+
+    });
+
+}
+
+loadNotifications();
+</script>

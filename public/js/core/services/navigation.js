@@ -43,6 +43,32 @@ __BORA_REGISTER_SERVICE__(
         }
 
         function executeScripts(container){
+
+            const scripts = container.querySelectorAll('script');
+
+            scripts.forEach(oldScript => {
+
+                const type = (oldScript.type || '').trim();
+
+                // 🚫 Skip non-JS scripts (like text/template, application/json, etc.)
+                if (type && type !== 'text/javascript' && type !== 'module') {
+                    return;
+                }
+
+                const newScript = document.createElement('script');
+
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+
+                document.body.appendChild(newScript);
+                oldScript.remove();
+            });
+        }
+
+        function executeScriptsO(container){
             const scripts = container.querySelectorAll('script');
 
             scripts.forEach(oldScript => {
@@ -59,6 +85,31 @@ __BORA_REGISTER_SERVICE__(
         }
 
         function injectScripts(htmlString){
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = htmlString;
+
+            wrapper.querySelectorAll('script').forEach(script => {
+
+                const type = (script.type || '').trim();
+
+                if (type && type !== 'text/javascript' && type !== 'module') {
+                    return;
+                }
+
+                const newScript = document.createElement('script');
+
+                if (script.src) {
+                    newScript.src = script.src;
+                } else {
+                    newScript.textContent = script.textContent;
+                }
+
+                document.body.appendChild(newScript);
+            });
+        }
+
+        function injectScriptsO(htmlString){
             const wrapper = document.createElement('div');
             wrapper.innerHTML = htmlString;
 
@@ -190,7 +241,7 @@ __BORA_REGISTER_SERVICE__(
                 return Promise.reject('blocked');
             }
 
-            hooks?.call?.('page.beforeLoad', cleanUrl);
+            scope.emit('page.beforeLoad', cleanUrl);
 
             const ov = overlay();
             ov?.show?.('Loading...', { progress: 5 });
@@ -219,8 +270,8 @@ __BORA_REGISTER_SERVICE__(
 
                 ov?.setProgress?.(100);
 
-                hooks?.call?.('page.afterLoad', cleanUrl, json);
-                hooks?.call?.('page.loaded', cleanUrl);
+                scope.emit('page.afterLoad', cleanUrl, json);
+                scope.emit('page.loaded', cleanUrl);
 
                 ov?.hide?.(true);
 
@@ -232,7 +283,7 @@ __BORA_REGISTER_SERVICE__(
                     return;
                 }
 
-                hooks?.call?.('page.loadError', cleanUrl, err);
+                scope.emit('page.loadError', cleanUrl, err);
                 ov?.hide?.(true);
 
                 console.error('[Navigation error]', err);
@@ -273,7 +324,45 @@ __BORA_REGISTER_SERVICE__(
             return fullUrl || '';
         }
 
+        function highlight(cleanRoute){
+            $(function(){
+                cleanRoute = normalizeUrl(cleanRoute || window.location.location);
+                const items = [...document.querySelectorAll('.features-item')];
+
+                let bestItem = null;
+                let bestLength = -1;
+
+                items.forEach(item => {
+
+                    const dataUrl = (item.dataset.url || '').replace(/^\/|\/$/g,'');
+
+                    if (!dataUrl) return;
+
+                    if (
+                        cleanRoute === dataUrl ||
+                        cleanRoute.startsWith(dataUrl + '/')
+                    ) {
+                        if (dataUrl.length > bestLength) {
+                            bestLength = dataUrl.length;
+                            bestItem = item;
+                        }
+                    }
+                });
+
+                items.forEach(i => i.classList.remove('active'));
+                bestItem?.classList.add('active');
+            });
+        }
+
         window.addEventListener('popstate', async (e)=>{
+            const uiStack = scope.getService('uiStack');
+            if(uiStack && uiStack.size() > 0){
+                uiStack.closeTop();
+                // restore history so navigation does not occur
+                history.pushState(e.state, '', window.location);
+                return;
+            }
+
             const url = e.state?.url || normalizeUrl(window.location);
             await go(url, { replace:true });
         });
@@ -282,7 +371,8 @@ __BORA_REGISTER_SERVICE__(
             go,
             navigate,
             reload,
-            back
+            back,
+            highlight
         };
     },
     {

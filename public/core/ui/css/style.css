@@ -165,6 +165,7 @@ a.edit_link {
     width: auto;
     min-width:18px;
     float: left;
+    color: #fff !important;
 }
 a.edit_link.r-t{
     position:absolute;
@@ -240,6 +241,7 @@ a.edit_link:hover {
 
 
 .inf_block:hover .inf_title,.inf_block:focus-within .inf_title{
+    color: inherit;
 }
 .inf_block:hover .int_btn,.inf_block:focus-within .int_btn{
     background-color:#ddc2d8;

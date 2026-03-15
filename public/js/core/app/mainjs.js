@@ -1811,7 +1811,7 @@ function showOverlay(){
 	// 		ELoader.showOverlay();
 	// 	}
 	// });
-	overlayLoader.show('Saving...');
+	// overlayLoader.show('Saving...');
 }
 
 function hideOverlay(){

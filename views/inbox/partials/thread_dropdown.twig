@@ -1,0 +1,17 @@
+<div class="thread-item" data-thread="{{ thread.id }}">
+
+    <div class="thread-title">
+        {{ thread.title }}
+    </div>
+
+    <div class="thread-preview">
+        {{ thread.last_sender }}: {{ thread.last_message|slice(0,40) }}
+    </div>
+
+    {% if thread.unread_count > 0 %}
+        <span class="thread-unread">
+            {{ thread.unread_count }}
+        </span>
+    {% endif %}
+
+</div>

@@ -1,3 +1,10 @@
+## [1.1.0] - 2026-03-15
+- minor version bump
+
+### New Commits
+812b695 New js core
+6073312 Stable with runtime js
+
 ## [1.0.49] - 2026-02-28
 - patch version bump
 

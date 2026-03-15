@@ -481,48 +481,63 @@ appUI.dropDown.init();
         }
 
         // Create a new popup instance
-        const diagPop = new BoraPopup({
-            containerId: pop || 'diagPop',
-            onOpen: () => {
-                if (typeof openCall === 'function') openCall();
-            },
-            onLoaded: (url) => {
-                console.log('Popup content loaded from:', url);
-                // If callbackPipe exists, inject it into the popup DOM
-                if (mPGs.callbackPipe) {
-                    // alert('Context');
-                    // const params = new URLSearchParams(mPGs.callbackPipe).toString();
-                    // popUrl += "?" + params;
-                    // alert('Here'+popUrl);
-                    // TODO:: explore popup context
-                    // const container = document.querySelector(`#${pop || 'diagPop'} .bora-form`);
-                    // if (container) { //alert('Context found');
-                    //     const input = document.createElement("input");
-                    //     input.type = "text";
-                    //     input.name = "_context";
-                    //     input.value = JSON.stringify(mPGs.callbackPipe);
-                    //     container.appendChild(input);
-                    // }
-                }
-            },
-            onClose: () => {
-                if (typeof closeCall === 'function') closeCall();
-            }
+        const diagPop = window.__BORA_APP__?.service?.('popup');
+        if (!diagPop) return;
+
+        diagPop.open({
+            mode:   'form',
+            module: klass,
+            group:  group,
+            view:   tab,
+            id:     itm,
+            tab:    tab,
+            size:   'md',
+            meta:   options
         });
+
+
+        // const diagPop = new BoraPopup({
+        //     containerId: pop || 'diagPop',
+        //     onOpen: () => {
+        //         if (typeof openCall === 'function') openCall();
+        //     },
+        //     onLoaded: (url) => {
+        //         console.log('Popup content loaded from:', url);
+        //         // If callbackPipe exists, inject it into the popup DOM
+        //         if (mPGs.callbackPipe) {
+        //             // alert('Context');
+        //             // const params = new URLSearchParams(mPGs.callbackPipe).toString();
+        //             // popUrl += "?" + params;
+        //             // alert('Here'+popUrl);
+        //             // TODO:: explore popup context
+        //             // const container = document.querySelector(`#${pop || 'diagPop'} .bora-form`);
+        //             // if (container) { //alert('Context found');
+        //             //     const input = document.createElement("input");
+        //             //     input.type = "text";
+        //             //     input.name = "_context";
+        //             //     input.value = JSON.stringify(mPGs.callbackPipe);
+        //             //     container.appendChild(input);
+        //             // }
+        //         }
+        //     },
+        //     onClose: () => {
+        //         if (typeof closeCall === 'function') closeCall();
+        //     }
+        // });
 
         // mPGs.activePopup = diagPop;
 
         // Debug (optional)
-        if (mPGs.callbackPipe) {
-            // alert('Add Context');
-            const params = new URLSearchParams(mPGs.callbackPipe).toString();
-            popUrl += "?" + params;
-            // alert('Here'+popUrl);
-        }
-        console.log('Opening popup from:', popUrl);
-        // alert('there'+popUrl);
-        // Open the popup (loads HTML content from backend)
-        diagPop.open(popUrl);
+        // if (mPGs.callbackPipe) {
+        //     // alert('Add Context');
+        //     const params = new URLSearchParams(mPGs.callbackPipe).toString();
+        //     popUrl += "?" + params;
+        //     // alert('Here'+popUrl);
+        // }
+        // console.log('Opening popup from:', popUrl);
+        // // alert('there'+popUrl);
+        // // Open the popup (loads HTML content from backend)
+        // diagPop.open(popUrl);
 
         mPGs.activePopup = diagPop;
 

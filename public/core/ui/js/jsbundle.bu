@@ -7,6 +7,8 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'js', 'ui');
 
 $pipeline
+    ->add('plugins/context-menu.js')
+    ->add('plugins/dropdown-panel.js')
     ->add('script.js')
     ->add('hooks.js')
 

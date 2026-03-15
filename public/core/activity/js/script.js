@@ -47,7 +47,20 @@ async function loadAndPromptDelayed(url, fallbackHtml = "<p>Not found.</p>") {
 let currentPopup = null;
 
 async function openPostPopup() {
-    currentPopup = await mPGs.klassPopup('activity', 'timeline', null, 'add');
+    // currentPopup = await mPGs.klassPopup('activity', 'timeline', null, 'add');
+    const popup = window.__BORA_APP__?.service?.('popup');
+    if (!popup) return;
+
+    popup.open({
+        mode:   'form',
+        module: 'activity',
+        group:  'timeline',
+        view:   'add',
+        id:     null,
+        tab:    'add',
+        size:   'md',
+        meta:   null
+    });
 }
 
 function closePostPopup() {

@@ -5,18 +5,21 @@
 }
 */
 
-app.when('sse', function (sse) {
-    // if (!window.isSseLeader()) return;
-    sse.on('*', function (event, envelope) {
-        // 1️⃣ Dispatch locally
-        FactBus.dispatch(event, {
-            source: 'sse',
-            envelope
-        });
+// app.when('sse', function (sse) {
+//     // if (!window.isSseLeader()) return;
+//     sse.on('*', function (event, envelope) {
+//         alert('app.when');
+//         console.log('event:', event);
+//         console.log('envelope:', envelope);
+//         // 1️⃣ Dispatch locally
+//         FactBus.dispatch(event, {
+//             source: 'sse',
+//             envelope
+//         });
 
-        // 2️⃣ Rebroadcast if leader
-        if (window.isSseLeader()) {
-            authNotify('fact', rd('bID'), event);
-        }
-    });
-});
+//         // 2️⃣ Rebroadcast if leader
+//         if (window.isSseLeader()) {
+//             authNotify('fact', rd('bID'), event);
+//         }
+//     });
+// });

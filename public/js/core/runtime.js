@@ -9,7 +9,7 @@
 
     function registerPluginDuringBuild(name, factory, meta = {}){
         pendingPlugins.set(name, { factory, meta });
-
+        // alert(name);
         if(global.__BORA_APP__?.isStarted()){
             global.__BORA_APP__._registerPlugin(name, factory, meta);
         }
@@ -45,6 +45,30 @@
         function on(event, handler){
             if(!events.has(event)) events.set(event, []);
             events.get(event).push(handler);
+        }
+
+        function off(event, handler){
+            if(!event){
+                events.clear();
+                return;
+            }
+
+            const handlers = events.get(event);
+            if(!handlers) return;
+
+            if(!handler){
+                events.delete(event);
+                return;
+            }
+
+            const index = handlers.indexOf(handler);
+            if(index !== -1){
+                handlers.splice(index, 1);
+            }
+
+            if(handlers.length === 0){
+                events.delete(event);
+            }
         }
 
         function emit(event, payload){
@@ -103,6 +127,28 @@
         ========================= */
 
         function _registerPlugin(name, factory, meta = {}){
+
+            if(plugins.has(name)){
+                console.warn('[Plugin exists]', name);
+                return;
+            }
+
+            try{
+                const instance = factory(createScope());
+
+                plugins.set(name, instance);
+                pluginMeta.set(name, meta);
+
+                // immediately evaluate activation
+                evaluatePluginActivation(normalizeUrl(window.location));
+
+            }
+            catch(err){
+                console.error('[Plugin crashed]', name, err);
+            }
+        }
+
+        function _registerPluginO(name, factory, meta = {}){
 
             if(plugins.has(name)){
                 console.warn('[Plugin exists]', name);
@@ -209,29 +255,6 @@
             return resolved;
         }
 
-        // function handlePluginActivationO(route){
-
-        //     plugins.forEach((instance, name)=>{
-
-        //         const meta = pluginMeta.get(name);
-
-        //         if(!meta?.activateOn) return;
-
-        //         const shouldBeActive = meta.activateOn(route);
-
-        //         if(shouldBeActive && !instance.__active){
-        //             instance.mount?.();
-        //             instance.__active = true;
-        //         }
-
-        //         if(!shouldBeActive && instance.__active){
-        //             instance.unmount?.();
-        //             instance.__active = false;
-        //         }
-
-        //     });
-        // }
-
         function integratePending(){
 
             if(!started){
@@ -326,7 +349,8 @@
             const face  = services.get('face');
 
             plugins.forEach((plugin, name) => {
-                console.log('PLUGIN::',name);
+                // console.log('Checking plugin:', name, 'route:', route);
+
                 const meta = pluginMeta.get(name);
                 if(!meta) return;
 
@@ -357,44 +381,10 @@
                     plugin.__active = false;
                 }
 
+                // console.log(name+' shouldActivate:', shouldActivate);
+
             });
         }
-        // function evaluatePluginActivationO(route){
-
-        //     const perms = services.get('permissions');
-        //     const face  = services.get('face');
-
-        //     instances.forEach((plugin, name) => {
-
-        //         const meta = pluginMeta.get(name);
-        //         if(!meta) return;
-
-        //         let shouldActivate = true;
-
-        //         // Route condition
-        //         if(meta.activateOn){
-        //             shouldActivate = meta.activateOn(route);
-        //         }
-
-        //         // Permission conditionFF
-        //         if(shouldActivate && meta.permission){
-        //             const {group, sub} = meta.permission;
-        //             shouldActivate = perms?.can(group, sub) === true;
-        //         }
-
-        //         // Face condition (optional future)
-        //         if(shouldActivate && meta.face){
-        //             shouldActivate = face.current() === meta.face;
-        //         }
-
-        //         if(shouldActivate){
-        //             plugin.mount?.();
-        //         } else {
-        //             plugin.unmount?.();
-        //         }
-
-        //     });
-        // }
 
         function validateRequires(requires = [], servicesMap, pluginMap){
 
@@ -532,6 +522,7 @@
             integratePending,
             lock,
             on,
+            off,
             emit,
             loadScriptOnce,
             sanity,

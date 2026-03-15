@@ -13,7 +13,20 @@ var modControl = addPlugin('modControl', {
         //});
 
         
-        mPGs.klassPopup('control', 'module', moduleId, 'edit', null, null, { action:action, module_id: moduleId });
+        // mPGs.klassPopup('control', 'module', moduleId, 'edit', null, null, { action:action, module_id: moduleId });
+        const popup = window.__BORA_APP__?.service?.('popup');
+        if (!popup) return;
+
+        popup.open({
+            mode:   'form',
+            module: 'control',
+            group:  'module',
+            view:   'edit',
+            id:     moduleId,
+            tab:    'edit',
+            size:   'md',
+            meta:   { action:action, module_id: moduleId }
+        });
     }
 });
 

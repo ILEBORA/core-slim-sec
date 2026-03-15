@@ -150,50 +150,6 @@ __BORA_REGISTER_PLUGIN__('BoraEventsV5', function(scope){
             }
         },
 
-        resolveFunctionO(fnCall, e, $el, eventType){
-
-            try{
-
-                const fn = fnCall.split('(')[0].trim();
-                const argsString = fnCall.match(/\((.*)\)/);
-                let args = [];
-
-                if(argsString && argsString[1]){
-                    args = argsString[1]
-                        .split(',')
-                        .map(a => BoraEvents.resolveArg(a.trim(), $el));
-                }
-
-                if(BoraEvents.allow && !BoraEvents.allow.includes(fn)){
-                    console.warn(`Blocked call to non-allowed function: ${fn}`);
-                    return;
-                }
-
-                const fnParts = fn.split('.');
-                let ctx = window;
-
-                for(let i = 0; i < fnParts.length - 1; i++){
-                    ctx = ctx[fnParts[i]];
-                    if(!ctx){
-                        throw new Error(`Context not found: ${fnParts.slice(0, i+1).join('.')}`);
-                    }
-                }
-
-                const method = ctx[fnParts.pop()];
-
-                if(typeof method === 'function'){
-                    method.apply(ctx, args.length ? args : [e, $el, eventType]);
-                }
-                else{
-                    console.warn(`Function not found: ${fn}`);
-                }
-
-            }
-            catch(err){
-                console.error('Error executing data-e function:', err);
-            }
-        },
-
         resolveArg(rawArg, $el){
 
             if(!rawArg) return null;

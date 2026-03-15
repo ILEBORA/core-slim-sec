@@ -1,0 +1,23 @@
+<div class="reaction-details">
+
+{% for type, icon in reactionTypes %}
+
+    {% set count = reactions.counts[type] ?? 0 %}
+
+    {% if count > 0 %}
+
+        <div class="reaction-meta">
+
+            <span class="icon">{{ icon }}</span>
+
+            <span class="label">{{ type }}</span>
+
+            <span class="count">{{ count }}</span>
+
+        </div>
+
+    {% endif %}
+
+{% endfor %}
+
+</div>

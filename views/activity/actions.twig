@@ -1,0 +1,37 @@
+<div class="act-button reaction-box">
+    <button class="reaction-trigger">
+        {% if item.reactions.me == 'love' %}❤️{% else %}🤍{% endif %} React
+    </button>
+
+    <div class="reaction-picker">
+        {% for name, icon in item.reactionTypes %}
+            <span class="act-react" data-reaction="{{name}}">{{icon}}</span>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="act-button">
+    <button class="act-comment">💬 Comment</button>
+</div>
+
+<div class="act-button">
+    <button class="act-share">
+        🔁 Share
+    </button>
+</div>
+
+<div class="act-button">
+    <button class="act-insights">
+        📊 Insights
+    </button>
+</div>
+
+<div class="act-button">
+    <button
+        data-context-trigger
+        data-context-type="activity"
+        data-context-id="{{item.id}}"
+        >
+        ⋯
+    </button>
+</div>

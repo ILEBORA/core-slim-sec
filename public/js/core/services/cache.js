@@ -1,6 +1,35 @@
 
 function _loadCacheScript(l,obj,v,a){
     logTest('Here _loadCacheScript '+ obj);
+
+    var b = document.createElement("script");
+
+    if(b != null || typeof b != 'undefined'){
+
+        b.onload=function(){
+
+            _cacheScript(obj,v,l);
+
+            // 🔴 Tell runtime new plugins may exist
+            if(window.__BORA_APP__?.isStarted()){
+                __BORA_APP__.integratePending();
+            }
+
+            a && a();
+        };
+
+        b.setAttribute("src",l);
+        document.getElementsByTagName("head")[0].appendChild(b);
+
+        if (b.parentNode) {
+            b.parentNode.removeChild(b);
+        }
+    }
+
+    b = null;
+}
+function _loadCacheScriptO(l,obj,v,a){
+    logTest('Here _loadCacheScript '+ obj);
     var b=document.createElement("script");
     if(b != null || typeof b != 'undefined'){ //TODO:: fix cache
         

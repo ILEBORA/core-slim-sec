@@ -1,0 +1,7 @@
+{% if media.type == 'image' %}
+    <img src="{{ media.preview_path }}">
+{% elseif media.type == 'video' %}
+    <video controls preload="metadata">
+        <source src="{{ media.preview_path }}" type="video/mp4">
+    </video>
+{% endif %}

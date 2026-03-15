@@ -28,8 +28,9 @@ __BORA_REGISTER_SERVICE__('popup', function(scope){
     }
 
     function closeActive(){
-        const popupPlugin = app?.plugin?.('BoraPopupV2');
-        popupPlugin?.activePopup?.close();
+        // const popupPlugin = app?.plugin?.('BoraPopupV2');
+        // popupPlugin?.activePopup?.close();
+        app?.service?.('uiStack')?.closeTop();
     }
 
     function open(options){
@@ -76,7 +77,8 @@ __BORA_REGISTER_SERVICE__('popup', function(scope){
         });
 
         // Apply size class
-        const container = document.getElementById('diagPop');
+        // const container = document.getElementById('bora_popup');
+        const container = popup?.$popup?.[0];
         if (container){
             container.classList.remove('diag-sm','diag-md','diag-lg','diag-full');
             container.classList.add('diag-' + size);

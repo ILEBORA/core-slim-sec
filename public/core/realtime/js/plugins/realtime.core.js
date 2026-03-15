@@ -31,6 +31,24 @@ function(scope){
     }
 
     function handleRealtimeEvents(event){
+        console.log('handleRealtimeEvents', event);
+        const list = event?.data?.events || [];
+        console.log('handleRealtimeEvents List', list);
+        list.forEach(e => {
+
+            if(!e.channel) return;
+
+            console.log('EMIT:: realtime:' + e.channel,e);
+            scope.emit(
+                'realtime:' + e.channel, 
+                e
+            );
+
+        });
+
+    }
+
+    function handleRealtimeEventsO(event){
 
         const list = event?.data?.events || [];
 

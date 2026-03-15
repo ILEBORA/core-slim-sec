@@ -7,9 +7,30 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'js', 'inbox');
 
 $pipeline
-    ->add('inbox.js')           // Main plugin
-    ->add('inbox-composer.js')  // Composer plugin
-    ->('inbox-actions.js')
-    ->add('chat.js')            // UI extras
-    ->add('realtime.js')        // Realtime integration
+    // Helpers
+    ->add('utils/InboxHelpers.js')
+    ->add('utils/InboxTests.js')
+
+    // Composer
+    ->add('composer/InboxComposer.js')
+
+    // UI Layer
+    ->add('controllers/InboxUI.js')
+
+    // Controllers
+    ->add('controllers/InboxTyping.js')
+    
+    ->add('controllers/InboxThreadLoader.js')
+
+    ->add('controllers/InboxPresence.js')
+    ->add('controllers/InboxNotifications.js')
+    ->add('controllers/InboxRealtime.js')
+    //->add('controllers/InboxReactions.js')
+
+    // API
+    ->add('InboxAPI.js')
+
+    // Plugin Bootstrap
+    ->add('InboxPlugin.js')
+
     ->send();

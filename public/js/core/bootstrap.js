@@ -68,6 +68,7 @@
     $(document).on('keyup', (e)=>{
         if(e.key === 'Escape'){
             hooks.call('esc');
+            app.emit('esc');
         }
     });
 
@@ -159,8 +160,8 @@
         exposeLegacy('BoraPopup', popupPlugin.create);
     }
 
-    console.log(app.plugins);
-    console.log(app.plugin('BoraAlertsV2'));
+    // console.log(app.plugins);
+    // console.log(app.plugin('BoraAlertsV2'));
     const eventsPlugin = app.plugin('BoraEventsV5');
     exposeLegacy('BoraEvents', eventsPlugin);
     eventsPlugin.init();
@@ -171,8 +172,8 @@
 
     const overlayLoader = app.plugin('Overlay');
     // if(overlayLoader){
-        overlayLoader.show('Saving data...');
-        overlayLoader.setProgress(60);
+        // overlayLoader.show('Saving data...');
+        // overlayLoader.setProgress(60);
         // overlay.hide();
     // }
 

@@ -519,6 +519,7 @@ if (!function_exists('View')) {
 
             // --- Vendor Defaults ---
             $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+            $appConfig = App::appConfig();
             $appName = App::config('app_name') ?: 'BoraSlim App';
 
             $instance
@@ -526,6 +527,11 @@ if (!function_exists('View')) {
                 ->share('app_name', $appName)
                 ->share('app_version', getVersion())
                 ->share('core_version', getCoreVersion());
+
+            foreach($appConfig as $key => $val){
+                $instance
+                ->share($key, $val);
+            }
 
             // --- Execute registered client callbacks ---
             foreach ($clientCallbacks??[] as $callback) {
@@ -781,12 +787,13 @@ if(!function_exists('response')){
 if (!function_exists('myApp')) {
     function myApp(): \BoraSlim\Core\App
     {
-        static $instance = null;
-        if ($instance === null) {
-            global $app;
-            $instance = $app;
-        }
-        return $instance;
+        return \BoraSlim\Core\App::getInstance();
+        // static $instance = null;
+        // if ($instance === null) {
+        //     global $app;
+        //     $instance = $app;
+        // }
+        // return $instance;
     }
 }
 
@@ -866,8 +873,24 @@ if(!function_exists('CryptoJSAesEncrypt')){
 
 
 if(!function_exists('Hooks')){
-    function Hooks(){
-        return \BoraSlim\Core\Modules\App\Utils\Hooks::getInstance();
+    function Hooks($name = 'global'){
+        // return \BoraSlim\Core\Modules\App\Utils\Hooks::getInstance();
+    return myApp()
+        ->getService('hooks')
+        ->channel($name);
+    }
+}
+
+if(!function_exists('HooksLegacy')){
+    function HooksLegacy()
+    {
+        static $adapter;
+
+        if(!$adapter){
+            $adapter = new \BoraSlim\Core\Hooks\LegacyHooksAdapter();
+        }
+
+        return $adapter;
     }
 }
 
@@ -1009,6 +1032,15 @@ if(!function_exists('autoIncludeCoreJs')){
 
         foreach ($manifest as $name => $meta) {
 
+            $file = $meta['file'] ?? null;
+
+            /* Inline asset (kernel generated) */
+            if ($file === '__inline__') {
+                $hooks->registerInline($name, '');
+                continue;
+            }
+
+            /* Normal file asset */
             $file = $corePath . '/' . $meta['file'];
 
             if (!file_exists($file)){error_log("Error Registering file:: $name :: $file"); continue;}
@@ -1320,20 +1352,66 @@ if (!function_exists('systemConfig')) {
 }
 
 if (!function_exists('AddModuleFunct')) {
-    function AddModuleFunct($module = null, $funct = null, $callback = null){
-        if($module && $funct && $callback){
-            return Hooks()->addKlassFunct( $module, $funct, $callback );
+    function AddModuleFunct($module = null, $funct = null, $callback = null)
+    {
+        if (!$module || !$funct || !$callback) {
+            return null;
         }
-        return null;
+
+        $channel = 'module:' . strtolower($module);
+
+        Hooks($channel)->add(function ($methods) use ($funct, $callback) {
+
+            $methods[$funct] = $callback;
+
+            return $methods;
+
+        });
+
+        return true;
     }
 }
 
+// if (!function_exists('AddModuleFunct')) {
+//     function AddModuleFunct($module = null, $funct = null, $callback = null){
+//         if($module && $funct && $callback){
+//             return Hooks()->addKlassFunct( $module, $funct, $callback );
+//         }
+//         return null;
+//     }
+// }
+
+// if (!function_exists('ModuleFunct')) {
+//     function ModuleFunct($module = null, $funct = null, $params = []){
+//         if($module && $funct){
+//             return Hooks()->getKlassFunct($module,$funct,$params);
+//         }
+//         return null;
+//     }
+// }
+
 if (!function_exists('ModuleFunct')) {
-    function ModuleFunct($module = null, $funct = null, $params = []){
-        if($module && $funct){
-            return Hooks()->getKlassFunct($module,$funct,$params);
+    function ModuleFunct($module = null, $funct = null, $params = [])
+    {
+        if (!$module || !$funct) {
+            return null;
         }
-        return null;
+
+        $channel = 'module:' . strtolower($module);
+
+        $methods = Hooks($channel)->call([]);
+
+        if (!isset($methods[$funct])) {
+            return null;
+        }
+
+        $callable = $methods[$funct];
+
+        if (!is_callable($callable)) {
+            return null;
+        }
+
+        return call_user_func_array($callable, $params);
     }
 }
 

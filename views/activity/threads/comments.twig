@@ -21,11 +21,12 @@
 
 <script>
 $(function(){
-    Thread.init();
-    const ctx = window.__diagContext || {};
+    ActivityThread.init();
+    alert('here');
+    //const ctx = window.__diagContext || {};
 
-    if (ctx.state?.focus === 'composer') {
-        $('#threadCommentBody').focus();
-    }
+    //if (ctx.state?.focus === 'composer') {
+    //    $('#threadCommentBody').focus();
+    //}
 })
 </script>

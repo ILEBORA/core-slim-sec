@@ -9,4 +9,6 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 $pipeline
     ->add('style.css')
     ->add('post.css')
+    ->add('reactions.css')
+    ->add('media.css')
     ->send();

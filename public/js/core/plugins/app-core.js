@@ -7,6 +7,7 @@ __BORA_REGISTER_PLUGIN__(
         const router     = scope.getService('router');
         const logger     = scope.getService('logger');
         const callbora   = scope.getService('callbora');
+        const preferences = scope.getService('preferences');
 
         const config = scope.config || {};
 
@@ -22,10 +23,13 @@ __BORA_REGISTER_PLUGIN__(
            LIFECYCLE
         ========================= */
 
-        function mount(){
+        async function mount(){
             loadPermissions();
 
             registerRouteGuards();
+
+            await preferences.load();
+            provide('preferences', preferences);
 
             if(config.dev){
                 console.log('[AppCore] mounted');
@@ -97,7 +101,7 @@ __BORA_REGISTER_PLUGIN__(
 
                     hooks?.call?.('user.logout.after');
 
-                    navigation.go('/');
+                    navigation.go('');
 
                 })
                 .catch(err=>{

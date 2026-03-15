@@ -1,5 +1,47 @@
 __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
 
+    const hooks = scope.getService('hooks');
+    const app   = window.__BORA_APP__;
+    const appCore = app?.plugin?.('AppCore');
+
+    // Create SSE connection
+    const instance = createSSE();
+
+    // Register with AppCore
+    appCore?.setSSE?.(instance);
+
+    bindNavigationLifecycle();
+    
+
+    function bindNavigationLifecycle(){
+
+        hooks?.add?.('page.beforeLoad', ()=>{
+            instance?.pause?.();
+        });
+
+        let resumeTimer = null;
+        hooks?.add?.('page.afterLoad', ()=>{
+            clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(()=>{
+                instance?.resume?.();
+            }, 50);
+        });
+
+        hooks?.add?.('page.loadError', ()=>{
+            instance?.resume?.();
+        });
+
+        // Hidden Tab
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                instance.pause();
+            } else {
+                instance.resume();
+            }
+        });
+
+    }
+
     const appCompat = {
         safeParse: (str, fallback) => {
             try { return JSON.parse(str); }
@@ -14,7 +56,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
     };
 
     // 🔥 TEMPORARY BRIDGE
-    window.app = appCompat;
+    window.appUtils = appCompat;
 
     function AppSe(fl){
         var self = this;
@@ -53,7 +95,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
 
         this.on = function(type, handler) {
             // alert('SSE Tree');
-            console.log(`LISTENER:: ${type}`);
+            console.log(`LISTENER N1:: ${type}`);
             if (!self.factHandlers[type]) {
                 self.factHandlers[type] = [];
                 
@@ -77,14 +119,14 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             self.userID = params['userID'];
             self.sessionID = params['sessionID'];
 
-            params.since = app.safeParse(
-                app.getCookie('lvui_versions'),
+            params.since = appUtils.safeParse(
+                appUtils.getCookie('lvui_versions'),
                 {}
             );
-            // var versions = app.getCookie('lvui_versions')
+            // var versions = appUtils.getCookie('lvui_versions')
             // params.since = JSON.parse(versions) ?? {};
 
-            console.log('PARAMS:: ',params);
+            console.log('PARAMS N:: ',params);
 
                 if (typeof (EventSource) !== "undefined" && typeof (params) !== "undefined" ) {
                     // var url = "https://api.ilebora.com/assets/plugins/sse/sse_p.bu?id="+id+'&userID='+usr+'&event='+event;
@@ -138,14 +180,14 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
                         let payload;
                         try {
                             payload = JSON.parse(e.data);
-                            console.log('PAYLOAD:: ', payload);
+                            console.log('PAYLOAD N:: ', payload);
                         } catch {
                             return;
                         }
 
                         // Batch support
                         if (payload.batch && Array.isArray(payload.batch)) {
-                            payload.batch.forEach(queueFact);
+                            payload.batch.forEach(self.queueFact);
                             return;
                         }
 
@@ -167,7 +209,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             
         };
 
-        this.processQueue = function() {
+        this.processQueueO = function() {
             if (sseBusy) return;
             if (sseQueue.length === 0) return;
 
@@ -198,22 +240,44 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             }
         };
 
-        this.pause = function(){
+        this.pauseO = function(){
             self.ssePaused = true;
         };
 
-        this.resume = function(){
+        this.pause = function(){
+            if(self.ths_source){
+                self.ths_source.close();
+                self.ths_source = null;
+            }
+            self.ssePaused = true;
+        };
+
+        this.resumeO = function(){
             self.ssePaused = false;
         };
 
+        this.resume = function(){
+            if(!self.ssePaused) return;
+
+            self.ssePaused = false;
+            if(self.lastParams){
+                self.subscribe(
+                    self.lastParams,
+                    self.successCallback,
+                    self.errorCallback
+                );
+            }
+
+        };
+
         window.addEventListener('beforeunload', function() {
-            console.log('Closing SSE connection');
+            console.log('Closing SSE connection N');
             self.closeConnecton(); 
         });
 
-        window.addEventListener('unload', function() {
-            self.closeConnecton(); // Clean up on page unload
-        });
+        //  window.addEventListener('pagehide', function () {
+        //     self.closeConnection();
+        // });
 
         this.dispatchFact = function (msg) {
             if (!Array.isArray(msg.data)) return;
@@ -242,13 +306,13 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
         };
 
         this.queueFact =  function(msg) {
-            console.log('queueFact',msg);
+            console.log('queueFact N',msg);
             self.factQueue.push(msg);
             if (!self.processing) self.processQueue();
         };
 
         this.processQueue = function() {
-            console.log('processQueue...');
+            console.log('processQueue N...');
             if (self.factQueue.length === 0) {
                 self.processing = false;
                 return;
@@ -256,7 +320,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
 
             self.processing = true;
             requestAnimationFrame(() => {
-                console.log('dispatchFact...');
+                console.log('dispatchFact N...');
                 self.dispatchFact(self.factQueue.shift());
                 self.processQueue();
             });
@@ -266,7 +330,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             if (!lvui || typeof lvui !== 'object') return;
 
             // Load last acknowledged versions
-            let versions = app.safeParse(
+            let versions = appUtils.safeParse(
                 localStorage.getItem('lvui_versions') || '{}'
             );
 
@@ -292,16 +356,18 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
         };
     }
 
-    const instance = new AppSe('se_m.bu');
+    function createSSE(){
+        return new AppSe('se_m.bu');
+    }
 
     return {
-        on: (...args) => instance.on(...args),
-        off: (...args) => instance.off(...args),
-        subscribe: (...args) => instance.subscribe(...args),
-        pause: () => instance.pause(),
-        resume: () => instance.resume(),
-        updateWidgetVersions: (lvui) => instance.updateWidgetVersions(lvui),
-        closeConnection: () => instance.closeConnecton?.(),
+        on: (...args) => instance?.on?.(...args),
+        off: (...args) => instance?.off?.(...args),
+        subscribe: (...args) => instance?.subscribe?.(...args),
+        pause: () => instance?.pause?.(),
+        resume: () => instance?.resume?.(),
+        updateWidgetVersions: (lvui) => instance?.updateWidgetVersions?.(lvui),
+        closeConnection: () => instance?.closeConnecton?.(),
         _raw: instance
     };
 

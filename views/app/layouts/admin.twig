@@ -67,7 +67,7 @@
 {% use 'app/partials/admin/content.twig' %}
 {% use 'app/partials/admin/footer.twig' %}
 
-<body>
+<body class="face-{{client_role}} {{themeprefs.theme}}">
     {% include 'app/partials/overlay.twig' with{
         current_page: current_page
     } %}

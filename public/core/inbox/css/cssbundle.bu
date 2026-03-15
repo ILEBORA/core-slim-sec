@@ -7,5 +7,12 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
-    ->add('style.css')
+    ->add('layout.css')
+    ->add('thread.css')
+    ->add('bubble.css')
+    ->add('composer.css')
+    ->add('realtime.css')
+    ->add('search.css')
+    ->add('theme.css')
+    ->add('thread-filters.css')
     ->send();

@@ -1,0 +1,7 @@
+.composer-header{
+    text-align: left;
+}
+
+.composer-header .avatar{
+    display: inline-block;
+}

@@ -1,30 +1,24 @@
-<div class="activity-item" data-id="{{ item.id }}">
-    
-    {% include 'activity/header.twig' with { item: item } %}
+{% set count = item.media|length %}
+{% if count > 0 %}
+<div class="activity-media">
 
-    <div class="activity-body">
-        {{ item.body|raw }}
-    </div>
-
-    {% if item.payload.snapshot is defined %}
-        {% include 'activity/snapshot.twig' with { snapshot: item.payload.snapshot } %}
+    {% if count <= 4 %}
+        <div class="media-grid grid-{{count}}">
+            {% for media in item.media %}
+                <img src="{{ media.preview_path }}">
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="media-carousel swiper">
+            <div class="swiper-wrapper">
+                {% for media in item.media %}
+                <div class="swiper-slide">
+                    <img src="{{ media.preview_path }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     {% endif %}
 
-    <div class="activity-meta">
-        <span class="reactions">
-            {% include 'activity/reactions.twig' with { reactions: item.reactions } %}
-        </span>
-        <span class="comments-count">
-            {{ item.comments_count }} comments
-        </span>
-    </div>
-
-    <div class="activity-actions">
-        <a href="#" class="act-like" data-reaction="like">
-            {% if item.reactions.me == 'like' %}Unlike{% else %}Like{% endif %}
-        </a>
-        <a href="#" class="act-comment">Comment</a>
-    </div>
-
-    <div class="comments"></div>
 </div>
+{% endif %}

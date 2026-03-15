@@ -1,14 +1,4 @@
-{# =========================================
-   Template: inbox.twig
-   SPA Clean Version
-========================================= #}
-
-{# Message template for plugin rendering #}
-<script type="text/template" id="tpl-inbox-message">
-    {{ source('inbox/render/message/bubble.twig') }}
-</script>
-
-<div class="inbox-layout"
+<div class="inbox-layout inbox"
      data-view="{{ data_view|default('list') }}">
 
     {{ lvui|raw }}
@@ -49,7 +39,7 @@
                 <li class="thread-item {{ thread.unread_count ? 'unread' : '' }}"
                     data-thread="{{ thread.thread_id }}"
                     data-type="{{ thread.thread_type ?? 'direct' }}"
-                    onclick="Bora.navigate('portal/inbox/show/{{ thread.thread_id }}');"
+                    dataeclick="Inbox.loadThread('{{ thread.thread_id }}');"
                     >
 
                     <div class="avatar">
@@ -58,7 +48,7 @@
 
                     <div class="meta">
                         <div class="title">
-                            {{ thread.title ?? 'Conversation' }}
+                            {{ thread.title ?: thread.display_name}}
                         </div>
 
                         <div class="preview">
@@ -176,10 +166,3 @@
     </div>
 
 </div>
-
-<script>
-$(function(){
-    const inbox = __BORA_APP__.plugin('Inbox');
-    //
-});
-</script>

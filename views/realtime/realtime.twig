@@ -113,6 +113,8 @@ $(function () {
     app.on('realtime:leader-change', ({ isLeader }) => {
         if (isLeader) {
             startSSEIfLeader();
+        }else {
+            sse.closeConnection();
         }
     });
 

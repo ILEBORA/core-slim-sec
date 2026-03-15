@@ -1,10 +1,32 @@
-{% if reactions.counts is defined %}
-    {% for type, count in reactions.counts %}
-        <span class="reaction-meta" data-reaction="{{ type }}">
-            <span class="icon">
-                {% if type == 'like' %}👍{% elseif type == 'love' %}❤️{% elseif type == 'haha' %}😂{% else %}✨{% endif %}
-            </span>
-            <span class="count">{{ count }}</span>
+<div class="reaction-summary" data-activity="{{ activity_id }}">
+
+{% set total = 0 %}
+
+<div class="reaction-icons">
+
+{% for type, icon in reactionTypes %}
+
+    {% set count = reactions.counts[type] ?? 0 %}
+    {% set total = total + count %}
+
+    {% if count > 0 %}
+
+        <span class="reaction-icon"
+              data-reaction="{{ type }}"
+              title="{{ count }} {{ type }}">
+
+            {{ icon }}
+
         </span>
-    {% endfor %}
+
+    {% endif %}
+
+{% endfor %}
+
+</div>
+
+{% if total > 0 %}
+<span class="reaction-total">{{ total }}</span>
 {% endif %}
+
+</div>

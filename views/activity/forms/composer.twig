@@ -1,0 +1,32 @@
+<div class="activity-composer">
+
+    <div class="composer-header">
+        <img src="{{ user.avatar }}" class="avatar">
+        <span class="user-name">{{ user.name }}</span>
+    </div>
+
+    <div class="composer-preview" id="composerPreview"></div>
+
+    <input type="file"
+           id="composerUpload"
+           accept="image/*,video/*"
+           multiple
+           hidden>
+
+    <div class="composer-tools">
+
+        <button type="button" class="attach-photo">
+            📷 Photo
+        </button>
+
+        <button type="button" class="attach-video">
+            🎥 Video
+        </button>
+
+        <button type="button" class="attach-link">
+            🔗 Link
+        </button>
+
+    </div>
+
+</div>

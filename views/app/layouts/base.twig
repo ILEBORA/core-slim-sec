@@ -76,7 +76,7 @@
 {% use 'app/partials/guest/content.twig' %}
 {% use 'app/partials/guest/footer.twig' %}
 
-<body class="{{themeprefs.theme}}">
+<body class="face-{{client_role}} {{themeprefs.theme}}">
     {% include 'app/partials/overlay.twig' with{
         current_page: current_page
     } %}

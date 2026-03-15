@@ -1,25 +1,27 @@
 __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
 
     const $ = scope.getService('jquery');
-    const hooks = scope.getService('hooks');
+    const dismiss = scope.getService('dismiss');
     const navigation = scope.getService('navigation');
     const context = __BORA_APP__.service('context');
+    const dismissable = scope.getService('uiDismissable');
+    let sidebarInstance = null;
 
     let sidebar, main, dropMenu, burger;
     let isOpen = false;
 
     function mount(){
-
-        sidebar = $('#side-bar');
-        main = $('.main-wrapper');
-        dropMenu = $('.menu-container');
-        burger = $('#burger');
-
         $(function(){
+            sidebar = $('#side-bar');
+            main = $('.main-wrapper');
+            dropMenu = $('.menu-container');
+            burger = $('#burger');
+
             bindEvents();
         });
 
         console.log('[Sidebar] mounted');
+        
     }
 
     function unmount(){
@@ -28,15 +30,22 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
     }
 
     function bindEvents(){
-
+        // console.log('dropMenu::',dropMenu);
+        if(dropMenu.length == 0){
+            dropMenu = $('.menu-container');
+            console.log('dropMenu::',dropMenu);
+        }
         // Burger toggle
         $(document).on('click.sidebar', '#burger, ._sideclose', toggleSidebar);
 
         // Profile dropdown
-        $(document).on('click.sidebar', '.mini-photo-wrapper', function(e){
-            e.stopPropagation();
-            dropMenu.toggleClass('is-active');
-        });
+        $(document).on('click.sidebar', '.mini-photo-wrapper', openUserMenu);
+            
+        //     function(e){
+        //     e.stopPropagation();
+        //     // alert('Here');
+        //     dropMenu.toggleClass('is-active');
+        // });
 
         // Outside click
         $(document).on('click.sidebar', function(e){
@@ -67,12 +76,13 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         });
 
         // Runtime hook integration
-        hooks.add('page.beforeLoad', handleBeforeLoad);
-        hooks.add('page.afterLoad', handleAfterLoad);
-        hooks.add('page.loaded', handlePageLoaded);
+        scope.on('page.beforeLoad', handleBeforeLoad);
+        scope.on('page.afterLoad', handleAfterLoad);
+        scope.on('page.loaded', handlePageLoaded);
         // alert(window.location);
         // Also handle initial load
-        setActiveFromRoute(window.location);
+        highlightMenu(window.location);
+        
 
         document.addEventListener('change', function(e){
 
@@ -83,6 +93,11 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
             __BORA_APP__.service('context').set(face);
             window.APP_CURRENT_ROLE = face;
             $('[data-refresh-menu]').data('role', face);
+
+            // After menu reload, highlight current route again
+            // const cleanRoute = __BORA_APP__.service('router').clean();
+            highlightMenu();
+            
         });
 
         document.addEventListener('click', function(e){
@@ -103,7 +118,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         // Apply initial state
         applyFace(context.get());
 
-
+        //
+        // scope.on('esc', onEscKeyPress);
     }
 
     function applyFace(face){
@@ -122,11 +138,51 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
     }
 
     function toggleSidebar(){
+        const isOpening = !sidebar.hasClass('sideActive');
+        if(isOpening){
+            sidebar.addClass('sideActive');
+            main.addClass('sideActive');
+            burger.addClass('is-active');
+
+            sidebarInstance = dismissable.create(()=>{
+                closeSidebar();
+            });
+
+        } else {
+
+            sidebarInstance?.close();
+        }
+
+    }
+
+    function openUserMenu(e){
+        e.stopPropagation();
+
+        if(dropMenu.hasClass('is-active')){
+            dropMenu.data('dismissInstance')?.close();
+            return;
+        }
+
+        dropMenu.addClass('is-active');
+
+        const instance = dismissable.create(()=>{
+            dropMenu.removeClass('is-active');
+            dropMenu.removeData('dismissInstance');
+        });
+
+        dropMenu.data('dismissInstance', instance);
+    }
+
+    function toggleSidebarO(){
         console.log('Bugger');
         sidebar.toggleClass('sideActive');
         main.toggleClass('sideActive');
         isOpen = sidebar.hasClass('sideActive');
         burger.toggleClass('is-active', isOpen);
+
+
+        console.log('[Sidebar] '+isOpen);
+
     }
 
     function closeSidebar(){
@@ -135,6 +191,15 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         burger.removeClass('is-active');
         isOpen = false;
     }
+
+    // function closeMenus(){
+    //     dropMenu.removeClass('is-active');
+    // }
+
+    // function onEscKeyPress(){
+    //     closeSidebar();
+    //     closeMenus();
+    // }
 
     function handleClick(el){
 
@@ -171,7 +236,9 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
             }
         });
 
-        setActiveFromRoute(url);
+        highlightMenu(url);
+
+        closeSidebar();
     }
 
     function normalizeUrl(fullUrl){
@@ -195,28 +262,43 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         return fullUrl || '';
     }
 
-    function setActiveFromRoute(currentUrl){
-        
-        const cleanRoute = normalizeUrl(currentUrl);
-        // alert(cleanRoute);
-        $(function(){
-            document.querySelectorAll('.features-item').forEach(item => {
+    // function setActiveFromRoute(currentUrl){
+    //     $(function(){
+    //         highlightMenu(cleanRoute);
+    //     });
+    // }
 
-                const dataUrl = item.getAttribute('data-url') ??'';
-                // alert(dataUrl+' :: '+ cleanRoute);
+    function highlightMenu(cleanRoute){
+        $(function(){
+            cleanRoute = normalizeUrl(cleanRoute || window.location.location);
+            const items = [...document.querySelectorAll('.features-item')];
+
+            let bestItem = null;
+            let bestLength = -1;
+
+            items.forEach(item => {
+
+                const dataUrl = (item.dataset.url || '').replace(/^\/|\/$/g,'');
+
                 if (!dataUrl) return;
 
-                // Prefix match
-                if (cleanRoute === dataUrl){
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
+                if (
+                    cleanRoute === dataUrl ||
+                    cleanRoute.startsWith(dataUrl + '/')
+                ) {
+                    if (dataUrl.length > bestLength) {
+                        bestLength = dataUrl.length;
+                        bestItem = item;
+                    }
                 }
             });
+
+            items.forEach(i => i.classList.remove('active'));
+            bestItem?.classList.add('active');
         });
     }
 
-    return { mount, unmount };
+    return { mount, unmount, close };
 
 }, {
     requires:['jquery','hooks','navigation'],

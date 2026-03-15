@@ -8,28 +8,53 @@
 
     <header class="thread-header">
         <button class="back-btn" aria-label="Back">←</button>
-        <h4>{{ thread.title ?? '' }}</h4>
-        <div class="participants">
-            <!-- avatars here -->
+        <div class="thread-info">
+            <h4>{{ thread.title ?: thread.display_name }}</h4>
+
+            <div class="participants-count">
+                {{ participants|length }} participants
+            </div>
+        </div>
+
+        <div class="page-actions f-right">
+            <button
+                data-context-trigger
+                data-context-type="thread"
+                data-context-id="{{thread.id}}"
+                >
+                ⋮
+            </button>
         </div>
     </header>
 
     <div class="messages-cont">
-
+        <div class="load-history">
+            Load earlier messages
+        </div>
         <div class="messages" lvui="inbox_thread_{{ thread_id }}">
+
             {% if data_view == 'list' %}
                 <div class="empty-state">
                     Select a conversation
                 </div>
             {% else %}
-                {% for message in messages %}
-                    <div class="message {{ message.sender_id == main_id ? 'outgoing' : 'incoming' }}">
-                        <div class="bubble">
-                            {{ message.body }}
-                        </div>
-                    </div>
+
+                {% set previousDate = null %}
+
+                {% for item in messages %}
+
+                    {% if item.type == 'date' %}
+                        {{ item.html|raw }}
+                    {% endif %}
+
+                    {% if item.type == 'message' %}
+                        {{ item.html|raw }}
+                    {% endif %}
+
                 {% endfor %}
+
             {% endif %}
+
         </div>
     </div>
 
@@ -37,15 +62,20 @@
         Someone is typing…
     </div>
 
-    <form class="composer" {{view_composer}}
-            action="api/modules/inbox/send-message/{{ thread_id }}" 
-            data-thread="{{ thread_id }}">
-        <input type="text" name="body" placeholder="Type a message…" autocomplete="off">
+    <form class="composer"
+          {{ view_composer }}
+          action="api/modules/inbox/send-message/{{ thread_id }}"
+          data-thread="{{ thread_id }}">
+
+        <input type="text"
+               name="body"
+               placeholder="Type a message…"
+               autocomplete="off">
+
         <button type="submit">Send</button>
     </form>
 
 </div>
-
 
 <script>
     window.MAIN_USER_ID = {{ main_id }};
@@ -54,8 +84,13 @@
 {% if thread_id is defined %}
 <script>
     window.INBOX_THREAD_ID = {{ thread_id }};
+    $(function(){
+        alert('test');
+        $('.thread-item[data-id="{{ thread_id }}"]').addClass('selected');
+    });
 </script>
 {% endif %}
+
 
 <script>
 document.addEventListener('submit', function (e) {
@@ -95,27 +130,6 @@ document.addEventListener('submit', function (e) {
 });
 
 
-appHooks.addHook('realtime:inbox:thread:{{ thread_id }}', e => {
-    if (e.type === 'message.sent') {
-        appInbox.appendMessage(e, {
-            isMe: e.sender_id === window.MAIN_USER_ID
-        });
-    }
-
-    if (e.type === 'typing.start') {
-        appInbox.showTyping();
-    }
-
-    if (e.type === 'typing.stop') {
-        appInbox.hideTyping();
-    }
-});
-
-appHooks.addHook('realtime:inbox:user:{{ main_id }}', e => {
-    if (e.type === 'thread.reordered') {
-        appInbox.bumpThread(e.thread_id);
-    }
-});
 
 let typingTimer = null;
 

@@ -1,5 +1,76 @@
-<div class="message {{ classes }}" data-message="{{ id }}">
+{# =========================================
+   bubble.twig
+   Message bubble renderer
+========================================= #}
+
+{% set isMine = message.sender_id == main_id %}
+
+<div class="message {{ isMine ? 'outgoing' : 'incoming' }}"
+     data-message-id="{{ message.id }}"
+     data-status="{{ message.status|default('sent') }}">
+
     <div class="bubble">
-        {{ body }}
+
+        {# ---------------------------------
+           Deleted Message
+        ---------------------------------- #}
+        {% if message.deleted_at %}
+
+            <div class="bubble-body deleted">
+                This message was deleted
+            </div>
+
+        {% else %}
+
+            {# ---------------------------------
+               Reply Preview
+            ---------------------------------- #}
+            {% if message.reply %}
+                <div class="bubble-reply">
+
+                    <div class="reply-author">
+                        {{ message.reply.sender_name }}
+                    </div>
+
+                    <div class="reply-text">
+                        {{ message.reply.body|slice(0,60) }}
+                    </div>
+
+                </div>
+            {% endif %}
+
+            <div class="bubble-body">
+                {{ message.body }}
+            </div>
+
+        {% endif %}
+
+        {# ---------------------------------
+           Meta (time + status)
+        ---------------------------------- #}
+        <div class="bubble-meta">
+
+            <time class="bubble-time">
+                {{ message.created_at|date('H:i') }}
+            </time>
+
+            {% if message.updated_at %}
+                <span class="edited-label">
+                    edited
+                </span>
+            {% endif %}
+
+            {% if isMine %}
+                <span class="bubble-status">
+
+                    <span class="tick tick-1"></span>
+                    <span class="tick tick-2"></span>
+
+                </span>
+            {% endif %}
+
+        </div>
+
     </div>
+
 </div>

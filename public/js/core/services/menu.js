@@ -3,6 +3,7 @@ __BORA_REGISTER_SERVICE__(
     function(scope){
 
         const hooks = scope.getService('hooks');
+        const navigation = scope.getService('navigation');
 
         async function refresh(role){
 
@@ -37,6 +38,7 @@ __BORA_REGISTER_SERVICE__(
         // React to context changes automatically
         scope.on?.('context.changed', (face) => {
             refresh(face);
+            navigation.highlight();
         });
 
         return { refresh };

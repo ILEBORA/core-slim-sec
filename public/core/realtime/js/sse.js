@@ -201,9 +201,9 @@ var appSE = function AppSe(fl){
         self.closeConnecton(); 
     });
 
-    window.addEventListener('unload', function() {
-        self.closeConnecton(); // Clean up on page unload
-    });
+    // window.addEventListener('pagehide', function () {
+    //     self.closeConnection();
+    // });
 
     this.dispatchFact = function (msg) {
         if (!Array.isArray(msg.data)) return;

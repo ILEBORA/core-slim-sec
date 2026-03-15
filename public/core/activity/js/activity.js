@@ -342,17 +342,31 @@ $(document).on('click', '.act-comment', function (e) {
         .closest('.activity-item')
         .data('id');
 
-    mPGs.klassView(
-        'Activity',
-        'comments',
-        activityId,
-        {
-            size: 'lg',
-            state: {
-                focus: 'composer'
-            }
-        }
-    );
+    const popup = window.__BORA_APP__?.service?.('popup');
+    if (!popup) return;
+
+    popup.open({
+        mode:   'view',
+        module: 'activity',
+        group:  'comments',
+        view:   'comments',
+        id:     activityId,
+        tab:    'view',
+        size:   'md',
+        meta:   null
+    });
+    
+    //     mPGs.klassView(
+    //     'Activity',
+    //     'comments',
+    //     activityId,
+    //     {
+    //         size: 'lg',
+    //         state: {
+    //             focus: 'composer'
+    //         }
+    //     }
+    // );
     
 
 });
@@ -385,17 +399,36 @@ $(document).on('click', '.reply-comment', function (e) {
         .closest('.comment-item')
         .data('id');
 
-    mPGs.klassView(
-        'Activity',
-        'replies',
-        activityId,
-        {
+    // mPGs.klassView(
+    //     'Activity',
+    //     'replies',
+    //     activityId,
+    //     {
+    //         size: 'lg',
+    //         state: {
+    //             focus: 'composer'
+    //         }
+    //     }
+    // );
+
+    const popup = window.__BORA_APP__?.service?.('popup');
+    if (!popup) return;
+
+    popup.open({
+        mode:   'view',
+        module: 'activity',
+        group:  'activity',
+        view:   'replies',
+        id:     activityId,
+        tab:    'replies',
+        size:   'lg',
+        meta:   {
             size: 'lg',
             state: {
                 focus: 'composer'
             }
         }
-    );
+    });
     
 
 });

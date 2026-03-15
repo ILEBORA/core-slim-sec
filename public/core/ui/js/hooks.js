@@ -28,7 +28,7 @@ appHooks.addHook("form:afterSubmit", ($form, resp) => {
     }
 
     if(resp.esc){
-        alert('esc');
+        // alert('esc');
         __BORA_APP__.service('hooks')?.call('esc');
     }
 
@@ -178,7 +178,8 @@ formJourney.registerJourney('mfaverify', function($form, done) {
                     if(typeof authChannel !== 'undefined'){
                         authChannel.postMessage({cmd:'login',usr:rd('bID'), lnk: this.lnk});
                     }
-                    overlayLoader.show('Loading...');
+                    // overlayLoader.show('Loading...');
+                    appHooks.callHook('page.beforeLoad', resp.redirect);
                     redirectTo(resp.redirect);
                 }
 

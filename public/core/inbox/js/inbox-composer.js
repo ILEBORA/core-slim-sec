@@ -8,8 +8,9 @@ __BORA_REGISTER_PLUGIN__('InboxComposer', function(scope){
     function mount(){
         el = document.querySelector('.inbox-composer');
         if(!el) return;
-        alert('here');
+        // alert('here');
         bind();
+        //open();
     }
 
     function bind(){
@@ -40,6 +41,38 @@ __BORA_REGISTER_PLUGIN__('InboxComposer', function(scope){
         });
     }
 
+    function open() {
+        el.hidden = false;
+        el.classList.add('open');
+        el.querySelector('.participant-search')?.focus();
+
+        el.querySelector('.start-btn')
+            .addEventListener('click', () => {
+                if (!selectedUser) return;
+
+                fetch('api/modules/inbox/create-direct', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        user_id: selectedUser.id
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (!res.success) return;
+
+                    close();
+
+                    // navigate / load thread
+                    window.location.href =
+                        `portal/inbox/show/${res.thread.id}`;
+                });
+            });
+    }
+
     function renderResults(users){
 
         const list = el.querySelector('.participant-results');
@@ -64,5 +97,7 @@ __BORA_REGISTER_PLUGIN__('InboxComposer', function(scope){
         setTimeout(()=> el.hidden = true, 250);
     }
 
-    return { mount };
+
+
+    return { mount, open,  close };
 });

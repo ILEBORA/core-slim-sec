@@ -1,0 +1,100 @@
+.thread-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.thread-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+}
+
+.thread-header h4 {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* Thread list */
+.thread-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.thread-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+    align-items: center;
+}
+
+.thread-item:hover { background: #f9fafb; }
+.thread-item.unread { background: #eef6ff; }
+.thread-item.selected { background: #e0ecff; }
+
+.thread-item.bumped{
+    background: rgba(80,160,255,0.08);
+    transition: background 600ms ease;
+}
+
+.thread-item .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #d1d5db;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.thread-item .status-dot {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #fff;
+}
+
+.thread-item .meta { flex: 1; min-width: 0; }
+
+.thread-item .title {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.thread-item .preview {
+    font-size: 13px;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.thread-item .stats {
+    text-align: right;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.thread-item .badge {
+    display: inline-block;
+    min-width: 18px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 11px;
+    margin-bottom: 4px;
+}

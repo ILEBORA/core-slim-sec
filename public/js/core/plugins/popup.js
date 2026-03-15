@@ -2,7 +2,7 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
 
     const $ = scope.getService('jquery');
     const events = scope.getService('events'); // optional
-    const dismiss = scope.getService('dismiss');
+    const uiStack = scope.getService('uiStack');
 
     /* ==================================================
        CLASS
@@ -60,13 +60,10 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
         }
 
         bindCoreEvents() {
-
             this.$close.on(`click.${this._id}`, () => this.close());
-
             this.$popup.on(`click.${this._id}`, (e) => {
                 if ($(e.target).is(this.$popup)) this.close();
             });
-
         }
 
         /* =========================
@@ -77,7 +74,7 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
             this.$popup.fadeIn(200);
             $('body').css('overflow', 'hidden');
 
-            dismiss?.register(this);
+            uiStack?.register(this);
 
             if (this.options.onOpen) this.options.onOpen();
 
@@ -100,7 +97,7 @@ __BORA_REGISTER_PLUGIN__('BoraPopupV2', function(scope){
 
         destroy() {
 
-            dismiss?.unregister(this);
+            uiStack?.unregister(this);
 
             this.$close.off(`.${this._id}`);
             this.$popup.off(`.${this._id}`);

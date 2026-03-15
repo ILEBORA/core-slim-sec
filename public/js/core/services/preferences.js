@@ -5,13 +5,16 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
 
     const state = {
         theme: 'light-mode',
-        sound: null,
+        sound: 'on',
+        language: 'en',
         speech: null,
         mode: null,
         avatar: null
     };
 
     let saving = false;
+
+    
 
     /* =========================
        LOAD
@@ -26,17 +29,25 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
                 headers: { 'Content-Type': 'application/json' }
             });
 
-            if(response.ok){
-                const data = await response.json();
-                Object.assign(state, data);
-                apply();
-                scope.emit('preferences:loaded', state);
+            if(!response.ok){
+                console.warn('Preferences API returned', response.status);
+                return;
             }
+
+            
+            const data = await response.json() || {};
+            Object.assign(state, data);
+            apply();
+            bindDOM();
+            scope.emit('preferences:loaded', state);
 
         } catch(error){
             console.error('Preferences load failed:', error);
         }
+
+        return state;
     }
+
 
     /* =========================
        APPLY
@@ -51,15 +62,33 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
         );
 
         // Update theme button icon
-        const $btn = $('.theme-btn #themeButton');
+        // const $btn = $('.theme-btn #themeButton');
+        // const $btn = $('#themeButton');
 
-        if($btn.length){
-            const icon = state.theme === 'light-mode'
-                ? "<abbr class='fa fa-moon'></abbr>"
-                : "<abbr class='fa fa-sun'></abbr>";
+        // if($btn.length){
+        //     const icon = state.theme === 'light-mode'
+        //         ? "<abbr class='fa fa-moon'></abbr>"
+        //         : "<abbr class='fa fa-sun'></abbr>";
 
-            $btn.html(icon);
-        }
+        //     $btn.html(icon);
+        // }
+
+        $('[data-pref-bind]').each(function(){
+
+            const key = $(this).data('pref-bind');
+
+            updateBoundElement($(this), key);
+
+        });
+
+        $('[data-pref-toggle^="sound"]').find('i')
+            .toggleClass('fa-volume-up', state.sound === 'on')
+            .toggleClass('fa-volume-mute', state.sound === 'off');
+
+        $('[data-pref-toggle^="theme"]').find('i')
+            .toggleClass('fa-sun', state.theme === 'light-mode')
+            .toggleClass('fa-moon', state.theme === 'dark-mode');
+
 
         scope.emit('preferences:applied', state);
     }
@@ -100,14 +129,126 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
     ========================= */
 
     function set(key, value){
+        if(state[key] === value) return;
+
         state[key] = value;
+
         apply();
-        return save();
+
+        queueSave();
     }
 
     function get(key){
         return state[key];
     }
+
+    let saveTimer = null;
+
+    function queueSave(){
+
+        clearTimeout(saveTimer);
+
+        saveTimer = setTimeout(save, 300);
+    }
+
+    //
+    /* =========================
+    DOM BINDING
+    ========================= */
+
+    function bindDOM(){
+
+        // bind values
+        $('[data-pref-bind]').each(function(){
+
+            const key = $(this).data('pref-bind');
+
+            updateBoundElement($(this), key);
+        });
+
+    }
+
+    function updateBoundElement($el, key){
+
+        const value = state[key];
+
+        if($el.is('img')){
+            $el.attr('src', value);
+        }
+        else if($el.is('input,select,textarea')){
+            $el.val(value);
+        }
+        else{
+           $el.text(value ?? '');
+        }
+
+    }
+
+    /* =========================
+    EVENT BINDINGS
+    ========================= */
+
+    function bindEvents(){
+
+        // Toggle preference
+        $(document).on('click','[data-pref-toggle]',function(){
+
+            const data = $(this).data('pref-toggle');
+
+            if(!data) return;
+
+            const parts = data.toString().split(':');
+
+            const key = parts[0];
+
+            const values = parts[1]
+                ? parts[1].split(',')
+                : ['light-mode','dark-mode'];
+
+            const current = state[key];
+
+            const next = current === values[0]
+                ? values[1]
+                : values[0];
+
+            set(key,next);
+
+        });
+
+        // Explicit set
+        $(document).on('click','[data-pref-set]',function(){
+
+            const data = $(this).data('pref-set');
+
+            if(!data) return;
+
+            const parts = data.toString().split(':');
+
+            if(parts.length !== 2) return;
+
+            const key = parts[0];
+            const value = parts[1];
+
+            set(key,value);
+
+        });
+
+        $(document).on('click','.dropdown-toggle',function(){
+            $(this)
+                .closest('.dropdown-tool')
+                .toggleClass('open');
+
+        });
+
+        $(document).on('click',function(e){
+            if(!$(e.target).closest('.dropdown-tool').length){
+                $('.dropdown-tool').removeClass('open');
+            }
+        });
+
+    }
+
+    bindEvents();
 
     return {
         load,

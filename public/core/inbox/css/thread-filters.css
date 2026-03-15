@@ -1,0 +1,64 @@
+.thread-filters {
+    display: flex;
+    padding: 6px;
+    gap: 6px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.thread-filters button {
+    flex: 1;
+    padding: 6px;
+    border-radius: 999px;
+    border: none;
+    background: #f3f4f6;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.thread-filters button.active {
+    background: #2563eb;
+    color: #fff;
+}
+
+.thread-item.selected {
+    background: #e0ecff;
+}
+
+
+.filter-unread {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+.filter-unread[aria-pressed="true"] {
+    color: #2563eb;
+}
+
+.thread-filters {
+    display: flex;
+    padding: 6px;
+    gap: 6px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.thread-filters button {
+    flex: 1;
+    padding: 6px;
+    border-radius: 999px;
+    border: none;
+    background: #f3f4f6;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.thread-filters button.active {
+    background: #2563eb;
+    color: #fff;
+}
+
+.thread-item.selected {
+    background: #e0ecff;
+}
