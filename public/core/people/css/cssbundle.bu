@@ -8,4 +8,5 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
     ->add('people.css')
+    ->add('person.css')
     ->send();

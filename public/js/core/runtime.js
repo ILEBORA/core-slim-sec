@@ -208,6 +208,7 @@
                 hasService,
                 getPlugin,
                 on,
+                off,
                 emit,
                 config,
                 runtimeInstance: publicAPI

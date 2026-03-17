@@ -239,6 +239,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         highlightMenu(url);
 
         closeSidebar();
+
+        updateSidebar();
     }
 
     function normalizeUrl(fullUrl){
@@ -260,6 +262,21 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         // }
 
         return fullUrl || '';
+    }
+
+    function updateSidebar(){
+        $.getJSON('api/modules/ui/sidebar-badges', function (badges) {
+            //reset all
+            $('.page-items-badges').text('');
+            Object.entries(badges).forEach(([target, count]) => {
+                if (!count) return;
+
+                const id = target.replace('sidebar.', '');
+                $(`.page-item-badge_${id}`)
+                    .text(count)
+                    .show();
+            });
+        });
     }
 
     // function setActiveFromRoute(currentUrl){

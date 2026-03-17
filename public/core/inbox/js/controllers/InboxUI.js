@@ -28,6 +28,8 @@ class InboxUI {
         if(this.bound) return;
         this.bound = true;
 
+        this.refreshCache(); //safe
+
         $(document)
             .on('click.inbox','.thread-item',this.handleThreadClick)
             .on('click.inbox','.back-btn',this.handleBack)
@@ -37,6 +39,8 @@ class InboxUI {
         console.log('[InboxUI] bound');
 
         this.bindThreadSearch();
+
+            
     }
 
     unbind(){
@@ -205,12 +209,14 @@ class InboxUI {
     ========================= */
 
     appendMessage(msg){
-
+        console.log('APPEND MESSAGE::',msg);
         if(document.querySelector(
             `[data-message-id="${msg.id}"]`
         )){
             return;
         }
+
+        msg.html = atob(msg.html);
 
         this.cache.messages
             ?.insertAdjacentHTML('beforeend', msg.html);
@@ -253,11 +259,11 @@ class InboxUI {
         console.log('load previous:: ' + this.getOldestMessageId());
         if(!beforeId) return;
 
-        if(loading) return;
+        if(this.loading) return;
 
         this.loading = true;
 
-        new CallBora(`api/modules/inbox/view-thread/${threadId}`)
+        new CallBora(`api/modules/inbox/view-thread/${this.threadId}`)
             .setMethod("GET")
             .setParams({
                 before: beforeId
@@ -317,14 +323,16 @@ class InboxUI {
     ========================= */
 
     setView(view){
-       this.cache.layout = document.querySelector('.inbox-layout');
+        this.cache.layout = document.querySelector('.inbox-layout');
         this.cache.layout
             ?.setAttribute('data-view', view);
+
+        this.refreshCache();
     }
 
     //
     updateThreadPreview(item, preview){
-
+        
         if(!item) return;
 
         const el = item.querySelector('.preview');

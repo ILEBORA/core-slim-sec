@@ -24,7 +24,7 @@ class InboxRealtime{
     }
 
     subscribeThread(threadId){
-
+        console.log('subscribeThread:: ',threadId);
         if(this.threadHook){
             this.scope.off(this.threadHook, this.handleThreadEvent);
         }
@@ -40,14 +40,28 @@ class InboxRealtime{
         if(!data) return;
 
         if(data.type === 'thread.bumped'){
-            this.ui.updateThreadPreview(data);
+            // this.ui.updateThreadPreview(data);
+            this.notifications.bumpThread(data);
+        }
+
+        if(data.type === 'inbox.toast'){
+            // Nothing like data.message
+            this.notifications.notifyThread(data);
+            // alertBora.notify(`Inbox Message from ${data.sender_id} with id ${data.message_id} for thread ${data.thread_id}`);
         }
     }
 
     handleThreadEvent(e){
-
+        console.log('HANDLE THREAD EVENT:: ', e);
         const data = e?.payload;
         if(!data) return;
+
+        console.log(
+            "message from",
+            data.sender_id,
+            "current user",
+            window.MAIN_USER_ID
+        );
 
         switch(data.type){
 

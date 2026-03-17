@@ -301,6 +301,12 @@ return [
         'version'  => '1.0.0',
         'priority' => 61,
     ],
+
+    'logout.ux' => [
+        'file'     => 'plugins/logout.ux.js',
+        'version'  => '1.0.0',
+        'priority' => 62,
+    ],
     
     /* ==================================================
        APPLICATION LAYER (Project Specific)

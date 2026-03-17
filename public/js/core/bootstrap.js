@@ -59,7 +59,8 @@
     global.Bora = Object.freeze({
         navigate: navigation?.go,
         reload:   navigation?.reload,
-        back:     navigation?.back
+        back:     navigation?.back,
+        logout:   () => app.plugin('AppCore')?.logout()
     });
 
     //
@@ -151,7 +152,7 @@
        6. LEGACY PLUGIN ALIASES
     ========================================================== */
 
-    const alerts = app.plugin('BoraAlertsV2');
+    const alerts = app.plugin('alerts');
     exposeLegacy('alertBora', alerts);
     exposeLegacy('alertBoraV2', alerts);
 
@@ -161,13 +162,17 @@
     }
 
     // console.log(app.plugins);
-    // console.log(app.plugin('BoraAlertsV2'));
+    // console.log(app.plugin('alerts'));
     const eventsPlugin = app.plugin('BoraEventsV5');
     exposeLegacy('BoraEvents', eventsPlugin);
     eventsPlugin.init();
 
     const uiActions = app.service('ui.actions');
     uiActions?.init();
+
+    uiActions.register('logout', () => {
+        app.plugin('AppCore')?.logout();
+    });
 
 
     const overlayLoader = app.plugin('Overlay');
@@ -243,10 +248,5 @@
     if(typeof app.emit === 'function'){
         app.emit('runtime:ready');
     }
-
-    // document.addEventListener('DOMContentLoaded', () => {
-    //     const nav = __BORA_APP__.service('navigation');
-    //     setActiveFromRoute(window.location.pathname);
-    // });
 
 })(window);

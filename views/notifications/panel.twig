@@ -40,6 +40,14 @@ function loadNotifications(offset = 0){
 
         if(!resp.rows) return;
 
+        //resp.rows.forEach(row=>{
+          //  list.append(row);
+        //});
+
+        if(offset === 0){
+            list.html('');
+        }
+
         resp.rows.forEach(row=>{
             list.append(row);
         });

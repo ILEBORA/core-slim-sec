@@ -10,5 +10,6 @@ $pipeline
     ->add('table.css')
     ->add('widgets.css')
     ->add('style.css')
+    //->add('alerts.css')
     ->add('theme_dark.css')
     ->send();

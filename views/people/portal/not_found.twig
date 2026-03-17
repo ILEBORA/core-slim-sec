@@ -1,0 +1,30 @@
+<div class="container">
+    <h1>Person Not Found</h1>
+
+    <p>
+    The profile you are looking for does not exist or may have been removed.
+    </p>
+
+    <p>
+    You searched for: <strong>{{ query }}</strong>
+    </p>
+
+    {% if suggestions %}
+    <h3>Did you mean:</h3>
+
+    <ul>
+    {% for p in suggestions %}
+        <li>
+            <button data-nav="portal/person/{{ p.id }}">
+                {{ p.first_name }} {{ p.last_name }}
+            </button>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="actions">
+        <button data-nav="portal/people">Browse People</button>
+        <button data-nav="portal/people/search">Search Again</button>
+    </div>
+</div>

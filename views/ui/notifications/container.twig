@@ -31,7 +31,10 @@ $(document).ready(function() {
             $('.total_logs').html(totalRows);
 
             //Reset 
-            $('.log_new_notifications').html(0).attr('data-count', 0);
+            //$('.log_new_notifications').html(0).attr('data-count', 0);
+            $('.log_new_notifications')
+                .html(response.unreadCount)
+                .attr('data-count', response.unreadCount);
 
         }, 'json');
     }
@@ -48,11 +51,15 @@ $(document).ready(function() {
         }
     });
 
-    $('.notifyli').on('click',function(){
-        if($(this).hasClass('unseen')){
-            $(this).removeClass('unseen');
-        }
-    })
+    //$('.notifyli').on('click',function(){
+    //    if($(this).hasClass('unseen')){
+    //        $(this).removeClass('unseen');
+    //    }
+    //})
+
+    $(document).on('click', '.notifyli', function(){
+        $(this).removeClass('unseen');
+    });
 
 
     // Initial load

@@ -1,5 +1,5 @@
 {% if media.type == 'image' %}
-    <img src="{{ media.preview_path }}">
+    <img class="lazy" src="assets/images/icons/placeholder.png" data-src="{{ media.preview_path }}">
 {% elseif media.type == 'video' %}
     <video controls preload="metadata">
         <source src="{{ media.preview_path }}" type="video/mp4">

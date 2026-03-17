@@ -91,7 +91,33 @@ __BORA_REGISTER_PLUGIN__(
            LOGOUT
         ========================= */
 
-        function logout(){
+        async function logout(){
+            // Allow interception (e.g. confirmation UI)
+            const proceed = await hooks.callAsync('user.logout.request');
+
+            if(proceed === false){
+                return;
+            }
+
+            hooks.call('user.logout.before');
+
+            new CallBora("api/auth/logout")
+                .setMethod("POST")
+                .setParams({})
+                .setCallback(() => {
+                    hooks.call('user.logout.after');
+                    redirectTo('', true);
+                })
+                .setDone(() => {
+                    if(typeof authChannel !== 'undefined'){
+                        authChannel.postMessage({cmd:'logout', usr: rd('bID')});
+                    }
+                })
+                .setError((xhr) => console.error("Logout error:", xhr))
+                .build();
+        }
+
+        function logoutO(){
 
             hooks?.call?.('user.logout.before');
 

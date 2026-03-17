@@ -50,7 +50,7 @@ function(scope){
         realtime.initUserChannel();
 
         scope.on('inbox.thread.open', e=>{
-            loader.load(e.threadId);
+             api.openThread(e.threadId);
         });
 
         const container = document.querySelector('.messages');

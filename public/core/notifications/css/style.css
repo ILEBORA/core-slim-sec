@@ -72,3 +72,15 @@
 .dot-green { background: #0a7f3f; }
 .dot-red { background: #c40000; }
 .dot-orange { background: #ff9800; }
+
+.notifyli.grouped {
+    font-weight: 600;
+}
+
+.notify-badge {
+    background: #eee;
+    border-radius: 10px;
+    padding: 2px 6px;
+    margin-left: 6px;
+    font-size: 11px;
+}

@@ -2,8 +2,8 @@
 
 {% if count == 1 %}
 
-<div class="media-single act-view-media" data-id="{{ item.media[0].id }}">
-    <img src="{{ item.media[0].preview_path }}">
+<div class="media-single act-view-media lazy" data-id="{{ item.media[0].id }}">
+    <img class="lazy" src="{{ item.media[0].preview_path }}">
 </div>
 
 {% elseif count <= 4 %}
@@ -13,11 +13,11 @@
         
         {% if media.type == 'image' %}
             <span class="act-view-media" data-id="{{ media.id }}">
-                <img src="{{ media.preview_path }}">
+                <img class="lazy" src="{{ media.preview_path }}">
             </span>
         {% elseif media.type == 'video' %}
             <div class="media-video act-view-media" data-id="{{ media.id }}">
-                <img src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}">
+                <img class="lazy" src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}">
                 <span class="play-icon">▶</span>
             </div>
         {% endif %}
@@ -30,7 +30,7 @@
     <div class="swiper-wrapper">
         {% for media in item.media %}
             <div class="swiper-slide">
-                <img src="{{ media.preview_path }}">
+                <img class="lazy" src="{{ media.preview_path }}">
             </div>
         {% endfor %}
     </div>

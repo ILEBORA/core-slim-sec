@@ -1,5 +1,10 @@
 <h1>{{ person.first_name }} {{ person.last_name }}</h1>
 
+{% if hasUser %}
+    <button>Follow</button>
+    <button>Message</button>
+{% endif %}
+
 <nav class="tabs">
     <a href="portal/person/{{person.id}}?tab=profile">Profile</a>
     <a href="portal/person/{{person.id}}?tab=activity">Activity</a>

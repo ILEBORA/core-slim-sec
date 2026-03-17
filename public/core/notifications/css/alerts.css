@@ -1,0 +1,14 @@
+.bora-toast-rich {
+    padding: 10px 12px;
+}
+
+.bora-toast-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.bora-toast-body {
+    font-size: 12px;
+    opacity: 0.85;
+}

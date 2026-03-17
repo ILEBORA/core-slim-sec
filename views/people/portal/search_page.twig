@@ -1,0 +1,17 @@
+<div class="container">
+    
+    <form class="people-search" method="get" action="portal/people/search">
+        <input type="text" name="q" placeholder="Search people..." />
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+        {% for p in suggestions %}
+            <li>
+                <button data-nav="portal/person/{{ p.id }}">
+                    {{ p.first_name }} {{ p.last_name }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

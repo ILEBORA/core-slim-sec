@@ -1,18 +1,38 @@
-<h1>People</h1>
+<div class="container people-page">
 
-<form method="get" action="portal/people/search">
-    <input type="text" name="q" placeholder="Search by name..." />
-    <button type="submit">Search</button>
-</form>
+    <h1>People</h1>
 
-<ul class="people-list">
-{% for person in people %}
-    <li>
-        <a href="portal/person/{{ person.id }}">
-            {{ person.first_name }} {{ person.last_name }}
+    <form class="people-search" method="get" action="portal/people/search">
+        <input type="text" name="q" placeholder="Search people..." />
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="people-grid">
+
+    {% for person in people %}
+        <a class="person-card" href="portal/person/{{ person.id }}">
+
+            <div class="avatar">
+                <img src="{{ person.avatar ?: '/assets/images/icons/noavatar.png' }}">
+            </div>
+
+            <div class="person-name">
+                {{ person.first_name }} {{ person.last_name }}
+            </div>
+
+            <div class="person-tags">
+                {% if person.is_placeholder %}
+                    <span class="tag">Placeholder</span>
+                {% endif %}
+
+                {% if person.is_deceased %}
+                    <span class="tag deceased">†</span>
+                {% endif %}
+            </div>
+
         </a>
-        {% if person.is_placeholder %}<span class="tag">placeholder</span>{% endif %}
-        {% if person.is_deceased %}<span class="tag deceased">†</span>{% endif %}
-    </li>
-{% endfor %}
-</ul>
+    {% endfor %}
+
+    </div>
+
+</div>

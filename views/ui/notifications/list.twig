@@ -1,8 +1,12 @@
-<li class="{{ cls }}">
+<li class="{{ cls }}" data-id="{{ id ?? '' }}">
+    
     <span class="notify-content" onclick="{{ link }}">{{ content }}</span>
+    {% if group_total is defined and group_total > 1 %}
+        <span class="notify-badge">{{ group_total }}</span>
+    {% endif %}
     <span class="notify-tools tools-r time f-right" >
         <abbr class="time timeago" title="{{ date }}" style="margin:2px;">{{ timeago }}</abbr>
         {{ tools }}
     </span>
-    
+
 </li>

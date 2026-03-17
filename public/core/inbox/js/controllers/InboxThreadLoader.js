@@ -6,6 +6,8 @@ class InboxThreadLoader{
         this.callbora = callbora;
         this.ui     = ui;
         this.typing = typing;
+
+        this.bindComposerSubmit(); // bind once
     }
 
     normalizeUrl(fullUrl){
@@ -107,6 +109,43 @@ class InboxThreadLoader{
                 );
             }
 
+            // //Ajax Submit
+            // document.addEventListener('submit', function (e) {
+            //     const form = composer; //e.target.closest('.composer');
+            //     if (!form) return;
+
+            //     e.preventDefault();
+
+            //     const input = form.querySelector('input[name="body"]');
+            //     const body = input.value.trim();
+            //     if (!body) return;
+
+            //     fetch(form.action, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'X-Requested-With': 'XMLHttpRequest'
+            //         },
+            //         body: JSON.stringify({ body })
+            //     })
+            //     .then(async r => {
+            //         const text = await r.text();
+            //         if (!text) throw new Error('Empty response');
+            //         return JSON.parse(text);
+            //     })
+            //     .then(res => {
+            //         if (!res.success) {
+            //             alert('Message failed to send');
+            //             return;
+            //         }
+            //         input.value = '';
+            //     })
+            //     .catch(err => {
+            //         console.error(err);
+            //         alert('Network error');
+            //     });
+            // });
+
             this.ui.setView('thread');
 
         })
@@ -119,6 +158,50 @@ class InboxThreadLoader{
                 `<div class="error">Failed to load thread</div>`;
 
         });
+    }
+
+    bindComposerSubmit(){
+        if (this._submitBound) return; // prevent duplicate binding
+        document.addEventListener('submit', (e) => {
+
+            const form = e.target.closest('.composer');
+            if (!form) return;
+
+            e.preventDefault();
+
+            const input = form.querySelector('input[name="body"]');
+            const body  = input.value.trim();
+            if (!body) return;
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ body })
+            })
+            .then(async r => {
+                const text = await r.text();
+                if (!text) throw new Error('Empty response');
+                return JSON.parse(text);
+            })
+            .then(res => {
+                if (!res.success) {
+                    alert('Message failed to send');
+                    return;
+                }
+                input.value = '';
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Network error');
+            });
+
+        });
+
+        this._submitBound = true; // lock it
+
     }
 
 }

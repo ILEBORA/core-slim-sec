@@ -1,0 +1,65 @@
+<div class="person-page container">
+
+    <div class="person-header">
+        <div class="person-avatar">
+            <img src="{{ person.avatar ?: '/assets/images/icons/noavatar.png' }}" alt="">
+        </div>
+
+        <div class="person-meta">
+            <h1>{{ person.first_name }} {{ person.last_name }}</h1>
+
+            <div class="person-tags">
+                {% if person.is_placeholder %}
+                    <span class="tag">Placeholder</span>
+                {% endif %}
+
+                {% if person.is_deceased %}
+                    <span class="tag deceased">† Deceased</span>
+                {% endif %}
+            </div>
+
+            <div class="person-actions">
+                {% if hasUser %}
+                    <button class="btn primary">Follow</button>
+                    <button class="btn">Message</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <nav class="tabs">
+        <a class="{{ tab=='profile' ? 'active' }}" href="portal/person/{{person.id}}?tab=profile">Profile</a>
+        <a class="{{ tab=='activity' ? 'active' }}" href="portal/person/{{person.id}}?tab=activity">Activity</a>
+        <a class="{{ tab=='events' ? 'active' }}" href="portal/person/{{person.id}}?tab=events">Events</a>
+        <a class="{{ tab=='tree' ? 'active' }}" href="portal/person/{{person.id}}?tab=tree">Tree</a>
+    </nav>
+
+    <div class="tab-content">
+
+        {% if tab == 'profile' %}
+            <div class="card profile-info">
+                <p><strong>Born:</strong> {{ person.birth_year ?: 'Unknown' }}</p>
+
+                {% if person.is_deceased %}
+                    <p><strong>Died:</strong> {{ person.death_year ?: 'Unknown' }}</p>
+                {% endif %}
+
+                <p><strong>Gender:</strong> {{ person.gender ?: 'Unknown' }}</p>
+            </div>
+        {% endif %}
+
+        {% if tab == 'activity' %}
+            {% include "people/portal/people/partials/activity.twig" %}
+        {% endif %}
+
+        {% if tab == 'events' %}
+            {% include "people/portal/people/partials/events.twig" %}
+        {% endif %}
+
+        {% if tab == 'tree' %}
+            <div id="tree-container"></div>
+        {% endif %}
+
+    </div>
+
+</div>

@@ -1,19 +1,7 @@
-__BORA_REGISTER_PLUGIN__('alerts', function(scope){
+__BORA_REGISTER_PLUGIN__('BoraAlertsV2', function(scope){
 
-  
   const $ = scope.getService('jquery');
   const events = scope.getService('events');
-
-  let __domReady = false;
-  let __notifyQueue = [];
-
-  $(function(){
-      __domReady = true;
-
-      // Flush queued notifications
-      __notifyQueue.forEach(fn => fn());
-      __notifyQueue = [];
-  });
 
   /* =========================
      PRIVATE STATE
@@ -60,11 +48,6 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
   ========================= */
 
   function ensureNotifierContainer(force){
-    // Note: DOM not ready → defer
-    if(!__domReady){
-        return null;
-    }
-
     const posClass = 'bora-pos-' + defaults.notifierPosition.replace(/\s+/g,'-');
 
     if (notifierContainer && !force) return notifierContainer;
@@ -93,13 +76,7 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
   }
 
   function notify(message, type='info', delay){
-    if(!__domReady){
-        __notifyQueue.push(()=> notify(message, type, delay));
-        return;
-    }
-
     ensureNotifierContainer();
-
     delay = (delay === undefined) ? defaults.notifierDelay : delay;
 
     const toast = $('<div class="bora-toast bora-'+type+' bora-toast-v2"></div>');
@@ -119,75 +96,6 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
     events && events.emit && events.emit('alerts:notify', {message,type});
 
     return { dismiss: ()=> dismissToast(toast) };
-  }
-
-  //
-  function notifyRich(options = {}) {
-
-    // 🚫 DOM not ready → queue
-    if(!__domReady){
-        __notifyQueue.push(()=> notifyRich(options));
-        return;
-    }
-
-    ensureNotifierContainer();
-
-    const {
-      title = '',
-      body = '',
-      type = 'info',
-      delay = defaults.notifierDelay,
-      onClick = null,
-      sound = true // 👈 new
-    } = options;
-
-    const toast = $(`
-      <div class="bora-toast bora-${type} bora-toast-v2 bora-toast-rich">
-        <div class="bora-toast-title">${title}</div>
-        <div class="bora-toast-body">${body}</div>
-      </div>
-    `);
-
-    notifierContainer.append(toast);
-    toast.hide().fadeIn(180);
-
-    // 🔊 SOUND
-    if (sound) {
-      playNotificationSound();
-    }
-
-    toast.on('click', () => {
-      dismissToast(toast);
-      onClick && onClick();
-    });
-
-    if(defaults.notifierAutoDismiss && delay > 0){
-      setTimeout(()=> dismissToast(toast), delay * 1000);
-    }
-
-    return { dismiss: ()=> dismissToast(toast) };
-  }
-
-  //
-  let audio;
-
-  function playNotificationSound(){
-
-    try {
-
-      if (!audio) {
-        audio = new Audio('assets/sound/notify.mp3'); // your path
-        audio.volume = 0.8;
-      }
-
-      // rewind for rapid notifications
-      audio.currentTime = 0;
-
-      audio.play().catch(()=>{});
-
-    } catch(e){
-      console.warn('Sound error::',e);
-    }
   }
 
   /* =========================
@@ -243,7 +151,7 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
     $(settings.container).append(overlay).append(modal);
     settings.showModal.call({modal,overlay});
 
-    modal.on('submit.alerts', function(e){
+    modal.on('submit.BoraAlertsV2', function(e){
       e.preventDefault();
       if(type==='prompt'){
         modal.serializeArray().forEach(item=>{
@@ -256,7 +164,7 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
       hide();
     });
 
-    cancelButton.on('click.alerts', function(){
+    cancelButton.on('click.BoraAlertsV2', function(){
       hide();
       defer.reject();
     });
@@ -284,7 +192,7 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
   function hide(){
     if(!modal) return;
     defaults.hideModal.call({modal,overlay});
-    $(document).off('.alerts');
+    $(document).off('.BoraAlertsV2');
     modal.remove();
     overlay.remove();
     modal=null; overlay=null;
@@ -327,6 +235,10 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
         cd.text(' ('+sec+')');
       }
     },1000);
+  }
+
+  function notifyRich(options = {}) {
+    alert('this');
   }
 
   /* =========================
