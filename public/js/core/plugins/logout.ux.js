@@ -1,8 +1,8 @@
 __BORA_REGISTER_PLUGIN__('LogoutUX', function(scope){
 
     const hooks   = scope.getService('hooks');
-    const alerts  = scope.plugin('alerts');
-    const overlay = scope.plugin('Overlay');
+    const alerts  = scope.getPlugin('alerts');
+    const overlay = scope.getPlugin('Overlay');
 
     function init(){
 
