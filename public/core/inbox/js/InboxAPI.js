@@ -25,24 +25,25 @@ class InboxAPI{
 }
 
 
-$(function(){
-    // alert('Inbox here');
-    alertBora.notifyRich({
-        title: 'Test',
-        body: 'Test message',
-        delay: 40,
-        sound: true,
-        onClick: () => {
-            let url = `portal/inbox/show/6`;
-            const nav = window.__BORA_APP__?.service('navigation');
-            if(nav){
-                nav.go(url);
-            }else{
-                window.location.href = url;
-            }
-            setTimeout(()=>this.ui.scrollBottom(),300);
-        }
-    });
-});
+// $(async function(){
+//     // alert('Inbox here');
+//     const alerts = await __BORA_APP__.plugin('alerts');
+//     alerts.notifyRich({
+//         title: 'Test',
+//         body: 'Test message',
+//         delay: 40,
+//         sound: true,
+//         onClick: () => {
+//             let url = `portal/inbox/show/6`;
+//             const nav = window.__BORA_APP__?.service('navigation');
+//             if(nav){
+//                 nav.go(url);
+//             }else{
+//                 window.location.href = url;
+//             }
+//             setTimeout(()=>this.ui.scrollBottom(),300);
+//         }
+//     });
+// });
 
    

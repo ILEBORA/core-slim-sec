@@ -1,12 +1,13 @@
-__BORA_REGISTER_PLUGIN__('ActivityFeedUI', function(scope){
+__BORA_REGISTER_PLUGIN__('activity.feed.ui', async function(scope){
 
-    const feed = scope.getService('activity.feed');
-    const sse  = scope.getService('realtime.sse');
+    const feed = await scope.getService('activity.feed');
+    const sse  = await scope.getService('realtime.sse');
 
     let el;
     let scopeName='home';
 
     function mount(){
+        console.log('[activity.feed.ui] mounted');
         $(function(){
             el = document.querySelector('#activityFeedNew');
             if(!el) return;
@@ -82,5 +83,5 @@ __BORA_REGISTER_PLUGIN__('ActivityFeedUI', function(scope){
 
 },{
     requires:['activity.feed','realtime.sse'],
-    activateOn:(route)=>route.startsWith('portal/activity')
+    activateOn: (route) => route.startsWith('portal/activity')
 });

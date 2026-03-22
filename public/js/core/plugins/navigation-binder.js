@@ -1,6 +1,6 @@
-__BORA_REGISTER_PLUGIN__('NavigationBinder', function(scope){
+__BORA_REGISTER_PLUGIN__('NavigationBinder', async function(scope){
 
-    const navigation = scope.getService('navigation');
+    const navigation = await scope.getService('navigation');
 
     function bind(){
         $(document).on('click', 'a.jx', function(e){
@@ -21,6 +21,7 @@ __BORA_REGISTER_PLUGIN__('NavigationBinder', function(scope){
     return {
         mount(){
             bind();
+            console.log('[NavigationBinder] mounted');
         }
     };
 });

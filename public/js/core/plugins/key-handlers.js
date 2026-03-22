@@ -1,13 +1,13 @@
-__BORA_REGISTER_PLUGIN__('KeyHandlers', function(scope){
+__BORA_REGISTER_PLUGIN__('KeyHandlers', async function(scope){
 
-    const $ = scope.getService('jquery');
-    const config = scope.config || {};
+    // const $ = await scope.getService('jquery');
+    const config = await scope.config || {};
 
     const handlers = {};
     const context = {};
 
-    function init(){
-
+    function mount(){
+        console.log('[KeyHandlers] mounted');
         $(document).on('keydown.keyHandler', (event) => {
 
             const keyPressed = ucfirst(event.key); // keep your logic
@@ -72,7 +72,7 @@ __BORA_REGISTER_PLUGIN__('KeyHandlers', function(scope){
     }
 
     return {
-        init,
+        mount,
         on,
         setContext,
         destroy

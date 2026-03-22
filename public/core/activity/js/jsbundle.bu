@@ -1,25 +1,70 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js','activity');
+$pipeline = new AssetPipelineJs('activity', __DIR__, 'core');
 
-$pipeline
-    // Services first
-    ->add('services/activity.utils.js')
-    ->add('services/activity.feed.js')
-    
+/* ==================================================
+   SERVICES
+================================================== */
 
-    // Plugins second
-    ->add('plugins/activity.composer.js')
-    ->add('plugins/activity.feed.js')
-    ->add('plugins/activity.actions.js')
-    ->add('plugins/thread.js')
-    ->add('plugins/stories.js')
+$pipeline->register('activity.utils', [
+    'file'     => 'services/activity.utils.js',
+    'type'     => 'service',
+    'priority' => 100,
+]);
 
-    // optional extra UI logic
-    //->add('activity.js')
+$pipeline->register('activity.feed.service', [
+    'file'     => 'services/activity.feed.js',
+    'type'     => 'service',
+    'priority' => 120,
+    'requires' => ['runtime'],
+]);
 
-    ->send();
+/* ==================================================
+   PLUGINS
+================================================== */
+
+$pipeline->register('activity.composer', [
+    'file'     => 'plugins/activity.composer.js',
+    'type'     => 'plugin',
+    'priority' => 200,
+    'requires' => ['runtime', 'activity.utils'],
+]);
+
+$pipeline->register('activity.feed.ui', [
+    'file'     => 'plugins/activity.feed.ui.js',
+    'type'     => 'plugin',
+    'priority' => 210,
+    'requires' => ['runtime', 'activity.feed.service'],
+]);
+
+$pipeline->register('activity.actions', [
+    'file'     => 'plugins/activity.actions.js',
+    'type'     => 'plugin',
+    'priority' => 220,
+    'requires' => ['runtime', 'activity.feed'],
+]);
+
+$pipeline->register('activity.thread', [
+    'file'     => 'plugins/activity.thread.js',
+    'type'     => 'plugin',
+    'priority' => 230,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.stories', [
+    'file'     => 'plugins/activity.stories.js',
+    'type'     => 'plugin',
+    'priority' => 240,
+    'requires' => ['runtime'],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

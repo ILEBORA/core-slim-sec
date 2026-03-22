@@ -1,7 +1,7 @@
-__BORA_REGISTER_SERVICE__('dashboards.editWidget', function(scope){
+__BORA_REGISTER_SERVICE__('dashboards.editWidget', async function(scope){
 
-    const capability = scope.getService('capability');
-    const popup      = scope.getService('popup');
+    const capability = await scope.getService('capability');
+    const popup      = await scope.getPlugin('popup');
 
     capability.when('dashboards.ready', function(dash){
 

@@ -1,13 +1,13 @@
-__BORA_REGISTER_PLUGIN__('RuntimeUX', function(scope){
+__BORA_REGISTER_PLUGIN__('RuntimeUX', async function(scope){
 
-    const $ = scope.getService('jquery');
-    const config = scope.config || {};
+    // const $ = await scope.getService('jquery');
+    const config = await scope.config || {};
 
     let audioUnlocked = false;
     const notifySound = new Audio('assets/sound/doink.mp3');
 
-    function init(){
-
+    function mount(){
+        console.log('[RuntimeUX] mounted');
         setupAudioUnlock();
         initCuriosity();
         emitStartup();
@@ -76,6 +76,6 @@ __BORA_REGISTER_PLUGIN__('RuntimeUX', function(scope){
     }
 
     return {
-        init
+        mount
     };
 });

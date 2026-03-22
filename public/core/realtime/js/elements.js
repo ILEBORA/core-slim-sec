@@ -1,10 +1,3 @@
-/* @bora:meta
-{
-  "id": "relatime:elements",
-  "depends": []
-}
-*/
-
 // Bora Live UI 4
 class BoraLvui extends HTMLElement {
     constructor() {
@@ -62,26 +55,33 @@ class BoraLvui extends HTMLElement {
         }
     }
 
-    addToCookies() {
+    async addToCookies() {
         const tag = this.getAttribute("blvui");
         if(tag){
-            new CallBora(`api/modules/realtime/tags/add`)
-                .setMethod("POST")
-                .setParams({tag: tag })
-                .setCallback((data) => {
-                    // console.log(data.html);
-                    if(data.success){
-                        //TODO:: Decide what to do with feedback data
-                    }
-                })
-                .setDone(() => {
-                    console.log("Request finished");
-                    //Hide Overlay
-                })
-                .setError((xhr) => {
-                    console.error("Error:", xhr);
-                })
-                .build();
+            const call = await __BORA_APP__?.service('callbora');
+            if(call){
+                call.post(
+                    `api/modules/realtime/tags/add`,
+                    {tag: tag }
+                );
+            }
+            // new CallBora(`api/modules/realtime/tags/add`)
+            //     .setMethod("POST")
+            //     .setParams({tag: tag })
+            //     .setCallback((data) => {
+            //         // console.log(data.html);
+            //         if(data.success){
+            //             //TODO:: Decide what to do with feedback data
+            //         }
+            //     })
+            //     .setDone(() => {
+            //         console.log("Request finished");
+            //         //Hide Overlay
+            //     })
+            //     .setError((xhr) => {
+            //         console.error("Error:", xhr);
+            //     })
+            //     .build();
         }
     }
 }
@@ -89,7 +89,7 @@ class BoraLvui extends HTMLElement {
 // Register the custom element
 customElements.define('bora-lvui', BoraLvui);
 
-const FactBusX = __BORA_APP__.service('factbus');
+// const FactBusX = await __BORA_APP__.service('factbus');
 
 const FactBusO = (function () {
     const handlers = {};

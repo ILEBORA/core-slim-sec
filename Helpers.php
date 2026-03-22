@@ -1012,6 +1012,8 @@ if(!function_exists('autoIncludeCoreJs')){
         $currentEnv = $_ENV['ENV_DEVELOPMENT'] ? 'dev' : 'prod';
         $tenant     = $_ENV['PRJCTN'] ?? '*';
 
+        $preload = []; // ✅ IMPORTANT
+
         // Filter
         $manifest = array_filter($manifest, function ($meta) use ($currentEnv, $tenant) {
 
@@ -1034,65 +1036,32 @@ if(!function_exists('autoIncludeCoreJs')){
 
             $file = $meta['file'] ?? null;
 
-            /* Inline asset (kernel generated) */
+            /* Inline asset */
             if ($file === '__inline__') {
                 $hooks->registerInline($name, '');
-                continue;
+            } else {
+
+                $filePath = $corePath . '/' . $meta['file'];
+
+                if (!file_exists($filePath)){
+                    error_log("Error Registering file:: $name :: $filePath");
+                    continue;
+                }
+
+                $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
+
+                $hooks->register($name, $filePath);
             }
 
-            /* Normal file asset */
-            $file = $corePath . '/' . $meta['file'];
-
-            if (!file_exists($file)){error_log("Error Registering file:: $name :: $file"); continue;}
-            // error_log("Register file:: $name :: $file");
-            $hooks->register($name, $file);
+            // ✅ preload collection (works for both inline + file)
+            if (!empty($meta['preload'])) {
+                $preload[] = $name;
+            }
         }
 
         $GLOBALS['__BORA_CORE_MANIFEST__'] = $manifest;
+        $GLOBALS['__BORA_PRELOAD__'] = $preload;
     }
-
-    function autoIncludeCoreJsOW($hooks) {
-        $corePath = vendor_path('public/js/core');
-        $manifestFile = $corePath . '/manifest.php';
-
-        if (!file_exists($manifestFile)) {
-            throw new \Exception("Core JS manifest not found.");
-        }
-
-        $manifest = include $manifestFile;
-
-        // Sort by priority
-        uasort($manifest, function ($a, $b) {
-            return ($a['priority'] ?? 100)
-                <=> ($b['priority'] ?? 100);
-        });
-
-        foreach ($manifest as $name => $meta) {
-
-            $file = $corePath . '/' . $meta['file'];
-
-            if (!file_exists($file)) {
-                error_log("Core JS file missing: {$meta['file']}");
-                continue;
-            }
-            error_log("Register file:: $name :: $file");
-            $hooks->register($name, $file);
-        }
-
-        // Store manifest for later use
-        $GLOBALS['__BORA_CORE_MANIFEST__'] = $manifest;
-    }
-
-    // function autoIncludeCoreJsO($hooks) {
-    //     $corePath = vendor_path('public/js/cores');
-
-    //     $files = glob($corePath . '/*.js');
-    //     // dieVal($files);
-    //     foreach ($files as $file) {
-    //         $name = basename($file, '.js'); // e.g., BoraHooks
-    //         $hooks->register(strtolower($name), $file);
-    //     }
-    // }
 }
 
 if(!function_exists('autoIncludeCoreCss')){

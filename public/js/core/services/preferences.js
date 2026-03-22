@@ -1,6 +1,6 @@
-__BORA_REGISTER_SERVICE__('preferences', function(scope){
+__BORA_REGISTER_SERVICE__('preferences', async function(scope){
 
-    const $ = scope.getService('jquery');
+    const jquery = await scope.getService('jquery');
     const config = scope.config || {};
 
     const state = {
@@ -13,6 +13,7 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
     };
 
     let saving = false;
+    let loading = false;
 
     
 
@@ -23,7 +24,10 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
     async function load(){
 
         try {
+            if(loading) return;
 
+            loading = true;
+            
             const response = await fetch('api/modules/ui/userprefs', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
@@ -40,6 +44,8 @@ __BORA_REGISTER_SERVICE__('preferences', function(scope){
             apply();
             bindDOM();
             scope.emit('preferences:loaded', state);
+
+            loading =  false;
 
         } catch(error){
             console.error('Preferences load failed:', error);

@@ -1,9 +1,9 @@
-__BORA_REGISTER_PLUGIN__('BoraEventsV5', function(scope){
+__BORA_REGISTER_PLUGIN__('events', async function(scope){
 
-    const $ = scope.getService('jquery');
-    const hooks = scope.getService('hooks');
-    const config = scope.config || {};
-
+    // const $ = await scope.getService('jquery');
+    const hooks = await scope.getService('hooks');
+    const config = await scope.config || {};
+    console.log('[events] mounted');
     const BoraEvents = {
 
         supportedEvents: [

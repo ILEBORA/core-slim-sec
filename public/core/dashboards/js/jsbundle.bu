@@ -1,16 +1,85 @@
 <?php
-require __DIR__ . '/../../../../../../../vendor/autoload.php';
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-use BoraSlim\Core\Assets\AssetPipeline;
+$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'dashboards');
+$pipeline = new AssetPipelineJs('dashboards', __DIR__, $origin);
 
-$pipeline
-    ->add('dashboards.js')
-    ->addPerm('dashboards', 'editdashboards', 'perms/dashboards/editdashboards.js')
-    ->addPerm('dashboards', 'createdashboards', 'perms/dashboards/createdashboards.js')
-    ->addPerm('dashpagewidgets', 'editdashpagewidgets', 'perms/dashpagewidgets/editdashpagewidgets.js')
-    ->addPerm('dashpagewidgets', 'adddashpagewidgets', 'perms/dashpagewidgets/adddashpagewidgets.js')
-    ->addPerm('dashpagewidgets', 'deletedashpagewidgets', 'perms/dashpagewidgets/deletedashpagewidgets.js')
-    ->send();
+/* ==================================================
+   CORE DASHBOARD LOGIC
+================================================== */
+
+$pipeline->register('dashboards.core', [
+    'file'     => 'dashboards.js',
+    'type'     => 'service', // or 'plugin' depending on behavior
+    'priority' => 100,
+    'requires' => [
+        'runtime',
+        'hooks',
+        'state'
+    ],
+]);
+
+/* ==================================================
+   PERMISSION: DASHBOARDS
+================================================== */
+
+$pipeline->registerPerm('dashboards.edit', [
+    'file'     => 'perms/dashboards/editdashboards.js',
+    'group'    => 'dashboards',
+    'sub'      => 'editdashboards',
+    'priority' => 200,
+    'requires' => [
+        'dashboards.core'
+    ],
+]);
+
+$pipeline->registerPerm('dashboards.create', [
+    'file'     => 'perms/dashboards/createdashboards.js',
+    'group'    => 'dashboards',
+    'sub'      => 'createdashboards',
+    'priority' => 201,
+    'requires' => [
+        'dashboards.core'
+    ],
+]);
+
+/* ==================================================
+   PERMISSION: DASHBOARD PAGE WIDGETS
+================================================== */
+
+$pipeline->registerPerm('dashpagewidgets.edit', [
+    'file'     => 'perms/dashpagewidgets/editdashpagewidgets.js',
+    'group'    => 'dashpagewidgets',
+    'sub'      => 'editdashpagewidgets',
+    'priority' => 210,
+    'requires' => [
+        'dashboards.core'
+    ],
+]);
+
+$pipeline->registerPerm('dashpagewidgets.add', [
+    'file'     => 'perms/dashpagewidgets/adddashpagewidgets.js',
+    'group'    => 'dashpagewidgets',
+    'sub'      => 'adddashpagewidgets',
+    'priority' => 211,
+    'requires' => [
+        'dashboards.core'
+    ],
+]);
+
+$pipeline->registerPerm('dashpagewidgets.delete', [
+    'file'     => 'perms/dashpagewidgets/deletedashpagewidgets.js',
+    'group'    => 'dashpagewidgets',
+    'sub'      => 'deletedashpagewidgets',
+    'priority' => 212,
+    'requires' => [
+        'dashboards.core'
+    ],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

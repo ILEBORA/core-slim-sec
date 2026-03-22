@@ -1,6 +1,6 @@
-__BORA_REGISTER_SERVICE__('jobQueue', function(scope){
+__BORA_REGISTER_SERVICE__('jobQueue', async function(scope){
 
-    const call = scope.getService('callbora');
+    const call = await scope.getService('callbora');
 
     const KEY = '__bora_jobs__';
 

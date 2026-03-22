@@ -1,14 +1,23 @@
-__BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
+__BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
 
-    const $ = scope.getService('jquery');
-    const dismiss = scope.getService('dismiss');
-    const navigation = scope.getService('navigation');
-    const context = __BORA_APP__.service('context');
-    const dismissable = scope.getService('uiDismissable');
+    // const $ = await scope.getService('jquery');
+    // const dismiss = await scope.getService('dismiss');
+    const navigation = await scope.getService('navigation');
+    const context = await scope.getService('context');
+    const dismissable = await scope.getService('uiDismissable');
+    const uiStack = await scope.getService('uiStack');
+    
     let sidebarInstance = null;
 
     let sidebar, main, dropMenu, burger;
     let isOpen = false;
+
+    let startX = 0;
+    let currentX = 0;
+    let startTime = 0;
+    let dragging = false;
+
+    const MAX_WIDTH = 280; // sidebar width (adjust to your CSS)
 
     function mount(){
         $(function(){
@@ -84,23 +93,25 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         highlightMenu(window.location);
         
 
-        document.addEventListener('change', function(e){
-
+        document.addEventListener('change', async function(e){
             if (!e.target.matches('#changemenu')) return;
 
             const face = e.target.value;
 
-            __BORA_APP__.service('context').set(face);
+            context.set(face);
             window.APP_CURRENT_ROLE = face;
             $('[data-refresh-menu]').data('role', face);
 
+            const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+            await menu.refresh(face);
+
             // After menu reload, highlight current route again
-            // const cleanRoute = __BORA_APP__.service('router').clean();
+            // const cleanRoute = await __BORA_APP__.service('router').clean();
             highlightMenu();
             
         });
 
-        document.addEventListener('click', function(e){
+        document.addEventListener('click', async function(e){
 
             const btn = e.target.closest('[data-refresh-menu]');
             if (!btn) return;
@@ -109,7 +120,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
 
             const role = btn.dataset.role || window.APP_CURRENT_ROLE;
 
-            __BORA_APP__.service('menu').refresh(role);
+            const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+            await menu.refresh(role);
         });
 
         // React to changes
@@ -120,6 +132,94 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
 
         //
         // scope.on('esc', onEscKeyPress);
+
+        scope.on('sidebar.open', toggleSidebar);
+        scope.on('sidebar.close', closeSidebar);
+
+        //Swipe
+        document.addEventListener('touchstart', (e) => {
+            // Not top dismissable element
+            if(uiStack && uiStack.size() > 0){
+                return; // ❌ block swipe
+            }
+
+            const t = e.touches[0];
+
+            // only allow swipe from left edge OR when open
+            if(t.clientX > 40 && !sidebar.hasClass('sideActive')) return;
+
+            startX = t.clientX;
+            currentX = startX;
+            startTime = Date.now();
+            dragging = true;
+
+            sidebar.css('transition', 'none');
+            main.css('transition', 'none');
+
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+
+            if(!dragging) return;
+
+            const t = e.touches[0];
+            currentX = t.clientX;
+
+            let delta = currentX - startX;
+
+            // if sidebar already open, offset from full width
+            if(sidebar.hasClass('sideActive')){
+                delta = delta + MAX_WIDTH;
+            }
+
+            // clamp
+            delta = Math.max(0, Math.min(MAX_WIDTH, delta));
+
+            // apply transform
+            sidebar.css('transform', `translateX(${delta - MAX_WIDTH}px)`);
+            main.css('transform', `translateX(${delta}px)`);
+
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+
+            if(!dragging) return;
+
+            dragging = false;
+
+            const delta = currentX - startX;
+            const duration = Date.now() - startTime;
+
+            const velocity = Math.abs(delta / duration); // px per ms
+
+            const threshold = MAX_WIDTH * 0.4;
+
+            const shouldOpen =
+                delta > threshold || velocity > 0.5;
+
+            const shouldClose =
+                delta < -threshold || velocity > 0.5;
+
+            sidebar.css('transition', '');
+            main.css('transition', '');
+
+            // reset transforms (we’ll rely on classes again)
+            sidebar.css('transform', '');
+            main.css('transform', '');
+
+            if(!sidebar.hasClass('sideActive')){
+                if(shouldOpen){
+                    // toggleSidebar();
+                    scope.emit('sidebar.open');
+                }
+            } else {
+                if(shouldClose){
+                    // closeSidebar();
+                    scope.emit('sidebar.close');
+                }
+            }
+
+        });
     }
 
     function applyFace(face){
@@ -171,18 +271,6 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
         });
 
         dropMenu.data('dismissInstance', instance);
-    }
-
-    function toggleSidebarO(){
-        console.log('Bugger');
-        sidebar.toggleClass('sideActive');
-        main.toggleClass('sideActive');
-        isOpen = sidebar.hasClass('sideActive');
-        burger.toggleClass('is-active', isOpen);
-
-
-        console.log('[Sidebar] '+isOpen);
-
     }
 
     function closeSidebar(){
@@ -312,6 +400,9 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
 
             items.forEach(i => i.classList.remove('active'));
             bestItem?.classList.add('active');
+
+            //After load check 
+            updateSidebar();
         });
     }
 
@@ -319,5 +410,5 @@ __BORA_REGISTER_PLUGIN__('Sidebar', function(scope){
 
 }, {
     requires:['jquery','hooks','navigation'],
-    activateOn: () => true
+    // activateOn: () => true
 });

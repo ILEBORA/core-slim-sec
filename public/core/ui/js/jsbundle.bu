@@ -1,15 +1,60 @@
 <?php
-require __DIR__ . '/../../../../../../../vendor/autoload.php';
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-use BoraSlim\Core\Assets\AssetPipeline;
+$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'ui');
+$pipeline = new AssetPipelineJs('ui', __DIR__, $origin);
 
-$pipeline
-    ->add('plugins/context-menu.js')
-    ->add('plugins/dropdown-panel.js')
-    ->add('script.js')
-    ->add('hooks.js')
+/* ==================================================
+   LIBS (FOUNDATION)
+================================================== */
 
-    ->send();
+$pipeline->register('ui.core', [
+    'file'     => 'script.js',
+    'type'     => 'lib',
+    'priority' => 100,
+    'requires' => ['runtime'],
+]);
+
+/* ==================================================
+   SERVICES (HOOK SYSTEM)
+================================================== */
+
+$pipeline->register('ui.hooks', [
+    'file'     => 'hooks.js',
+    'type'     => 'lib',
+    'priority' => 110,
+    'requires' => ['runtime'],
+]);
+
+/* ==================================================
+   PLUGINS (UI BEHAVIOUR)
+================================================== */
+
+$pipeline->register('ui.context.menu', [
+    'file'     => 'plugins/context.menu.js',
+    'type'     => 'plugin',
+    'priority' => 130,
+    'requires' => [
+        'runtime',
+        'ui.core',
+        'ui.hooks'
+    ],
+]);
+
+$pipeline->register('ui.dropdown.panel', [
+    'file'     => 'plugins/dropdown.panel.js',
+    'type'     => 'plugin',
+    'priority' => 131,
+    'requires' => [
+        'runtime',
+        'ui.core',
+        'ui.hooks'
+    ],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

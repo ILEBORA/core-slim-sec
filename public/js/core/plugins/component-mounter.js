@@ -2,7 +2,8 @@ __BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
 
     let mountedInstances = [];
 
-    function init(){
+    function mount(){
+        console.log('[ComponentMounter] mounted');
         mountAll();
         scope.on('page.afterLoad', mountAll);
     }
@@ -11,14 +12,14 @@ __BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
         mountedInstances.forEach(i => i.destroy?.());
         mountedInstances = [];
 
-        document.querySelectorAll('[data-component]').forEach(el => {
+        document.querySelectorAll('[data-component]').forEach(async el => {
 
             const name = el.dataset.component;
             const props = el.dataset.props
                 ? JSON.parse(el.dataset.props)
                 : {};
 
-            const plugin = scope.getPlugin(name);
+            const plugin = await scope.getPlugin(name);
 
             if(plugin?.mount){
                 const instance = plugin.mount(el, props);
@@ -27,5 +28,5 @@ __BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
         });
     }
 
-    return { init };
+    return { mount };
 });

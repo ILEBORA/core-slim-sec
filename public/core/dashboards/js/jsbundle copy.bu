@@ -1,0 +1,16 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipeline;
+
+$pipeline = new AssetPipeline(__DIR__, 'js', 'dashboards');
+
+$pipeline
+    ->add('dashboards.js')
+    ->addPerm('dashboards', 'editdashboards', 'perms/dashboards/editdashboards.js')
+    ->addPerm('dashboards', 'createdashboards', 'perms/dashboards/createdashboards.js')
+    ->addPerm('dashpagewidgets', 'editdashpagewidgets', 'perms/dashpagewidgets/editdashpagewidgets.js')
+    ->addPerm('dashpagewidgets', 'adddashpagewidgets', 'perms/dashpagewidgets/adddashpagewidgets.js')
+    ->addPerm('dashpagewidgets', 'deletedashpagewidgets', 'perms/dashpagewidgets/deletedashpagewidgets.js')
+    ->send();

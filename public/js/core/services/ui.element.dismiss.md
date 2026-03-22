@@ -72,12 +72,12 @@ uiStack.unregister(instance)
 ### Open
 
 ```javascript
-$(document).on('click', '.reaction-trigger', function(e){
+$(document).on('click', '.reaction-trigger', async function(e){
 
     e.preventDefault();
 
-    const uiStack = __BORA_APP__.service('uiStack');
-    const dismissable = __BORA_APP__.service('uiDismissable');
+    const uiStack = await __BORA_APP__.service('uiStack');
+    const dismissable = await __BORA_APP__.service('uiDismissable');
 
     const $box = $(this).closest('.reaction-box');
 
@@ -103,7 +103,7 @@ Close after reaction
 $box.data('dismissInstance')?.close();
 Example 2 — Sidebar
 Open
-const dismissable = scope.getService('uiDismissable');
+const dismissable = await scope.getService('uiDismissable');
 
 let sidebarInstance = null;
 
@@ -130,7 +130,7 @@ $(document).on('click', '.mini-photo-wrapper', function(e){
 
     e.stopPropagation();
 
-    const dismissable = scope.getService('uiDismissable');
+    const dismissable = await scope.getService('uiDismissable');
 
     if(dropMenu.hasClass('is-active')){
         dropMenu.data('dismissInstance')?.close();

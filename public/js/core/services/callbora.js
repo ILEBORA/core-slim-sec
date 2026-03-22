@@ -1,9 +1,9 @@
-__BORA_REGISTER_SERVICE__('callbora', function(scope){
+__BORA_REGISTER_SERVICE__('callbora', async function(scope){
 
-    const hooks   = scope.getService('hooks');
-    const logger  = scope.getService('logger');
-    const config  = scope.config || {};
-    const $       = scope.getService('jquery');
+    const hooks   = await scope.getService('hooks');
+    const logger  = await scope.getService('logger');
+    const config  = await scope.config || {};
+    const $       = await scope.getService('jquery');
 
     if(!$){
         throw new Error('callbora requires jquery service');

@@ -14,7 +14,7 @@ appHooks.addHook("form:beforeSubmit", ($form) => {
 });
 
 // Register an afterSubmit hook
-appHooks.addHook("form:afterSubmit", ($form, resp) => {
+appHooks.addHook("form:afterSubmit", async ($form, resp) => {
     console.log("Form submitted:", $form.attr('id'), resp);
     // e.g., show a toast or update Ui
     if (resp.message){
@@ -29,7 +29,7 @@ appHooks.addHook("form:afterSubmit", ($form, resp) => {
 
     if(resp.esc){
         // alert('esc');
-        __BORA_APP__.service('hooks')?.call('esc');
+        await __BORA_APP__.service('hooks')?.call('esc');
     }
 
     if(resp.success){

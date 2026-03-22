@@ -1,9 +1,9 @@
 // __BORA_REGISTER_PLUGIN__(
 // 'ClientFace',
-// function(scope){
+// async function(scope){
 
-//     const state = scope.getService('state');
-//     const inbox = scope.getPlugin('Inbox');
+//     const state = await scope.getService('state');
+//     const inbox = await scope.getPlugin('Inbox');
 
 //     let unsubRoute;
 

@@ -1,6 +1,7 @@
 // service-worker.js.tpl
 
-const CACHE_NAME = `bora-pwa-cache-${Date.now()}`;//'bora-pwa-cache-{{VERSION}}';
+// const CACHE_NAME = `bora-pwa-cache-${Date.now()}`;//'bora-pwa-cache-{{VERSION}}';
+const CACHE_NAME = `bora-pwa-cache-{{VERSION}}`;
 const ASSETS = {{ASSETS}};
 
 self.addEventListener('install', event => {
@@ -34,21 +35,55 @@ self.addEventListener('fetch', event => {
     // =========================
     // NETWORK-FIRST: JS + CSS
     // =========================
-    if (isJS || isCSS) {
+    // if (isJS || isCSS) {
+    //     event.respondWith(
+    //         fetch(req)
+    //             .then(res => {
+    //                 if (!res || res.status !== 200 || res.type !== 'basic') {
+    //                     return res;
+    //                 }
+
+    //                 const clone = res.clone();
+    //                 caches.open(CACHE_NAME).then(c => c.put(req, clone));
+
+    //                 return res;
+    //             })
+    //             .catch(() => caches.match(req))
+    //     );
+    //     return;
+    // }
+
+    // =========================
+    // BORA CORE: CACHE-FIRST JS
+    // =========================
+    const isBoraAsset =
+        url.pathname.includes('/core/') ||
+        url.pathname.includes('/modules/') ||
+        url.pathname.includes('/client.bundle');
+
+    if (isJS && isBoraAsset) {
+
         event.respondWith(
-            fetch(req)
-                .then(res => {
-                    if (!res || res.status !== 200 || res.type !== 'basic') {
-                        return res;
-                    }
+            caches.open(CACHE_NAME).then(async cache => {
 
-                    const clone = res.clone();
-                    caches.open(CACHE_NAME).then(c => c.put(req, clone));
+                const cached = await cache.match(req);
 
-                    return res;
-                })
-                .catch(() => caches.match(req))
+                if (cached) {
+                    return cached; // ⚡ NO NETWORK
+                }
+
+                const res = await fetch(req, { cache: 'no-store' });
+
+                if (res && res.status === 200) {
+                    cache.put(req, res.clone());
+                }
+
+                return res;
+            })
         );
+
+        return;
+
         return;
     }
 

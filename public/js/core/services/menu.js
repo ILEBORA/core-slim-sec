@@ -1,9 +1,9 @@
 __BORA_REGISTER_SERVICE__(
     'menu',
-    function(scope){
+    async function(scope){
 
-        const hooks = scope.getService('hooks');
-        const navigation = scope.getService('navigation');
+        const hooks = await scope.getService('hooks');
+        const navigation = await scope.getService('navigation');
 
         async function refresh(role){
 

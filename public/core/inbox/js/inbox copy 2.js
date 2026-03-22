@@ -291,9 +291,9 @@ function handleBack(){
     history.pushState({},'', 'portal/inbox');
 }
 
-function openNewThread(){
+async function openNewThread(){
 
-    const composer = scope.getPlugin('InboxComposer');
+    const composer = await scope.getPlugin('InboxComposer');
 
     composer?.mount?.();
     composer?.open?.();

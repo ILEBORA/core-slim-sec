@@ -1,6 +1,6 @@
-__BORA_REGISTER_SERVICE__('inbox.actions', function(scope){
+__BORA_REGISTER_SERVICE__('inbox.actions', async function(scope){
 
-    const hooks = scope.getService('hooks');
+    const hooks = await scope.getService('hooks');
 
     document.addEventListener('click', function(e){
 

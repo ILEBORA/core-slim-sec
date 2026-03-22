@@ -1,11 +1,11 @@
 __BORA_REGISTER_SERVICE__(
     'navigation',
-    function(scope){
+    async function(scope){
 
-        const state  = scope.getService('state');
-        const router = scope.getService('router');
-        const hooks  = scope.getService('hooks');
-        const meta   = scope.getService('meta');
+        const state  = await scope.getService('state');
+        const router = await scope.getService('router');
+        const hooks  = await scope.getService('hooks');
+        const meta   = await scope.getService('meta');
 
         let currentRoute = window.location.pathname;
         let currentAbort = null;

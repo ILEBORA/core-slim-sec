@@ -78,9 +78,13 @@ body.overlay-visible{
     margin-bottom: 20px;
 }
 
-.overlay-message .message {
+.overlay-message .msg {
     color: var(--body-overlay-color, #ccc);
     font-size: small;
+    max-width: 70%;
+    margin-bottom: 8px;
+    display: flex;
+    margin: auto auto;
 }
 
 body > .mn-overlay.active{

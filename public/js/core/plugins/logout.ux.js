@@ -1,29 +1,27 @@
-__BORA_REGISTER_PLUGIN__('LogoutUX', function(scope){
+__BORA_REGISTER_PLUGIN__('LogoutUX', async function(scope){
 
-    const hooks   = scope.getService('hooks');
-    const alerts  = scope.getPlugin('alerts');
-    const overlay = scope.getPlugin('Overlay');
+    const hooks   = await scope.getService('hooks');
+    const alerts  = await scope.getPlugin('alerts');
+    const overlay = await scope.getPlugin('Overlay');
 
-    function init(){
-
+    function mount(){ 
+        console.log('[LogoutUX] mounted');
         hooks.add('user.logout.request', async () => {
 
-            try{
-                await alerts.confirm('Are you <em>really</em> sure?', {
-                    html: true
-                }).autoCancel(10);
-
+            return alerts.confirm('Are you <em>really</em> sure?', {
+                html: true
+            }).autoCancel(20)
+            .then(() => {
                 overlay?.show('Logging out...');
                 localStorage.removeItem("auth.token");
-
                 return true;
-            }
-            catch(e){
-                // user cancelled
+            })
+            .catch(() => {
+                console.log('Confirmation canceled');
                 return false;
-            }
+            });
         });
     }
 
-    return { init };
+    return { mount };
 });

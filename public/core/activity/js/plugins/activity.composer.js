@@ -1,11 +1,11 @@
-__BORA_REGISTER_PLUGIN__('ActivityComposer', function(scope){
+__BORA_REGISTER_PLUGIN__('activity.composer', function(scope){
 
     let attachments = [];
     let bound = false;
 
     function bindUI(){
         if(bound) return;
-        alert('bind');
+        // alert('bind');
         $(document).on('click','.attach-photo', openFileDialog);
         $(document).on('change','#composerUpload', uploadFiles);
 
@@ -86,9 +86,9 @@ __BORA_REGISTER_PLUGIN__('ActivityComposer', function(scope){
             .val(JSON.stringify(attachments));
     }
 
-    function open(){
+    async function open(){
 
-        const popup = scope.getService('popup');
+        const popup = await scope.getPlugin('popup');
 
         popup.open({
             mode:'form',

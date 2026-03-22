@@ -1,6 +1,6 @@
-__BORA_REGISTER_PLUGIN__('InboxComposer', function(scope){
+__BORA_REGISTER_PLUGIN__('InboxComposer', async function(scope){
 
-    const navigation = scope.getService('navigation');
+    const navigation = await scope.getService('navigation');
 
     let el;
     let selectedUser = null;

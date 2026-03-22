@@ -60,7 +60,7 @@ __BORA_REGISTER_SERVICE__('hooks', function(scope){
            EXECUTION
         ========================= */
 
-        call(name, ...params){
+        async call(name, ...params){
 
             if(!this.hooks.has(name)) return;
 
@@ -74,7 +74,7 @@ __BORA_REGISTER_SERVICE__('hooks', function(scope){
                     console.error(`[Hook Error: ${name}]`, error);
 
                     // Optional: forward to logger service
-                    const logger = scope.getService('logger');
+                    const logger = await scope.getService('logger');
                     if(logger && logger.error){
                         logger.error('Hook failure', { name, error });
                     }
@@ -84,24 +84,67 @@ __BORA_REGISTER_SERVICE__('hooks', function(scope){
 
         async callAsync(name, ...params){
 
-            if(!this.hooks.has(name)) return;
+            const list = this.hooks.get(name);
 
-            for(const { func } of this.hooks.get(name)){
+            if(!list || list.length === 0){
+                return [];
+            }
+
+            const results = [];
+
+            for(const { func } of list){
 
                 try {
-                    await func(...params);
+                    const res = await func(...params);
+                    results.push(res);
                 }
                 catch(error){
 
                     console.error(`[Async Hook Error: ${name}]`, error);
 
-                    const logger = scope.getService('logger');
+                    const logger = await scope.getService('logger');
                     if(logger && logger.error){
                         logger.error('Async hook failure', { name, error });
                     }
                 }
             }
+
+            return results;
         }
+
+        async callAsyncUntilFalse(name, ...args){
+
+            const list = this.hooks.get(name);
+
+            if(!list || list.length === 0){
+                return true; // no blockers → allow
+            }
+
+            for(const { func } of list){
+
+                try{
+                    const res = await func(...args);
+
+                    if(res === false){
+                        return false;
+                    }
+                }
+                catch(error){
+
+                    console.error(`[Async Hook Error: ${name}]`, error);
+
+                    const logger = await scope.getService('logger');
+                    if(logger && logger.error){
+                        logger.error('Async hook failure', { name, error });
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        //END fn
+        
     }
 
     /* ==================================================

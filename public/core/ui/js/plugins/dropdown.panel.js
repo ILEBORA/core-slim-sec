@@ -1,6 +1,6 @@
-__BORA_REGISTER_PLUGIN__('DropdownPanel', function(scope){
+__BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
-    const dismissable = scope.getService('uiDismissable');
+    const dismissable = await scope.getService('uiDismissable');
 
     let panel = null;
     let dismissInstance = null;

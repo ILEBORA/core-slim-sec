@@ -1,11 +1,12 @@
 __BORA_REGISTER_PLUGIN__(
     'GuestFace',
-    function(scope){
+    async function(scope){
 
-        const layouts = scope.getPlugin('Layouts');
+        const layouts = await scope.getPlugin('Layouts');
 
         function mount(){
             layouts?.mount();
+            console.log('[GuestFace] mounted');
         }
 
         function unmount(){
@@ -15,6 +16,7 @@ __BORA_REGISTER_PLUGIN__(
         return { mount, unmount };
     },
     {
-        requires:['Layouts']
+        requires:['Layouts'],
+        faces: ['guest']
     }
 );

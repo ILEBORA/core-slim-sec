@@ -1,13 +1,13 @@
 __BORA_REGISTER_PLUGIN__(
     'AppCore',
-    function(scope){
+    async function(scope){
 
-        const hooks      = scope.getService('hooks');
-        const navigation = scope.getService('navigation');
-        const router     = scope.getService('router');
-        const logger     = scope.getService('logger');
-        const callbora   = scope.getService('callbora');
-        const preferences = scope.getService('preferences');
+        const hooks      = await scope.getService('hooks');
+        const navigation = await scope.getService('navigation');
+        const router     = await scope.getService('router');
+        const logger     = await scope.getService('logger');
+        const callbora   = await scope.getService('callbora');
+        const preferences = await scope.getService('preferences');
 
         const config = scope.config || {};
 
@@ -19,17 +19,55 @@ __BORA_REGISTER_PLUGIN__(
             _capWaiters: {}
         };
 
+        function normalizeUrl(fullUrl){
+            const base = window.__APP_BASE_PATH__ || '';
+
+            if (!fullUrl) return '/';
+
+            fullUrl = String(fullUrl);
+
+            if (base && fullUrl.startsWith(base)){
+                fullUrl = fullUrl.slice(base.length);
+            }
+
+            // remove query
+            fullUrl = fullUrl.split('?')[0];
+
+            // if (!fullUrl.startsWith('/')){
+            //     fullUrl = '/' + fullUrl;
+            // }
+
+            return fullUrl || '';
+        }
+
         /* =========================
            LIFECYCLE
         ========================= */
 
         async function mount(){
-            loadPermissions();
+            console.log('[AppCore] mounted');
+            await loadPermissions();
 
-            registerRouteGuards();
+            await registerRouteGuards();
 
             await preferences.load();
             provide('preferences', preferences);
+
+            /* =========================
+            🔥 ROUTE → ACTIVATION BRIDGE
+            ========================= */
+
+            scope.on('route:changed', async (route) => {
+                try{
+                    await scope.evaluatePluginActivation(route);
+                }catch(err){
+                    console.error('[AppCore] Activation failed', err);
+                }
+            });
+
+            // 🔥 Initial activation (after boot)
+            // const initialRoute = normalizeUrl(window.location);
+            // await scope.evaluatePluginActivation(initialRoute);
 
             if(config.dev){
                 console.log('[AppCore] mounted');
@@ -42,7 +80,7 @@ __BORA_REGISTER_PLUGIN__(
            PERMISSIONS
         ========================= */
 
-        function loadPermissions(){
+        async function loadPermissions(){
 
             try{
 
@@ -67,7 +105,7 @@ __BORA_REGISTER_PLUGIN__(
            ROUTE GUARDS
         ========================= */
 
-        function registerRouteGuards(){
+        async function registerRouteGuards(){
 
             if(!router) return;
 
@@ -92,6 +130,42 @@ __BORA_REGISTER_PLUGIN__(
         ========================= */
 
         async function logout(){
+
+            const result = await hooks.callAsyncUntilFalse('user.logout.request');
+            console.log('RESULTS',result);
+
+            // If ANY handler explicitly returns false → cancel
+            if(result === false){
+                return;
+            }
+
+            hooks.call('user.logout.before');
+            
+            // alert('Here logout');
+            new CallBora("api/auth/logout")
+                .setMethod("POST")
+                .setParams({})
+                .setCallback(() => {
+                    hooks.call('user.logout.after');
+                    redirectTo('', true);
+                })
+                .setDone(() => {
+                    if(typeof authChannel !== 'undefined'){
+                        authChannel.postMessage({cmd:'logout', usr: rd('bID')});
+                    }
+
+                    // if(typeof globalThis.authChannel !== 'undefined'){
+                    //     authChannel.postMessage({
+                    //         cmd:'logout',
+                    //         usr: globalThis.rd?.('bID')
+                    //     });
+                    // }
+                })
+                .setError((xhr) => console.error("Logout error:", xhr))
+                .build();
+        }
+
+        async function logoutO(){
             // Allow interception (e.g. confirmation UI)
             const proceed = await hooks.callAsync('user.logout.request');
 

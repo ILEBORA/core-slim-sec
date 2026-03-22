@@ -1,9 +1,9 @@
 __BORA_REGISTER_PLUGIN__(
     'Layouts',
-    function(scope){
+    async function(scope){
 
-        const $ = scope.getService('jquery');
-        const state = scope.getService('state');
+        // const $ = await scope.getService('jquery');
+        const state = await scope.getService('state');
 
         let menus = new Map();
         let mounted = false;
@@ -90,12 +90,13 @@ __BORA_REGISTER_PLUGIN__(
 
         function mount(){
 
-            addMenu('#menu');
-            addMenu('#header');
-            addMenu('#cart');
-            addMenu('.overlay');
+            // addMenu('#menu');
+            // addMenu('#header');
+            // addMenu('#cart');
+            // addMenu('.overlay');
 
-            bind();
+            // bind();
+            console.log('[Layouts] mounted');
         }
 
         function unmount(){

@@ -1,6 +1,7 @@
-__BORA_REGISTER_SERVICE__('dashboards', function(scope){
+__BORA_REGISTER_SERVICE__('dashboards', async function(scope){
 
-    const capability = scope.getService('capability');
+    const capability = await scope.getService('capability');
+    const uiActions = await scope.getService('ui.actions');
 
     /*
     |--------------------------------------------------------------------------
@@ -31,16 +32,12 @@ __BORA_REGISTER_SERVICE__('dashboards', function(scope){
     */
 
     function bindCoreControls(){
-
+        
         // Toggle dashboard control panel
-        document.addEventListener('click', function(e){
+        uiActions.register('dashboard.toggle-controls', (el)=>{
+            el.classList.toggle('opened');
 
-            const toggle = e.target.closest('.dash-controls-toggle');
-            if(!toggle) return;
-
-            toggle.classList.toggle('opened');
-
-            const container = toggle.closest('.dash-controls-container');
+            const container = el.closest('.dash-controls-container');
             if(!container) return;
 
             container.classList.toggle('expanded');
@@ -48,25 +45,51 @@ __BORA_REGISTER_SERVICE__('dashboards', function(scope){
             const controls = container.querySelector('.dash-controls');
             if(controls) controls.classList.toggle('expanded');
 
-            const icon = toggle.querySelector('i');
+            const icon = el.querySelector('i');
             if(icon){
                 icon.classList.toggle('fa-cogs');
                 icon.classList.toggle('fa-times');
             }
         });
+        // document.addEventListener('click', function(e){
+        //     const toggle = e.target.closest('.dash-controls-toggle');
+        //     if(!toggle) return;
+
+        //     toggle.classList.toggle('opened');
+
+        //     const container = toggle.closest('.dash-controls-container');
+        //     if(!container) return;
+
+        //     container.classList.toggle('expanded');
+
+        //     const controls = container.querySelector('.dash-controls');
+        //     if(controls) controls.classList.toggle('expanded');
+
+        //     const icon = toggle.querySelector('i');
+        //     if(icon){
+        //         icon.classList.toggle('fa-cogs');
+        //         icon.classList.toggle('fa-times');
+        //     }
+        // });
 
         // Hover tools (no jQuery required)
         document.addEventListener('mouseover', function(e){
+
             const container = e.target.closest('.widget_container');
             if(!container) return;
+
+            if(container.contains(e.relatedTarget)) return; // 🔥 important
 
             const tools = container.querySelector('.widget_tools');
             if(tools) tools.style.display = 'block';
         });
 
         document.addEventListener('mouseout', function(e){
+
             const container = e.target.closest('.widget_container');
             if(!container) return;
+
+            if(container.contains(e.relatedTarget)) return; // 🔥 important
 
             const tools = container.querySelector('.widget_tools');
             if(tools) tools.style.display = 'none';
@@ -143,4 +166,7 @@ __BORA_REGISTER_SERVICE__('dashboards', function(scope){
         api
     };
 
+},
+{
+    requires: ['ui.actions']
 });

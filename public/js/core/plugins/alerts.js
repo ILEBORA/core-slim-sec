@@ -1,8 +1,8 @@
-__BORA_REGISTER_PLUGIN__('alerts', function(scope){
+__BORA_REGISTER_PLUGIN__('alerts', async function(scope){
 
   
-  const $ = scope.getService('jquery');
-  const events = scope.getService('events');
+  const jquery = await scope.getService('jquery');
+  const events = await scope.getService('events');
 
   let __domReady = false;
   let __notifyQueue = [];
@@ -13,6 +13,8 @@ __BORA_REGISTER_PLUGIN__('alerts', function(scope){
       // Flush queued notifications
       __notifyQueue.forEach(fn => fn());
       __notifyQueue = [];
+
+      console.log('[alerts] mounted');
   });
 
   /* =========================

@@ -1,11 +1,11 @@
 __BORA_REGISTER_SERVICE__(
     'navigation',
-    function(scope){
+    async function(scope){
 
-        const state   = scope.getService('state');
-        const router  = scope.getService('router');
-        const hooks   = scope.getService('hooks');
-        const meta    = scope.getService('meta');
+        const state   = await scope.getService('state');
+        const router  = await scope.getService('router');
+        const hooks   = await scope.getService('hooks');
+        const meta    = await scope.getService('meta');
 
         const app     = window.__BORA_APP__;
         const overlay = () => app?.plugin?.('Overlay');
@@ -256,6 +256,11 @@ __BORA_REGISTER_SERVICE__(
 
                 ov?.setProgress?.(90);
 
+                //TODO
+                if(!scope?.config.dev??false){ 
+                    // clearConsole();
+                }
+
                 renderPage(json);
 
                 currentRoute = cleanUrl;
@@ -268,10 +273,14 @@ __BORA_REGISTER_SERVICE__(
 
                 state?.set?.('route', cleanUrl);
 
+                scope.emit('route:changed', cleanUrl);
+
                 ov?.setProgress?.(100);
 
                 scope.emit('page.afterLoad', cleanUrl, json);
                 scope.emit('page.loaded', cleanUrl);
+
+                
 
                 ov?.hide?.(true);
 
@@ -355,7 +364,7 @@ __BORA_REGISTER_SERVICE__(
         }
 
         window.addEventListener('popstate', async (e)=>{
-            const uiStack = scope.getService('uiStack');
+            const uiStack = await scope.getService('uiStack');
             if(uiStack && uiStack.size() > 0){
                 uiStack.closeTop();
                 // restore history so navigation does not occur

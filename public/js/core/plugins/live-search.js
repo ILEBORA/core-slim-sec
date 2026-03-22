@@ -1,9 +1,9 @@
-__BORA_REGISTER_PLUGIN__('LiveSearch', function(scope){
+__BORA_REGISTER_PLUGIN__('LiveSearch', async function(scope){
 
-    const $ = scope.getService('jquery');
+    // const $ = await scope.getService('jquery');
 
     function mount(el, props){
-
+        console.log('[LiveSearch] mounted');
         const $el = $(el);
         const $input = $el.find('.search-input');
         const $results = $el.find('.results');

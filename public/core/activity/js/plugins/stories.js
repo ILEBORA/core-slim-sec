@@ -1,6 +1,6 @@
-__BORA_REGISTER_PLUGIN__('ActivityStories', function(scope){
+__BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
 
-    const sse = scope.getService('realtime.sse');
+    const sse = await scope.getService('realtime.sse');
 
     function mount(){
 
@@ -55,5 +55,5 @@ __BORA_REGISTER_PLUGIN__('ActivityStories', function(scope){
 
 },{
     requires:['realtime.sse'],
-    activateOn:(route)=>route.startsWith('portal/activity/stories')
+    activateOn: (route) => route.startsWith('portal/activity/stories')
 });

@@ -1,36 +1,140 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'inbox');
+$pipeline = new AssetPipelineJs('inbox', __DIR__);
 
-$pipeline
-    // Helpers
-    ->add('utils/InboxHelpers.js')
-    ->add('utils/InboxTests.js')
+/* ==================================================
+   HELPERS
+================================================== */
 
-    // Composer
-    ->add('composer/InboxComposer.js')
+$pipeline->register('inbox.helpers', [
+    'file'     => 'utils/InboxHelpers.js',
+    'type'     => 'lib',
+    'priority' => 100,
+]);
 
-    // UI Layer
-    ->add('controllers/InboxUI.js')
+$pipeline->register('inbox.tests', [
+    'file'     => 'utils/InboxTests.js',
+    'type'     => 'lib',
+    'priority' => 101,
+    'requires' => ['inbox.helpers'],
+]);
 
-    // Controllers
-    ->add('controllers/InboxTyping.js')
-    
-    ->add('controllers/InboxThreadLoader.js')
+/* ==================================================
+   COMPOSER
+================================================== */
 
-    ->add('controllers/InboxPresence.js')
-    ->add('controllers/InboxNotifications.js')
-    ->add('controllers/InboxRealtime.js')
-    //->add('controllers/InboxReactions.js')
+$pipeline->register('inbox.composer', [
+    'file'     => 'composer/InboxComposer.js',
+    'priority' => 110,
+    'requires' => ['inbox.helpers'],
+]);
 
-    // API
-    ->add('InboxAPI.js')
+/* ==================================================
+   UI LAYER
+================================================== */
 
-    // Plugin Bootstrap
-    ->add('InboxPlugin.js')
+$pipeline->register('inbox.ui', [
+    'file'     => 'controllers/InboxUI.js',
+    'priority' => 120,
+    'requires' => ['inbox.composer'],
+]);
 
-    ->send();
+/* ==================================================
+   CONTROLLERS
+================================================== */
+
+$pipeline->register('inbox.typing', [
+    'file'     => 'controllers/InboxTyping.js',
+    'type'     => 'lib',
+    'priority' => 130,
+    'requires' => ['inbox.ui'],
+]);
+
+$pipeline->register('inbox.threadloader', [
+    'file'     => 'controllers/InboxThreadLoader.js',
+    'type'     => 'lib',
+    'priority' => 131,
+    // 'requires' => ['inbox.ui','inbox.typing'],
+]);
+
+$pipeline->register('inbox.presence', [
+    'file'     => 'controllers/InboxPresence.js',
+    'type'     => 'lib',
+    'priority' => 132,
+    'requires' => ['inbox.ui'],
+]);
+
+$pipeline->register('inbox.notifications', [
+    'file'     => 'controllers/InboxNotifications.js',
+    'type'     => 'lib',
+    // 'group'    => 'inbox',
+    // 'sub'      => 'notify',
+    'priority' => 133,
+    'requires' => ['inbox.ui'],
+]);
+
+$pipeline->register('inbox.realtime', [
+    'file'     => 'controllers/InboxRealtime.js',
+    'type'     => 'lib',
+    // 'group'    => 'inbox',
+    // 'sub'      => 'read',
+    'priority' => 134,
+    'requires' => ['inbox.ui'],
+]);
+
+// Optional future:
+// $pipeline->registerPerm('inbox.reactions', [...]);
+
+/* ==================================================
+   API
+================================================== */
+
+$pipeline->register('inbox.api', [
+    'file'     => 'InboxAPI.js',
+    'type'     => 'lib',
+    'priority' => 140,
+    'requires' => [
+        'inbox.helpers',
+        'inbox.threadloader',
+        'inbox.presence'
+    ],
+]);
+
+/* ==================================================
+   PLUGIN BOOTSTRAP (ENTRY POINT)
+================================================== */
+
+$pipeline->register('inbox.plugin', [
+    'file'     => 'InboxPlugin.js',
+    'type'     => 'plugin',
+    'priority' => 200,
+    'requires' => [
+    //     'runtime',         // core
+    //     'state',           // core service
+        'inbox.helpers',
+        'inbox.ui',
+       
+        'inbox.typing',
+        'inbox.threadloader',
+        
+        'inbox.notifications',
+        'inbox.realtime',
+
+         'inbox.api',
+
+        
+    //     'inbox.presence'
+    ],
+    'preload' => false
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

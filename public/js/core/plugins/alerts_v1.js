@@ -1,7 +1,7 @@
-__BORA_REGISTER_PLUGIN__('BoraAlertsV2', function(scope){
+__BORA_REGISTER_PLUGIN__('BoraAlertsV2', async function(scope){
 
-  const $ = scope.getService('jquery');
-  const events = scope.getService('events');
+  const jquery = await scope.getService('jquery');
+  const events = await scope.getService('events');
 
   /* =========================
      PRIVATE STATE

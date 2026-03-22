@@ -3,19 +3,21 @@
 return [
 
     /* ==================================================
-       VENDOR (Load First – Pure Dependencies)
+       vendor
     ================================================== */
 
     'jquery' => [
         'file'     => 'vendor/jquery.js',
         'version'  => '3.7.1',
         'priority' => 1,
+        //'preload'  => true,
     ],
 
     'jquery_global' => [
         'file'     => 'vendor/jquery_global.js',
         'version'  => '1.0.0',
         'priority' => 2,
+        'preload'  => true,
     ],
 
     'select2' => [
@@ -36,322 +38,141 @@ return [
         'priority' => 5,
     ],
 
-
     /* ==================================================
-       CORE ENGINE (Execution Container)
+       core engine
     ================================================== */
+
+    'loader' => [
+        'file'     => 'app/loader.js',
+        'version'  => '1.0.0',
+        'priority' => 10,
+        'preload'  => true,
+    ],
 
     'runtime' => [
         'file'     => 'runtime.js',
         'version'  => '2.0.0',
-        'priority' => 10,
+        'priority' => 11,
+        'preload'  => true,
     ],
-
 
     /* ==================================================
-       CORE SERVICES (Infrastructure Layer)
+       core services
     ================================================== */
-
-    'callbora' => [
-        'file'     => 'services/callbora.js',
-        'version'  => '2.0.0',
-        'priority' => 20,
-        'requires' => ['runtime']
-    ],
-
-    'hooks' => [
-        'file'     => 'services/hooks.js',
-        'version'  => '1.0.0',
-        'priority' => 21,
-        'requires' => ['runtime']
-    ],
-
-    'cache' => [
-        'file'     => 'services/cache.js',
-        'version'  => '1.0.0',
-        'priority' => 22,
-        'requires' => ['runtime']
-    ],
-
-    'logger' => [
-        'file'     => 'services/logger.js',
-        'version'  => '1.0.0',
-        'priority' => 23,
-        'requires' => ['runtime']
-    ],
-
-    'plugin' => [
-        'file'     => 'services/plugin.js',
-        'version'  => '1.0.0',
-        'priority' => 24,
-        'requires' => ['runtime']
-    ],
-
-    'deprecations' => [
-        'file'     => 'services/deprecations.js',
-        'version'  => '1.0.0',
-        'priority' => 25,
-        'requires' => ['runtime']
-    ],
 
     'state' => [
         'file'     => 'services/state.js',
+        'type' => 'service', 
         'version'  => '1.0.0',
         'priority' => 26,
-        'requires' => ['runtime']
-    ],
-
-    'meta' => [
-        'file'     => 'services/meta.js',
-        'version'  => '1.0.0',
-        'priority' => 27,
+        'requires' => ['runtime'],
+        'preload'  => true,
     ],
 
     'router' => [
         'file'     => 'services/router.js',
+        'type' => 'service', 
         'version'  => '1.0.0',
         'priority' => 28,
-        'requires' => ['runtime','state']
-    ],
-
-    'navigation' => [
-        'file'     => 'services/navigation.js',
-        'version'  => '1.0.0',
-        'priority' => 29,
-        'requires' => ['runtime','router','state']
-    ],
-
-    'devtools' => [
-        'file'     => 'services/devtools.js',
-        'version'  => '1.0.0',
-        'priority' => 30,
-        'requires' => ['runtime','state']
-    ],
-
-    'jobqueue' => [
-        'file'     => 'services/job-queue.js',
-        'version'  => '1.0.0',
-        'priority' => 31,
-        'requires' => ['runtime','callbora']
-    ],
-
-    'face' => [
-        'file'     => 'services/face.js',
-        'version'  => '1.0.0',
-        'priority' => 32,
-        'requires' => ['runtime']
-    ],
-
-    'menu' => [
-        'file'     => 'services/menu.js',
-        'version'  => '1.0.0',
-        'priority' => 33,
-        'requires' => ['runtime']
-    ],
-
-    'context' => [
-        'file'     => 'services/context.js',
-        'version'  => '1.0.0',
-        'priority' => 34,
-        'requires' => ['runtime']
-    ],
-
-    'popup.service' => [
-        'file'     => 'services/popup.js',
-        'version'  => '1.0.0',
-        'priority' => 35,
-        'requires' => ['runtime']
-    ],
-
-    'capability' => [
-        'file'     => 'services/capability.js',
-        'version'  => '1.0.0',
-        'priority' => 36,
-        'requires' => ['runtime']
-    ],
-
-    
-    'ui.actions' => [
-        'file'     => 'services/ui.actions.js',
-        'version'  => '1.0.0',
-        'priority' => 37,
-        'requires' => ['runtime']
+        'requires' => ['runtime', 'state'],
+        'preload'  => true,
     ],
 
     'permissions' => [
         'file'     => 'services/permissions.js',
+        'type' => 'service', 
         'version'  => '1.0.0',
         'priority' => 38,
-        'requires' => ['runtime']
+        'requires' => ['runtime'],
+        'preload'  => true,
     ],
 
-    'ui.stack' => [
-        'file'     => 'services/ui.stack.js',
+    'navigation' => [
+        'file'     => 'services/navigation.js',
+        'type' => 'service', 
         'version'  => '1.0.0',
-        'priority' => 39,
-        'requires' => ['runtime']
+        'priority' => 29,
+        'requires' => ['runtime', 'router', 'state'],
+        'preload'  => true,
     ],
-
-    'ui.dismissable' => [
-        'file'     => 'services/ui.dismissable.js',
-        'version'  => '1.0.0',
-        'priority' => 40,
-        'requires' => ['runtime']
-    ],
-
-    'ui.element.dismiss' => [
-        'file'     => 'services/ui.element.dismiss.js',
-        'version'  => '1.0.0',
-        'priority' => 41,
-        'requires' => ['runtime']
-    ],
-
-    'preferences' => [
-        'file'     => 'services/preferences.js',
-        'version'  => '1.0.0',
-        'priority' => 42,
-        'requires' => ['runtime']
-    ],
-    
 
     /* ==================================================
-       CORE PLUGINS (UI Layer – Controlled)
+       remaining services (lazy)
     ================================================== */
 
-    'events' => [
-        'file'     => 'plugins/events.js',
-        'version'  => '1.0.0',
-        'priority' => 40,
-        'requires' => ['jquery','runtime']
-    ],
-
-    'popup.plugin' => [
-        'file'     => 'plugins/popup.js',
-        'version'  => '1.0.0',
-        'priority' => 41,
-        'requires' => ['jquery','runtime','events']
-    ],
-
-    'navigation.plugin' => [
-        'file'     => 'plugins/navigation.js',
-        'version'  => '1.0.0',
-        'priority' => 42,
-        // 'requires' => ['jquery','runtime','events','navigation']
-    ],
-
-    'alerts' => [
-        'file'     => 'plugins/alerts.js',
-        'version'  => '2.0.0',
-        'priority' => 45,
-        'requires' => ['runtime']
-    ],
-
-    'devtools_plugin' => [
-        'file'     => 'plugins/devtools.js',
-        'version'  => '1.0.0',
-        'priority' => 50,
-        'requires' => ['devtools']
-    ],
-
-    'app_core' => [
-        'file'     => 'plugins/app-core.js',
-        'version'  => '1.0.0',
-        'priority' => 55,
-        'requires' => ['hooks','state','callbora']
-    ],
-
-    'layouts' => [
-        'file'     => 'plugins/layouts.js',
-        'version'  => '1.0.0',
-        'priority' => 57,
-    ],
-
-    'face-guest' => [
-        'file'     => 'plugins/face-guest.js',
-        'version'  => '1.0.0',
-        'priority' => 57,
-    ],
-
-    'face-client' => [
-        'file'     => 'plugins/face-client.js',
-        'version'  => '1.0.0',
-        'priority' => 58,
-    ],
-
-    'face-admin' => [
-        'file'     => 'app/face-admin.js',
-        'version'  => '1.0.0',
-        'priority' => 59,
-    ],
-
-    'layout.sidebar' => [
-        'file'     => 'plugins/layout.sidebar.js',
-        'version'  => '1.0.0',
-        'priority' => 60,
-    ],
-
-    'navigation-binder' => [
-        'file'     => 'plugins/navigation-binder.js',
-        'version'  => '1.0.0',
-        'priority' => 61,
-    ],
-
-    'overlay' => [
-        'file'     => 'plugins/overlay.js',
-        'version'  => '1.0.0',
-        'priority' => 61,
-    ],
-
-    'logout.ux' => [
-        'file'     => 'plugins/logout.ux.js',
-        'version'  => '1.0.0',
-        'priority' => 62,
-    ],
+    'callbora' => ['file' => 'services/callbora.js', 'type' => 'service', 'version' => '2.0.0', 'priority' => 20, 'requires' => ['runtime']],
+    'hooks' => ['file' => 'services/hooks.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 21, 'requires' => ['runtime']],
+    'cache' => ['file' => 'services/cache.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 22, 'preload'=>true, 'requires' => ['runtime']],
+    'logger' => ['file' => 'services/logger.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 23, 'preload'=>true, 'requires' => ['runtime']],
+    'plugin' => ['file' => 'services/plugin.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 24, 'preload'=>true, 'requires' => ['runtime']],
+    'deprecations' => ['file' => 'services/deprecations.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 25, 'requires' => ['runtime']],
+    'meta' => ['file' => 'services/meta.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 27],
+    'devtools' => ['file' => 'services/devtools.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 30, 'requires' => ['runtime', 'state']],
+    'jobqueue' => ['file' => 'services/job-queue.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 31, 'requires' => ['runtime', 'callbora']],
+    'face' => ['file' => 'services/face.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 32, 'requires' => ['runtime']],
+    'menu' => ['file' => 'services/menu.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 33, 'requires' => ['runtime']],
+    'context' => ['file' => 'services/context.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 34, 'requires' => ['runtime']],
     
+    'capability' => ['file' => 'services/capability.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 36, 'requires' => ['runtime']],
+    'ui.actions' => ['file' => 'services/ui.actions.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 37, 'requires' => ['runtime']],
+    'uistack' => ['file' => 'services/ui.stack.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 39, 'requires' => ['runtime']],
+    'uidismissable' => ['file' => 'services/ui.dismissable.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 40, 'requires' => ['runtime']],
+    'ui.element.dismiss' => ['file' => 'services/ui.element.dismiss.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['runtime']],
+    'preferences' => ['file' => 'services/preferences.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 42, 'requires' => ['runtime']],
+    'sanity' => ['file' => 'services/sanity.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 43, 'requires' => ['runtime']],
+    'pagecache' => ['file' => 'services/page-cache.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 44, 'requires' => ['runtime']],
+
     /* ==================================================
-       APPLICATION LAYER (Project Specific)
+       core plugins (lazy)
     ================================================== */
 
-    'ilebora_or' => [
-        'file'     => 'app/ilebora_or.js',
-        'version'  => '1.0.0',
-        'priority' => 70,
-    ],
+    'events' => ['file' => 'plugins/events.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 40, 'requires' => ['jquery', 'runtime']],
+    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin','version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events']],
+    'navigation.plugin' => ['file' => 'plugins/navigation.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 42],
+    'alerts' => ['file' => 'plugins/alerts.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
+    'devtools' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
+    'appcore' => ['file' => 'plugins/app-core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
+    'layouts' => ['file' => 'plugins/layouts.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
+    'guestface' => ['file' => 'plugins/face-guest.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
+    'clientface' => ['file' => 'plugins/face-client.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 58],
+    'adminface' => ['file' => 'plugins/face-admin.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 59],
+    'sidebar' => ['file' => 'plugins/layout.sidebar.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 60],
+    'navigationbinder' => ['file' => 'plugins/navigation-binder.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61],
+    'overlay' => ['file' => 'plugins/overlay.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61],
+    'logoutux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62],
+    'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63],
 
-    'mainjs' => [
-        'file'     => 'app/mainjs.js',
-        'version'  => '1.0.0',
-        'priority' => 75,
-    ],
+    'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core']],
+
+    /* ==================================================
+       app layer (lazy)
+    ================================================== */
+
+    'ilebora_or' => ['file' => 'app/ilebora_or.js', 'version' => '1.0.0', 'priority' => 70, 'preload' => true],
+    'mainjs' => ['file' => 'app/mainjs.js', 'version' => '1.0.0', 'priority' => 75, 'preload' => true],    
 
     'config' => [
         'file' => '__inline__',
         'priority' => 76,
-        'requires' => ['mainjs']
+        'requires' => ['mainjs'],
+        'preload' => true,
     ],
 
-    'plugins' => [
-        'file'     => 'app/plugins.js',
-        'version'  => '1.0.0',
-        'priority' => 80,
-    ],
-
-    
-
+    'plugins' => ['file' => 'app/plugins.js', 'version' => '1.0.0', 'priority' => 80],
 
     /* ==================================================
-       BOOTSTRAP (Always Last in Core)
+       bootstrap
     ================================================== */
 
     'bootstrap' => [
         'file'     => 'bootstrap.js',
         'version'  => '2.0.0',
         'priority' => 1000,
+        'preload'  => true,
     ],
 
-
     /* ==================================================
-       TENANT LAYER (Client Customization)
+       tenant
     ================================================== */
 
     'client' => [
@@ -361,3 +182,5 @@ return [
     ],
 
 ];
+
+

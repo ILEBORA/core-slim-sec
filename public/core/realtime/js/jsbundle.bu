@@ -1,17 +1,78 @@
 <?php
-require __DIR__ . '/../../../../../../../vendor/autoload.php';
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-use BoraSlim\Core\Assets\AssetPipeline;
+$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'realtime');
+$pipeline = new AssetPipelineJs('realtime', __DIR__, $origin);
 
-$pipeline
-    ->add('services/factbus.js')
-    ->add('elements.js')
-    ->add('services/realtime.leader.js')
-    ->add('services/realtime.sse.js')     // NEW: sse service
-    ->add('plugins/realtime.core.js')
-    ->add('plugins/realtime.transport.js')// replaces realtime.sse.js
+/* ==================================================
+   LIBS (FOUNDATION)
+================================================== */
 
-    ->send();
+$pipeline->register('realtime.factbus', [
+    'file'     => 'services/factbus.js',
+    'type'     => 'lib',
+    'priority' => 100,
+]);
+
+$pipeline->register('realtime.elements', [
+    'file'     => 'elements.js',
+    'type'     => 'lib',
+    'priority' => 101,
+]);
+
+/* ==================================================
+   SERVICES (STATE + INFRASTRUCTURE)
+================================================== */
+
+$pipeline->register('realtime.leader', [
+    'file'     => 'services/realtime.leader.js',
+    'type'     => 'service',
+    'priority' => 120,
+    'requires' => [
+        'runtime',
+        'realtime.factbus'
+    ],
+]);
+
+$pipeline->register('realtime.sse', [
+    'file'     => 'services/realtime.sse.js',
+    'type'     => 'service',
+    'priority' => 121,
+    'requires' => [
+        'runtime',
+        'realtime.factbus'
+    ],
+]);
+
+/* ==================================================
+   PLUGINS (ORCHESTRATION)
+================================================== */
+
+$pipeline->register('realtime.transport', [
+    'file'     => 'plugins/realtime.transport.js',
+    'type'     => 'plugin',
+    'priority' => 140,
+    'requires' => [
+        'realtime.sse',
+        'realtime.leader'
+    ],
+]);
+
+$pipeline->register('realtime.core', [
+    'file'     => 'plugins/realtime.core.js',
+    'type'     => 'plugin',
+    'priority' => 150,
+    'requires' => [
+        'runtime',
+        'hooks',
+        'realtime.transport',
+        'realtime.elements'
+    ],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

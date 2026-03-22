@@ -1,6 +1,6 @@
-__BORA_REGISTER_PLUGIN__('Overlay', function(scope){
+__BORA_REGISTER_PLUGIN__('Overlay', async function(scope){
 
-    const hooks = scope.getService('hooks');
+    const hooks = await scope.getService('hooks');
 
     let $overlay;
     let $message;
@@ -11,17 +11,17 @@ __BORA_REGISTER_PLUGIN__('Overlay', function(scope){
 
     function init(){
         $overlay  = $('.mn-overlay');
-        $message  = $overlay.find('.message');
+        $message  = $overlay.find('.msg');
         $progress = $overlay.find('.progress-bar');
     }
 
-    function ensure(){
+    function ensureInit(){
         if (!$overlay || !$overlay.length) init();
     }
 
     function show(msg = 'Loading...', options = {}){
 
-        ensure();
+        ensureInit();
 
         activeCount++;
 
@@ -53,7 +53,7 @@ __BORA_REGISTER_PLUGIN__('Overlay', function(scope){
     }
 
     function setProgress(percent){
-        ensure();
+        ensureInit();
         if (!$progress.length) return;
 
         $progress.css('width', percent + '%');
@@ -124,6 +124,7 @@ __BORA_REGISTER_PLUGIN__('Overlay', function(scope){
         mount(){
             init();
             bindHooks();
+            console.log('[KeyHandlers] mounted');
         },
 
         show,

@@ -1,10 +1,10 @@
 __BORA_REGISTER_PLUGIN__(
-'RealtimeCore',
-function(scope){
+'realtime.core',
+async function(scope){
 
-    const leader = scope.getService('realtime.leader');
-    const hooks  = scope.getService('hooks');
-    const events = scope.getService('events');
+    const leader = await scope.getService('realtime.leader');
+    const sse    = await scope.getService('realtime.sse');
+
 
     let mounted = false;
 
@@ -14,6 +14,14 @@ function(scope){
         mounted = true;
 
         leader.start();
+
+        // 🔥 CRITICAL: bind leader → SSE lifecycle
+        scope.on('realtime:leader-change', handleLeaderChange);
+
+        // 🔥 initial boot
+        if (leader.isLeader()) {
+            startSSE();
+        }
 
         scope.on('realtime.events', handleRealtimeEvents);
 
@@ -26,8 +34,36 @@ function(scope){
         mounted = false;
 
         leader.stop();
+        sse.closeConnection();
 
         console.log('[Realtime] unmounted');
+    }
+
+    function handleLeaderChange({ isLeader }){
+        if (isLeader) {
+            startSSE();
+        } else {
+            sse.closeConnection();
+        }
+    }
+
+    function startSSE(){
+
+        // prevent duplicate connections
+        sse.closeConnection();
+
+        // ⚠️ YOU MUST PROVIDE PARAMS (this was in Twig before)
+        sse.subscribe({
+            id: scope.config?.id || '',
+            userID: scope.config?.userID || rd('uID'),
+            sessionID: scope.config?.sessionID || rd('sessID'),
+            event: scope.config?.event || 'updatesmain',
+            timer: scope.config?.timer || 20,
+            base: scope.config?.baseURL || rd('baseUrl'),
+            leaderEpoch: leader.getEpoch()
+        });
+
+        console.log('[Realtime] SSE started (leader)');
     }
 
     function handleRealtimeEvents(event){
@@ -48,26 +84,13 @@ function(scope){
 
     }
 
-    function handleRealtimeEventsO(event){
-
-        const list = event?.data?.events || [];
-
-        list.forEach(e => {
-
-            if(!e.channel || !e.payload) return;
-
-            scope.emit(
-                'realtime:' + e.channel,
-                e.payload
-            );
-
-        });
-    }
-
     return { mount, unmount };
 
 },
 {
-    requires:['realtime.leader','hooks','events'],
-    activateOn:(route)=> route.startsWith('portal')
+
+    requires:['realtime.leader'],//,'hooks','events'],
+    // activateOn:(route)=> route.startsWith('portal') || route.startsWith('bo')
+    //TODO:: runtime face mount
+    // faces: ['client', 'admin']
 });

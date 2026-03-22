@@ -1,9 +1,9 @@
-__BORA_REGISTER_PLUGIN__('ContentManager', function(scope){
+__BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
 
-    const state = scope.getService('state');
-    const hooks = scope.getService('hooks');
-    const meta  = scope.getService('meta');
-    const cache = scope.getService('pageCache');
+    const state = await scope.getService('state');
+    const hooks = await scope.getService('hooks');
+    const meta  = await scope.getService('meta');
+    const cache = await scope.getService('pageCache');
 
     let currentRequest = null;
 
@@ -23,7 +23,7 @@ __BORA_REGISTER_PLUGIN__('ContentManager', function(scope){
                 $('.features-list').html(response.blocks.sidebar_menu);
             }
             if(response.blocks.submenus){
-                $('.submenu-area .sub_menu').html(response.blocks.submenus);
+                $('.submenu-area .sub_menu')?.html(response.blocks.submenus);
             }
         }
 
@@ -103,6 +103,7 @@ __BORA_REGISTER_PLUGIN__('ContentManager', function(scope){
 
     return {
         mount(){
+            console.log('[ContentManager] mounted');
             state.subscribe('route', onRouteChange);
         }
     };

@@ -11,4 +11,6 @@ $pipeline
     ->add('user-tools.css')
     ->add('context-menu.css')
     ->add('dropdown-panel.css')
+    ->add('devtools.css')
+
     ->send();

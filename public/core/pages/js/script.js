@@ -1,7 +1,7 @@
 mPGs.openPageEditor = function(id) {
     // return mPGs.klassPopup('pages', 'manage', id, 'edit');
     // return mPGs.klassPopup('pages', 'manage', id, 'edit', null, null, null);
-    const popup = window.__BORA_APP__?.service?.('popup');
+    const popup = window.__BORA_APP__?.plugin?.('popup');
     if (!popup) return;
 
     popup.open({
@@ -18,7 +18,7 @@ mPGs.openPageEditor = function(id) {
 
 mPGs.openMotherPageSettings = function (id, tab = 'settings') {
     // return mPGs.klassPopup('pages', 'manage', id, 'settings', null, null, null);
-    const popup = window.__BORA_APP__?.service?.('popup');
+    const popup = window.__BORA_APP__?.plugin?.('popup');
     if (!popup) return;
 
     popup.open({
@@ -36,7 +36,7 @@ mPGs.openMotherPageSettings = function (id, tab = 'settings') {
 
 mPGs.openSubpageModal = function(id){
     // return mPGs.klassPopup('pages', 'manage', id, 'subpage', null, null, null);
-    const popup = window.__BORA_APP__?.service?.('popup');
+    const popup = window.__BORA_APP__?.plugin?.('popup');
     if (!popup) return;
 
     popup.open({
@@ -53,7 +53,7 @@ mPGs.openSubpageModal = function(id){
 
 mPGs.openArrangeUI = function(id){
     // return mPGs.klassPopup('pages', 'manage', null, 'arrange', null, null, null);
-    const popup = window.__BORA_APP__?.service?.('popup');
+    const popup = window.__BORA_APP__?.plugin?.('popup');
     if (!popup) return;
 
     popup.open({
@@ -70,7 +70,7 @@ mPGs.openArrangeUI = function(id){
 
 mPGs.togglePageStatus = function(id){
     // return mPGs.klassPopup('pages', 'manage', id, 'toggle', null, null, null);
-    const popup = window.__BORA_APP__?.service?.('popup');
+    const popup = window.__BORA_APP__?.plugin?.('popup');
     if (!popup) return;
 
     popup.open({

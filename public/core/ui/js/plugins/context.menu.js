@@ -1,8 +1,8 @@
-__BORA_REGISTER_PLUGIN__('ContextMenu', function(scope){
+__BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
-    const hooks = scope.getService('hooks');
-    const callbora   = scope.getService('callbora');
-    const dismissable = scope.getService('uiDismissable');
+    const hooks = await scope.getService('hooks');
+    const callbora   = await scope.getService('callbora');
+    const dismissable = await scope.getService('uiDismissable');
 
     let openedMenu = null;
     let dismissInstance = null;

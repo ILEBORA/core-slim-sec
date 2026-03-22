@@ -1,9 +1,9 @@
 __BORA_REGISTER_PLUGIN__(
 'RealtimeTransport',
-function(scope){
+async function(scope){
 
-    const sse = scope.getService('realtime.sse');
-    const leader = scope.getService('realtime.leader');
+    const sse = await scope.getService('realtime.sse');
+    const leader = await scope.getService('realtime.leader');
 
     function mount(){
         // alert('sse transport');
@@ -27,5 +27,6 @@ function(scope){
 },
 {
     requires:['realtime.sse','realtime.leader'],
-    activateOn:(route)=>route.startsWith('portal')
+    // activateOn:(route)=>route.startsWith('portal')
+    // faces: ['client', 'admin']
 });

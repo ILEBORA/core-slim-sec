@@ -7,7 +7,11 @@ class InboxThreadLoader{
         this.ui     = ui;
         this.typing = typing;
 
-        this.bindComposerSubmit(); // bind once
+        // this.bindComposerSubmit(); // bind once
+    }
+
+    init() {
+        this.bindComposerSubmit();
     }
 
     normalizeUrl(fullUrl){

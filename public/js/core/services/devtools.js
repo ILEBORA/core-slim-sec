@@ -1,24 +1,29 @@
-__BORA_REGISTER_SERVICE__('devtools', function(scope){
+__BORA_REGISTER_SERVICE__('devtools', async function(scope){
 
     const runtime = globalThis.__BORA_APP__;
 
-    function inspect(){
+    async function inspect(){
+
+        const services = await runtime?._getServices?.() || new Map();
+        const plugins  = await runtime?._getPlugins?.() || new Map();
+        const meta     = await runtime?._getMeta?.() || new Map();
 
         return {
-            services: runtime ? Object.keys(runtime._services?.() || {}) : [],
-            plugins: runtime ? Object.keys(runtime._plugins?.() || {}) : [],
+            services: Array.from(services.keys()),
+            plugins: Array.from(plugins.keys()),
+            meta: Object.fromEntries(meta),
             state: scope.getService('state')?.getAll?.() || {}
         };
     }
 
-    function snapshot(label){
+    async function snapshot(label = 'snapshot'){
 
-        const stateService = scope.getService('state');
+        const stateService = await scope.getService('state');
 
         return {
             label,
-            time: new Date(),
-            state: stateService?.getAll?.()
+            time: new Date().toISOString(),
+            state: stateService?.getAll?.() || {}
         };
     }
 

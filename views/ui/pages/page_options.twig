@@ -57,7 +57,7 @@
 
 
 <script>
-const CURRENT_PAGE_ID = '{{item.id}}';
+window.CURRENT_PAGE_ID = '{{item.id}}';
 $(document).on('click', '.kebab-btn', function (e) {
     e.stopPropagation();
     $('.kebab-dropdown').toggle();

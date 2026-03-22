@@ -1,6 +1,6 @@
-__BORA_REGISTER_SERVICE__('uiDismissable', function(scope){
+__BORA_REGISTER_SERVICE__('uiDismissable', async function(scope){
 
-    const uiStack = scope.getService('uiStack');
+    const uiStack = await scope.getService('uiStack');
 
     function create(closeFn){
 

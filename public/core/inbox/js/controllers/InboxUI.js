@@ -238,7 +238,7 @@ class InboxUI {
         const container = document.querySelector('.messages-cont');
 
         container.addEventListener('scroll', () => {
-            console.log(container.scrollTop);
+            // console.log(container.scrollTop);
             if (container.scrollTop < 50) {
                 this.loadPreviousMessages();
             }

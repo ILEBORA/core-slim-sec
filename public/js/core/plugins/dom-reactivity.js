@@ -1,10 +1,10 @@
-__BORA_REGISTER_PLUGIN__('DomReactivity', function(scope){
+__BORA_REGISTER_PLUGIN__('DomReactivity', async function(scope){
 
-    const $ = scope.getService('jquery');
-    const state = scope.getService('state');
+    const jquery = await scope.getService('jquery');
+    const state = await scope.getService('state');
 
-    function init(){
-
+    function mount(){
+        console.log('[DomReactivity] mounted');
         $('[data-bind]').each(function(){
 
             const key = $(this).data('bind');
@@ -24,5 +24,5 @@ __BORA_REGISTER_PLUGIN__('DomReactivity', function(scope){
 
     }
 
-    return { init };
+    return { mount };
 });

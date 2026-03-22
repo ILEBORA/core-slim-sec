@@ -83,9 +83,11 @@
 
 {% if thread_id is defined %}
 <script>
-    window.INBOX_THREAD_ID = {{ thread_id }};
-    __BORA_APP__.plugin('Inbox')?.openThread({{ thread_id }});
+     window.INBOX_THREAD_ID = {{ thread_id }};
     $(function(){
+        //const inbox = __BORA_APP__.getPlugin('Inbox');
+        //inbox?.openThread({{ thread_id }});
+
         $('.thread-item[data-id="{{ thread_id }}"]').addClass('selected');
     });
 </script>

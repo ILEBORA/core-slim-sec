@@ -481,7 +481,7 @@ appUI.dropDown.init();
         }
 
         // Create a new popup instance
-        const diagPop = window.__BORA_APP__?.service?.('popup');
+        const diagPop = window.__BORA_APP__?.plugin?.('popup');
         if (!diagPop) return;
 
         diagPop.open({

@@ -1,4 +1,4 @@
-__BORA_REGISTER_SERVICE__('sanity', function(scope){
+__BORA_REGISTER_SERVICE__('sanity', async function(scope){
 
     const config = scope.config || {};
     const issues = [];
@@ -9,8 +9,8 @@ __BORA_REGISTER_SERVICE__('sanity', function(scope){
         }
     }
 
-    function checkPlugin(name){
-        if(!scope.getPlugin || !scope.getPlugin(name)){
+    async function checkPlugin(name){
+        if(!scope.getPlugin || !await scope.getPlugin(name)){
             issues.push(`Missing plugin: ${name}`);
         }
     }

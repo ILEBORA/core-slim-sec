@@ -1,10 +1,10 @@
-__BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
+__BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
-    const feedUI  = scope.getPlugin('ActivityFeedUI');
-    const activityComposer  = scope.getPlugin('ActivityComposer');
+    const feedUI  = await scope.getPlugin('activity.feed.ui');
+    const activityComposer  = await scope.getPlugin('activity.composer');
 
     function mount(){
-
+        console.log('[activity.actions] mounted');
         $(document).on('click','.act-react',handleReaction);
         $(document).on('click','.act-comment',handleComment);
         $(document).on('click','.act-share', handleShare);
@@ -13,12 +13,12 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
 
         $(document).on('click','.act-view-media', handleMediaView);
 
-        $(document).on('click', '.reaction-trigger', function(e){
+        $(document).on('click', '.reaction-trigger', async function(e){
 
             e.preventDefault();
 
-            const uiStack = __BORA_APP__.service('uiStack');
-            const dismissable = __BORA_APP__.service('uiDismissable');
+            const uiStack = await __BORA_APP__.service('uiStack');
+            const dismissable = await __BORA_APP__.service('uiDismissable');
 
             const $box = $(this).closest('.reaction-box');
 
@@ -80,21 +80,35 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
 
     }
 
-    function handleComment(e){
+    async function handleComment(e){
         e.preventDefault();
 
         const id = $(this)
             .closest('.activity-item')
             .data('id');
 
-        const popup = window.__BORA_APP__?.service('popup');
+        const popup = await scope.getPlugin('popup');
 
-        popup?.open({
+        popup.open({
             mode:'view',
             module:'activity',
             group:'comments',
             view:'comments',
-            id: id
+            id: id,
+            tabs: [
+                {
+                    id: 'replies',
+                    label: 'Comments',
+                    url: `api/modules/activity/comments/${id}`
+                },
+                // {
+                //     id: 'likes',
+                //     label: 'Likes',
+                //     url: `api/modules/activity/view/likes/${id}`
+                // }
+            ],
+
+            activeTab: 'replies'
         });
     }
 
@@ -125,12 +139,12 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
             alert('TODO:: Post '+id+' options...');
     }
 
-    function handleMediaView(e){
+    async function handleMediaView(e){
         e.preventDefault();
         const id = $(this)
             .data('id');
 
-        const popup = scope.getService('popup');
+        const popup = await scope.getPlugin('popup');
 
         popup.open({
             mode:'view',
@@ -140,7 +154,21 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
             tab:'preview',
             id: id,
             size:'md',
-            meta:   { id:id, mode: 'preview' }
+            meta:   { id:id, mode: 'preview' },
+            tabs: [
+                {
+                    id: 'replies',
+                    label: 'Preview',
+                    url: `api/modules/activity/media/preview/${id}`
+                },
+                {
+                    id: 'edit',
+                    label: 'Edit',
+                    url: `api/modules/activity/media/edit/${id}`
+                }
+            ],
+
+            activeTab: 'preview'
         });
         
     }
@@ -178,8 +206,8 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
                     }
                     
                     if(resp.esc){
-                        setTimeout(()=>{
-                            __BORA_APP__.service('uiStack')?.closeTop();
+                        setTimeout(async ()=>{
+                            await __BORA_APP__.service('uiStack')?.closeTop();
                         },0);
                     }
 
@@ -211,27 +239,14 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
         $.ajax(ajaxOptions);
     });
 
-    function handleReplies(e){
+    async function handleReplies(e){
         e.preventDefault();
 
         const activityId = $(this)
             .closest('.comment-item')
             .data('id');
 
-        // mPGs.klassView(
-        //     'Activity',
-        //     'replies',
-        //     activityId,
-        //     {
-        //         size: 'lg',
-        //         state: {
-        //             focus: 'composer'
-        //         }
-        //     }
-        // );
-
-        const popup = window.__BORA_APP__?.service?.('popup');
-        if (!popup) return;
+        const popup = await scope.getPlugin('popup');
 
         popup.open({
             mode:   'view',
@@ -246,7 +261,21 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
                 state: {
                     focus: 'composer'
                 }
-            }
+            },
+            tabs: [
+                {
+                    id: 'replies',
+                    label: 'Replies',
+                    url: `api/modules/activity/view/replies/${activityId}`
+                },
+                // {
+                //     id: 'likes',
+                //     label: 'Likes',
+                //     url: `api/modules/activity/view/likes/${activityId}`
+                // }
+            ],
+
+            activeTab: 'replies'
         });
     }
     
@@ -254,4 +283,6 @@ __BORA_REGISTER_PLUGIN__('ActivityActions', function(scope){
 
     return { mount, unmount };
 
+},{
+    activateOn: (route) => route.startsWith('portal/activity')
 });

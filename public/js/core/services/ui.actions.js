@@ -50,7 +50,7 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
 
     function bind(){
 
-        document.addEventListener('click', function(e){
+        document.addEventListener('click', async function(e){
 
             /* ==================================================
                NEW SYSTEM — data-action
@@ -63,8 +63,13 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
 
                 const name = actionEl.dataset.action;
 
-                if(run(name, actionEl, e)){
-                    return;
+                // if(run(name, actionEl, e)){
+                //     return;
+                // }
+
+                if(name){
+                    const handled = run(name, actionEl, e);
+                    if(handled) return;
                 }
             }
 
@@ -91,8 +96,8 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
             if (popupEl){
 
                 e.preventDefault();
-
-                const popup = app?.service?.('popup');
+                // alert('popup');
+                const popup = await app?.plugin?.('popup');
                 if (!popup) return;
 
                 popup.open({
@@ -116,7 +121,7 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
 
                 e.preventDefault();
 
-                const navigation = app?.service?.('navigation');
+                const navigation = await app?.service?.('navigation');
                 if (!navigation) return;
 
                 navigation.go(navEl.dataset.nav);
@@ -131,13 +136,48 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
 
                 e.preventDefault();
 
-                const menu = app?.service?.('menu');
+                const menu = await app?.service?.('menu');
                 if (!menu) return;
 
                 const role = refreshEl.dataset.role;
                 menu.refresh(role);
 
                 return;
+            }
+
+            /* ==================================================
+            LEGACY — data-e-click
+            ================================================== */
+
+            const eClickEl = e.target.closest('[data-e-click]');
+            if (eClickEl){
+
+                e.preventDefault();
+
+                const expr = eClickEl.dataset.eClick;
+
+                // 🔥 NEW: detect function-like vs action name
+                if(expr.includes('(')){
+
+                    try{
+                        // ⚠️ controlled eval
+                        const fn = new Function('event', 'el', `
+                            return (${expr});
+                        `);
+
+                        fn(e, eClickEl);
+
+                    }catch(err){
+                        console.error('[ui.actions] inline execution failed:', expr, err);
+                    }
+
+                    return;
+                }
+
+                // fallback to action system
+                if(run(expr, eClickEl, e)){
+                    return;
+                }
             }
 
         });

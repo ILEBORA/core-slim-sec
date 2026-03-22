@@ -1,8 +1,7 @@
-__BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
+__BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
 
-    const hooks = scope.getService('hooks');
-    const app   = window.__BORA_APP__;
-    const appCore = app?.plugin?.('AppCore');
+    const hooks = await scope.getService('hooks');
+    const appCore = await scope.getPlugin('AppCore');
 
     // Create SSE connection
     const instance = createSSE();
@@ -209,20 +208,6 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             
         };
 
-        this.processQueueO = function() {
-            if (sseBusy) return;
-            if (sseQueue.length === 0) return;
-
-            sseBusy = true;
-
-            requestAnimationFrame(() => {
-                const data = sseQueue.shift();
-                handleSSE(data);
-                sseBusy = false;
-                processQueue();
-            });
-        };
-
         this.changeEndpoint = function(newUrl) {
             self.closeConnecton(); // Close existing connection
             self.ths_source = new EventSource(newUrl);
@@ -240,10 +225,6 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             }
         };
 
-        this.pauseO = function(){
-            self.ssePaused = true;
-        };
-
         this.pause = function(){
             if(self.ths_source){
                 self.ths_source.close();
@@ -252,9 +233,6 @@ __BORA_REGISTER_SERVICE__('realtime.sse', function(scope){
             self.ssePaused = true;
         };
 
-        this.resumeO = function(){
-            self.ssePaused = false;
-        };
 
         this.resume = function(){
             if(!self.ssePaused) return;

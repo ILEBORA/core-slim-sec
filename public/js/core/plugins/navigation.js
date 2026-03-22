@@ -1,6 +1,6 @@
-__BORA_REGISTER_PLUGIN__('Navigation', function(scope){
+__BORA_REGISTER_PLUGIN__('navigation.plugin', async function(scope){
 
-    const navigation = scope.getService('navigation');
+    const navigation = await scope.getService('navigation');
 
     return {
         go: navigation.go,

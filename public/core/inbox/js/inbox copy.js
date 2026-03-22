@@ -1,11 +1,11 @@
 __BORA_REGISTER_PLUGIN__(
 'Inbox',
-function(scope){
+async function(scope){
 
-    const hooks      = scope.getService('hooks');
-    const callbora   = scope.getService('callbora');
-    const navigation = scope.getService('navigation');
-    const appInboxComposer = scope.getPlugin('InboxComposer');
+    const hooks      = await scope.getService('hooks');
+    const callbora   = await scope.getService('callbora');
+    const navigation = await scope.getService('navigation');
+    const appInboxComposer = await scope.getPlugin('InboxComposer');
 
     let threadId = null;
     let mounted  = false;
@@ -459,9 +459,9 @@ function(scope){
 
     function bindScroll() {
         const container = document.querySelector('.messages-cont');
-
+        
         container.addEventListener('scroll', () => {
-            console.log(container.scrollTop);
+            // console.log(container.scrollTop);
             if (container.scrollTop < 50) {
                 loadPreviousMessages();
             }

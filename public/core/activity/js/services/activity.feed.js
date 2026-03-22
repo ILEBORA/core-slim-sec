@@ -1,6 +1,6 @@
-__BORA_REGISTER_SERVICE__('activity.feed', function(scope){
+__BORA_REGISTER_SERVICE__('activity.feed', async function(scope){
 
-    const http = scope.getService('http') || $;
+    // const http = await scope.getService('http') || $;
 
     let since   = null;
     let loading = false;

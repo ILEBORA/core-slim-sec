@@ -1,6 +1,6 @@
-__BORA_REGISTER_SERVICE__('uiElementDismiss', function(scope){
+__BORA_REGISTER_SERVICE__('uiElementDismiss', async function(scope){
 
-    const dismissable = scope.getService('uiDismissable');
+    const dismissable = await scope.getService('uiDismissable');
 
     function bind($el, openClass='open'){
 

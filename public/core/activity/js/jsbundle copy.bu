@@ -1,0 +1,25 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipeline;
+
+$pipeline = new AssetPipeline(__DIR__, 'js','activity');
+
+$pipeline
+    // Services first
+    ->add('services/activity.utils.js')
+    ->add('services/activity.feed.js')
+    
+
+    // Plugins second
+    ->add('plugins/activity.composer.js')
+    ->add('plugins/activity.feed.js')
+    ->add('plugins/activity.actions.js')
+    ->add('plugins/thread.js')
+    ->add('plugins/stories.js')
+
+    // optional extra UI logic
+    //->add('activity.js')
+
+    ->send();
