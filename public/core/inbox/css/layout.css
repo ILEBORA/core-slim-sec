@@ -5,6 +5,7 @@
     background: var(--bg-main, #f5f6f8);
     max-width: 75rem;
     margin: auto auto;
+    height: 700px;
     max-height: 600px;
 }
 
@@ -113,6 +114,7 @@
 
     .inbox-layout {
         position: relative;
+        height: 700px;
     }
 
     /* Panels stack */
