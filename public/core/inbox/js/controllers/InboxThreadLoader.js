@@ -57,9 +57,7 @@ class InboxThreadLoader{
         // this.realtime.subscribeThread(id);
 
         // this.load(threadId);
-        $(()=>{
-            this.ui.setActiveThread(threadId);
-        });
+  
     }
 
     load(threadId){

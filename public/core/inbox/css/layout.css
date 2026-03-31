@@ -3,7 +3,6 @@
     display: flex;
     height: calc(100dvh - var(--header-height));
     background: var(--bg-main, #f5f6f8);
-    overflow: hidden;
     max-width: 75rem;
     margin: auto auto;
     max-height: 600px;
