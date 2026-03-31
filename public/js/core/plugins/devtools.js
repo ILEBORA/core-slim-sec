@@ -76,6 +76,7 @@ __BORA_REGISTER_PLUGIN__('DevTools', async function(scope){
 
     async function renderPerf(){
 
+        const runtime  = scope.runtimeInstance;
         const timings = runtime.__timings || new Map();
 
         if(!timings.size){
@@ -144,11 +145,12 @@ __BORA_REGISTER_PLUGIN__('DevTools', async function(scope){
 
     async function renderSystem(){
 
-        const data = await devtools.inspect();
+        const devtools = await scope.getService('devtools');
+        const data = await devtools?.inspect();
 
         return `
-            <div><b>Services:</b> ${data.services.length}</div>
-            <div><b>Plugins:</b> ${data.plugins.length}</div>
+            <div><b>Services:</b> ${data?.services.length}</div>
+            <div><b>Plugins:</b> ${data?.plugins.length}</div>
             <div style="margin-top:6px;">
                 <button data-dump>Dump State</button>
             </div>

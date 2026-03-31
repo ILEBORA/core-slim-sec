@@ -1,0 +1,10 @@
+{
+    "visit" : "Tembea",
+    "comment_added": "amechangia kwenye shughuli yako",
+    "view_activity": "Tazama Shughuli",
+    "email_footer_notice": "Unapokea ujumbe huu kwa sababu una akaunti",
+    "email_visit": "Tembelea tovuti",
+
+    "rights_reserved" : "Haki zote zimehifadhiwa.",
+    "build_notice" : "Built on <span style='font-weight:bold;''>BoraCore Slim</b> v{{core_version}} by <a href='https://ilebora.co.ke'>ILEBORA</a> "
+}

@@ -1,0 +1,73 @@
+<div class="container animated fadeIn">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Missing Translations (EN)</h2>
+
+        <div>
+            <select id="moduleSelect" class="form-select d-inline w-auto">
+                {% for mod in modules %}
+                    <option value="{{ mod }}" {{ mod == current_module ? 'selected' }}>
+                        {{ mod|capitalize }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button id="loadModule" class="btn btn-primary ms-2">
+                Load
+            </button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5>
+                Missing Keys 
+                <span class="badge bg-danger">{{ missing_count }}</span>
+            </h5>
+
+            <form id="missingForm">
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width:30%">Key</th>
+                            <th>EN Value</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for key, value in missing %}
+                            <tr>
+                                <td class="text-muted small">{{ key }}</td>
+                                <td>
+                                    <input 
+                                        type="text"
+                                        class="form-control"
+                                        name="translations[{{ key }}]"
+                                        value="{{ value }}"
+                                    >
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">
+                                    No missing translations 🎉
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if missing_count > 0 %}
+                    <button id="addAllMissing" class="btn btn-success">
+                        Add All to EN
+                    </button>
+                {% endif %}
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

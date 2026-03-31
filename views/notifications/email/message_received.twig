@@ -1,0 +1,9 @@
+<div style="font-family: Arial;">
+
+    <h3>{{ actor_name|default('Someone') }} sent you a message:</h3>
+
+    <p>{{ message|raw }}</p>
+
+    <a href="{{ url|default('#') }}">View Thread</a>
+
+</div>

@@ -7,6 +7,9 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
+    ->add('layout.css')
     ->add('people.css')
     ->add('person.css')
+    ->add('profile_tab.css')
+    ->add('filters.css')
     ->send();

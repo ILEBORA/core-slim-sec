@@ -1,0 +1,17 @@
+{# people/person/tabs/activity.twig #}
+
+<div class="activity-feed">
+
+    {% if activity is empty %}
+        <div class="empty-state">
+            No activity yet
+        </div>
+    {% else %}
+
+        {% for item in activity %}
+            {{ item.html|raw }}
+        {% endfor %}
+
+    {% endif %}
+
+</div>

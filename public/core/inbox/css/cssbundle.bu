@@ -12,7 +12,14 @@ $pipeline
     ->add('bubble.css')
     ->add('composer.css')
     ->add('realtime.css')
+    ->add('header.css')
     ->add('search.css')
-    ->add('theme.css')
+    ->add('groups.css')
+    
     ->add('thread-filters.css')
+    ->add('thread.css')
+    ->add('thread.css')
+
+    ->add('message.css')
+    ->add('theme.css')
     ->send();

@@ -24,6 +24,7 @@ return [
         'file'     => 'vendor/select2.js',
         'version'  => '4.1.0',
         'priority' => 3,
+        'preload'  => true,
     ],
 
     'colorpicker' => [
@@ -121,13 +122,20 @@ return [
     'preferences' => ['file' => 'services/preferences.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 42, 'requires' => ['runtime']],
     'sanity' => ['file' => 'services/sanity.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 43, 'requires' => ['runtime']],
     'pagecache' => ['file' => 'services/page-cache.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 44, 'requires' => ['runtime']],
+    'sound' => ['file' => 'services/sound.service.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 45, 'requires' => []],
 
     /* ==================================================
        core plugins (lazy)
     ================================================== */
 
-    'events' => ['file' => 'plugins/events.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 40, 'requires' => ['jquery', 'runtime']],
-    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin','version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events']],
+    'events' => [
+        'file' => 'plugins/events.js',
+        'type' => 'plugin',
+        'version' => '1.0.0',
+        'priority' => 40,
+        'requires' => ['jquery', 'runtime']
+    ],
+    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events']],
     'navigation.plugin' => ['file' => 'plugins/navigation.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 42],
     'alerts' => ['file' => 'plugins/alerts.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
     'devtools' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
@@ -143,6 +151,7 @@ return [
     'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63],
 
     'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core']],
+
 
     /* ==================================================
        app layer (lazy)

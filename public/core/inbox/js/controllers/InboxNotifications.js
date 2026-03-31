@@ -58,7 +58,7 @@ class InboxNotifications {
 
                 const n = new Notification(preview.title, {
                     body: preview.body,
-                    icon: '/assets/img/avatar-default.png', // optional
+                    icon: 'assets/images/icons/placeholder.png', // optional
                     tag: `thread-${data.thread_id}`, // 👈 prevents spam stacking
                     data: {
                         thread_id: data.thread_id

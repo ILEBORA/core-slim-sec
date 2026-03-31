@@ -1,0 +1,36 @@
+<div class="container thread-info-overview" data-thread="{{ thread.id }}">
+
+    <div class="thread-header text-center">
+
+        <div class="thread-avatar">
+            <img src="{{ thread.avatar }}" alt="{{ thread.title }}">
+        </div>
+
+        <h3 class="thread-title">{{ thread.title }}</h3>
+
+        {% if thread.description %}
+            <p class="thread-desc">{{ thread.description }}</p>
+        {% endif %}
+
+    </div>
+
+    <div class="thread-meta">
+
+        <div class="meta-row">
+            <span class="label">Participants</span>
+            <span class="value">{{ thread.participants_count }}</span>
+        </div>
+
+        <div class="meta-row">
+            <span class="label">Created</span>
+            <span class="value">{{ thread.created_at|date("M d, Y") }}</span>
+        </div>
+
+        <div class="meta-row">
+            <span class="label">Owner</span>
+            <span class="value">{{ thread.owner_name }}</span>
+        </div>
+
+    </div>
+
+</div>

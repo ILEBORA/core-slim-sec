@@ -40,7 +40,10 @@
             {% endif %}
 
             <div class="bubble-body">
-                {{ message.body }}
+                <div class="reply-author">
+                    {{ message.sender_name }}
+                </div>
+                {{ message.body|raw }}
             </div>
 
         {% endif %}
@@ -56,7 +59,7 @@
 
             {% if message.updated_at %}
                 <span class="edited-label">
-                    edited
+                    edited {{message.updated_at}}
                 </span>
             {% endif %}
 

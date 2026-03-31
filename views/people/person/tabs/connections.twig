@@ -1,0 +1,56 @@
+{# people/person/tabs/connections.twig #}
+
+<div class="connections-list">
+
+    {% if trees is not empty %}
+
+        <div class="connections-header">
+
+            <select data-tree-select>
+                <option value="">Select tree</option>
+
+                {% for tree in trees %}
+                    <option value="{{ tree.id }}">
+                        {{ tree.name }} ({{ tree.visibility }})
+                    </option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <button data-action="tree:open-full">
+            Open full tree →
+        </button>
+
+    {% elseif connections is not empty %}
+
+        {# 🔁 fallback (no tree module or no trees) #}
+        <div class="connections-fallback">
+
+            {% for item in connections %}
+                <div class="connection-item"
+                     data-person="{{ item.id }}"
+                     data-action="people:open">
+
+                    <img src="{{ item.avatar_url }}"
+                         class="avatar"
+                         loading="lazy">
+
+                    <div class="name">
+                        {{ item.name }}
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            No connections available
+        </div>
+
+    {% endif %}
+
+</div>

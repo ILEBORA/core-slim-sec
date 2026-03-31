@@ -2,7 +2,7 @@
 
     <div class="person-header">
         <div class="person-avatar">
-            <img src="{{ person.avatar ?: '/assets/images/icons/noavatar.png' }}" alt="">
+            <img class="userAvatar{{ user.id }} lazy" src="assets/images/icons/noavatar.png" data-src="{{user.avatar_url}}"  style="width:100%;height:250px;" />
         </div>
 
         <div class="person-meta">
@@ -19,8 +19,15 @@
             </div>
 
             <div class="person-actions">
-                {% if hasUser %}
-                    <button class="btn primary">Follow</button>
+                {% if hasUser and not person.is_deceased %}
+                    <button 
+                        class="btn primary follow-btn" 
+                        data-user-id="{{ person.user_id }}"
+                        data-following="{{ isFollowing ? 1 : 0 }}"
+                    >
+                        {{ isFollowing ? 'Following' : 'Follow' }}
+                    </button>
+
                     <button class="btn">Message</button>
                 {% endif %}
             </div>
@@ -63,3 +70,22 @@
     </div>
 
 </div>
+
+<script>
+$(document).on('click', '.follow-btn', function () {
+    const btn = $(this);
+    const userId = btn.data('user-id');
+
+    $.post('portal/follow/toggle', { user_id: userId }, function (res) {
+
+        if (res.status === 'followed') {
+            btn.text('Following');
+            btn.attr('data-following', 1);
+        } else {
+            btn.text('Follow');
+            btn.attr('data-following', 0);
+        }
+
+    });
+});
+</script>

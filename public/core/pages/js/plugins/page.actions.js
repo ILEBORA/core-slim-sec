@@ -1,11 +1,6 @@
-__BORA_REGISTER_PLUGIN__('pages.actions', async function(scope){
+__BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
     const hooks = await scope.getService('hooks');
-    
-
-
-
-    
 
     /* ---------------------------------------
        Internal helper
@@ -13,7 +8,7 @@ __BORA_REGISTER_PLUGIN__('pages.actions', async function(scope){
 
     async function open(config){
 
-        const popup = await scope.getService('popup');
+        const popup = await scope.getPlugin('popup');
         if(!popup) return;
 
         popup.open({
@@ -32,6 +27,10 @@ __BORA_REGISTER_PLUGIN__('pages.actions', async function(scope){
 
     function openPageEditor(id){
         open({ view:'edit', id, tab:'edit' });
+    }
+
+    function openDublicate(id){
+        open({ view:'dublicate', id, tab:'dublicate' });
     }
 
     function openMotherPageSettings(id){
@@ -66,7 +65,7 @@ __BORA_REGISTER_PLUGIN__('pages.actions', async function(scope){
        Hook Registration (CRITICAL)
     --------------------------------------- */
 
-    hooks.register('pages.action', function(action, id){
+    hooks.add('pages.action', function(action, id){
 
         switch(action){
 

@@ -1,0 +1,56 @@
+<div class="container people-page">
+
+    <h1>People</h1>
+
+    <form class="people-search" method="get" action="portal/people/search">
+        <input type="text" name="q" placeholder="Search people..." />
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="view-toggle">
+        <button data-view="grid">Grid</button>
+        <button data-view="list">List</button>
+    </div>
+
+    <script>
+        $('.view-toggle button').on('click', function(){
+            const view = $(this).data('view');
+            $('.people-grid')
+                .toggleClass('list-view', view === 'list');
+        });
+    </script>
+    <div class="people-grid">
+
+    {% for person in people %}
+        <a class="person-card" href="portal/person/{{ person.id }}">
+
+            <div class="avatar">
+                <img src="{{ person.avatar ?: 'assets/images/icons/noavatar.png' }}">
+            </div>
+
+            <div class="person-name">
+                {{ person.first_name }} {{ person.last_name }}
+            </div>
+
+            <div class="person-tags">
+                {% if person.is_placeholder %}
+                    <span class="tag">Placeholder</span>
+                {% endif %}
+
+                {% if person.is_deceased %}
+                    <span class="tag deceased">†</span>
+                {% endif %}
+            </div>
+
+            {% if person.user_id %}
+                <span class="follow-indicator">
+                    {{ person.is_following ? 'Following' : '' }}
+                </span>
+            {% endif %}
+
+        </a>
+    {% endfor %}
+
+    </div>
+
+</div>

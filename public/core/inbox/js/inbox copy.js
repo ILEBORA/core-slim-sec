@@ -5,7 +5,7 @@ async function(scope){
     const hooks      = await scope.getService('hooks');
     const callbora   = await scope.getService('callbora');
     const navigation = await scope.getService('navigation');
-    const appInboxComposer = await scope.getPlugin('InboxComposer');
+    const appInboxComposer = await scope.getPlugin('inbox.composer');
 
     let threadId = null;
     let mounted  = false;

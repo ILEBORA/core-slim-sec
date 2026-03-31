@@ -1,12 +1,41 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'pwa');
+$pipeline = new AssetPipelineJs('pwa', __DIR__);
 
-$pipeline
-    ->add('script.js')
-    //->add('pwa-launch.js')
-    ->send();
+$pipeline->register('pwa.service', [
+    'file'     => 'services/PwaService.js',
+    'type'     => 'lib',
+    'priority' => 100,
+]);
+
+$pipeline->register('pwa.install', [
+    'file'     => 'plugins/pwa.install.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 110,
+    'requires' => ['pwa.service'],
+]);
+
+$pipeline->register('pwa.ios', [
+    'file'     => 'plugins/pwa.ios.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 111,
+    'requires' => ['pwa.service'],
+]);
+
+$pipeline->register('pwa.plugin', [
+    'file'     => 'plugins/pwa.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 200,
+    'requires' => [
+        'pwa.service',
+        'pwa.install',
+        'pwa.ios'
+    ],
+]);
+
+$pipeline->compile();

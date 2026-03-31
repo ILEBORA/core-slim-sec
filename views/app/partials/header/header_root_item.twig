@@ -4,7 +4,7 @@
        {% if item.icon %}
        <i class="{{ item.icon }}"></i>
        {% endif %}
-       {{ item.title }}
+       {{ __t(item.menu_key,null,item.title) }}
    </a>
    <i id="menu_loading_{{ item.id }}" class="menu_loading"></i>
 </li>

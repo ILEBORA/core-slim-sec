@@ -1,0 +1,24 @@
+<a class="person-card {{ not person.user_id or person.is_deceased ? 'muted' }}" 
+   href="portal/person/{{ person.id }}">
+
+    <div class="avatar">
+        <img src="{{ person.avatar_url }}">
+    </div>
+
+    <div class="person-name">
+        {{ person.full_name }}
+    </div>
+
+    <div class="person-tags">
+
+        {% if not person.user_id %}
+            <span class="tag">Node</span>
+        {% endif %}
+
+        {% if person.is_deceased %}
+            <span class="tag deceased">†</span>
+        {% endif %}
+
+    </div>
+
+</a>

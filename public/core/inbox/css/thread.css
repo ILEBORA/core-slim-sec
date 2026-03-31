@@ -1,3 +1,7 @@
+.thread-info-overview{
+    padding-top: 10px;
+}
+
 .thread-view {
     display: flex;
     flex-direction: column;
@@ -51,6 +55,11 @@
     background: #d1d5db;
     position: relative;
     flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.thread-item .role {
+    font-size: smaller;
 }
 
 .thread-item .status-dot {
@@ -97,4 +106,62 @@
     color: #fff;
     font-size: 11px;
     margin-bottom: 4px;
+}
+
+/* PARTICIPANTS List */
+.participants-actions {
+    margin-bottom: 12px;
+}
+
+.participants-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.participant-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+    column-gap: 10px;
+}
+
+.participant-item.bot {
+    opacity: 0.95;
+}
+
+
+.participant-item.bot .name::after {
+    content: " 🤖";
+    font-size: 12px;
+}
+
+.badge.bot {
+    background: #6c5ce7;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 6px;
+}
+
+/* SETTINGS */
+/* Section blocks */
+.settings-section,
+.meta-row {
+    margin-bottom: 16px;
+}
+.danger-zone{
+    background-color: #f9c5c5;
+    border: 2px #f9c5c5 solid;
+}
+
+
+/* COMPOSER */
+.group-title{
+    font-size: small;
+    font-weight: bold;
+    background: #f1eeee;
 }

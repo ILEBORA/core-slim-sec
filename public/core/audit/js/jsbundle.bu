@@ -1,11 +1,23 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'audit');
+$pipeline = new AssetPipelineJs('audit', __DIR__);
 
-$pipeline
-    ->add('script.js')
-    ->send();
+
+
+$pipeline->register('audit.plugin', [
+    'file'     => 'plugins/audit.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 101,
+    'requires' => ['audit.actions'],
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

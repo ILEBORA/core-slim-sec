@@ -31,6 +31,8 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
     async function closeActive(){
         // const popupCore = await app?.plugin?.('popup');
         // popupCore?.activePopup?.close();
+        popupCore.setActive(null);
+        
         await uiStack?.closeTop();
     }
 
@@ -89,7 +91,11 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
             container.classList.add('diag-' + size);
         }
 
-        if (finalUrl){
+        if (tabs && tabs.length){
+            // Skip initial view load
+            popup.open('<div id="tabContentArea"></div>', callback);
+        }
+        else if (finalUrl){
             popup.open(finalUrl, callback);
         }
         else if (html){
@@ -102,10 +108,39 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
         return popup;
     }
 
+    async function openPopupSmart({ key, id, tab, factory }) {
+
+        const active = popupCore.getActive();
+
+        // Helper: ensure popup is still alive
+        const isAlive = (p) => p && p.$popup && p.$popup.length;
+
+        if (
+            isAlive(active) &&
+            active._key === key &&
+            active._id === id
+        ){
+            active.goToTab(tab);
+            return active;
+        }
+
+        const config = factory(id);
+        config.activeTab = tab;
+
+        const instance = await open(config);
+
+        // Attach identity
+        instance._key = key;
+        instance._id = id;
+
+        return instance;
+    }
+    
     return {
         open,
         closeActive,
         buildFormUrl,
-        buildViewUrl
+        buildViewUrl,
+        openPopupSmart
     };
 });

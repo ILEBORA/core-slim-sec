@@ -25,16 +25,20 @@
 
 <script>
 $(function() {
-  // countdown
-  let secs = parseInt($('#mfa_timer').text());
-  const timer = setInterval(() => {
-    if (--secs <= 0) {
-      clearInterval(timer);
-      $('#mfa_timer').text('expired');
-    } else {
-      $('#mfa_timer').text(secs);
-    }
-  }, 1000);
+      let secs = parseInt($('#mfa_timer').text());
+      const timer = setInterval(() => {
+          if (--secs <= 0) {
+              clearInterval(timer);
+              $('#mfa_timer').text('expired');
+
+              // Redirect to home
+              window.location.href = '/';
+          } else {
+              $('#mfa_timer').text(secs);
+          }
+          
+      }, 1000);
+  });
 
   // form submission
   $('#mfa_form').on('submit', function(e) {

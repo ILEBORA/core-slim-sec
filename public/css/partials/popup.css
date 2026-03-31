@@ -178,7 +178,7 @@
     margin-right:1px;
     line-height:50px;
     text-decoration:none;
-    color:var(--popup-menu-color, #fff);
+    color:var(--popup-menu-color, #fff) !important;
     cursor:pointer;
     text-align:center;
     border-radius: 0;
@@ -187,7 +187,7 @@
 .chat_hd li a.active{
     border-radius: 0;
     background:#fff;
-    color:#0099CC;
+    color:var(--popup-menu-active-color, #0099CC) !important;
 }
 
 .popup-loader {

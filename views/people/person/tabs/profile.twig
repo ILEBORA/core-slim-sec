@@ -1,0 +1,74 @@
+{# people/person/profile.twig #}
+
+<div class="person-profile">
+
+    {# ===============================
+       AVATAR
+    =============================== #}
+    <div class="profile-avatar">
+        <img src="{{ person.avatar_url }}"
+             alt="{{ person.name }}"
+             loading="lazy">
+    </div>
+
+    {# ===============================
+       BASIC INFO
+    =============================== #}
+    <div class="profile-main">
+
+        <h2 class="profile-name">
+            {{ person.name }}
+        </h2>
+
+        {% if person.bio %}
+            <p class="profile-bio">
+                {{ person.bio }}
+            </p>
+        {% endif %}
+
+    </div>
+
+    {# ===============================
+       META / DETAILS
+    =============================== #}
+    <div class="profile-meta">
+
+        {% if person.email %}
+            <div class="meta-item">
+                <span class="label">Email:</span>
+                <span class="value">{{ person.email }}</span>
+            </div>
+        {% endif %}
+
+        {% if person.phone %}
+            <div class="meta-item">
+                <span class="label">Phone:</span>
+                <span class="value">{{ person.phone }}</span>
+            </div>
+        {% endif %}
+
+        {% if person.location %}
+            <div class="meta-item">
+                <span class="label">Location:</span>
+                <span class="value">{{ person.location }}</span>
+            </div>
+        {% endif %}
+
+    </div>
+
+    {# ===============================
+       QUICK ACTIONS (OPTIONAL)
+    =============================== #}
+    <div class="profile-actions">
+
+        {% if person.user_id %}
+            <button class="btn-follow"
+                    data-action="people:follow"
+                    data-person="{{ person.id }}">
+                {{ person.is_following ? 'Following' : 'Follow' }}
+            </button>
+        {% endif %}
+
+    </div>
+
+</div>

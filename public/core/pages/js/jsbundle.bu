@@ -1,11 +1,31 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'pages');
+$pipeline = new AssetPipelineJs('pages', __DIR__);
 
-$pipeline
-    ->add('script.js')
-    ->send();
+/* ==================================================
+   HELPERS
+================================================== */
+
+$pipeline->register('page.actions', [
+    'file'     => 'plugins/page.actions.js',
+    'type'     => 'plugin',
+    'priority' => 100,
+]);
+
+$pipeline->register('pages.plugin', [
+    'file'     => 'plugins/pages.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 101,
+    'requires' => ['page.actions'],
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

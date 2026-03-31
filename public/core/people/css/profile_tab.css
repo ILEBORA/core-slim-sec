@@ -1,0 +1,8 @@
+.profile-avatar{
+    width: 140px;
+    height: 140px;
+
+    object-fit: cover;
+    border-radius: 10px;
+    background: #f3f4f6;
+}

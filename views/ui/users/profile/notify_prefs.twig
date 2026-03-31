@@ -1,51 +1,91 @@
 <div class="inf_block">
-    <div class="inf_title">Notification Preferences 
-        <a title="Edit" class="edit_link " onclick="return false;" style="display:none;"></a>
+    <div class="inf_title">
+        Notification Preferences 
+        <a title="Edit" class="edit_link" onclick="return false;" style="display:none;"></a>
     </div>
+
     <br clear="left">
+
     <div class="inf_cont shdw">
         <div class="roundedge info_box" align="center">    
+
             <div class="inf_desc">
-                Please choose items you wish to be notified about...
+                Please choose how you wish to be notified...
             </div>          
+
             <table id="spm" width="100%" border="0" cellpadding="0" cellspacing="0">
             <tbody>
 
-            {% if items is empty %}
+            {% if groups is empty %}
                 <tr>
                     <td colspan="3" align="center" style="padding: 15px; opacity: 0.7;">
-                        No items available to subscribe for notifications.
+                        No notification preferences available.
                     </td>
                 </tr>
             {% else %}
-                {% for item in items %}
-                    <tr style="border: none;">
 
-                        <td align="center" style="width:20%;">
-                            <span id="lable">
-                                <input 
-                                    type="checkbox"
-                                    checked
-                                    data-role="status"
-                                    data-id="{{ item.id }}"
-                                    onchange="appUI.notify.updateStt(this)"
-                                >
-                            </span>
-                        </td>
+                {% for group, items in groups %}
 
-                        <td align="left" valign="middle">
-                            <span id="lable">{{ item.content|raw }}</span>
+                    <!-- GROUP HEADER -->
+                    <tr>
+                        <td colspan="3" style="padding:10px 5px; font-weight:600; opacity:0.8;">
+                            {{ group|capitalize }}
                         </td>
-                        
-                        <td width="25"></td>
                     </tr>
+
+                    {% for item in items %}
+                        <tr style="border:none;">
+
+                            <!-- CHANNEL CHECKBOXES -->
+                            <td align="center" style="width:30%;">
+                                {% for ch in item.channels %}
+                                    <label style="display:block; font-size:12px; margin-bottom:4px;">
+                                        <input 
+                                            type="checkbox"
+                                            data-role="notify-pref"
+                                            data-type="{{ item.type }}"
+                                            data-channel="{{ ch.channel }}"
+                                            {{ ch.enabled ? 'checked' : '' }}
+                                            onchange="updatePref(this)"
+                                        >
+                                        {{ ch.channel|capitalize }}
+                                    </label>
+                                {% endfor %}
+                            </td>
+
+                            <!-- LABEL -->
+                            <td align="left" valign="middle">
+                                <span id="lable">{{ item.label }}</span>
+                            </td>
+
+                            <td width="25"></td>
+                        </tr>
+                    {% endfor %}
+
                 {% endfor %}
+
             {% endif %}
             
-            </tbody></table>
+            </tbody>
+            </table>
+
             <br clear="all">
         </div>
     </div>
 
     <br clear="all">
 </div>
+
+<script>
+function updatePref(el) {
+    const type    = el.dataset.type;
+    const channel = el.dataset.channel;
+    const enabled = el.checked ? 1 : 0;
+
+    $.post('api/modules/notifications/update-preference', {
+        type,
+        channel,
+        enabled
+    });
+}
+</script>

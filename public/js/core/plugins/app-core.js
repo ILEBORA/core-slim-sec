@@ -84,12 +84,17 @@ __BORA_REGISTER_PLUGIN__(
 
             try{
 
-                if(typeof globalThis.acs === 'string' && acs.trim()){
-                    state.appPerms = JSON.parse(atob(acs));
-                }
+                // if(typeof globalThis.acs === 'string' && acs.trim()){
+                    state.appPerms = JSON.parse(rd('current_permissions'));
+                // }
 
-                if(typeof globalThis.acsr === 'string' && acsr.trim()){
-                    state.curRole = JSON.parse(atob(acsr));
+                // if(typeof globalThis.acsr === 'string' && acsr.trim()){
+                    state.curRole = rd('current_role');
+                // }
+                if(config.dev){
+                    console.log('PERMS::',state.appPerms);
+                    console.log('ROLE::',state.curRole);
+                    // alert('Perms');
                 }
 
             }catch(e){
@@ -98,6 +103,7 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function hasPermission(perm, sub){
+            console.log('PERMS::',state.appPerms);
             return state.appPerms?.[state.curRole]?.[perm]?.[sub] === true;
         }
 

@@ -21,9 +21,13 @@ class InboxUI {
 
         //
         this.loading = false;
+
+        this.lastSound = 0;
+
+        
     }
 
-    bind(){
+    async bind(){
 
         if(this.bound) return;
         this.bound = true;
@@ -34,13 +38,33 @@ class InboxUI {
             .on('click.inbox','.thread-item',this.handleThreadClick)
             .on('click.inbox','.back-btn',this.handleBack)
             .on('click.inbox','.fab-new-thread',this.handleNewThread)
+            .on('click.inbox','.new-thread-btn',this.handleNewThread)
             .on('keydown.inbox',this.handleKeyNav);
 
         console.log('[InboxUI] bound');
 
         this.bindThreadSearch();
+        
+        this.scope.on('inbox.thread.read', ({threadId}) => {
 
-            
+            new CallBora(`api/modules/inbox/mark-read/${threadId}`)
+                .setMethod("POST")
+                .setCallback(res => {
+                    if(!res.success) return;
+
+                    // Option A: optimistic UI
+                    this.clearThreadBadge(threadId);
+
+                    // Option B: wait for server push (better)
+                })
+                .build();
+        });
+
+        const composer = await this.scope.getPlugin('inbox.composer');
+        this.scope.on('chat.new', function(){
+            composer?.init?.();
+            composer?.open?.();
+        });
     }
 
     unbind(){
@@ -119,6 +143,8 @@ class InboxUI {
         }
 
         this.setActiveThread(threadId);
+
+        this.clearThreadBadge(threadId);
     }
 
     bumpThread(threadId){
@@ -204,12 +230,24 @@ class InboxUI {
 
     }
 
+    async updateUnreadBadge(count){
+        const state = await scope.getService('state');
+        state.set('ui.inbox.count', count);
+    }
+
+    
+
     /* =========================
        MESSAGES
     ========================= */
-
     appendMessage(msg){
-        console.log('APPEND MESSAGE::',msg);
+        console.log('APPEND MESSAGE::'+this.getActiveThread() + ':: msgThreadId' + msg.thread_id, msg);
+        // alert(this.getActiveThread());
+        // CRITICAL: ignore messages not for active thread
+        if(msg.thread_id !== this.threadId){
+            return;
+        }
+
         if(document.querySelector(
             `[data-message-id="${msg.id}"]`
         )){
@@ -218,20 +256,174 @@ class InboxUI {
 
         msg.html = atob(msg.html);
 
-        this.cache.messages
-            ?.insertAdjacentHTML('beforeend', msg.html);
+        const isBot = msg.sender_type === 'bot';
+
+        // 🎯 Smart delay
+        // let delay = 0;
+
+        // if(isBot){
+        //     // Bots feel more "human" with delay
+        //     delay = Math.random() * 400 + 200; // 200–600ms
+        //     this.showTyping();
+        // }else{
+        //     delay = 50; // near instant for user
+        // }
+
+        // setTimeout(() => {
+            this._renderMessage(msg, {isBot});
+        // }, delay);
+        console.warn('here');
+
+    }
+
+    // appendMessageO(msg){
+    //     console.log('APPEND MESSAGE::',msg);
+
+    //     // CRITICAL: ignore messages not for active thread
+    //     if(msg.thread_id !== this.threadId){
+            
+    //         return;
+    //     }
+
+    //     if(document.querySelector(
+    //         `[data-message-id="${msg.id}"]`
+    //     )){
+    //         return;
+    //     }
+
+    //     msg.html = atob(msg.html);
+
+    //     // this.cache.messages
+    //         // ?.insertAdjacentHTML('beforeend', msg.html);
+        
+    //     // document.querySelector('.messages')
+    //         // ?.insertAdjacentHTML('beforeend', msg.html);
+
+    //     // this.scrollBottom();
+    //     // ⏳ Small artificial delay (100–300ms)
+    //     const delay = Math.random() * 200 + 100;
+
+    //     setTimeout(() => {
+    //         this._renderMessage(msg);
+    //     }, delay);
+
+    // }
+
+    _renderMessage(msg, {isBot = false} = {}){
+
+        const container = document.querySelector('.messages');
+        if(!container) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = msg.html;
+
+        const el = wrapper.firstElementChild;
+
+        if(el){
+            // 🎬 Base animation class
+            el.classList.add('msg-enter');
+
+            // 🎯 Different feel for bot vs user
+            if(isBot){
+                el.classList.add('msg-bot-enter');
+            }else{
+                el.classList.add('msg-user-enter');
+            }
+
+            el.classList.add('msg-highlight');
+
+            setTimeout(()=>{
+                el.classList.remove('msg-highlight');
+            }, 600);
+
+            container.appendChild(el);
+
+            // force reflow
+            el.offsetHeight;
+
+            // 🎬 activate animation
+            el.classList.add('msg-enter-active');
+        }
+
+        // 🎯 stop typing AFTER render
+        if(isBot){
+            this.hideTyping();
+        }
+
+        // 🔊 play sound AFTER visible
+        this.playMessageSound();
+
+        this.scrollBottomSmooth();
+    }
+
+    _renderMessageO(msg){
+
+        const container = document.querySelector('.messages');
+        if(!container) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = msg.html;
+
+        const el = wrapper.firstElementChild;
+
+        // 🎬 Initial state (hidden)
+        el.classList.add('msg-enter');
+
+        container.appendChild(el);
+
+        // force reflow
+        el.offsetHeight;
+
+        // 🎬 animate in
+        el.classList.add('msg-enter-active');
 
         this.scrollBottom();
     }
 
+    updateMessageStatus(messageId, status){
+
+        const msg = document.querySelector(
+            `[data-message-id="${messageId}"]`
+        );
+
+        if(!msg) return;
+
+        msg.dataset.status = status;
+
+        // optional: update ticks UI
+        const statusEl = msg.querySelector('.msg-status');
+
+        if(statusEl){
+            statusEl.className = `msg-status ${status}`;
+        }
+    }
+
     scrollBottom(){
 
-        const c = this.cache.messagesCont;
+        // const c = this.cache.messagesCont;
 
-        if(c){
-            c.scrollTop = c.scrollHeight + 40;
-        }
+        // if(c){
+        //     c.scrollTop = c.scrollHeight + 40;
+        // }
+
+        const c = this.cache.messagesCont;
+        if(!c) return;
+
+        c.scrollTo({
+            top: c.scrollHeight,
+            behavior: 'smooth'
+        });
         
+    }
+
+    scrollBottomSmooth(){
+        const c = this.cache.messagesCont;
+        if(!c) return;
+
+        c.scrollTo({
+            top: c.scrollHeight,
+            behavior: 'smooth'
+        });
     }
 
     bindScroll() {
@@ -256,7 +448,7 @@ class InboxUI {
     loadPreviousMessages(){
         
         const beforeId = this.getOldestMessageId();
-        console.log('load previous:: ' + this.getOldestMessageId());
+        // console.log('load previous:: ' + this.getOldestMessageId());
         if(!beforeId) return;
 
         if(this.loading) return;
@@ -307,15 +499,21 @@ class InboxUI {
     ========================= */
 
     showTyping(){
+        if(this.typingVisible) return;
 
-        this.cache.typing
-            ?.removeAttribute('hidden');
+        this.typingVisible = true;
+
+        this.cache.typing?.removeAttribute('hidden');
     }
 
     hideTyping(){
+        this.typingVisible = false;
 
-        this.cache.typing
-            ?.setAttribute('hidden', true);
+        setTimeout(()=>{
+            if(!this.typingVisible){
+                this.cache.typing?.setAttribute('hidden', true);
+            }
+        }, 200); // prevents flicker
     }
 
     /* =========================
@@ -328,6 +526,16 @@ class InboxUI {
             ?.setAttribute('data-view', view);
 
         this.refreshCache();
+        //Mount Chat composer
+        if(view == 'list'){
+            // $('.thred_context_menu').hide();
+            // $('.thread-info').hide();
+            this.scope.emit('inbox.view.list');
+        }else{
+            // $('.thred_context_menu').show();
+            // $('.thread-info').show();
+            this.scope.emit('inbox.view.thread');
+        }
     }
 
     //
@@ -373,6 +581,9 @@ class InboxUI {
 
         this.setThreadSelected(id);
 
+        // mark as read
+        this.scope.emit('inbox.thread.read', {threadId: id});
+
         this.scope.emit('inbox.thread.open', {threadId:id});
     }
 
@@ -384,12 +595,12 @@ class InboxUI {
         history.pushState({},'',`portal/inbox`);
     }
 
-    handleNewThread(){
+    async handleNewThread(){
+        this.scope.emit('chat.new');
+        // const composer = await this.scope.getPlugin('inbox.composer');
 
-        const composer = this.scope.getPlugin('InboxComposer');
-
-        composer?.mount?.();
-        composer?.open?.();
+        // composer?.init?.();
+        // composer?.open?.();
     }
 
     handleKeyNav(e){
@@ -440,7 +651,6 @@ class InboxUI {
 
     }
     
-
     searchParticipants(query){
         callbora
             .get(`api/modules/inbox/participants?q=${encodeURIComponent(query)}`)
@@ -448,6 +658,14 @@ class InboxUI {
                 this.renderParticipants(res.data);
             });
 
+    }
+    
+    async playMessageSound(){
+        const sound = await this.scope.getService('sound');
+        const now = Date.now();
+        if(now - this.lastSound < 800) return; // debounce
+        this.lastSound = now;
+        sound.play('message');
     }
 
 }

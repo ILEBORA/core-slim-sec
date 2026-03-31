@@ -1,0 +1,49 @@
+<div class="container thread-settings" data-thread="{{ thread.id }}">
+
+    {% if permissions.is_owner %}
+        <div class="settings-section">
+
+            <h4>Thread Settings</h4>
+
+            <div class="form-group">
+                <label>Thread Name</label>
+                <input type="text"
+                       value="{{ thread.title }}"
+                       data-action="thread.rename"
+                       data-id="{{ thread.id }}">
+            </div>
+
+        </div>
+    {% endif %}
+
+    {% if permissions.can_invite %}
+        <div class="settings-section">
+            <button class="btn"
+                    data-action="thread.invite"
+                    data-id="{{ thread.id }}">
+                Add Participants
+            </button>
+        </div>
+    {% endif %}
+
+    <div class="settings-section danger-zone">
+
+        {% if not permissions.is_owner %}
+            <button class="btn danger"
+                    data-action="thread.leave"
+                    data-id="{{ thread.id }}">
+                Leave Thread
+            </button>
+        {% endif %}
+
+        {% if permissions.is_owner %}
+            <button class="btn danger"
+                    data-action="thread.delete"
+                    data-id="{{ thread.id }}">
+                Delete Thread
+            </button>
+        {% endif %}
+
+    </div>
+
+</div>

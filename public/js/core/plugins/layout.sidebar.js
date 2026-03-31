@@ -90,7 +90,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
         scope.on('page.loaded', handlePageLoaded);
         // alert(window.location);
         // Also handle initial load
-        highlightMenu(window.location);
+        // highlightMenu(window.location);
         
 
         document.addEventListener('change', async function(e){
@@ -106,7 +106,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
             await menu.refresh(face);
 
             // After menu reload, highlight current route again
-            // const cleanRoute = await __BORA_APP__.service('router').clean();
+            // const cleanRoute = await scope.service('router').clean();
+            // alert(cleanRoute);
             highlightMenu();
             
         });
@@ -220,6 +221,10 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
             }
 
         });
+
+        scope.on('page.loaded', async (url) => {
+            
+        });
     }
 
     function applyFace(face){
@@ -296,6 +301,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
 
         $('.features-list .active').removeClass('active');
         $(el).addClass('active loading');
+        $(el).find('.menu_loading').addClass('fa fa-spinner fa-spin');
 
         navigation.navigate(url)
             .finally(() => {
@@ -304,16 +310,25 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
     }
 
     function handleBeforeLoad(url){
-        window.history.pushState({ url }, '', url);
+        // window.history.pushState({ url }, '', url);
+        //  $('.features-item').removeClass('active');
+        $(`[data-url="${url}"]`).addClass('loading');
     }
 
     function handleAfterLoad(url){
         $('.features-item').removeClass('loading');
+
+        let el = $(`[data-url="${url}"`);
+        if (!el) return;
+        $(el).find('.menu_loading').removeClass('fa fa-spinner fa-spin');
     }
 
-    function handlePageLoaded(url){
+    function handlePageLoaded(ctx){
 
-        const current = normalizeUrl(url || window.location.location);
+        // const current = normalizeUrl(url || window.location);
+        const url = ctx?.url || window.location;
+        const current = normalizeUrl(url);
+
         // alert(url);
         $('.features-item').each(function(){
             const linkUrl = $(this).data('url');
@@ -324,7 +339,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
             }
         });
 
-        highlightMenu(url);
+        highlightMenu(current);
 
         closeSidebar();
 
@@ -333,7 +348,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
 
     function normalizeUrl(fullUrl){
         const base = window.__APP_BASE_PATH__ || '';
-
+        // alert(base);
+        // alert(window.location);
         if (!fullUrl) return '/';
 
         fullUrl = String(fullUrl);
@@ -373,9 +389,43 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
     //     });
     // }
 
+    function highlightMenuO(cleanRoute){
+
+        cleanRoute = normalizeUrl(cleanRoute || window.location);
+
+        const items = [...document.querySelectorAll('.features-item')];
+
+        let bestItem = null;
+        let bestLength = -1;
+
+        items.forEach(item => {
+
+            const dataUrl = (item.dataset.url || '').replace(/^\/|\/$/g,'');
+
+            if (!dataUrl) return;
+
+            if (
+                cleanRoute === dataUrl ||
+                cleanRoute.startsWith(dataUrl + '/')
+            ) {
+                if (dataUrl.length > bestLength) {
+                    bestLength = dataUrl.length;
+                    bestItem = item;
+                }
+            }
+        });
+
+        items.forEach(i => i.classList.remove('active'));
+        bestItem?.classList.add('active');
+
+        updateSidebar();
+    }
+
     function highlightMenu(cleanRoute){
+        
         $(function(){
-            cleanRoute = normalizeUrl(cleanRoute || window.location.location);
+            cleanRoute = normalizeUrl(cleanRoute || window.location);
+            // alert(cleanRoute);
             const items = [...document.querySelectorAll('.features-item')];
 
             let bestItem = null;

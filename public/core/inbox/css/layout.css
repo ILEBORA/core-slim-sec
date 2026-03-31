@@ -1,11 +1,12 @@
 /* Layout container */
 .inbox-layout {
     display: flex;
-    height: calc(100vh - var(--header-height,425px));
+    height: calc(100dvh - var(--header-height));
     background: var(--bg-main, #f5f6f8);
     overflow: hidden;
     max-width: 75rem;
     margin: auto auto;
+    max-height: 600px;
 }
 
 /* Sidebar */
@@ -35,7 +36,7 @@
 
 /* Floating Action Button */
 .fab-new-thread {
-    position: fixed;
+    position: absolute;
     right: 16px;
     bottom: 16px;
     width: 56px;
@@ -59,6 +60,13 @@
     display:none;
 }
 
+.thread_context_menu, .thread-info{
+    display: none;
+}
+
+.thread-header{
+    position: relative;
+}
 /* Desktop hide FAB */
 @media (min-width: 769px) {
     .fab-new-thread {
@@ -79,7 +87,7 @@
         display: none;
     }
      .fab-new-thread {
-        position: fixed;
+        position: absolute;
         right: 16px;
         bottom: 16px;
         width: 56px;
@@ -174,7 +182,7 @@
 
 /* Composer */
 .inbox-composer {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 200;
 }
@@ -230,7 +238,7 @@
 
 /* Composer */
 .inbox-composer {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 200;
 }

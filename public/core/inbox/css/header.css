@@ -1,0 +1,32 @@
+.inbox-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.inbox-header .new-thread-btn{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #2563eb; /* your blue */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.inbox-header .new-thread-btn:hover{
+    background: #1d4ed8;
+    transform: scale(1.05);
+}
+
+.inbox-header .new-thread-btn:active{
+    transform: scale(0.95);
+}

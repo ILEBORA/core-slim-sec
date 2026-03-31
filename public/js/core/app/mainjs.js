@@ -916,8 +916,8 @@ function updateCe(cE){
 	// console.log('this');
 }
 
-function rd(y){
-	return (typeof window.settings[y] === "undefined") ? '' : window.settings[y];
+function rd(y, d = ''){
+	return (typeof window.settings[y] === "undefined") ? d : window.settings[y];
 }
 	
 function st(y,v){

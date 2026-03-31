@@ -29,7 +29,8 @@ $pipeline->register('inbox.tests', [
 ================================================== */
 
 $pipeline->register('inbox.composer', [
-    'file'     => 'composer/InboxComposer.js',
+    'file'     => 'composer/inbox.composer.js',
+    'type'     => 'plugin',
     'priority' => 110,
     'requires' => ['inbox.helpers'],
 ]);
@@ -95,7 +96,7 @@ $pipeline->register('inbox.realtime', [
 ================================================== */
 
 $pipeline->register('inbox.api', [
-    'file'     => 'InboxAPI.js',
+    'file'     => 'controllers/InboxAPI.js',
     'type'     => 'lib',
     'priority' => 140,
     'requires' => [
@@ -105,12 +106,24 @@ $pipeline->register('inbox.api', [
     ],
 ]);
 
+//
+$pipeline->register('inbox.ui.interactions', [
+    'file'     => 'plugins/inbox.ui.interactions.js',
+    'type'     => 'plugin',
+    'priority' => 141,
+    // 'requires' => [
+    //     'inbox.helpers',
+    //     'inbox.threadloader',
+    //     'inbox.presence'
+    // ],
+]);
+
 /* ==================================================
    PLUGIN BOOTSTRAP (ENTRY POINT)
 ================================================== */
 
 $pipeline->register('inbox.plugin', [
-    'file'     => 'InboxPlugin.js',
+    'file'     => 'plugins/inbox.plugin.js',
     'type'     => 'plugin',
     'priority' => 200,
     'requires' => [

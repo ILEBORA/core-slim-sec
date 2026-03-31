@@ -1,11 +1,12 @@
 class InboxThreadLoader{
 
-    constructor(scope, callbora, ui, typing){
+    constructor(scope, callbora, ui, typing, realtime){
 
         this.scope  = scope;
         this.callbora = callbora;
         this.ui     = ui;
         this.typing = typing;
+        this.realtime = realtime
 
         // this.bindComposerSubmit(); // bind once
     }
@@ -42,9 +43,23 @@ class InboxThreadLoader{
 
         const threadId = match[1];
 
-        this.ui.setView('thread');
+        // this.ui.setThreadSelected(threadId);
 
-        this.load(threadId);
+        // mark as read
+        this.scope.emit('inbox.thread.read', {threadId: threadId});
+
+        this.ui.setThreadSelected(threadId);
+        this.scope.emit('inbox.thread.open', {threadId:threadId});
+
+        // this.ui.setView('thread');
+
+        // this.ui.setActiveThread(id);
+        // this.realtime.subscribeThread(id);
+
+        // this.load(threadId);
+        $(()=>{
+            this.ui.setActiveThread(threadId);
+        });
     }
 
     load(threadId){
@@ -69,6 +84,8 @@ class InboxThreadLoader{
 
             });
 
+            this.scope.emit('thread.participants.updated', {count:res.data.participants.length});
+
             this.ui.scrollBottom();
 
             this.typing.bind(threadId);
@@ -80,7 +97,7 @@ class InboxThreadLoader{
             history.pushState({}, '', `portal/inbox/show/${threadId}`);
             this.ui.bindScroll();
 
-
+            // this.ui.setActiveThread(threadId);
             //
             $('.composer').data('thread',threadId);
             
@@ -113,45 +130,12 @@ class InboxThreadLoader{
                 );
             }
 
-            // //Ajax Submit
-            // document.addEventListener('submit', function (e) {
-            //     const form = composer; //e.target.closest('.composer');
-            //     if (!form) return;
-
-            //     e.preventDefault();
-
-            //     const input = form.querySelector('input[name="body"]');
-            //     const body = input.value.trim();
-            //     if (!body) return;
-
-            //     fetch(form.action, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             'X-Requested-With': 'XMLHttpRequest'
-            //         },
-            //         body: JSON.stringify({ body })
-            //     })
-            //     .then(async r => {
-            //         const text = await r.text();
-            //         if (!text) throw new Error('Empty response');
-            //         return JSON.parse(text);
-            //     })
-            //     .then(res => {
-            //         if (!res.success) {
-            //             alert('Message failed to send');
-            //             return;
-            //         }
-            //         input.value = '';
-            //     })
-            //     .catch(err => {
-            //         console.error(err);
-            //         alert('Network error');
-            //     });
-            // });
+            let contextMenu = document.querySelector('.thread_context_menu');
+            if(contextMenu){
+                 contextMenu.setAttribute('data-context-id', threadId);
+            }
 
             this.ui.setView('thread');
-
         })
 
         .catch(err => {

@@ -1,0 +1,104 @@
+<div class="container animated fadeIn">
+
+    {# ============================= #}
+    {# HEADER                      #}
+    {# ============================= #}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Language Manager</h2>
+
+        <div>
+            <select id="moduleSelect" class="form-select d-inline w-auto">
+                {% for mod in modules %}
+                    <option value="{{ mod }}" {{ mod == current_module ? 'selected' }}>
+                        {{ mod|capitalize }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select id="langSelect" class="form-select d-inline w-auto ms-2">
+                {% for lang in languages %}
+                    <option value="{{ lang }}" {{ lang == current_lang ? 'selected' }}>
+                        {{ lang|upper }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button id="loadTranslations" class="btn btn-primary ms-2">
+                Load
+            </button>
+        </div>
+    </div>
+
+    {# ============================= #}
+    {# ACTIONS                     #}
+    {# ============================= #}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>Actions</h5>
+
+            <button id="syncTranslations" class="btn btn-warning">
+                <i class="fa fa-refresh"></i> Sync from JSON
+            </button>
+
+            <button id="saveTranslations" class="btn btn-success">
+                <i class="fa fa-save"></i> Save Changes
+            </button>
+        </div>
+    </div>
+
+    {# ============================= #}
+    {# TRANSLATIONS TABLE          #}
+    {# ============================= #}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5>Translations</h5>
+
+            <input type="text" id="search" class="form-control mb-3" placeholder="Search keys...">
+
+            <form id="translationsForm">
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width:30%">Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="translationsTable">
+
+                        {% for key, value in translations %}
+                            <tr>
+                                <td class="text-muted small">
+                                    {{ key }}
+                                </td>
+                                <td>
+                                    <input 
+                                        type="text"
+                                        class="form-control translation-input"
+                                        name="translations[{{ key }}]"
+                                        value="{{ value }}"
+                                    >
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">
+                                    No translations found.
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

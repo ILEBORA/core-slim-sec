@@ -1,0 +1,10 @@
+{
+    "visit" : "Visit",
+    "comment_added": "commented on your activity",
+    "view_activity": "View Activity",
+    "email_footer_notice": "You are receiving this because you have an account",
+    "email_visit": "Visit site",
+
+    "rights_reserved" : "All rights reserved.",
+    "build_notice" : "Built on <span style='font-weight:bold;''>BoraCore Slim</b> v{{core_version}} by <a href='https://ilebora.co.ke'>ILEBORA</a> "
+}

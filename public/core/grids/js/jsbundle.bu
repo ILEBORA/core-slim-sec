@@ -1,12 +1,23 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'grids');
+$pipeline = new AssetPipelineJs('grids', __DIR__);
 
-$pipeline
-    ->add('grids.js')
 
-    ->send();
+
+$pipeline->register('grids.plugin', [
+    'file'     => 'plugins/grids.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 101,
+    'requires' => [],
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

@@ -6,9 +6,13 @@ __BORA_REGISTER_SERVICE__(
         const router  = await scope.getService('router');
         const hooks   = await scope.getService('hooks');
         const meta    = await scope.getService('meta');
+        const uiStack = await scope.getService('uiStack');        
 
         const app     = window.__BORA_APP__;
+        let overlayTimer = null;
+        let overlayVisible = false;
         const overlay = () => app?.plugin?.('Overlay');
+        const alerts  = () => app?.plugin?.('alerts');
 
         let currentRoute = normalizeUrl(window.location);
         let currentXHR   = null;
@@ -186,6 +190,7 @@ __BORA_REGISTER_SERVICE__(
                     const percent = Math.round((e.loaded / e.total) * 100);
 
                     const ov = overlay();
+
                     if (ov && ov.setProgress){
                         ov.setProgress(percent);
                     }
@@ -224,7 +229,7 @@ __BORA_REGISTER_SERVICE__(
          * -------------------------------------------------- */
 
         async function go(url, options = {}){
-
+            
             if (!url) return Promise.resolve();
 
             const cleanUrl = normalize(url);
@@ -244,47 +249,94 @@ __BORA_REGISTER_SERVICE__(
             scope.emit('page.beforeLoad', cleanUrl);
 
             const ov = overlay();
-            ov?.show?.('Loading...', { progress: 5 });
+            // ov?.show?.('Loading...', { progress: 5 });
+            // delay showing overlay
+            overlayTimer = setTimeout(() => {
+                ov?.show?.('Loading...', { progress: 5 });
+                overlayVisible = true;
+            }, 120);
+
+            await new Promise(requestAnimationFrame);
 
             try {
 
                 const json = await fetchJson(cleanUrl);
 
-                if (!json.ok){
-                    throw new Error('Invalid response');
-                }
-
-                ov?.setProgress?.(90);
-
-                //TODO
-                if(!scope?.config.dev??false){ 
-                    // clearConsole();
-                }
-
-                renderPage(json);
-
-                currentRoute = cleanUrl;
-
-                if (!options.replace){
-                    history.pushState({ url: cleanUrl }, '', cleanUrl);
-                } else {
-                    history.replaceState({ url: cleanUrl }, '', cleanUrl);
-                }
-
-                state?.set?.('route', cleanUrl);
-
-                scope.emit('route:changed', cleanUrl);
-
-                ov?.setProgress?.(100);
-
-                scope.emit('page.afterLoad', cleanUrl, json);
-                scope.emit('page.loaded', cleanUrl);
-
+                const isValid = json?.ok === true || json?.success === true;
+                if (!isValid){
                 
+                    // alertBora?.notifyRich?({
+                    //     title: 'Permission',
+                    //     body: json.message,
+                    //     delay: 8,
+                    //     sound: true,
+                    //     onClick: () => {
+                    //         this.navigation.go(``);
+                    //     }
+                    // });
 
-                ov?.hide?.(true);
+                    alertBora.notifyRich({
+                        type: 'error',
+                        title: 'Permission Error',
+                        body: json.message,
+                        delay: 4,
+                        sound: true,
+                        onClick: () => {
+                            this.navigation.go(``);
+                        }
+                    });
 
-                return json;
+                    uiStack.closeTop();
+
+                    scope.emit('page.loadError', cleanUrl, json);
+
+                    // ov?.hide?.(true);
+                    if (overlayVisible) ov?.hide?.(true);
+
+                    return Promise.reject(json);
+                    // throw new Error('Invalid response');
+                }else{
+
+                    // ov?.setProgress?.(90);
+                    clearTimeout(overlayTimer);
+
+                    if (overlayVisible){
+                        ov?.setProgress?.(90);
+                    }
+
+                    //TODO
+                    if (!(scope?.config?.dev ?? false)) { 
+                        // clearConsole();
+                    }
+
+                    renderPage(json);
+
+                    currentRoute = cleanUrl;
+
+                    if (!options.replace){
+                        history.pushState({ url: cleanUrl }, '', cleanUrl);
+                    } else {
+                        history.replaceState({ url: cleanUrl }, '', cleanUrl);
+                    }
+
+                    state?.set?.('route', cleanUrl);
+
+                    scope.emit('route:changed', cleanUrl);
+
+                    if (overlayVisible){
+                        ov?.setProgress?.(100);
+                    }
+
+                    scope.emit('page.afterLoad', cleanUrl, json);
+                    scope.emit('page.loaded', cleanUrl);
+
+                    // ov?.hide?.(true);
+                    if (overlayVisible){
+                        ov?.hide?.(true);
+                    }
+
+                    return json;
+                }
 
             } catch (err){
 
@@ -293,7 +345,10 @@ __BORA_REGISTER_SERVICE__(
                 }
 
                 scope.emit('page.loadError', cleanUrl, err);
-                ov?.hide?.(true);
+                // ov?.hide?.(true);
+                if (overlayVisible){
+                    ov?.hide?.(true);
+                }
 
                 console.error('[Navigation error]', err);
                 throw err;
@@ -335,7 +390,7 @@ __BORA_REGISTER_SERVICE__(
 
         function highlight(cleanRoute){
             $(function(){
-                cleanRoute = normalizeUrl(cleanRoute || window.location.location);
+                cleanRoute = normalizeUrl(cleanRoute || window.location);
                 const items = [...document.querySelectorAll('.features-item')];
 
                 let bestItem = null;

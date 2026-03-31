@@ -1,29 +1,25 @@
 <div class="main_container container details_box">
 <div style="background: url(assets/images/icons/bck_wht.png) top left repeat;padding:3px;">
-<h1>Users Access Control </h1>
-
-
-    {{ edit_roles_button|raw }}
-    
-    
+<h1>{{__t('ui.title.user_access_control', null, 'Users Access Control')}} </h1>
+    {{ edit_roles_button|raw }}    
     <div>
 
     <table class="pm" width="100%">
         <tbody>
             <tr>
-                <td class="custom-lable" style="text-align:right;width:50px;">Role: </span></td>
+                <td class="custom-lable" style="text-align:right;width:50px;">{{__t('ui.label.role', null, 'Role')}}: </span></td>
                 <td style="text-align:left;">
                     <select id="roletype" name="roletype" class="custom-input" style="width:250px;" >
-                        <option value="blank">Select Role</option>
+                        <option value="blank">{{__t('ui.label.select_role', null, 'Select Role')}}</option>
                         {{ roletype_options|raw }}
                     </select>
                 </td>                
             </tr>
             <tr>
-                <td style="text-align:right;vertical-align: top;" text-align="right" class="custom-lable">Permissions: </span></td>
+                <td style="text-align:right;vertical-align: top;" text-align="right" class="custom-lable">{{__t('ui.label.permission', null, 'Permissions')}}: </span></td>
                 <td style="text-align:left;">
                     <select id="roleperm" name="roleperm" class="custom-input" style="width:250px;">
-                        <option value="blank">Select Permission</option>
+                        <option value="blank">{{__t('ui.label.select_permission', null, 'Select Permission')}}</option>
                     </select>
 
                     <ul id="permission_block" class="perm-list accordion"></ul>

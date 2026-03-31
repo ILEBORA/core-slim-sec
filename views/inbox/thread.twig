@@ -12,12 +12,13 @@
             <h4>{{ thread.title ?: thread.display_name }}</h4>
 
             <div class="participants-count">
-                {{ participants|length }} participants
+                <span data-bind="thread.participants">{{ participants|length }}</span> participants
             </div>
         </div>
 
         <div class="page-actions f-right">
             <button
+                class="thread_context_menu"
                 data-context-trigger
                 data-context-type="thread"
                 data-context-id="{{thread.id}}"
@@ -36,6 +37,7 @@
             {% if data_view == 'list' %}
                 <div class="empty-state">
                     Select a conversation
+                    <button class="start-chat-btn">Start a conversation</button>
                 </div>
             {% else %}
 

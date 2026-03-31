@@ -8,7 +8,10 @@
     =============================== #}
     <aside class="inbox-sidebar">
 
-        <h3>Inbox</h3>
+        <div class="inbox-header">
+            <span><h3>Inbox</h3></span>
+            <button class="new-thread-btn" title="New chat">+</button>
+        </div>
 
         <div class="thread-search">
             <input
@@ -51,7 +54,7 @@
                         </div>
 
                         <div class="preview">
-                            {{ thread.last_message_body|default('No messages yet') }}
+                            {{ thread.last_message_body|raw|default('No messages yet') }}
                         </div>
                     </div>
 
@@ -89,8 +92,8 @@
                     </p>
 
                     <button
-                        class="btn btn-primary"
-                        data-action="inbox:start">
+                        class="btn btn-primary start-btn"
+                        data-action="inbox:confirm-start">
                         Start a conversation
                     </button>
                 </div>
@@ -115,7 +118,7 @@
         class="fab-new-thread"
         aria-label="New conversation"
         title="New conversation"
-        data-action="inbox:start">
+        >
         +
     </button>
 

@@ -124,6 +124,7 @@ if (!function_exists('processDBRoutesO')) {
 if (!function_exists('processDBRoute')) {
     function processDBRoutes($router){
         $routes = getActiveRoutesFromDB(); 
+        // dieVal($routes);
         foreach ($routes as $route) {
             $class = $route['controller'];
             $method = $route['action'];
@@ -1475,19 +1476,20 @@ if(!function_exists('abort')){
 if (!function_exists('i18n_current_lang')) {
     function i18n_current_lang(): string
     {
+        $lang = 'en';
         // EARLY bootstrap (before myApp / ModManage)
-        if (!empty($_SESSION['siteprefs']['lang'])) {
-            return $_SESSION['siteprefs']['lang'];
+        if (isset($_SESSION['siteprefs'])) {
+            $prefs = unserialize($_SESSION['siteprefs']);
+            // jsonExit($prefs);
+            $lang = $prefs['language'];
         }
 
-        // LATE runtime (after app is ready)
-        // if (function_exists('myApp')) {
-        //     try {
-        //         return ModManage()->ui->manager->getSitePrefs()['lang'] ?? 'en';
-        //     } catch (\Throwable $e) {}
-        // }
+        if($prefs = \BoraSlim\Core\Modules\Ui\Controllers\Api\UserprefsController::all(true)){
+            // jsonExit($prefs);
+            $lang = getIfSet($prefs['language'],'en');
+        }
 
-        return 'en';
+        return $lang;
     }
 }
 
@@ -1499,13 +1501,13 @@ if(!function_exists('getTranslator')){
 }
 
 if(!function_exists('__t')){
-    function __t(string $key, ?string $lang = null): string
+    function __t(string $key, ?string $lang = null, ?string $default = null): string
     {
         $translator = I18nBootstrap::translator();
 
         $lang = i18n_current_lang();
 
-        return $translator->translate($key, $lang);
+        return $translator->translate($key, $lang, $default);
     }
 }
 
@@ -1517,7 +1519,12 @@ if (!function_exists('i18n_register_core')) {
         $loader     = I18nBootstrap::loader();
 
         $lang = i18n_current_lang();
-
+        // if($prefs = \BoraSlim\Core\Modules\Ui\Controllers\Api\UserprefsController::all(true)){
+        //     // jsonExit($prefs);
+        //     $lang = getIfSet($prefs['language'],'en');
+        // }
+        // jsonExit(unserialize($_SESSION['siteprefs']));
+        // dieVal($lang);
         // Always register merged EN
         $translator->register(
             $domain,
@@ -1562,9 +1569,11 @@ use BoraSlim\Core\Kernel\Modules\ModuleService;
 if (!function_exists('i18n_register_auto')) {
     function i18n_register_auto(ModuleService $service): void
     {
-        if ($service->isCore()) {
+        if ($service->isCore()) { 
+            // print_r($service->getDomain().'<br>');
             i18n_register_core($service->getDomain());
         } else {
+            // print_r($service->getName().'<br>');
             i18n_register_module($service->getName());
         }
     }
@@ -1619,5 +1628,64 @@ if (!function_exists('isAdmin')) {
         } catch (\Throwable $e) {
             return false;
         }
+    }
+}
+
+if(!function_exists('timeAgo')){
+    function timeAgo($datetime): string
+    {
+        if (!$datetime) return '';
+
+        $time = is_numeric($datetime) ? $datetime : strtotime($datetime);
+        $diff = time() - $time;
+
+        if ($diff < 60) return 'now';
+        if ($diff < 3600) return floor($diff / 60) . 'm';
+        if ($diff < 86400) return floor($diff / 3600) . 'h';
+        if ($diff < 604800) return floor($diff / 86400) . 'd';
+        if ($diff < 2592000) return floor($diff / 604800) . 'w';
+
+        return date('M j', $time); // fallback
+    }
+}
+
+if(!function_exists('getPropertyType')){
+    function getPropertyType(object $obj, string $prop): ?string
+    {
+        if (!property_exists($obj, $prop)) return null;
+
+        $ref = new ReflectionProperty($obj, $prop);
+        $type = $ref->getType();
+
+        return $type ? $type->getName() : null;
+    }
+}
+
+if(!function_exists('core')){
+    function core(): \BoraSlim\Core\Container
+    {
+        static $app;
+
+        if (!$app) {
+            $app = new \BoraSlim\Core\Container();
+        }
+
+        return $app;
+    }
+
+    function resolve(string $key)
+    {
+        return core()->make($key);
+    }
+}
+
+if(!function_exists('appCtx')){
+    function appCtx(): \BoraSlim\Core\Ctx
+    {
+        return new class {
+            public function get($key){ return \BoraSlim\Core\Ctx::get($key); }
+            public function set($key,$val){ \BoraSlim\Core\Ctx::set($key,$val); }
+            public function has($key){ return \BoraSlim\Core\Ctx::has($key); }
+        };
     }
 }

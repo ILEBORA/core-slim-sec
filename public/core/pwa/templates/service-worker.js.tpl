@@ -1,6 +1,4 @@
 // service-worker.js.tpl
-
-// const CACHE_NAME = `bora-pwa-cache-${Date.now()}`;//'bora-pwa-cache-{{VERSION}}';
 const CACHE_NAME = `bora-pwa-cache-{{VERSION}}`;
 const ASSETS = {{ASSETS}};
 

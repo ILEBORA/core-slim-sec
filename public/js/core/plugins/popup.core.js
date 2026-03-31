@@ -93,6 +93,10 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
         close() {
 
+            if (API.activePopup === this){
+                API.activePopup = null;
+            }
+            
             this.$popup.fadeOut(200, () => {
 
                 $('body').css('overflow', '');
@@ -121,6 +125,10 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             this.$close = null;
 
             this._tabCache = {};
+
+            if (API.activePopup === this){
+                API.activePopup = null;
+            }
         }
 
         /* =========================
@@ -263,6 +271,12 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
         goToTab(tabId){
 
+            // Guard against destroyed popup
+            if (!this.$tabs || !this.$append){
+                console.warn('[popup] Attempted to use destroyed popup');
+                return;
+            }
+            
             const $tabLink = this.$tabs.find(`a[data-tab="${tabId}"], a[href="#${tabId}"]`);
 
             if (!$tabLink.length) return;
@@ -273,17 +287,17 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             this.tryLoadTabContent($tabLink);
         }
 
-        goToTabO(tabId) {
+        // goToTabO(tabId) {
 
-            const $tabLink = this.$tabs.find(`a[href="#${tabId}"]`);
+        //     const $tabLink = this.$tabs.find(`a[href="#${tabId}"]`);
 
-            if (!$tabLink.length) return;
+        //     if (!$tabLink.length) return;
 
-            this.$tabs.find('a').removeClass('active');
-            $tabLink.addClass('active');
+        //     this.$tabs.find('a').removeClass('active');
+        //     $tabLink.addClass('active');
 
-            this.tryLoadTabContent($tabLink);
-        }
+        //     this.tryLoadTabContent($tabLink);
+        // }
 
         setTabs(tabs = [], activeTab = null){
 
@@ -340,7 +354,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             }
 
             
-            API.activePopup = instance;
+            // API.activePopup = instance;
             return instance;
         },
 

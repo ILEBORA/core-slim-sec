@@ -191,6 +191,7 @@ class Myloader{
                 return JSON.parse(text);
             })
             .then(res => {
+                console.log('Here');
                 if (!res.success) {
                     alert('Message failed to send');
                     return;

@@ -1,0 +1,35 @@
+.profile-stats {
+    display: flex;
+    gap: 24px;
+
+    margin-top: 10px;
+}
+
+.profile-stats div {
+    font-size: 13px;
+    color: #666;
+}
+
+.profile-stats strong {
+    display: block;
+    font-size: 18px;
+    color: #111;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 24px;
+
+    margin-top: 10px;
+}
+
+.profile-stats div {
+    font-size: 13px;
+    color: #666;
+}
+
+.profile-stats strong {
+    display: block;
+    font-size: 18px;
+    color: #111;
+}

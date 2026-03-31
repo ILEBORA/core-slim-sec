@@ -1,0 +1,18 @@
+.people-filters {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.people-filters button {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #eee;
+    border: none;
+    cursor: pointer;
+}
+
+.people-filters button.active {
+    background: #2d6cdf;
+    color: #fff;
+}

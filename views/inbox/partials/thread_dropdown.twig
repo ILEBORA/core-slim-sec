@@ -1,17 +1,66 @@
-<div class="thread-item" data-thread="{{ thread.id }}">
+<div class="thread-item 
+    {{ thread.unread_count > 0 ? 'unread' : '' }}" 
+    data-thread="{{ thread.thread_id }}" data-action="thread.open">
 
-    <div class="thread-title">
-        {{ thread.title }}
+    <!-- Avatar -->
+    <div class="avatar">
+        {% if thread.avatar %}
+            <img src="{{ thread.avatar }}" alt="">
+        {% endif %}
+
+        {% if thread.is_online %}
+            <span class="status-dot"></span>
+        {% endif %}
     </div>
 
-    <div class="thread-preview">
-        {{ thread.last_sender }}: {{ thread.last_message|slice(0,40) }}
+    <!-- Meta (title + preview) -->
+    <div class="meta">
+
+        <div class="title">
+            {{ thread.title ?: 'Conversation' }}
+        </div>
+
+        <div class="preview">
+            <strong class="sender">
+                {% if thread.sender_id == current_user_id %}
+                    You
+                {% elseif thread.sender_type == 'system' %}
+                    System
+                {% else %}
+                    {{ thread.last_sender }}
+                {% endif %}
+            </strong>
+
+            <span class="sep">:</span>
+
+            <span class="message">
+                {% if thread.message_type == 'text' %}
+                    {{ thread.last_message|slice(0, 50) }}
+                {% elseif thread.message_type == 'media' %}
+                    📎 Media
+                {% elseif thread.message_type == 'event' %}
+                    📅 Event update
+                {% else %}
+                    {{ thread.last_message|slice(0, 50) }}
+                {% endif %}
+            </span>
+        </div>
+
     </div>
 
-    {% if thread.unread_count > 0 %}
-        <span class="thread-unread">
-            {{ thread.unread_count }}
-        </span>
-    {% endif %}
+    <!-- Stats (time + unread badge) -->
+    <div class="stats">
+
+        <div class="time">
+            {{ thread.last_message_date|timeago }}
+        </div>
+
+        {% if thread.unread_count > 0 %}
+            <div class="badge">
+                {{ thread.unread_count > 99 ? '99+' : thread.unread_count }}
+            </div>
+        {% endif %}
+
+    </div>
 
 </div>

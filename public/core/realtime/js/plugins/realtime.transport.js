@@ -1,5 +1,5 @@
 __BORA_REGISTER_PLUGIN__(
-'RealtimeTransport',
+'realtime.transport',
 async function(scope){
 
     const sse = await scope.getService('realtime.sse');

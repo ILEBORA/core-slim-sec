@@ -45,7 +45,7 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
         const el   = $(this);
         const type = el.data('context-type');
         const id   = el.data('context-id');
-
+        // alert(id);
         showLoading(el);
 
         const menu = await loadMenu(type,id);
@@ -196,7 +196,9 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
                 html += `
                 <li class="context-menu-item ${cls}"
-                    data-action="${item.action || ''}">
+                    data-action="${item.action || ''}"
+                    data-id="${item?.data_id || ''}"
+                    >
                     ${item.label}
                 </li>`;
 

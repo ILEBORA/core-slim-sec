@@ -11,6 +11,7 @@ class InboxRealtime{
         this.threadHook = null;
         
         this.userId = rd('uID') ?? window.MAIN_USER_ID ?? null;
+        this.lastSound = 0;
     }
 
     initUserChannel(){
@@ -23,8 +24,10 @@ class InboxRealtime{
         );
     }
 
-    subscribeThread(threadId){
+    async subscribeThread(threadId){
+        
         console.log('subscribeThread:: ',threadId);
+        
         if(this.threadHook){
             this.scope.off(this.threadHook, this.handleThreadEvent);
         }
@@ -32,6 +35,30 @@ class InboxRealtime{
         this.threadHook = `realtime:inbox:thread:${threadId}`;
 
         this.scope.on(this.threadHook, this.handleThreadEvent.bind(this));
+
+        this.scope.on('inbox.message.received', (msg) => {
+
+            const isActive = msg.thread_id === this.ui.getActiveThread();
+            const isMine   = msg.sender_id === currentUserId;
+
+            if(!isMine && !isActive){
+                this.sound?.play('message');   // 🔔 play sound
+                this.ui.incrementThreadBadge(msg.thread_id);
+                this.ui.bumpThread(msg.thread_id);
+                return;
+            }
+
+            this.ui.appendMessage(msg);
+        });
+
+        this.scope.on('inbox.message.delivered', (data) => {
+            this.ui.updateMessageStatus(data.message_id, 'delivered');
+        });
+
+        this.scope.on('inbox.message.read', (data) => {
+            this.ui.updateMessageStatus(data.message_id, 'read');
+        });
+
     }
 
     handleUserEvent(e){
@@ -39,29 +66,39 @@ class InboxRealtime{
         const data = e?.payload;
         if(!data) return;
 
-        if(data.type === 'thread.bumped'){
-            // this.ui.updateThreadPreview(data);
-            this.notifications.bumpThread(data);
-        }
+        switch(data.type){
 
-        if(data.type === 'inbox.toast'){
-            // Nothing like data.message
-            this.notifications.notifyThread(data);
-            // alertBora.notify(`Inbox Message from ${data.sender_id} with id ${data.message_id} for thread ${data.thread_id}`);
+            case 'thread.bumped':
+                this.notifications.bumpThread(data);
+            break;
+
+            case 'inbox.toast':
+                this.notifications.notifyThread(data);
+            break;
+
+            // NEW: unread count update
+            case 'inbox.unread.updated':
+                this.ui.updateUnreadBadge(data.count);
+            break;
+
+            // NEW: thread read
+            case 'thread.read':
+                this.ui.clearThreadBadge(data.thread_id);
+            break;
         }
     }
 
     handleThreadEvent(e){
-        console.log('HANDLE THREAD EVENT:: ', e);
+        // console.log('HANDLE THREAD EVENT:: ', e);
         const data = e?.payload;
         if(!data) return;
 
-        console.log(
-            "message from",
-            data.sender_id,
-            "current user",
-            window.MAIN_USER_ID
-        );
+        // console.log(
+        //     "message from",
+        //     data.sender_id,
+        //     "current user",
+        //     window.MAIN_USER_ID
+        // );
 
         switch(data.type){
 

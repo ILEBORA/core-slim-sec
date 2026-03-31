@@ -33,7 +33,7 @@
     word-wrap: break-word;
 }
 
-.message.theirs .bubble {
+.message .bubble {
     background: #fff;
     border: 1px solid #e5e7eb;
 }
@@ -118,4 +118,13 @@
     padding:4px 10px;
     border-radius:12px;
     margin:10px 0;
+}
+
+.reply-author{
+    font-size: smaller;
+    color:#3b718d;
+}
+
+.message.outgoing .reply-author{
+    color: #dbf2f9;
 }

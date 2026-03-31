@@ -1,0 +1,38 @@
+<div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
+    
+    <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+
+        <!-- HEADER -->
+        <div style="background:#1f2937; color:#ffffff; padding:16px 20px;">
+            <img src="{{ logo_url }}" alt="{{ app_name }}" style="height:28px; vertical-align:middle;">
+            <span style="margin-left:10px; font-size:16px; font-weight:600;">
+                {{ app_name }}
+            </span>
+        </div>
+
+        <!-- BODY -->
+        <div style="padding:20px;">
+            {{ content|raw }}
+        </div>
+
+        <!-- FOOTER -->
+        <div style="padding:16px 20px; font-size:12px; color:#6b7280; border-top:1px solid #e5e7eb;text-align:center;">
+            
+            <p style="margin:0 0 6px;">
+                {{ __t('notifications.email_footer_notice') }} {{ app_name }}.
+            </p>
+
+            <p style="margin:0 0 6px;">
+                <a href="{{ base_url }}" style="color:#2563eb;">{{ __t('notifications.visit') }} {{ app_name }}</a>
+            </p>
+
+            <p style="margin:0;">
+                © {{ year }} {{ app_name }}. {{ __t('notifications.rights_reserved') }}<br>
+                {{ __t('notifications.build_notice')|raw }}
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

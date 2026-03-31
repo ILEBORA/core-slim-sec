@@ -1,0 +1,33 @@
+<div class="container add-participants">
+
+    <input type="text"
+           placeholder="Search users..."
+           class="search-input"
+           data-action="thread.search-users"
+           data-thread="{{ thread.id }}">
+
+    <ul class="user-list">
+
+        {% for user in users.recent %}
+            <li class="user-item">
+
+                <img src="{{ user.avatar }}">
+
+                <span>{{ user.name }}</span>
+
+                <input type="checkbox"
+                       value="{{ user.id }}"
+                       class="select-user">
+
+            </li>
+        {% endfor %}
+
+    </ul>
+
+    <button class="btn primary"
+            data-action="thread.add-selected"
+            data-thread="{{ thread.id }}">
+        Add Selected
+    </button>
+
+</div>

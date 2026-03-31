@@ -17,7 +17,7 @@
         <i class="menu-icon fa fa-circle"></i>
     {% endif %}
     
-    <span class="label">{{ item.title }}</span>
+    <span class="label">{{ __t(item.menu_key,null,item.title) }}</span>
     
     <i id="menu_loading_{{ item.target_key }}" class="menu_loading"></i>
 

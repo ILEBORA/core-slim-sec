@@ -2,9 +2,11 @@
 
 .inbox-layout {
     display: flex;
-    height: calc(100vh - var(--header-height,425px));
+    height: calc(100dvh - var(--header-height));
     background: var(--bg-main, #f5f6f8);
     overflow: hidden;
+    max-width: 75rem;
+    margin: 0 auto;
 }
 
 /* Sidebar */
@@ -297,7 +299,7 @@
 
 /* Floating Action Button */
 .fab-new-thread {
-    position: fixed;
+    position: absolute;
     right: 16px;
     bottom: 16px;
     width: 56px;
@@ -318,6 +320,10 @@
     .fab-new-thread {
         display: none;
     }
+
+    .new-thread-btn{
+        display: inline-block;
+    }
 }
 
 @media (max-width: 768px) {
@@ -325,7 +331,7 @@
         display: none;
     }
      .fab-new-thread {
-        position: fixed;
+        position: absolute;
         right: 16px;
         bottom: 16px;
         width: 56px;
@@ -343,6 +349,10 @@
     /* ONLY show when inbox list is visible */
     .inbox-layout[data-view="list"] .fab-new-thread {
         display: block;
+    }
+
+    .new-thread-btn{
+        display: none;
     }
 }
 
@@ -418,12 +428,7 @@
     }
 }
 
-/* Composer */
-.inbox-composer {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-}
+
 
 /* Backdrop */
 .composer-backdrop {

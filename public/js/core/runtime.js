@@ -43,9 +43,11 @@
         const plugins    = new Map();
         const pluginMeta = new Map();
 
-        const events  = new Map();
+        // const events  = new Map();
         const timings = new Map();
         const errors  = new Map();
+
+        const firedEvents = new Map();
 
         let started = false;
 
@@ -58,17 +60,44 @@
         }
 
         /* ==================================================
-           EVENT BUS
+        EVENT BUS (STATEFUL + REPLAYABLE)
         ================================================== */
 
-        function on(event, handler){
+        const events = new Map();        // event => [handlers]
+        const fired = new Map();         // event => last payload
+        const replayable = new Set([
+            'runtime:started',
+            'page.loaded'
+        ]);
+
+        function on(event, handler, options = {}){
             if(!events.has(event)) events.set(event, []);
-            events.get(event).push(handler);
+            
+            const handlers = events.get(event);
+            handlers.push(handler);
+
+            // 🔥 Immediate replay if already fired
+            if(
+                replayable.has(event) &&
+                fired.has(event) &&
+                options.replay !== false // allow opt-out
+            ){
+                try{
+                    handler(fired.get(event));
+                }
+                catch(err){
+                    console.error('[Runtime event replay error]', err);
+                }
+            }
+
+            // return unsubscribe (very useful)
+            return () => off(event, handler);
         }
 
         function off(event, handler){
             if(!event){
                 events.clear();
+                fired.clear(); // important: reset state too
                 return;
             }
 
@@ -77,6 +106,7 @@
 
             if(!handler){
                 events.delete(event);
+                fired.delete(event);
                 return;
             }
 
@@ -91,11 +121,19 @@
         }
 
         function emit(event, payload){
+            // store state if replayable
+            if(replayable.has(event)){
+                fired.set(event, payload);
+            }
+
             const handlers = events.get(event);
             if(!handlers) return;
 
-            handlers.forEach(fn=>{
-                try{ fn(payload); }
+            // clone to avoid mutation issues during emit
+            [...handlers].forEach(fn=>{
+                try{
+                    fn(payload);
+                }
                 catch(err){
                     console.error('[Runtime event error]', err);
                 }
@@ -739,6 +777,12 @@
             });
 
             emit('runtime:started');
+
+            
+            emit('page.loaded', {
+                source: 'initial',
+                url: window.location
+            });
 
             // initial activation (lazy)
             // await evaluatePluginActivation(normalizeUrl(window.location));

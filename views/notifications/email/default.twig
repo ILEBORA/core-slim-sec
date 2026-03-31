@@ -1,0 +1,9 @@
+<div style="font-family: Arial;">
+
+    <h3>{{ actor_name|default('Someone') }} commented on your activity</h3>
+
+    <p>{{ comment|raw }}</p>
+
+    <a href="{{ url|base_url|default('') }}">View Activity</a>
+
+</div>

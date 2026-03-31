@@ -1,0 +1,39 @@
+<div class="person-view" data-person="{{ person.id }}">
+
+    {% include 'people/person/header.twig' with{person:person} %}
+
+    <nav class="person-tabs">
+        <button data-tab="profile" class="active">Profile</button>
+        <button data-tab="connections">Connections</button>
+        <button data-tab="activity">Activity</button>
+        <button data-tab="events">Events</button>
+    </nav>
+
+    <div class="person-content">
+
+        <div class="tab-panel active" data-tab="profile">
+            {% include 'people/person/profile.twig' with{person:person}%}
+        </div>
+
+        <div class="tab-panel" data-tab="connections">
+            <div class="tab-placeholder"
+                 data-tab="connections">
+                <!-- will be replaced -->
+            </div>
+        </div>
+
+        <div class="tab-panel" data-tab="activity">
+            <div class="tab-placeholder"
+                 data-tab="activity">
+            </div>
+        </div>
+
+        <div class="tab-panel" data-tab="events">
+            <div class="tab-placeholder"
+                 data-tab="events">
+            </div>
+        </div>
+
+    </div>
+
+</div>

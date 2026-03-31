@@ -1,0 +1,90 @@
+.person-page{
+    max-width:900px;
+    margin:auto;
+}
+
+.person-header{
+    display:flex;
+    gap:20px;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.person-avatar img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #eee;
+}
+
+.person-meta h1{
+    margin:0;
+    font-size:26px;
+}
+
+.person-tags{
+    margin-top:6px;
+}
+
+.tag{
+    display:inline-block;
+    background:#eee;
+    padding:3px 8px;
+    border-radius:5px;
+    font-size:12px;
+    margin-right:5px;
+}
+
+.tag.deceased{
+    background:#444;
+    color:white;
+}
+
+.person-actions{
+    margin-top:10px;
+}
+
+.btn{
+    padding:7px 12px;
+    border:1px solid #ccc;
+    background:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn.primary{
+    background:#2d7ef7;
+    color:white;
+    border-color:#2d7ef7;
+}
+
+.tabs{
+    display:flex;
+    gap:15px;
+    border-bottom:1px solid #eee;
+    margin-bottom:20px;
+}
+
+.tabs a{
+    padding:10px 5px;
+    text-decoration:none;
+    color:#555;
+    font-weight:500;
+}
+
+.tabs a.active{
+    border-bottom:2px solid #2d7ef7;
+    color:#2d7ef7;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    border:1px solid #eee;
+}
+
+.profile-info p{
+    margin:8px 0;
+}

@@ -1,90 +1,165 @@
-.person-page{
-    max-width:900px;
-    margin:auto;
+/* =========================================
+   PERSON VIEW
+========================================= */
+
+.person-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fff;
 }
 
-.person-header{
-    display:flex;
-    gap:20px;
-    align-items:center;
-    margin-bottom:20px;
+/* =========================================
+   HEADER
+========================================= */
+
+.person-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px;
+    border-bottom: 1px solid #eee;
 }
 
-.person-avatar img{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    object-fit:cover;
-    border:2px solid #eee;
+.person-header .back-btn {
+    margin-right: 10px;
+    cursor: pointer;
 }
 
-.person-meta h1{
-    margin:0;
-    font-size:26px;
+.person-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
 }
 
-.person-tags{
-    margin-top:6px;
+.person-header .meta {
+    font-size: 12px;
+    color: #777;
 }
 
-.tag{
-    display:inline-block;
-    background:#eee;
-    padding:3px 8px;
-    border-radius:5px;
-    font-size:12px;
-    margin-right:5px;
+.person-header .actions {
+    margin-left: auto;
 }
 
-.tag.deceased{
-    background:#444;
-    color:white;
+.btn-follow {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #3b82f6;
+    color: #fff;
+    cursor: pointer;
 }
 
-.person-actions{
-    margin-top:10px;
+/* =========================================
+   TABS
+========================================= */
+
+.person-tabs {
+    display: flex;
+    gap: 20px;
+
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
 }
 
-.btn{
-    padding:7px 12px;
-    border:1px solid #ccc;
-    background:white;
-    border-radius:6px;
-    cursor:pointer;
+.person-tabs button {
+    background: none;
+    border: none;
+
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+
+    background: none;
+    border: none;
+
 }
 
-.btn.primary{
-    background:#2d7ef7;
-    color:white;
-    border-color:#2d7ef7;
+.person-tabs button.active {
+    border-bottom: 2px solid #3b82f6;
+    font-weight: 600;
+    color: #111;
 }
 
-.tabs{
-    display:flex;
-    gap:15px;
-    border-bottom:1px solid #eee;
-    margin-bottom:20px;
+.person-tabs button.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 2px;
+    background: #2563eb;
 }
 
-.tabs a{
-    padding:10px 5px;
-    text-decoration:none;
-    color:#555;
-    font-weight:500;
+/* =========================================
+   CONTENT
+========================================= */
+
+.person-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
 }
 
-.tabs a.active{
-    border-bottom:2px solid #2d7ef7;
-    color:#2d7ef7;
+.tab-panel {
+    display: none;
 }
 
-.card{
-    background:white;
-    padding:20px;
-    border-radius:8px;
-    border:1px solid #eee;
+.tab-panel.active {
+    display: block;
 }
 
-.profile-info p{
-    margin:8px 0;
+/* =========================================
+   PROFILE SECTION
+========================================= */
+
+.person-profile {
+    display: flex;
+    gap: 16px;
+}
+
+.person-profile .avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #ddd;
+}
+
+/* =========================================
+   LAST SEEN / PRESENCE
+========================================= */
+
+.last-seen {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* Follow */
+.btn-follow {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+
+    padding: 6px 14px;
+    border-radius: 6px;
+
+    font-size: 13px;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.btn-follow:hover {
+    background: #1d4ed8;
+}
+
+.person-card.following .btn-follow {
+    background: #e5e7eb;
+    color: #111;
 }

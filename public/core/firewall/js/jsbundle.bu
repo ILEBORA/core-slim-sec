@@ -1,12 +1,23 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js','firewall');
+$pipeline = new AssetPipelineJs('firewalll', __DIR__);
 
-$pipeline
-    ->add('firewall.js')
 
-    ->send();
+
+$pipeline->register('firewalll.plugin', [
+    'file'     => 'plugins/firewalll.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 101,
+    'requires' => ['firewalll.actions'],
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

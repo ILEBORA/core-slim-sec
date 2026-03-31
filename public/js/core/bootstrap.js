@@ -18,7 +18,7 @@
     ================================================== */
 
     const CONFIG = global.__BORA_CONFIG__ || {
-        dev: false,
+        dev: false, //rd('devMode', false), //false,
         // securityMode: 'strict'
     };
 
@@ -146,7 +146,7 @@
         try{
 
             const route = normalizeUrl(window.location);
-            
+            // alert(route);
             // trigger plugin activation cycle
             await app.emit('route:init', route);
 
@@ -331,8 +331,9 @@
         const uiActions = await app.service('ui.actions');
         uiActions?.init();
 
-        uiActions.register('logout', () => {
-            app.plugin('AppCore')?.logout();
+        uiActions.register('logout', async() => {
+            const appcore = await app.plugin('AppCore');
+            appcore.logout();
         });
 
 

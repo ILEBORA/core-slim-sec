@@ -1,0 +1,101 @@
+.people-search{
+    margin-bottom:25px;
+}
+
+.people-search input{
+    padding:8px 10px;
+    width:220px;
+    border:1px solid #ddd;
+    border-radius:6px;
+}
+
+.people-search button{
+    padding:8px 12px;
+    border:none;
+    background:#2d7ef7;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.people-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:18px;
+}
+
+.person-card{
+    display:block;
+    text-align:center;
+    padding:18px 10px;
+    border:1px solid #eee;
+    border-radius:10px;
+    text-decoration:none;
+    color:#333;
+    background:white;
+    transition:all .15s ease;
+}
+
+.person-card:hover{
+    border-color:#2d7ef7;
+    box-shadow:0 5px 12px rgba(0,0,0,0.06);
+}
+
+.avatar img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:10px;
+}
+
+.person-name{
+    font-weight:600;
+}
+
+.person-tags{
+    margin-top:6px;
+}
+
+.tag{
+    font-size:11px;
+    padding:3px 7px;
+    border-radius:5px;
+    background:#eee;
+}
+
+.tag.deceased{
+    background:#444;
+    color:white;
+}
+
+
+/* Grid */
+.people-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.people-grid.list-view {
+    display: block;
+}
+
+.people-grid.list-view .person-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.people-grid.list-view .avatar img {
+    width: 40px;
+    height: 40px;
+}
+
+.person-card.muted {
+    opacity: 0.7;
+}
+
+.person-card.muted .avatar img {
+    filter: grayscale(60%);
+}

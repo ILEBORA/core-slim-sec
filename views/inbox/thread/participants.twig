@@ -1,0 +1,56 @@
+<div class="container thread-participants" data-thread="{{ thread.id }}">
+    <h2>Thread Participants</h2>
+    {% if permissions.can_invite %}
+        <div class="participants-actions">
+            <button class="btn btn-primary" data-action="thread.invite" data-id="{{ thread.id }}">
+                Add Participant
+            </button>
+        </div>
+    {% endif %}
+
+    <ul class="participants-list">
+
+        {% for p in participants %}
+            <li class="participant-item" data-user="{{ p.id }}">
+
+                <div class="avatar">
+                    <img src="{{ p.avatar }}" alt="{{ p.name }}" style="width:100%;height:100%;">
+                </div>
+
+                <div class="info">
+                    <div class="name">
+                        {{ p.name }}
+                        {% if p.role == 'owner' %}
+                            <span class="badge">Admin</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="role">{{ p.role|capitalize }}</div>
+                </div>
+
+                {% if permissions.is_owner and p.role != 'owner' %}
+                    <div class="actions">
+
+                        <button class="btn btn-sm"
+                                data-action="thread.promote"
+                                data-thread="{{ thread.id }}"
+                                data-user="{{ p.id }}">
+                            Promote
+                        </button>
+
+                        <button class="btn btn-sm danger"
+                                data-action="thread.remove"
+                                data-thread="{{ thread.id }}"
+                                data-user="{{ p.id }}">
+                            Remove
+                        </button>
+
+                    </div>
+                {% endif %}
+
+            </li>
+        {% endfor %}
+
+    </ul>
+
+</div>

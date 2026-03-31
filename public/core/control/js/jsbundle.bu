@@ -1,12 +1,23 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'control');
+$pipeline = new AssetPipelineJs('control', __DIR__);
 
-$pipeline
-    ->add('control.js')
 
-    ->send();
+
+$pipeline->register('control.plugin', [
+    'file'     => 'plugins/control.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 101,
+    'requires' => ['control.actions'],
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

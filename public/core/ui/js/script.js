@@ -208,7 +208,8 @@ appUI.dropDown.init();
                     'Profile pic: <input type="file" data-itm="'+itm+'" data-id="'+typ+'" accept="image/jpeg" class="alertable-input" id="newimage" name="newimage" onchange="mPGs.uploadAvatar(this)">' +
                     '<div align="center"><span id="artUpload" class="badge" style="font-size:small;"></span><img id="artHolder" src="'+prev+'" onerror="this.onerror=null;this.src=\'assets/images/icons/placeholder.png\';" width="250" class="frame" />' +
                     '<input type="hidden" class="alertable-input hide" placeholder="path" id="artworkPath" name="artworkPath"/>' +
-                    '<input type="hidden" class="alertable-input hide" placeholder="file" id="artworkFile" name="artworkFile"/>'
+                    '<input type="hidden" class="alertable-input hide" placeholder="file" id="artworkFile" name="artworkFile"/>' +
+                    '<input type="hidden" class="alertable-input hide" placeholder="id" id="artworkId" name="artworkId"/>'
                 }).then(function(det) {
                     det['typ'] = typ;
                     det['itm'] = itm;
@@ -221,8 +222,8 @@ appUI.dropDown.init();
                                  mPGs.uploaded = "";
                                 //Update options
                                 if(data.success){
-                                    $('.'+typ+'Avatar'+itm).attr('src',data.data.path);
-                                    $('#avtrBox').attr('data-prev',data.data.path);
+                                    $('.'+typ+'Avatar'+itm).attr('src',data.data.avatar_url);
+                                    $('#avtrBox').attr('data-prev',data.data.avatar_url);
                                     alertBora.notify('Updated!', 'success');
                                     if($('#avtrChange'+itm).length >0){
                                         $('#avtrChange'+itm).fadeOut('slow');
@@ -289,6 +290,7 @@ appUI.dropDown.init();
             console.log("Preview:: ",resp.data.preview);
             container.find('#artworkPath').val(resp.data.preview);
             container.find('#artworkFile').val(resp.data.file);
+            container.find('#artworkId').val(resp.data.id);
             container.find('#artHolder').attr('src',resp.data.preview);
             mPGs.uploaded = resp.data.file;
             container.find('#artUpload').html('');
@@ -303,255 +305,255 @@ appUI.dropDown.init();
         xhr.send(fd);
     };
         
-    mPGs.klassPopupO = function (klass, group, itm = null, tab = 'add', openCall = null, closeCall = null, callbackPipe = null) {
-        // Store callback pipe if provided
-        if (callbackPipe) {
-            mPGs.callbackPipe = callbackPipe;
-        }
+    // mPGs.klassPopupO = function (klass, group, itm = null, tab = 'add', openCall = null, closeCall = null, callbackPipe = null) {
+    //     // Store callback pipe if provided
+    //     if (callbackPipe) {
+    //         mPGs.callbackPipe = callbackPipe;
+    //     }
 
-        // Build URL for form route
-        // Example: api/modules/dashboards/pagewidgets/form/add
-        // or:     api/modules/dashboards/pagewidgets/form/edit/3
-        let urlParts = ['api/modules', klass];
+    //     // Build URL for form route
+    //     // Example: api/modules/dashboards/pagewidgets/form/add
+    //     // or:     api/modules/dashboards/pagewidgets/form/edit/3
+    //     let urlParts = ['api/modules', klass];
 
-        if (group) urlParts.push('form',group);
-        if (tab) urlParts.push(tab);
-        if (itm) urlParts.push(itm); // optional id
+    //     if (group) urlParts.push('form',group);
+    //     if (tab) urlParts.push(tab);
+    //     if (itm) urlParts.push(itm); // optional id
 
-        var popUrl = urlParts.join('/');
+    //     var popUrl = urlParts.join('/');
 
-        // alert(popUrl);
+    //     // alert(popUrl);
 
-        // Call the popup loader
-        return mPGs.klassDiag('diagPop', klass, group, itm, tab, popUrl, openCall, closeCall);
-    };
+    //     // Call the popup loader
+    //     return mPGs.klassDiag('diagPop', klass, group, itm, tab, popUrl, openCall, closeCall);
+    // };
 
-    mPGs.buildFormUrl = function (klass, group, tab = 'add', itm = null, meta = null) {
-        let url = '';
-        const parts = ['api/modules', klass, 'form', group, tab];
-        if (itm) parts.push(itm);
+    // mPGs.buildFormUrl = function (klass, group, tab = 'add', itm = null, meta = null) {
+    //     let url = '';
+    //     const parts = ['api/modules', klass, 'form', group, tab];
+    //     if (itm) parts.push(itm);
         
-        url = parts.join('/');
+    //     url = parts.join('/');
 
-        if (meta && typeof meta === 'object') {
-            const params = new URLSearchParams(meta).toString();
-            url += `?${params}`;
-        }
+    //     if (meta && typeof meta === 'object') {
+    //         const params = new URLSearchParams(meta).toString();
+    //         url += `?${params}`;
+    //     }
         
-        return url;
-    };
+    //     return url;
+    // };
 
-    mPGs.buildViewUrl = function (klass, view, tab = 'view', itm = null) {
-        const parts = ['api/modules', klass, 'view', view, tab];
-        if (itm) parts.push(itm);
-        return parts.join('/');
-    };
+    // mPGs.buildViewUrl = function (klass, view, tab = 'view', itm = null) {
+    //     const parts = ['api/modules', klass, 'view', view, tab];
+    //     if (itm) parts.push(itm);
+    //     return parts.join('/');
+    // };
 
-    mPGs.klassPopup = function (
-                        klass, 
-                        group, 
-                        itm = null, 
-                        tab = 'add', 
-                        openCall = null, 
-                        closeCall = null, 
-                        meta = null,
-                        options = {}
-                    ) {
-        const popUrl = mPGs.buildFormUrl(klass, group, tab, itm, meta);
+    // mPGs.klassPopup = function (
+    //                     klass, 
+    //                     group, 
+    //                     itm = null, 
+    //                     tab = 'add', 
+    //                     openCall = null, 
+    //                     closeCall = null, 
+    //                     meta = null,
+    //                     options = {}
+    //                 ) {
+    //     const popUrl = mPGs.buildFormUrl(klass, group, tab, itm, meta);
 
-        return mPGs.klassDiag(
-            'diagPop',
-            klass,
-            group,
-            itm,
-            tab,
-            popUrl,
-            openCall,
-            closeCall,
-            { mode: 'form', meta },
-            options
-        );
-    };
+    //     return mPGs.klassDiag(
+    //         'diagPop',
+    //         klass,
+    //         group,
+    //         itm,
+    //         tab,
+    //         popUrl,
+    //         openCall,
+    //         closeCall,
+    //         { mode: 'form', meta },
+    //         options
+    //     );
+    // };
 
-    mPGs.klassView = function (klass, view, itm = null, options = {}) {
-        const {
-            tab = 'view',
-            size = 'lg',
-            openCall = null,
-            closeCall = null,
-            state = null
-        } = options;
+    // mPGs.klassView = function (klass, view, itm = null, options = {}) {
+    //     const {
+    //         tab = 'view',
+    //         size = 'lg',
+    //         openCall = null,
+    //         closeCall = null,
+    //         state = null
+    //     } = options;
 
-        const popUrl = mPGs.buildViewUrl(klass, view, tab, itm);
+    //     const popUrl = mPGs.buildViewUrl(klass, view, tab, itm);
 
-        return mPGs.klassDiag(
-            'diagPop',
-            klass,
-            view,
-            itm,
-            tab,
-            popUrl,
-            openCall,
-            closeCall,
-            {
-                mode: 'view',
-                size,
-                state
-            }
-        );
-    };
+    //     return mPGs.klassDiag(
+    //         'diagPop',
+    //         klass,
+    //         view,
+    //         itm,
+    //         tab,
+    //         popUrl,
+    //         openCall,
+    //         closeCall,
+    //         {
+    //             mode: 'view',
+    //             size,
+    //             state
+    //         }
+    //     );
+    // };
 
-    mPGs.klassDiag = function (
-        diagType,
-        klass,
-        group,
-        itm,
-        tab,
-        popUrl,
-        openCall,
-        closeCall,
-        meta,
-        options = {}
-    ) {
-        const {
-            size = 'md',
-            mode = 'form',
-            state = null
-        } = options;
+    // mPGs.klassDiag = function (
+    //     diagType,
+    //     klass,
+    //     group,
+    //     itm,
+    //     tab,
+    //     popUrl,
+    //     openCall,
+    //     closeCall,
+    //     meta,
+    //     options = {}
+    // ) {
+    //     const {
+    //         size = 'md',
+    //         mode = 'form',
+    //         state = null
+    //     } = options;
 
-        // Store state globally for popup context if needed
-        if (state) {
-            mPGs.popupState = state;
-        }
+    //     // Store state globally for popup context if needed
+    //     if (state) {
+    //         mPGs.popupState = state;
+    //     }
 
-        const diag = mPGs.klassDiagO(
-            diagType,   // container id
-            klass,
-            group,
-            itm,
-            tab,
-            popUrl,
-            openCall,
-            closeCall,
-            options
-        );
+    //     const diag = mPGs.klassDiagO(
+    //         diagType,   // container id
+    //         klass,
+    //         group,
+    //         itm,
+    //         tab,
+    //         popUrl,
+    //         openCall,
+    //         closeCall,
+    //         options
+    //     );
 
-        // annotate popup instance
-        diag.__klass = klass;
-        diag.__mode  = mode;
-        diag.__group = group;
-        diag.__item  = itm;
-        diag.__size  = size;
-        diag.__meta = options.meta || null;
+    //     // annotate popup instance
+    //     diag.__klass = klass;
+    //     diag.__mode  = mode;
+    //     diag.__group = group;
+    //     diag.__item  = itm;
+    //     diag.__size  = size;
+    //     diag.__meta = options.meta || null;
 
-        // apply size class (non-invasive)
-        $('#' + (diagType || 'diagPop'))
-            .removeClass('diag-sm diag-md diag-lg diag-full')
-            .addClass('diag-' + size);
+    //     // apply size class (non-invasive)
+    //     $('#' + (diagType || 'diagPop'))
+    //         .removeClass('diag-sm diag-md diag-lg diag-full')
+    //         .addClass('diag-' + size);
 
-        return diag;
-    };
+    //     return diag;
+    // };
 
-    mPGs.klassDiagO = function (
-                        pop, 
-                        klass, 
-                        group, 
-                        itm, 
-                        tab, 
-                        popUrl, 
-                        openCall, 
-                        closeCall, 
-                        options = {}
-                    ) {
-        if (mPGs.activePopup) {
-            console.log('OPRIONS',options);
-            if (options.force) {
-                console.log('Forcing popup replacement');
-                // mPGs.activePopup.close();
-                // mPGs.activePopup = null;
-            } 
-            else if (options.reuse) {
-                console.log('Reusing active popup');
-                return mPGs.activePopup;
-            } 
-            else {
-                console.warn('Popup already active, ignoring new request');
-                return mPGs.activePopup;
-            }
-        }
+    // mPGs.klassDiagO = function (
+    //                     pop, 
+    //                     klass, 
+    //                     group, 
+    //                     itm, 
+    //                     tab, 
+    //                     popUrl, 
+    //                     openCall, 
+    //                     closeCall, 
+    //                     options = {}
+    //                 ) {
+    //     if (mPGs.activePopup) {
+    //         console.log('OPRIONS',options);
+    //         if (options.force) {
+    //             console.log('Forcing popup replacement');
+    //             // mPGs.activePopup.close();
+    //             // mPGs.activePopup = null;
+    //         } 
+    //         else if (options.reuse) {
+    //             console.log('Reusing active popup');
+    //             return mPGs.activePopup;
+    //         } 
+    //         else {
+    //             console.warn('Popup already active, ignoring new request');
+    //             return mPGs.activePopup;
+    //         }
+    //     }
 
-        // Create a new popup instance
-        const diagPop = window.__BORA_APP__?.plugin?.('popup');
-        if (!diagPop) return;
+    //     // Create a new popup instance
+    //     const diagPop = window.__BORA_APP__?.plugin?.('popup');
+    //     if (!diagPop) return;
 
-        diagPop.open({
-            mode:   'form',
-            module: klass,
-            group:  group,
-            view:   tab,
-            id:     itm,
-            tab:    tab,
-            size:   'md',
-            meta:   options
-        });
-
-
-        // const diagPop = new BoraPopup({
-        //     containerId: pop || 'diagPop',
-        //     onOpen: () => {
-        //         if (typeof openCall === 'function') openCall();
-        //     },
-        //     onLoaded: (url) => {
-        //         console.log('Popup content loaded from:', url);
-        //         // If callbackPipe exists, inject it into the popup DOM
-        //         if (mPGs.callbackPipe) {
-        //             // alert('Context');
-        //             // const params = new URLSearchParams(mPGs.callbackPipe).toString();
-        //             // popUrl += "?" + params;
-        //             // alert('Here'+popUrl);
-        //             // TODO:: explore popup context
-        //             // const container = document.querySelector(`#${pop || 'diagPop'} .bora-form`);
-        //             // if (container) { //alert('Context found');
-        //             //     const input = document.createElement("input");
-        //             //     input.type = "text";
-        //             //     input.name = "_context";
-        //             //     input.value = JSON.stringify(mPGs.callbackPipe);
-        //             //     container.appendChild(input);
-        //             // }
-        //         }
-        //     },
-        //     onClose: () => {
-        //         if (typeof closeCall === 'function') closeCall();
-        //     }
-        // });
-
-        // mPGs.activePopup = diagPop;
-
-        // Debug (optional)
-        // if (mPGs.callbackPipe) {
-        //     // alert('Add Context');
-        //     const params = new URLSearchParams(mPGs.callbackPipe).toString();
-        //     popUrl += "?" + params;
-        //     // alert('Here'+popUrl);
-        // }
-        // console.log('Opening popup from:', popUrl);
-        // // alert('there'+popUrl);
-        // // Open the popup (loads HTML content from backend)
-        // diagPop.open(popUrl);
-
-        mPGs.activePopup = diagPop;
-
-        return diagPop;
-    };
+    //     diagPop.open({
+    //         mode:   'form',
+    //         module: klass,
+    //         group:  group,
+    //         view:   tab,
+    //         id:     itm,
+    //         tab:    tab,
+    //         size:   'md',
+    //         meta:   options
+    //     });
 
 
-        mPGs.callbackPipe = null;
+    //     // const diagPop = new BoraPopup({
+    //     //     containerId: pop || 'diagPop',
+    //     //     onOpen: () => {
+    //     //         if (typeof openCall === 'function') openCall();
+    //     //     },
+    //     //     onLoaded: (url) => {
+    //     //         console.log('Popup content loaded from:', url);
+    //     //         // If callbackPipe exists, inject it into the popup DOM
+    //     //         if (mPGs.callbackPipe) {
+    //     //             // alert('Context');
+    //     //             // const params = new URLSearchParams(mPGs.callbackPipe).toString();
+    //     //             // popUrl += "?" + params;
+    //     //             // alert('Here'+popUrl);
+    //     //             // TODO:: explore popup context
+    //     //             // const container = document.querySelector(`#${pop || 'diagPop'} .bora-form`);
+    //     //             // if (container) { //alert('Context found');
+    //     //             //     const input = document.createElement("input");
+    //     //             //     input.type = "text";
+    //     //             //     input.name = "_context";
+    //     //             //     input.value = JSON.stringify(mPGs.callbackPipe);
+    //     //             //     container.appendChild(input);
+    //     //             // }
+    //     //         }
+    //     //     },
+    //     //     onClose: () => {
+    //     //         if (typeof closeCall === 'function') closeCall();
+    //     //     }
+    //     // });
 
-        mPGs.mainCallBack  = function(data){
-            if(mPGs.callbackPipe){
-                mPGs.callbackPipe($data);
-            }
-        };
+    //     // mPGs.activePopup = diagPop;
+
+    //     // Debug (optional)
+    //     // if (mPGs.callbackPipe) {
+    //     //     // alert('Add Context');
+    //     //     const params = new URLSearchParams(mPGs.callbackPipe).toString();
+    //     //     popUrl += "?" + params;
+    //     //     // alert('Here'+popUrl);
+    //     // }
+    //     // console.log('Opening popup from:', popUrl);
+    //     // // alert('there'+popUrl);
+    //     // // Open the popup (loads HTML content from backend)
+    //     // diagPop.open(popUrl);
+
+    //     mPGs.activePopup = diagPop;
+
+    //     return diagPop;
+    // };
+
+
+    //     mPGs.callbackPipe = null;
+
+    //     mPGs.mainCallBack  = function(data){
+    //         if(mPGs.callbackPipe){
+    //             mPGs.callbackPipe($data);
+    //         }
+    //     };
 
     
     
@@ -570,7 +572,7 @@ appUI.dropDown.init();
         // click.preventDefault(); //Messes with Alertable
         var target = $(click.target);
         var targetParent = (click.target.parentNodet);
-        // logTest(targetParent);
+        // logTest(targetParent);return mPGs.changeAvatar(this);
         
         //TODO:: dont close menu on popup interaction
         if(!target.hasClass("item") && !target.hasClass("optionsButton active")) {
@@ -730,45 +732,45 @@ window.KlassPopup = KlassPopup;
 
 
 //Notifications:
-appUI.notify = addPlugin(
-    BoraPlugin, 
-    {
-        pluginName: 'app_notify',
-        init : function(){
-            BoraPlugin.init.call(this); // Call the base init method
-            console.log('App Notify  initialization.');
+// appUI.notify = addPlugin(
+//     BoraPlugin, 
+//     {
+//         pluginName: 'app_notify',
+//         init : function(){
+//             BoraPlugin.init.call(this); // Call the base init method
+//             console.log('App Notify  initialization.');
             
             
-        },
+//         },
 
-        updateStt : function(obj){
-            var stt = ($(obj).prop('checked')) ? 1 : 0;
-            var itm = $(obj).attr('data-role');
-            var pid = $(obj).attr('data-id');
-            new CallBora("api/modules/notifications/update")
-                .setMethod("POST")
-                .setParams({stt:stt,itm:itm,pid:pid})
-                .setCallback((res) => {
-                    if(res.success){
-                        alertBora.notify(res.message, res.type??'success', res.duration??10);
-                    }else{
-                        alertBora.notify(res.message, 'error', res.duration??10);
-                    }
-                })
-                .setDone(() => {
-                    //TODO:: update Ui
-                })
-                .setError((xhr) => console.error("Error:", xhr))
-                .build();
-        },
+//         updateStt : function(obj){
+//             var stt = ($(obj).prop('checked')) ? 1 : 0;
+//             var itm = $(obj).attr('data-role');
+//             var pid = $(obj).attr('data-id');
+//             new CallBora("api/modules/notifications/update")
+//                 .setMethod("POST")
+//                 .setParams({stt:stt,itm:itm,pid:pid})
+//                 .setCallback((res) => {
+//                     if(res.success){
+//                         alertBora.notify(res.message, res.type??'success', res.duration??10);
+//                     }else{
+//                         alertBora.notify(res.message, 'error', res.duration??10);
+//                     }
+//                 })
+//                 .setDone(() => {
+//                     //TODO:: update Ui
+//                 })
+//                 .setError((xhr) => console.error("Error:", xhr))
+//                 .build();
+//         },
         
-    }
-);
+//     }
+// );
 
-//debug
-appUI.notify.setDebug(true);
+// //debug
+// appUI.notify.setDebug(true);
  
-appUI.notify.init();
+// appUI.notify.init();
 
 // On load
 $(function() {

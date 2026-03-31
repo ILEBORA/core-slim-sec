@@ -1,0 +1,34 @@
+<header class="person-header">
+
+    <button class="back-btn">←</button>
+
+    <div class="person-info">
+        <h4>{{ person.full_name }}</h4>
+
+        <div class="last-seen">
+            {% if person.presence %}
+                {% if person.presence.status == 'online' %}
+                    Online
+                {% elseif person.presence.lastSeen %}
+                    Last seen {{ person.presence.lastSeen }}
+                {% else %}
+                    Offline
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="actions">
+        {% if person.user_id %}
+            <button class="btn-follow"
+                    data-person="{{ person.id }}">
+                {{ person.is_following ? 'Following' : 'Follow' }}
+            </button>
+            <button 
+                data-action="people:message">
+                Message
+            </button>
+        {% endif %}
+    </div>
+
+</header>

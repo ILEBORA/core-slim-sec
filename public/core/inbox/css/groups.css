@@ -1,0 +1,22 @@
+.selected-participants{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 10px;
+}
+
+.participant-chip{
+    background: #e0e7ff;
+    color: #1e3a8a;
+    padding: 4px 8px;
+    border-radius: 14px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.participant-chip .remove{
+    cursor: pointer;
+    font-weight: bold;
+}

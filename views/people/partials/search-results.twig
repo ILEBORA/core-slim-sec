@@ -1,0 +1,25 @@
+{% if people is empty %}
+    <div class="empty-state">
+        No results found
+    </div>
+{% else %}
+
+    {% for person in people %}
+        <div class="person-card"
+             data-person="{{ person.id }}"
+             data-action="people:open"
+             data-type="{{ person.user_id ? 'members' : 'non-users' }}"
+             data-favorite="{{ person.is_favorite ? 1 : 0 }}">
+
+            <div class="avatar">
+                <img src="{{ person.avatar_url }}" />
+            </div>
+
+            <div class="name">
+                {{ person.full_name }}
+            </div>
+
+        </div>
+    {% endfor %}
+
+{% endif %}

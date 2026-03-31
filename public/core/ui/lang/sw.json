@@ -1,4 +1,5 @@
 {
+  "welcome_back": "Karibu tena",
   "menu.dashboard": "Dashibodi",
   "menu.profile": "Wasifu",
   "menu.settings": "Mipangilio",
@@ -8,6 +9,21 @@
   "menu.modules": "Moduli",
   "menu.trees": "Miti",
   "menu.security": "Usalama",
+  "menu.audit_logs": "Kumbukumbu za Ukaguzi",
+  "menu.page_manager": "Meneja ya Kurasa",
+  "menu.theme_builder": "Mjenzi wa Mandhari",
+  "menu.developer_tools": "Zana za Wasanidi Programu",
+  "menu.modules_control": "Udhibiti wa moduli",
+  "menu.billing": "Bili na Malipo",
+  "menu.reports": "Ripoti",
+  "menu.system": "Mfumo",
+  "menu.role_permission" : "Wajibu na Ruhusa",
+  "menu.maintenance": "Matengenezo",
+  "menu.privacy_policy": "Sera ya Faragha",
+  "menu.terms_adn_conditions": "Vigezo na Masharti",
+  "menu.terms_of_service": "Masharti ya Huduma",
+  "menu.help": "Msaada",
+  "menu.language_manager": "Meneja ya Lugha",
 
   "button.save": "Hifadhi",
   "button.cancel": "Ghairi",
@@ -20,6 +36,7 @@
   "button.confirm": "Thibitisha",
   "button.back": "Rudi",
   "button.next": "Endelea",
+  "button.add_new_role": "Ongeza Jukumu Jipya",
 
   "dialog.confirm_title": "Tafadhali thibitisha",
   "dialog.confirm_delete": "Una uhakika unataka kufuta kipengee hiki?",
@@ -52,5 +69,11 @@
   "label.confirm_password": "Thibitisha nenosiri",
   "label.name": "Jina",
   "label.search": "Tafuta",
-  "label.actions": "Vitendo"
+  "label.actions": "Vitendo",
+  "label.role": "Jukumu",
+  "label.permission" : "Ruhusa",
+  "label.select_role" : "Chagua Jukumu",
+  "label.select_permission" : "Chagua Ruhusa",
+
+  "title.user_access_control": "Udhibiti wa Ufikiaji wa Watumiaji"
 }
