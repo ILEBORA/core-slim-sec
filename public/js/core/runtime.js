@@ -326,6 +326,11 @@
 
                 const meta = manifest[name];
 
+                // 🧠 Phase 1: should load?
+                if(!shouldLoad(meta, context)){
+                    continue;
+                }
+
                 // ensure code is loaded
                 await global.__BORA_LOADER__.ensure(name);
 
@@ -512,6 +517,28 @@
         //         }
         //     }
         // }
+        function shouldLoad(meta, context){
+
+            if(!meta) return true;
+
+            const { route, face } = context;
+
+            if(Array.isArray(meta.faces)){
+                if(!meta.faces.includes(face)) return false;
+            }
+
+            if(typeof meta.activateOn === 'function'){
+                try{
+                    if(meta.activateOn(route) !== true){
+                        return false;
+                    }
+                }catch(e){
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         function evaluateMeta(name, pMeta, context){
 

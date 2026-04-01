@@ -41,7 +41,7 @@ $userID     = isset($req['userID']) ? $req['userID'] : 'guest';
 $sessionID  = isset($req['sessionID']) ? $req['sessionID'] : 'null';
 $timer      = isset($req['timer']) ? $req['timer'] : 10;
 $timer      = (int) ($timer * 1000);
-// die($userID );
+//die($sessionID );
 
 $ackFile = BASE_DIR."/.realtime/state/{$userID}_{$sessionID}.json";
 $acked = is_file($ackFile)
@@ -133,11 +133,11 @@ $callback = function () use (&$lastSentm, $ackFile) {
 
     // die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
     // die("http://localhost/wahenga/api/v1/se_main/".$sessionID."/".$event."/notify");
-
+    // die($userID);
     if(empty($base)){
         $base = getIfSet($_ENV['SE_BASE'],'http://localhost/wahenga/');
     }
-    // die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
+    //die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
 
     $params = [
             'CRON_MODE' => getenv('CRON_MODE'),

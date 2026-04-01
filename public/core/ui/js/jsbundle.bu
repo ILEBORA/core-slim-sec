@@ -1,4 +1,8 @@
 <?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
 use BoraSlim\Core\Assets\AssetPipelineJs;
 
 $origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';

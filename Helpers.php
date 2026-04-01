@@ -302,7 +302,7 @@ function userID():string
 }
 
 function sessionID(){
-    return getIfSet($_SESSION['client'],'123');
+    return getIfSet($_SESSION['client'],'1234');
 }
 
 function pass($vars){
@@ -1687,5 +1687,40 @@ if(!function_exists('appCtx')){
             public function set($key,$val){ \BoraSlim\Core\Ctx::set($key,$val); }
             public function has($key){ return \BoraSlim\Core\Ctx::has($key); }
         };
+    }
+}
+
+if(!function_exists('getBrowserID')){
+    function getBrowserID(){
+        if(!empty(userID())){
+            return md5(userID());
+        }
+        
+        $browser = (object) getBrowserDetails();
+        $userIP = getUserIpAddr();
+        $userID = '';
+        if(isset($_SESSION['loggedIn'])){
+            if($sessData = @unserialize($_SESSION['loggedIn'])){
+                    $userID = $sessData->id;
+            }
+        }
+
+        return md5($browser->browser_name.$userID.$userIP);
+    }
+}
+
+if(!function_exists('getBrowserDetails')){
+    function getBrowserDetails($enc = false){
+        $Browser = new BoraSlim\Core\Utils\BrowserDetection();
+        // $useragent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Mobile Safari/537.36';
+        $useragent = $_SERVER['HTTP_USER_AGENT'];
+        $result = $Browser->getAll($useragent);
+        // print_r($result);
+        
+        if($enc){
+            return md5(json_encode($result));
+        }
+
+        return $result;
     }
 }

@@ -55,8 +55,8 @@ async function(scope){
         // ⚠️ YOU MUST PROVIDE PARAMS (this was in Twig before)
         sse.subscribe({
             id: scope.config?.id || '',
-            userID: scope.config?.userID || rd('uID'),
-            sessionID: scope.config?.sessionID || rd('sessID'),
+            userID: rd('uID') || '0',
+            sessionID: rd('sessID'),
             event: scope.config?.event || 'updatesmain',
             timer: scope.config?.timer || 20,
             base: scope.config?.baseURL || rd('baseUrl'),
@@ -64,6 +64,8 @@ async function(scope){
         });
 
         console.log('[Realtime] SSE started (leader)');
+
+        // alert(rd('uID')||rd('bID'));
     }
 
     function handleRealtimeEvents(event){
