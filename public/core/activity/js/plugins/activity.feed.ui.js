@@ -6,21 +6,63 @@ __BORA_REGISTER_PLUGIN__('activity.feed.ui', async function(scope){
     let el;
     let scopeName='home';
 
+    // 🔒 Internal state
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+        // alert('here');
         console.log('[activity.feed.ui] mounted');
-        $(function(){
-            el = document.querySelector('#activityFeedNew');
-            if(!el) return;
-
+        
+        waitForElement('#activityFeedNew', (node) => {
+            el = node;
             scopeName = el.dataset.scope || 'home';
-
+            console.log('Proceed...');
             load();
-
             bindRealtime();
         });
     }
 
+    function waitForElement(selector, callback){
+        const el = document.querySelector(selector);
+        if(el) return callback(el);
+
+        const observer = new MutationObserver(() => {
+            const el = document.querySelector(selector);
+            if(el){
+                observer.disconnect();
+                callback(el);
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+    // function init(retries = 10){
+
+    //     el = document.querySelector('#activityFeedNew');
+
+    //     if(!el){
+    //         if(retries > 0){
+    //             return setTimeout(() => init(retries - 1), 50);
+    //         }
+    //         console.warn('[activity.feed.ui] element not found');
+    //         return;
+    //     }
+
+    //     console.log('Proceed...');
+    //     scopeName = el.dataset.scope || 'home';
+
+    //     load();
+    //     bindRealtime();
+    // }
+
     function unmount(){
+        if (!state.mounted) return; // ⚠️ FIXED (was wrong)
+        state.mounted = false;
+
         sse?.off?.('feed.activity.updated', handleUpdated);
         sse?.off?.('feed.activity.deleted', handleDeleted);
     }

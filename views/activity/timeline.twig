@@ -14,14 +14,9 @@
         class="timeline-feed activityFeedNew"
         data-scope="{{ scope|default('home') }}"
     >
-        {# JS injects items here #}
-    </div>
-    <div
-        id="activityFeed"
-        class="timeline-feed"
-        data-scope="{{ scope|default('home') }}"
-    >
-        {# JS injects items here #}
+        {% for entry in items %}
+            {{ entry.html|raw }}
+        {% endfor %}
     </div>
 
     {# Loading indicator #}
@@ -30,9 +25,3 @@
     </div>
 
 </div>
-
-<script>
-$(function(){
-    //ActivityFeed.init();
-});
-</script>

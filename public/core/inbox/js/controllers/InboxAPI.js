@@ -37,7 +37,7 @@ class InboxAPI{
 //         delay: 40,
 //         sound: true,
 //         onClick: () => {
-//             let url = `portal/inbox/show/6`;
+//             let url = `portal/inbox/thread/6`;
 //             const nav = window.__BORA_APP__?.service('navigation');
 //             if(nav){
 //                 nav.go(url);

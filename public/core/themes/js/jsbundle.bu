@@ -1,11 +1,42 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-use BoraSlim\Core\Assets\AssetPipeline;
+use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipeline(__DIR__, 'js', 'themes');
+$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
 
-$pipeline
-    ->add('themes.js')
-    ->send();
+$pipeline = new AssetPipelineJs('themes', __DIR__, $origin);
+
+/* ==================================================
+   LIBS (FOUNDATION)
+================================================== */
+
+$pipeline->register('themes.plugin', [
+    'file'     => 'plugins/themes.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 100,
+    'requires' => ['runtime'],
+]);
+
+
+/* ==================================================
+   PLUGINS (UI BEHAVIOUR)
+================================================== */
+
+// $pipeline->register('system.langmanager.plugin', [
+//     'file'     => 'plugins/system.langmanager.plugin.js',
+//     'type'     => 'plugin',
+//     'priority' => 130,
+//     'requires' => [
+        
+//     ],
+// ]);
+
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

@@ -8,7 +8,7 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
     | Internal API exposed to optional features
     |--------------------------------------------------------------------------
     */
-
+    // alert('dash');
     const api = {
 
         bindClick(selector, handler){
@@ -155,6 +155,7 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
 
     if(document.readyState === 'loading'){
         document.addEventListener('DOMContentLoaded', init);
+        // alert('here');
         // $(function(){
         //     init();
         // });

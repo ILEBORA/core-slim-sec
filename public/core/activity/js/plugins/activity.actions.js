@@ -18,7 +18,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             e.preventDefault();
 
             const uiStack = await __BORA_APP__.service('uiStack');
-            const dismissable = await __BORA_APP__.service('uiDismissable');
+            const dismissable = await __BORA_APP__.service('ui.dismissable');
 
             const $box = $(this).closest('.reaction-box');
 

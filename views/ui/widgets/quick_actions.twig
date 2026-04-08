@@ -1,0 +1,11 @@
+{% extends "widgets/base.twig" %}
+
+{% block content %}
+<div class="quick-actions">
+    {% for action in actions %}
+        <button class="action-btn" onclick="{{ action.onclick }}">
+            {{ action.label }}
+        </button>
+    {% endfor %}
+</div>
+{% endblock %}

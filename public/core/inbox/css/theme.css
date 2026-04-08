@@ -1,17 +1,53 @@
+/* 🌞 LIGHT (default) */
 :root {
     --inbox-primary: #2563eb;
+
     --inbox-bg: #f9fafb;
+    --inbox-surface: #ffffff;
+    --inbox-border: #e5e7eb;
+
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+
     --bubble-outgoing: #2563eb;
     --bubble-incoming: #ffffff;
+
+    --bubble-text: #111827;
+    --bubble-meta: #6b7280;
+
+    --tick-read: #2563eb;
+    
 }
 
-body.dark {
+/* 🌙 DARK MODE */
+body.dark-mode {
+    --inbox-bg: #0f172a;
+    --inbox-surface: #1e293b;
+    --inbox-border: #334155;
+
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+
+    --bubble-outgoing: #134e4a;
+    --bubble-incoming: #1e293b;
+
+    --bubble-text: #e2e8f0;
+    --bubble-meta: #94a3b8;
+
+    --tick-read: #38bdf8;
+}
+
+/**/
+
+
+
+body.dark-mode {
     --inbox-bg: #0f172a;
     --bubble-outgoing: #134e4a;
     --bubble-incoming: #1e293b;
 }
 
-body.dark {
+body.dark-mode {
     --inbox-bg: #0f172a;
     --bubble-outgoing: #134e4a;
     --bubble-incoming: #1e293b;

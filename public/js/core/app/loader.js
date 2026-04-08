@@ -22,6 +22,7 @@
     const loading  = new Map();   // name -> Promise
     const loaded   = new Set();   // name
     const failed   = new Map();   // name -> error
+    const libs = new Set();
 
     const scriptCache = new Map(); // src -> Promise
 
@@ -104,7 +105,7 @@
         const plugins  = app._getPlugins?.();
 
         // already registered
-        if(services?.has(name) || plugins?.has(name)){
+        if(services?.has(name) || plugins?.has(name) || libs.has(name)){
             loaded.add(name);
             return true;
         }
@@ -134,7 +135,7 @@
         }
 
         const promise = (async ()=>{
-
+            
             try{
 
                 /* ---------------------------
@@ -165,6 +166,13 @@
 
                 if(typeof app.integratePending === 'function'){
                     app.integratePending();
+                }
+
+                // ✅ NEW: handle libs
+                if(entry.type === 'lib'){
+                    libs.add(name);
+                    loaded.add(name);
+                    return true;
                 }
 
                 /* ---------------------------

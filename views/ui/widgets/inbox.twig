@@ -1,0 +1,15 @@
+{% extends "widgets/base.twig" %}
+
+{% block content %}
+<ul class="inbox-list">
+    {% for msg in messages %}
+        <li class="inbox-item">
+            <div class="sender">{{ msg.sender }}</div>
+            <div class="message">{{ msg.preview }}</div>
+            <div class="time">{{ msg.time }}</div>
+        </li>
+    {% else %}
+        <li class="empty">No messages</li>
+    {% endfor %}
+</ul>
+{% endblock %}

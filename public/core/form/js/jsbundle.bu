@@ -13,7 +13,9 @@ $pipeline->register('form.plugin', [
     'file'     => 'plugins/form.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['form.actions'],
+    'requires' => [
+        //'form.actions'
+        ],
 ]);
 
 /* ==================================================

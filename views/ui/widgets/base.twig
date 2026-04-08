@@ -1,0 +1,22 @@
+{# Core widget wrapper #}
+
+<div class="widget {{ class|default('') }} {{ statusmode|default('') }}" 
+     data-widget-id="{{ id|default('') }}">
+
+    {% if tools is defined and tools %}
+        <div class="widget-tools">
+            {{ tools|raw }}
+        </div>
+    {% endif %}
+
+    {% if title is defined %}
+        <div class="widget-header">
+            <h3 class="widget-title">{{ title }}</h3>
+        </div>
+    {% endif %}
+
+    <div class="widget-body">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>

@@ -6,6 +6,7 @@ async function (scope) {
     // 🔧 Resolve services FIRST
     const callbora      = await scope.getService('callbora');
     const navigation    = await scope.getService('navigation');
+    const state         = await scope.getService('state');
     const uiActions     = await scope.getService('ui.actions');
     const popup = await scope.getPlugin('popup');
     
@@ -103,7 +104,7 @@ async function (scope) {
                 console.log('RESPONSE:: ',res);
                 scope.emit('inbox.message.sent',{
                     res
-                })
+                });
                 if (!res.success) {
                     alert('Message failed to send');
                     return;
@@ -118,17 +119,24 @@ async function (scope) {
 
         scope.on('inbox.view.list',function(){
             $('.thread_context_menu').hide();
-            $('.thread-info').hide();
+            $('.thread-info').addClass('is-hidden');
+
+            $('.thread-info').addClass('is-hidden');
+            $('.thread-view .composer').addClass('is-hidden');
+            
         });
 
         scope.on('inbox.view.thread',function(){
             $('.thread_context_menu').show();
-            $('.thread-info').show();
+            $('.thread-info').removeClass('is-hidden'); 
+
+            $('.thread-view .composer').removeClass('is-hidden');
         });
 
         // let $scope = scope;
         scope.on('thread.participants.updated',(e) => {
-            //scope.set('thread.participants', e.count);
+            console.log('Participants updated: ' + e.count);
+            state.set('thread.participants', e.count);
         });
 
         setupActions();

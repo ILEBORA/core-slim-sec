@@ -10,20 +10,23 @@ return [
         'file'     => 'vendor/jquery.js',
         'version'  => '3.7.1',
         'priority' => 1,
-        //'preload'  => true,
+        // 'bypass'  => true,
+        // 'preload'  => true,
     ],
 
     'jquery_global' => [
         'file'     => 'vendor/jquery_global.js',
         'version'  => '1.0.0',
         'priority' => 2,
-        'preload'  => true,
+        // 'bypass'  => true,
+        // 'preload'  => true,
     ],
 
     'select2' => [
         'file'     => 'vendor/select2.js',
         'version'  => '4.1.0',
         'priority' => 3,
+        'bypass'  => true,
         'preload'  => true,
     ],
 
@@ -31,12 +34,16 @@ return [
         'file'     => 'vendor/colorpicker.js',
         'version'  => '1.0.0',
         'priority' => 4,
+        'bypass'  => true,
+        'preload'  => true,
     ],
 
     'draggable' => [
         'file'     => 'vendor/draggable.js',
         'version'  => '1.0.0',
         'priority' => 5,
+        'bypass'  => true,
+        'preload'  => true,
     ],
 
     /* ==================================================
@@ -117,7 +124,7 @@ return [
     'capability' => ['file' => 'services/capability.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 36, 'requires' => ['runtime']],
     'ui.actions' => ['file' => 'services/ui.actions.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 37, 'requires' => ['runtime']],
     'uistack' => ['file' => 'services/ui.stack.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 39, 'requires' => ['runtime']],
-    'uidismissable' => ['file' => 'services/ui.dismissable.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 40, 'requires' => ['runtime']],
+    'ui.dismissable' => ['file' => 'services/ui.dismissable.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 40, 'requires' => ['runtime']],
     'ui.element.dismiss' => ['file' => 'services/ui.element.dismiss.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['runtime']],
     'preferences' => ['file' => 'services/preferences.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 42, 'requires' => ['runtime']],
     'sanity' => ['file' => 'services/sanity.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 43, 'requires' => ['runtime']],
@@ -146,18 +153,21 @@ return [
     'adminface' => ['file' => 'plugins/face-admin.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 59],
     'sidebar' => ['file' => 'plugins/layout.sidebar.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 60],
     'navigationbinder' => ['file' => 'plugins/navigation-binder.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61],
-    'overlay' => ['file' => 'plugins/overlay.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61],
+    'overlay' => ['file' => 'plugins/overlay.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61, 'preload' => true],
     'logoutux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62],
     'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63],
 
     'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core']],
+    
+    'dom.reactivity' => ['file' => 'plugins/dom.reactivity.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 65, 'requires' => ['runtime', 'state']],
+
 
 
     /* ==================================================
        app layer (lazy)
     ================================================== */
 
-    'ilebora_or' => ['file' => 'app/ilebora_or.js', 'version' => '1.0.0', 'priority' => 70, 'preload' => true],
+    'ilebora_or' => ['file' => 'app/ilebora_or.js', 'version' => '1.0.0', 'priority' => 70, 'preload' => true, 'bypass' => true],
     'mainjs' => ['file' => 'app/mainjs.js', 'version' => '1.0.0', 'priority' => 75, 'preload' => true],    
 
     'config' => [

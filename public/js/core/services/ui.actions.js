@@ -9,11 +9,35 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
     const actions = {};
 
     function register(name, fn){
+
         if(!name || typeof fn !== 'function'){
             console.warn('[ui.actions] Invalid register:', name);
             return;
         }
+
+        if(actions[name]){
+            console.warn(`[ui.actions] Overwriting action: ${name}`);
+        }
+
         actions[name] = fn;
+    }
+
+    // function registerO(name, fn){
+    //     if(!name || typeof fn !== 'function'){
+    //         console.warn('[ui.actions] Invalid register:', name);
+    //         return;
+    //     }
+    //     actions[name] = fn;
+    // }
+
+    function unregister(name, fn){
+
+        if(!actions[name]) return;
+
+        // 🔒 only remove if same function
+        if(!fn || actions[name] === fn){
+            delete actions[name];
+        }
     }
 
     function run(name, el, event){
@@ -192,6 +216,88 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
         console.log('[ui.actions] ready');
     }
 
+    //
+    async function withLoading(el, fn, onError){
+
+        loading(el, true);
+
+        try{
+            return await fn();
+        }
+        catch(err){
+            if(onError) onError(err);
+            else console.error(err);
+        }
+        finally{
+            loading(el, false);
+        }
+    }
+
+    function loading(el, state = true, options = {}){
+
+        const $el = window.jQuery ? window.jQuery(el) : null;
+
+        if(!$el || $el.length === 0) return;
+
+        const $btn = $el;
+        const $text = $btn.find('.btn_text');
+        const $loader = $btn.find('.btn_loading');
+
+        const defaults = {
+            loadingHTML: '<img class="jx_status" src="assets/images/icons/ajax.gif"/>',
+            successHTML: '<img class="jx_status" src="assets/images/icons/success.png"/>',
+            resetDelay: 0 // ms
+        };
+
+        const config = Object.assign({}, defaults, options);
+
+        if(state === true){
+
+            // store original text once
+            if(!$btn.data('__original_text')){
+                $btn.data('__original_text', $text.html());
+            }
+
+            $btn.prop('disabled', true);
+
+            if($loader.length){
+                $loader.html(config.loadingHTML);
+            } else {
+                // fallback if no loader span
+                $btn.html(config.loadingHTML);
+            }
+
+        } else if(state === 'success'){
+
+            if($loader.length){
+                $loader.html(config.successHTML);
+            }
+
+            if(config.resetDelay > 0){
+                setTimeout(() => loading(el, false, options), config.resetDelay);
+            }
+
+        } else {
+
+            // reset
+            $btn.prop('disabled', false);
+
+            const original = $btn.data('__original_text');
+
+            if($text.length && original){
+                $text.html(original);
+            }
+
+            if($loader.length){
+                $loader.html('');
+            } else if(original){
+                $btn.html(original);
+            }
+
+            $btn.removeData('__original_text');
+        }
+    }
+
     /* ==================================================
        PUBLIC API
     ================================================== */
@@ -199,6 +305,10 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
     return {
         init,
         register,
+        unregister,
+        withLoading,
+        loading,
+
         run   // optional, useful for manual triggering
     };
 });

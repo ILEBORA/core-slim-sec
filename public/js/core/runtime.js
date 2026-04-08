@@ -264,33 +264,6 @@
             }
         }
 
-        // function integratePendingO(){
-
-        //     console.log('Pending plugins:', pendingPlugins.size);
-
-        //     if(!started) return;
-
-        //     // services
-        //     pendingServices.forEach(({factory, meta}, name)=>{
-        //         name = name.toLowerCase();
-        //         if(!services.has(name)){
-        //             _registerService(name, factory, meta);
-        //         }
-        //     });
-
-        //     pendingServices.clear();
-
-        //     // plugins
-        //     pendingPlugins.forEach(({factory, meta}, name)=>{
-        //         name = name.toLowerCase();
-        //         if(!plugins.has(name)){
-        //             _registerPlugin(name, factory, meta);
-        //         }
-        //     });
-
-        //     pendingPlugins.clear();
-        // }
-
         /* ==================================================
            ACTIVATION (LAZY SAFE)
         ================================================== */

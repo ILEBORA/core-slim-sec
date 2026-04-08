@@ -1,6 +1,7 @@
 __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
     const hooks = await scope.getService('hooks');
+    const callbora = await scope.getService('callbora');
 
     /* ---------------------------------------
        Internal helper
@@ -26,38 +27,73 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
     --------------------------------------- */
 
     function openPageEditor(id){
-        open({ view:'edit', id, tab:'edit' });
+        open({ view:'edit', id, tab:'edit', group:  'page'});
     }
 
-    function openDublicate(id){
-        open({ view:'dublicate', id, tab:'dublicate' });
+    function openDuplicate(id){
+        open({ view:'duplicate', id, tab:'duplicate', group:  'page', });
     }
 
     function openMotherPageSettings(id){
-        open({ view:'settings', id, tab:'settings' });
+        open({ view:'settings', id, tab:'settings', group:  'page', });
     }
 
     function openSubpageModal(id){
-        open({ view:'subpage', id, tab:'subpage' });
+        open({ view:'subpage', id, tab:'subpage', group:  'page', });
     }
 
     function openArrangeUI(id){
-        open({ view:'arrange', id, tab:'arrange' });
+        open({ view:'arrange', id, tab:'arrange', group:  'page' });
     }
 
     function togglePageStatus(id){
-        open({ view:'toggle', id, tab:'toggle' });
+        open({ view:'toggle', id, tab:'toggle', group:  'page', });
     }
 
     function confirmDelete(id){
 
-        alertBora.confirm('Are you <em>really</em> sure?', { html:true })
-        .autoCancel(20)
-        .then(function(){
-            console.warn('Delete not implemented:', id);
-        }, function(){
-            console.log('Delete cancelled');
+        alertBora.prompt(
+            '<h3>Confirm Action</h3>Enter your password to continue',
+            {
+                html: true,
+                prompt: '<input type="password" name="password" placeholder="Password">'
+            }
+        ).then(function(det){
+
+            overlayLoader.show('Please wait...');
+
+            let password = btoa(det.password);
+
+            callbora.post(`api/modules/pages/page/${id}/delete`, {
+                password: password
+            }).then(function(response){
+
+                overlayLoader.hide();
+
+                if(response.success){
+                    alertBora.success('Page deleted');
+                } else {
+                    alertBora.error(response.message || 'Failed');
+                }
+
+            });
+
         });
+
+        // alertBora.confirm('Are you <em>really</em> sure?', { html:true })
+        // .autoCancel(20)
+        // .then(function(){
+        //     callbora.api('api/modules/pages/page/1/delete', { id }).then(function(response){
+        //         if(response.success){
+        //             alertBora.notify('Page deleted successfully').success();
+        //         }
+        //     });
+
+        //     console.warn('Delete not implemented:', id);
+        // }, function(){
+        //     console.log('Delete cancelled');
+        // });
+        
 
     }
 
@@ -82,6 +118,12 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
                 return openArrangeUI(id);
 
             case 'toggle-status':
+                return togglePageStatus(id);
+            
+            case 'duplicate':
+                return openDuplicate(id);
+
+            case 'togglestatus':
                 return togglePageStatus(id);
 
             case 'delete':

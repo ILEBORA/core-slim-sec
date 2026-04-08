@@ -47,7 +47,7 @@ class InboxUI {
         
         this.scope.on('inbox.thread.read', ({threadId}) => {
 
-            new CallBora(`api/modules/inbox/mark-read/${threadId}`)
+            new CallBora(`api/modules/inbox/thread/${threadId}/read`)
                 .setMethod("POST")
                 .setCallback(res => {
                     if(!res.success) return;
@@ -243,8 +243,14 @@ class InboxUI {
     appendMessage(msg){
         console.log('APPEND MESSAGE::'+this.getActiveThread() + ':: msgThreadId' + msg.thread_id, msg);
         // alert(this.getActiveThread());
+        console.log(
+            'CHECK THREAD:',
+            msg.thread_id,
+            this.threadId,
+            msg.thread_id === this.threadId
+        );
         // CRITICAL: ignore messages not for active thread
-        if(msg.thread_id !== this.threadId){
+        if(String(msg.thread_id) !== String(this.threadId)){
             return;
         }
 
@@ -466,11 +472,11 @@ class InboxUI {
 
                 this.prependMessages(res.data.messages);
 
-                if(!res.data.has_more){
-                    $('.load-history').hide();
-                }else{
-                    $('.load-history').show();
-                }
+                // if(!res.data.has_more){
+                //     $('.load-history').hide();
+                // }else{
+                //     $('.load-history').show();
+                // }
 
                 this.loading = false;
 
@@ -536,6 +542,10 @@ class InboxUI {
             // $('.thread-info').show();
             this.scope.emit('inbox.view.thread');
         }
+
+
+        
+
     }
 
     //

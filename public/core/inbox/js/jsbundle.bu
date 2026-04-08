@@ -15,6 +15,7 @@ $pipeline->register('inbox.helpers', [
     'file'     => 'utils/InboxHelpers.js',
     'type'     => 'lib',
     'priority' => 100,
+    'preload'  => true,
 ]);
 
 $pipeline->register('inbox.tests', [
@@ -68,6 +69,7 @@ $pipeline->register('inbox.presence', [
     'type'     => 'lib',
     'priority' => 132,
     'requires' => ['inbox.ui'],
+    'preload'  => true,
 ]);
 
 $pipeline->register('inbox.notifications', [

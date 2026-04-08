@@ -6,7 +6,7 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
 
     let el;
     let selectedUser = null;
-    let selectedParticipants = []
+    let selectedParticipants = [];
     let bound = false;
 
     function init(){
@@ -77,7 +77,11 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
                 'api/modules/inbox/create-direct',
                 {
                     //user_id:selectedUser.id
-                    participants: selectedParticipants.map(p => p.id)
+                    // participants: selectedParticipants.map(p => p.id)
+                    participants: selectedParticipants.map(p => ({
+                        id: p.id,
+                        type: p.type
+                    }))
                 }
             )
             .then(res=>{
@@ -87,7 +91,7 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
                 close();
 
                 navigation.go(
-                    `portal/inbox/show/${res.thread.id}`
+                    `portal/inbox/thread/${res.thread.id}`
                 );
 
             });
@@ -107,16 +111,6 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
                 `${u.username} (${u.email})`;
 
             li.addEventListener('click', ()=>{
-
-                // selectedUser = u;
-
-                // list
-                //     .querySelectorAll('li')
-                //     .forEach(x=>x.classList.remove('selected'));
-
-                // li.classList.add('selected');
-
-                // el.querySelector('.start-btn').disabled = false;
                 const exists = selectedParticipants.find(p => p.id === u.id);
 
                 if(exists){
@@ -136,6 +130,11 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
 
         });
 
+    }
+
+    function isSameParticipant(a, b){
+        return String(a.id) === String(b.id)
+            && String(a.type) === String(b.type);
     }
 
     function open(){
@@ -195,8 +194,14 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
             header.textContent = title;
             list.appendChild(header);
 
-            users.forEach(u => {
-                list.appendChild(createUserItem(u));
+            users.forEach(raw => {
+                const u = normalizeParticipant(raw);
+
+                if(u.type === 'bot'){
+                    list.appendChild(createBotItem(u));
+                } else {
+                    list.appendChild(createUserItem(u));
+                }
             });
         };
 
@@ -238,9 +243,41 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
         return li;
     }
 
-    function toggleParticipant(user, el){
+    function normalizeParticipant(u){
+        return {
+            id: String(u.id),
+            type: u.type || 'user',     // 🔥 align with backend
+            name: u.name || u.username || '',
+            avatar: u.avatar || '',
+            bot_type: u.bot_type || null
+        };
+    }
 
-        const index = selectedParticipants.findIndex(p => p.id === user.id);
+    function toggleParticipant(rawUser, el){
+
+        const user = normalizeParticipant(rawUser);
+
+        const index = selectedParticipants.findIndex(p => isSameParticipant(p, user));
+
+        if(index !== -1){
+            selectedParticipants.splice(index, 1);
+            el.classList.remove('selected');
+        } else {
+            selectedParticipants.push(user);
+            el.classList.add('selected');
+        }
+
+        updateSelectedUI();
+
+        el.closest('.inbox-composer')
+            .querySelector('.start-btn').disabled =
+            selectedParticipants.length === 0;
+    }
+
+    function toggleParticipantO(user, el){
+
+        // const index = selectedParticipants.findIndex(p => p.id === user.id);
+        const index = selectedParticipants.findIndex(p => isSameParticipant(p, user));
 
         if(index !== -1){
             // remove
@@ -275,7 +312,7 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
             chip.className = 'participant-chip';
 
             chip.innerHTML = `
-                ${user.username}
+                ${user.name}
                 <span class="remove">&times;</span>
             `;
 
@@ -286,7 +323,7 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
 
                 // also unselect in list
                 el.querySelectorAll('.participant-results li').forEach(li => {
-                    if(li.textContent.includes(user.username)){
+                    if(li.textContent.includes(user.name)){
                         li.classList.remove('selected');
                     }
                 });

@@ -5,6 +5,23 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
 
     function buildFormUrl({ module, group, tab='add', id=null, meta=null }){
 
+        // FIXED ORDER
+        const parts = ['api/modules', module, group, 'form', tab];
+
+        if (id) parts.push(id);
+
+        let url = parts.join('/');
+
+        if (meta && typeof meta === 'object'){
+            const qs = new URLSearchParams(meta).toString();
+            if (qs) url += '?' + qs;
+        }
+
+        return url;
+    }
+
+    function buildFormUrlO({ module, group, tab='add', id=null, meta=null }){
+
         const parts = ['api/modules', module, 'form', group, tab];
 
         if (id) parts.push(id);

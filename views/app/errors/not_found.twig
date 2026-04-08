@@ -1,3 +1,10 @@
 <div class="container">
-    <center>{{ message|raw }}</center>
+    <div class="error-box">
+        <h4>⚠️ Something went wrong</h4>
+        <p>{{ message|raw }}</p>
+
+        <button class="retry-btn" onclick="window.history.back()">
+            Go back
+        </button>
+    </div>
 </div>

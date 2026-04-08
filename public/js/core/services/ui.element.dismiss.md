@@ -43,12 +43,12 @@ ESC closes **top item first**.
 
 ---
 
-## uiDismissable
+## ui.dismissable
 
 Creates a dismissable instance.
 
 
-const dismissable = app.service('uiDismissable');
+const dismissable = app.service('ui.dismissable');
 
 const instance = dismissable.create(()=>{
 closeUI();
@@ -77,7 +77,7 @@ $(document).on('click', '.reaction-trigger', async function(e){
     e.preventDefault();
 
     const uiStack = await __BORA_APP__.service('uiStack');
-    const dismissable = await __BORA_APP__.service('uiDismissable');
+    const dismissable = await __BORA_APP__.service('ui.dismissable');
 
     const $box = $(this).closest('.reaction-box');
 
@@ -103,7 +103,7 @@ Close after reaction
 $box.data('dismissInstance')?.close();
 Example 2 — Sidebar
 Open
-const dismissable = await scope.getService('uiDismissable');
+const dismissable = await scope.getService('ui.dismissable');
 
 let sidebarInstance = null;
 
@@ -130,7 +130,7 @@ $(document).on('click', '.mini-photo-wrapper', function(e){
 
     e.stopPropagation();
 
-    const dismissable = await scope.getService('uiDismissable');
+    const dismissable = await scope.getService('ui.dismissable');
 
     if(dropMenu.hasClass('is-active')){
         dropMenu.data('dismissInstance')?.close();

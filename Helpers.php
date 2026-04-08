@@ -663,40 +663,8 @@ if (!function_exists('hasPermission')) {
      * @param bool $autoRegister Create permission if missing
      * @param bool $throw Throw exception if denied
      */
-    // function hasPermissionO(string $module, string $action, bool $autoRegister = false, bool $throw = true): bool {
-    //     $permRepo = ModManage()->permissions; // Assuming you have a PermissionsRepository
-    //     $permission = $permRepo->findByName($module, $action);
-
-    //     if (!$permission && $autoRegister) {
-    //         $permRepo->create(['module' => $module, 'action' => $action]);
-    //         return true;
-    //     }
-
-    //     $user = auth()->user(); // however you fetch the current user
-    //     $has = $user && $user->hasPermission($module, $action);
-
-    //     if (!$has && $throw) {
-    //         throw new \Exception("Access denied: {$module}.{$action}");
-    //     }
-
-    //     return $has;
-    // }
 
     function hasPermission(string $module, string $action, bool $autoRegister = false, bool $throw = false): bool {
-        // $permRepo = ModManage()->permissions; // Assuming you have a PermissionsRepository
-        // $permission = $permRepo->findByName($module, $action);
-
-        // if (!$permission && $autoRegister) {
-        //     $permRepo->create(['module' => $module, 'action' => $action]);
-        //     return true;
-        // }
-
-        // $user = auth()->user(); // however you fetch the current user
-        // $has = $user && $user->hasPermission($module, $action);
-
-        // if (!$has && $throw) {
-        //     throw new \Exception("Access denied: {$module}.{$action}");
-        // }
         $permManager = myApp()->getFeature('permissions');
         $module = strtolower($module);
         $action = strtolower($action);
@@ -1049,8 +1017,15 @@ if(!function_exists('autoIncludeCoreJs')){
                     continue;
                 }
 
-                $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
-
+                // $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
+                if(isset($manifest[$name]['bypass'])){
+                    $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
+                }else{
+                    $compiled = \BoraSlim\Core\Assets\JsAssetCompiler::compile($name, $filePath);
+                    $manifest[$name]['file'] = $compiled['url'];
+                }
+                
+                // dieVal($compiled);
                 $hooks->register($name, $filePath);
             }
 
@@ -1519,12 +1494,7 @@ if (!function_exists('i18n_register_core')) {
         $loader     = I18nBootstrap::loader();
 
         $lang = i18n_current_lang();
-        // if($prefs = \BoraSlim\Core\Modules\Ui\Controllers\Api\UserprefsController::all(true)){
-        //     // jsonExit($prefs);
-        //     $lang = getIfSet($prefs['language'],'en');
-        // }
-        // jsonExit(unserialize($_SESSION['siteprefs']));
-        // dieVal($lang);
+
         // Always register merged EN
         $translator->register(
             $domain,
@@ -1679,17 +1649,6 @@ if(!function_exists('core')){
     }
 }
 
-if(!function_exists('appCtx')){
-    function appCtx(): \BoraSlim\Core\Ctx
-    {
-        return new class {
-            public function get($key){ return \BoraSlim\Core\Ctx::get($key); }
-            public function set($key,$val){ \BoraSlim\Core\Ctx::set($key,$val); }
-            public function has($key){ return \BoraSlim\Core\Ctx::has($key); }
-        };
-    }
-}
-
 if(!function_exists('getBrowserID')){
     function getBrowserID(){
         if(!empty(userID())){
@@ -1722,5 +1681,129 @@ if(!function_exists('getBrowserDetails')){
         }
 
         return $result;
+    }
+}
+
+// Ctx
+if(!function_exists('ctx')){
+    function ctx(): \BoraSlim\Core\Ctx
+    {
+        return \BoraSlim\Core\Ctx::instance();
+    }
+}
+
+// Widgets
+if (!function_exists('widgets')) {
+
+    function widgets(): \BoraSlim\Core\Kernel\Widgets\WidgetRegistry
+    {
+        if (!ctx()->has(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class)) {
+            ctx()->set(
+                \BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class,
+                new \BoraSlim\Core\Kernel\Widgets\WidgetRegistry()
+            );
+        }
+
+        return ctx()->get(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class);
+    }
+}
+
+// Forms
+if(!function_exists('forms')){
+    function forms(): \BoraSlim\Core\Kernel\Forms\FormRegistry
+    {
+        if (!ctx()->has(\BoraSlim\Core\Kernel\Forms\FormRegistry::class)) {
+            ctx()->set(
+                \BoraSlim\Core\Kernel\Forms\FormRegistry::class,
+                new \BoraSlim\Core\Kernel\Forms\FormRegistry()
+            );
+        }
+
+        return ctx()->get(\BoraSlim\Core\Kernel\Forms\FormRegistry::class);
+    }
+}
+
+// Channels
+if (!function_exists('channels')) {
+
+    function channels(): \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry
+    {
+        if (!ctx()->has(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class)) {
+            ctx()->set(
+                \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class,
+                new \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry()
+            );
+        }
+
+        return ctx()->get(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class);
+    }
+}
+
+//Queue 
+if(!function_exists('queue')){
+    function queue(): \BoraSlim\Core\Infrastructure\Queue\DatabaseQueue
+    {
+        return ctx()->make(\BoraSlim\Core\Infrastructure\Queue\DatabaseQueue::class);
+    }
+}
+
+//Context menu
+if(!function_exists('contextMenu')){
+    function contextMenu(): \BoraSlim\Core\Modules\Ui\Services\ContextMenu
+    {
+        return ctx()->make(\BoraSlim\Core\Modules\Ui\Services\ContextMenu::class);
+    }
+}
+
+// Dropdown
+if(!function_exists('dropdown')){
+    function dropdown(): \BoraSlim\Core\Modules\Ui\Services\DropdownPanel
+    {
+        return ctx()->make(\BoraSlim\Core\Modules\Ui\Services\DropdownPanel::class);
+    }
+}
+
+// API
+if (!function_exists('api')) {
+    function api(): \BoraSlim\Core\Http\ApiRegistry
+    {
+        $ctx = ctx();
+
+        if (!$ctx->bound('api.registry')) {
+            $ctx->bind('api.registry', fn() => new \BoraSlim\Core\Http\ApiRegistry());
+        }
+
+        return $ctx->make('api.registry');
+    }
+}
+
+if (!function_exists('api_responder')) {
+    function api_responder(?\BoraSlim\Core\Http\Responders\HttpStatusMapper $mapper = null): \BoraSlim\Core\Http\Responders\ApiResponder
+    {
+        $role = myApp()->getFeature('permissions')->getCurrentRole();
+        return new \BoraSlim\Core\Http\Responders\ApiResponder(
+            I18nBootstrap::translator(),
+            $mapper ?? new \BoraSlim\Core\Http\Responders\DefaultHttpStatusMapper(),
+            new \BoraSlim\Core\Http\RequestContext(
+                i18n_current_lang(),
+                $role??'Guest'
+            )
+        );
+    }
+}
+
+if (!function_exists('validate')) {
+    function validate(array $data, array $rules): array
+    {
+        $validator = new \BoraSlim\Core\Support\Validator($data, $rules);
+
+        if ($validator->fails()) {
+            throw new \DomainException(json_encode([
+                'type' => 'validation',
+                'errors' => $validator->errors()
+            ]));
+        }
+
+        return $data;
     }
 }

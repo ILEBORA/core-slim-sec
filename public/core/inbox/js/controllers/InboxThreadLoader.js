@@ -34,7 +34,7 @@ class InboxThreadLoader{
 
         const url = this.normalizeUrl(window.location.toString());
 
-        const match = url.match(/portal\/inbox\/show\/(\d+)/);
+        const match = url.match(/portal\/inbox\/thread\/(\d+)/);
 
         if(!match){
             this.ui.setView('list');
@@ -50,13 +50,6 @@ class InboxThreadLoader{
 
         this.ui.setThreadSelected(threadId);
         this.scope.emit('inbox.thread.open', {threadId:threadId});
-
-        // this.ui.setView('thread');
-
-        // this.ui.setActiveThread(id);
-        // this.realtime.subscribeThread(id);
-
-        // this.load(threadId);
   
     }
 
@@ -81,7 +74,7 @@ class InboxThreadLoader{
                 );
 
             });
-
+            
             this.scope.emit('thread.participants.updated', {count:res.data.participants.length});
 
             this.ui.scrollBottom();
@@ -92,7 +85,7 @@ class InboxThreadLoader{
             this.ui.clearThreadBadge(threadId);
 
             //
-            history.pushState({}, '', `portal/inbox/show/${threadId}`);
+            history.pushState({}, '', `portal/inbox/thread/${threadId}`);
             this.ui.bindScroll();
 
             // this.ui.setActiveThread(threadId);
@@ -124,7 +117,7 @@ class InboxThreadLoader{
                 composer.setAttribute('data-thread', threadId);
                 composer.setAttribute(
                     'action',
-                    `api/modules/inbox/send-message/${threadId}`
+                    `api/modules/inbox/thread/${threadId}/message`
                 );
             }
 
@@ -140,10 +133,10 @@ class InboxThreadLoader{
 
             console.error('[InboxLoader] failed', err);
 
-            container.innerHTML =
+            container.innerHTML = 
                 `<div class="error">Failed to load thread</div>`;
 
-        });
+            });
     }
 
     bindComposerSubmit(){

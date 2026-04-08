@@ -67,7 +67,7 @@ class InboxNotifications {
 
                 n.onclick = () => {
                     window.focus();
-                    this.navigation.go(`portal/inbox/show/${data.thread_id}`);
+                    this.navigation.go(`portal/inbox/thread/${data.thread_id}`);
                     setTimeout(()=>this.ui.scrollBottom(),300);
                     n.close();
                 };
@@ -91,7 +91,7 @@ class InboxNotifications {
             delay: 4,
             sound: true,
             onClick: () => {
-                this.navigation.go(`portal/inbox/show/${data.thread_id}`);
+                this.navigation.go(`portal/inbox/thread/${data.thread_id}`);
                 setTimeout(()=>this.ui.scrollBottom(),300);
             }
         });
@@ -117,7 +117,7 @@ class InboxNotifications {
     //             delay: 4,
     //             sound: !isActiveThread, // 👈 key logic
     //             onClick: () => {
-    //                 this.navigation.go(`portal/inbox/show/${data.thread_id}`);
+    //                 this.navigation.go(`portal/inbox/thread/${data.thread_id}`);
     //                 setTimeout(()=>this.ui.scrollBottom(),300);
     //             }
     //         });
@@ -126,7 +126,7 @@ class InboxNotifications {
     //         //     preview || 'You received a message',
     //         //     4,
     //         //     () => {
-    //         //         this.navigation.go(`portal/inbox/show/${data.thread_id}`);
+    //         //         this.navigation.go(`portal/inbox/thread/${data.thread_id}`);
     //         //         setTimeout(()=>{
     //         //             ui.scrollBottom();
     //         //         },300);

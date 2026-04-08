@@ -85,7 +85,7 @@ async function (scope) {
 
         uiActions.register('page.toggle-status', (el)=>{
             const pageId = el.dataset.id;
-            ppageActions.togglePageStatus(pageId);
+            pageActions.togglePageStatus(pageId);
         });
 
 
@@ -100,14 +100,38 @@ async function (scope) {
             pageActions.confirmDelete(pageId);
         });
 
-        //Panel
+
+        //Panel Actions
         uiActions.register('thread.open', (el)=>{
             const threadId = el.dataset.thread;
             uiStack.closeTop();
-            navigation.go(`portal/inbox/show/${threadId}`);
-        })
+            navigation?.go(`portal/inbox/thread/${threadId}`);
+        });
 
-    
+        scope.on('preferences:before-change', async ({ key, value, preventDefault }) => {
+
+            if(key === 'language'){
+
+                const alerts = await scope.getPlugin('alerts');
+
+                alerts.confirm('Change language? The app will reload.', {
+                        html: true
+                }).autoCancel(20)
+                .then(function() {
+                    // Allow change, but override flow
+                    setTimeout(async () => {
+                        const prefs = await scope.getService('preferences');
+                        await prefs.save();
+                        location.reload();
+                    }, 0);
+                }, function() {
+                    logTest('Confirmation canceled');
+                });
+                
+                preventDefault();                
+            }
+        });
+
     }
 
     function uiUnbind(){

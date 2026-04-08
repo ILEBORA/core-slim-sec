@@ -186,7 +186,7 @@ const appInbox = addPlugin(
             .setParams({})
             .setCallback((res) => {
                 if (!res.success) {
-                    container.innerHTML = `<p>Failed to load thread</p>`;
+                    container.innerHTML = res.error ??`<p>Failed to load thread</p>`;
                     return;
                 }
 
@@ -461,7 +461,7 @@ const appInboxComposer = addPlugin(BoraPlugin, {
 
                     // navigate / load thread
                     window.location.href =
-                        `portal/inbox/show/${res.thread.id}`;
+                        `portal/inbox/thread/${res.thread.id}`;
                 });
             });
     },

@@ -13,7 +13,9 @@ $pipeline->register('control.plugin', [
     'file'     => 'plugins/control.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['control.actions'],
+    'requires' => [
+        // 'control.actions'
+        ],
 ]);
 
 /* ==================================================

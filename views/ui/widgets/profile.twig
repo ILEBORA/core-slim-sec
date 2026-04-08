@@ -1,0 +1,9 @@
+{% extends "widgets/base.twig" %}
+
+{% block content %}
+<div class="profile-box">
+    <div class="name">{{ user.name }}</div>
+    <div class="role">{{ user.role }}</div>
+    <div class="last-login">Last login: {{ user.last_login }}</div>
+</div>
+{% endblock %}

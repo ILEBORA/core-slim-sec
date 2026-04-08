@@ -28,7 +28,7 @@
             {% for thread in threads %}
                 <li class="thread-item {{ thread.unread_count ? 'unread' : '' }}"
                     data-thread="{{ thread.thread_id }}"
-                    onclick="Bora.navigate('portal/inbox/show/{{ thread.thread_id }}');"
+                    onclick="Bora.navigate('portal/inbox/thread/{{ thread.thread_id }}');"
                     >
 
                     <div class="avatar">
@@ -150,7 +150,7 @@ document.addEventListener('click', e => {
     history.pushState(
         { threadId },
         '',
-        `portal/inbox/show/${threadId}`
+        `portal/inbox/thread/${threadId}`
     );
 
 });

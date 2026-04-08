@@ -191,7 +191,7 @@ async function(scope){
     function resolveThreadFromRoute(){
 
         const url = normalizeUrl(window.location); //alert(url);
-        const match = url.match(/\portal\/inbox\/show\/(\d+)/);
+        const match = url.match(/\portal\/inbox\/thread\/(\d+)/);
 
         if (!match) {
             setView('list');
@@ -208,7 +208,7 @@ async function(scope){
 
         if (!id) return;
 
-        // navigation.go(`portal/inbox/show/${id}`);
+        // navigation.go(`portal/inbox/thread/${id}`);
     }
 
     /* ---------------------------------
@@ -280,7 +280,7 @@ async function(scope){
 
             })
             .setDone(() =>{
-                history.pushState({}, '', `portal/inbox/show/${id}`);
+                history.pushState({}, '', `portal/inbox/thread/${id}`);
                 bindScroll();
             })
             .setError((xhr) => {

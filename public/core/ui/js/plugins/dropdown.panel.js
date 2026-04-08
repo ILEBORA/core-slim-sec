@@ -1,6 +1,8 @@
 __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
-    const dismissable = await scope.getService('uiDismissable');
+    const dismissable = await scope.getService('ui.dismissable');
+    const anchor = await scope.getPlugin('ui.anchor.positioner');
+    const uiActions = await scope.getService('ui.actions');
 
     let panel = null;
     let dismissInstance = null;
@@ -8,12 +10,18 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
     function mount(){
         $(document).on('click','[data-dropdown]', openPanel);
-        $(document).on('click.dropdown-panel', function(e){
+
+        $(document).off('click.dropdown-panel').on('click.dropdown-panel', function(e){
+
             if(!openedMenu) return;
-            if($(e.target).closest('.dropdown-panel, [data-dropdown]').length){
-                return;
-            }
-            dismissInstance?.close();
+
+            const isInsidePanel  = panel && panel.has(e.target).length;
+            const isTriggerClick = $(e.target).closest('[data-dropdown]').length;
+
+            if(isInsidePanel || isTriggerClick) return;
+
+            closePanel();
+
         });
     }
 
@@ -43,7 +51,9 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
             </div>
         `).appendTo('body');
 
-        position(trigger, panel);
+        requestAnimationFrame(() => {
+            position(trigger, panel);
+        });
 
         openedMenu = panel;
 
@@ -63,9 +73,11 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
         panel = $(data.html).appendTo('body');
 
-        position(trigger, panel);
+        requestAnimationFrame(() => {
+            position(trigger, panel);
+        });
 
-        dismissInstance = dismissable.create(()=>{
+        dismissInstance = dismissable?.create(()=>{
             closePanel();
         });
 
@@ -74,6 +86,9 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
     }
 
     function closePanel(){
+
+        $(window).off('scroll.dropdown resize.dropdown');
+
         if(openedMenu){
             openedMenu.remove();
             openedMenu = null;
@@ -87,19 +102,29 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
         if(dismissInstance){
             dismissInstance = null;
         }
-
     }
 
     function position(trigger, panel){
+        let options = {
+                            align: 'right',
+                            offsetY: 4,
+                            arrow: true
+                        };
+        anchor.position(trigger, panel, options);
 
-        const pos = trigger.offset();
+        bindAutoPosition(trigger, panel, options);
+    }
 
-        panel.css({
-            position:'absolute',
-            top: pos.top + trigger.outerHeight(),
-            right: pos.right ?? 0
-        });
+    function bindAutoPosition(trigger, panel, options){
 
+        $(window)
+            .off('scroll.dropdown resize.dropdown')
+            .on('scroll.dropdown resize.dropdown', () => {
+
+                if(!panel || !panel.is(':visible')) return;
+
+                anchor.position(trigger, panel, options);
+            });
     }
 
     return { mount,closePanel};

@@ -55,7 +55,7 @@ function unmount(){
 function resolveThreadFromRoute(){
 
     const url = normalizeUrl(window.location);
-    const match = url.match(/portal\/inbox\/show\/(\d+)/);
+    const match = url.match(/portal\/inbox\/thread\/(\d+)/);
 
     if(!match){
         setView('list');
@@ -174,7 +174,7 @@ function loadThread(id){
 
         })
         .setDone(()=>{
-            history.pushState({},'',`portal/inbox/show/${id}`);
+            history.pushState({},'',`portal/inbox/thread/${id}`);
             bindScroll();
         })
         .build();

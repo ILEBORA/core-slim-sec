@@ -7,13 +7,13 @@ use BoraSlim\Core\Assets\AssetPipelineJs;
 
 $pipeline = new AssetPipelineJs('comm', __DIR__);
 
-
-
 $pipeline->register('comm.plugin', [
     'file'     => 'plugins/comm.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['comm.actions'],
+    'requires' => [
+        // 'runtime'
+        ],
 ]);
 
 /* ==================================================

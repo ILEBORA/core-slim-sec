@@ -1,0 +1,14 @@
+{% extends "widgets/base.twig" %}
+
+{% block content %}
+<ul class="task-list">
+    {% for task in tasks %}
+        <li class="task-item {{ task.status }}">
+            <input type="checkbox" {% if task.done %}checked{% endif %}>
+            <span class="task-title">{{ task.title }}</span>
+        </li>
+    {% else %}
+        <li class="empty">No tasks</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -13,7 +13,9 @@ $pipeline->register('audit.plugin', [
     'file'     => 'plugins/audit.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['audit.actions'],
+    'requires' => [
+        //'audit.actions'
+        ],
 ]);
 
 /* ==================================================

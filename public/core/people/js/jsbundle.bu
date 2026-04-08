@@ -17,12 +17,12 @@ $pipeline->register('people.helpers', [
     'priority' => 100,
 ]);
 
-$pipeline->register('people.tests', [
-    'file'     => 'utils/PeopleTests.js',
-    'type'     => 'lib',
-    'priority' => 101,
-    'requires' => ['people.helpers'],
-]);
+//$pipeline->register('people.tests', [
+//    'file'     => 'utils/PeopleTests.js',
+//    'type'     => 'lib',
+//    'priority' => 101,
+//    'requires' => ['people.helpers'],
+//]);
 
 /* ==================================================
    COMPOSER (PROFILE / CARD BUILDER)

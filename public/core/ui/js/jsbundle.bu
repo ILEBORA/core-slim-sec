@@ -35,6 +35,15 @@ $pipeline->register('ui.hooks', [
    PLUGINS (UI BEHAVIOUR)
 ================================================== */
 
+$pipeline->register('ui.anchor.positioner', [
+    'file'     => 'plugins/ui.anchor.positioner.js',
+    'type'     => 'plugin',
+    'priority' => 130,
+    'requires' => [
+        'runtime'
+    ],
+]);
+
 $pipeline->register('ui.context.menu', [
     'file'     => 'plugins/context.menu.js',
     'type'     => 'plugin',
@@ -50,10 +59,12 @@ $pipeline->register('ui.dropdown.panel', [
     'file'     => 'plugins/dropdown.panel.js',
     'type'     => 'plugin',
     'priority' => 131,
+    'preload'  => true,
     'requires' => [
         'runtime',
         'ui.core',
-        'ui.hooks'
+        'ui.hooks',
+        'ui.anchor.positioner'
     ],
 ]);
 

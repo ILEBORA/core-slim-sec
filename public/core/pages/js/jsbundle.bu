@@ -15,13 +15,18 @@ $pipeline->register('page.actions', [
     'file'     => 'plugins/page.actions.js',
     'type'     => 'plugin',
     'priority' => 100,
+    'preload'  => true,
+    'requires' => ['hooks'],
 ]);
 
 $pipeline->register('pages.plugin', [
     'file'     => 'plugins/pages.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['page.actions'],
+    'requires' => [
+        //'page.actions'
+        ],
+    'preload'  => true,
 ]);
 
 /* ==================================================

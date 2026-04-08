@@ -134,9 +134,21 @@ __BORA_REGISTER_SERVICE__('preferences', async function(scope){
        PUBLIC API
     ========================= */
 
-    function set(key, value){
+    async function set(key, value){
         if(state[key] === value) return;
 
+        // before hook
+        let prevented = false;
+
+        scope.emit('preferences:before-change', {
+            key,
+            value,
+            preventDefault: () => prevented = true
+        });
+
+        if(prevented) return;
+
+        //proceed with change
         state[key] = value;
 
         apply();

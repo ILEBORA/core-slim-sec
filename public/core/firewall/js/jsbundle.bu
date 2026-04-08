@@ -13,7 +13,9 @@ $pipeline->register('firewalll.plugin', [
     'file'     => 'plugins/firewalll.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['firewalll.actions'],
+    'requires' => [
+        // 'firewalll.actions'
+        ],
 ]);
 
 /* ==================================================

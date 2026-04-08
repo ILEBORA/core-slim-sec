@@ -1,0 +1,12 @@
+{% extends "widgets/base.twig" %}
+
+{% block content %}
+<div class="kpi-grid">
+    {% for item in items %}
+        <div class="kpi-card">
+            <div class="kpi-value">{{ item.value }}</div>
+            <div class="kpi-label">{{ item.label }}</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

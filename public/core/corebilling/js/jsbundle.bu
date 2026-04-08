@@ -13,7 +13,9 @@ $pipeline->register('corebilling.plugin', [
     'file'     => 'plugins/corebilling.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
-    'requires' => ['corebilling.actions'],
+    'requires' => [
+        // 'corebilling.actions'
+        ],
 ]);
 
 /* ==================================================

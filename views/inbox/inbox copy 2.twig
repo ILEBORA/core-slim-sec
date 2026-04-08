@@ -1,0 +1,171 @@
+<div class="inbox-layout inbox"
+     data-view="{{ data_view|default('list') }}">
+
+    {{ lvui|raw }}
+
+    {# ===============================
+       SIDEBAR
+    =============================== #}
+    <aside class="inbox-sidebar">
+
+        <div class="inbox-header">
+            <span><h3>Inbox</h3></span>
+            <button class="new-thread-btn" title="New chat">+</button>
+        </div>
+
+        <div class="thread-search">
+            <input
+                type="search"
+                placeholder="Search conversations…"
+                aria-label="Search inbox"
+                data-inbox-search
+            >
+
+            <button
+                class="filter-unread"
+                aria-pressed="false"
+                title="Show unread only"
+                data-inbox-filter="unread">
+                ●
+            </button>
+        </div>
+
+        <div class="thread-filters">
+            <button data-type="all" class="active">All</button>
+            <button data-type="direct">Direct</button>
+            <button data-type="group">Groups</button>
+        </div>
+
+        <ul class="thread-list" lvui="inbox_threads">
+
+            {% for thread in threads %}
+                <li class="thread-item {{ thread.unread_count ? 'unread' : '' }}"
+                    data-thread="{{ thread.thread_id }}"
+                    data-type="{{ thread.thread_type ?? 'direct' }}"
+                    >
+
+                    <div class="avatar">
+                        <span class="status-dot online"></span>
+                    </div>
+
+                    <div class="meta">
+                        <div class="title">
+                            {{ thread.title ?: thread.display_name}}
+                        </div>
+
+                        <div class="preview">
+                            {{ thread.last_message_body|raw|default('No messages yet') }}
+                        </div>
+                    </div>
+
+                    <div class="stats">
+                        {% if thread.unread_count %}
+                            <span class="badge">
+                                {{ thread.unread_count }}
+                            </span>
+                        {% endif %}
+
+                        <time>
+                            {{ thread.last_message_at|date('H:i') }}
+                        </time>
+                    </div>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </aside>
+
+
+    {# ===============================
+       MAIN CONTENT
+    =============================== #}
+    <main class="inbox-content">
+
+        {% block inbox_content %}
+        
+
+            {% if threads is empty %}
+
+                <div class="empty-state inbox-empty">
+                    <h3>No conversations yet</h3>
+                    <p>
+                        Start a new conversation to begin chatting.
+                    </p>
+
+                    <button
+                        class="btn btn-primary start-btn"
+                        data-action="inbox:confirm-start">
+                        Start a conversation
+                    </button>
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+                    Select a conversation
+                </div>
+
+            {% endif %}
+
+        {% endblock %}
+
+    </main>
+
+
+    {# ===============================
+       FLOATING ACTION BUTTON
+    =============================== #}
+    <button
+        class="fab-new-thread"
+        aria-label="New conversation"
+        title="New conversation"
+        >
+        +
+    </button>
+
+
+    {# ===============================
+       NEW CONVERSATION SHEET
+    =============================== #}
+    <div class="inbox-composer" hidden>
+
+        <div class="composer-backdrop"></div>
+
+        <div class="composer-sheet">
+
+            <header>
+                <h4>New conversation</h4>
+                <button class="close" data-action="inbox:close-composer">
+                    ×
+                </button>
+            </header>
+
+            <div class="composer-body">
+
+                <input
+                    type="search"
+                    class="participant-search"
+                    placeholder="Search people…"
+                    autocomplete="off"
+                    data-inbox-participant-search
+                >
+
+                <ul class="participant-results">
+                    {# dynamically injected by plugin #}
+                </ul>
+
+            </div>
+
+            <footer>
+                <button class="start-btn"
+                        disabled
+                        data-action="inbox:confirm-start">
+                    Start
+                </button>
+            </footer>
+
+        </div>
+
+    </div>
+
+</div>

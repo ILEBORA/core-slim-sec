@@ -4,7 +4,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
     // const dismiss = await scope.getService('dismiss');
     const navigation = await scope.getService('navigation');
     const context = await scope.getService('context');
-    const dismissable = await scope.getService('uiDismissable');
+    const dismissable = await scope.getService('ui.dismissable');
     const uiStack = await scope.getService('uiStack');
     
     let sidebarInstance = null;

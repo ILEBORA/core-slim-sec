@@ -283,30 +283,6 @@
             () => __BORA_APP__?.plugin('alerts')
         );
 
-        // // Safe global notifier (legacy + async-safe)
-        // window.notifyBora = function(msg, type = 'info', delay = 3){
-
-        //     if(window.alertBora){
-        //         return window.alertBora.notify(msg, type, delay);
-        //     }
-
-        //     __BORA_APP__?.plugin('alerts')?.then(a => a?.notify(msg, type, delay));
-        // };
-
-        // window.notifyBoraRich = function(options = {}){
-
-        //     if(window.alertBora){
-        //         return window.alertBora.notifyRich(options);
-        //     }
-
-        //     __BORA_APP__?.plugin('alerts')?.then(a => a?.notifyRich(options));
-        // };
-
-        // const popupPlugin = await app.plugin('popup');
-        // if (popupPlugin?.create) {
-        //     exposeLegacy('BoraPopup', popupPlugin.create);
-        // }
-
         exposeLegacy(
             'BoraPopup',
             null,
@@ -332,8 +308,20 @@
         uiActions?.init();
 
         uiActions.register('logout', async() => {
-            const appcore = await app.plugin('AppCore');
-            appcore.logout();
+            const alerts = await app.getPlugin('alerts');
+
+            alerts.confirm('Are you <em>really</em> sure?', {
+                    html: true
+            }).autoCancel(20)
+            .then(function() {
+                // Allow change, but override flow
+                setTimeout(async () => {
+                    const appcore = await app.plugin('AppCore');
+                    appcore.logout();
+                }, 0);
+            }, function() {
+                logTest('Confirmation canceled');
+            });
         });
 
 

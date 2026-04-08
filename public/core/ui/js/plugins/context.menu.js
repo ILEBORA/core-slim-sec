@@ -2,7 +2,7 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
     const hooks = await scope.getService('hooks');
     const callbora   = await scope.getService('callbora');
-    const dismissable = await scope.getService('uiDismissable');
+    const dismissable = await scope.getService('ui.dismissable');
 
     let openedMenu = null;
     let dismissInstance = null;
@@ -39,12 +39,11 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
     }
 
     async function openMenu(e){
-
         e.stopPropagation();
 
         const el   = $(this);
-        const type = el.data('context-type');
-        const id   = el.data('context-id');
+        const type = el.attr('data-context-type');
+        const id   = el.attr('data-context-id');
         // alert(id);
         showLoading(el);
 

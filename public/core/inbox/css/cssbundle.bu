@@ -7,6 +7,8 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
+    ->add('theme.css')
+    
     ->add('layout.css')
     ->add('thread.css')
     ->add('bubble.css')
@@ -17,9 +19,11 @@ $pipeline
     ->add('groups.css')
     
     ->add('thread-filters.css')
-    ->add('thread.css')
-    ->add('thread.css')
+    ->add('thread-info.css')
 
     ->add('message.css')
-    ->add('theme.css')
+
+    ->add('errors.css')
+    
+    
     ->send();

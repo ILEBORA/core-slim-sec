@@ -1,0 +1,14 @@
+{% extends "widgets/base.twig" %}
+
+{% block content %}
+<ul class="alerts-list">
+    {% for alert in alerts %}
+        <li class="alert-item {{ alert.type }}">
+            <span class="alert-message">{{ alert.message }}</span>
+            <span class="alert-time">{{ alert.time }}</span>
+        </li>
+    {% else %}
+        <li class="empty">No alerts</li>
+    {% endfor %}
+</ul>
+{% endblock %}

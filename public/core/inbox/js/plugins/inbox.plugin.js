@@ -78,7 +78,6 @@ async function (scope) {
 
     function unmount() {
         if (!state.mounted) return; // ⚠️ FIXED (was wrong)
-
         state.mounted = false;
 
         ui.unbind();
