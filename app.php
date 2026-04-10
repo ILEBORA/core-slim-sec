@@ -3,9 +3,9 @@
  * ================================================================
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
- *  Version:    2.1.16
- *  Build ID:   AFC5F872F655
- *  Timestamp:  2026-04-10 11:56:42
+ *  Version:    2.1.17
+ *  Build ID:   A0A628FE632B
+ *  Timestamp:  2026-04-10 12:20:19
  *  License:    Proprietary - Unauthorized modification prohibited.
  *  © 2025 ILEBORA Technologies. All Rights Reserved.
  * ================================================================

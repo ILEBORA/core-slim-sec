@@ -135,7 +135,7 @@ __BORA_REGISTER_SERVICE__(
             if (response.blocks){
 
                 if (response.blocks.submenus !== undefined){
-                    alert('submenu block');
+                    // alert('submenu block');
                     const el = document.querySelector('.submenu-area .sub_menu');
                     if (el) el.innerHTML = response.blocks.submenus;
                 }
