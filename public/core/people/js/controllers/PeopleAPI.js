@@ -12,6 +12,10 @@ class PeopleAPI {
      * ====================================== */
 
     async openProfile(personId) {
+        // alert('Opening person '+personId);
+        this.ui.setView('thread');
+
+        //this.realtime.subscribeThread(id);
 
         this.ui.showLoading();
 
@@ -20,7 +24,7 @@ class PeopleAPI {
         this.ui.renderHTML(html);
 
         this.ui.setActivePerson(personId);
-
+        
         return html;
     }
 

@@ -1,24 +1,33 @@
 __BORA_REGISTER_PLUGIN__(
-    'ClientFace',
-    async function(scope){
+'ClientFace',
+async function(scope){
 
-        const layouts = await scope.getPlugin('Layouts');
+    const layouts = await scope.getPlugin('Layouts');
 
-        function mount(){
+    const state = { 
+        mounted: false
+    };
 
-            layouts?.mount();
+    function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
 
-            console.log('[ClientFace] mounted');
-        }
+        layouts?.mount();
 
-        function unmount(){
-            layouts?.unmount?.();
-        }
-
-        return { mount, unmount };
-    },
-    {
-        requires:['Layouts'],
-        faces: ['client']
+        console.log('[ClientFace] mounted');
     }
+
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
+        
+        layouts?.unmount?.();
+    }
+
+    return { mount, unmount };
+},
+{
+    requires:['Layouts'],
+    faces: ['client']
+}
 );

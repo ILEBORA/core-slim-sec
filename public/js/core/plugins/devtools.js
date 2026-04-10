@@ -8,6 +8,10 @@ __BORA_REGISTER_PLUGIN__('DevTools', async function(scope){
     let activeTab = 'perf';
     let interval = null;
 
+    const state = {
+        mounted: false
+    };
+
     /* =========================
        CREATE PANEL
     ========================= */
@@ -191,6 +195,9 @@ __BORA_REGISTER_PLUGIN__('DevTools', async function(scope){
     ========================= */
 
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         if(!config.dev) return;
         console.log('[DevTools] mounted');
 
@@ -216,7 +223,9 @@ __BORA_REGISTER_PLUGIN__('DevTools', async function(scope){
     }
 
     function unmount(){
-
+        if (!state.mounted) return; 
+        state.mounted = false;
+        
         if(interval){
             clearInterval(interval);
             interval = null;

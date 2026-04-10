@@ -259,7 +259,7 @@
 
             // 🔥 CRITICAL: trigger activation only if new plugins arrived
             if(newPlugins){
-                console.log('NEW PLUGINS:: ', newPlugins);
+                // console.log('NEW PLUGINS:: ', newPlugins);
                 await evaluatePluginActivation(normalizeUrl(window.location));
             }
         }
@@ -377,119 +377,6 @@
             }
         }
 
-        // async function evaluatePluginActivationO(route){
-            
-        //     const manifest = global.__BORA_MANIFEST__ || {};
-        //     console.log('MANIFEST::', manifest);
-        //     for(const name in manifest){
-                
-        //         const meta = manifest[name];
-
-        //         // only plugins
-        //         if(meta.type !== 'plugin') continue;
-                
-        //         // ensure plugin is loaded first
-        //         await global.__BORA_LOADER__.ensure(name);
-        //         // console.log('check:: '+ name);
-        //         // console.log('Plugins:: ', plugins);
-        //         // console.log('Service::',services);
-        //         const plugin = plugins.get(name);
-        //         if(!plugin) continue;
-
-        //         // console.log('here with '+ name);
-        //         // console.log(plugin);
-        //         /* ---------------------------
-        //         ACTIVATION DECISION (runtime-owned)
-        //         --------------------------- */
-
-        //         // let shouldActivate = true;
-
-        //         const pMeta = pluginMeta.get(name);
-
-        //         const shouldActivate = evaluateMeta(pMeta, {
-        //             route,
-        //             face: global.__BORA_FACE__ || 'guest',
-        //             appcore: plugins.get('appcore')
-        //         });
-
-        //         /* ---------------------------
-        //         MOUNT / UNMOUNT
-        //         --------------------------- */
-
-        //         if(shouldActivate){
-
-        //             if(!plugin.__active){
-
-        //                 try{
-        //                     const start = performance.now();
-
-        //                     await plugin.mount?.();
-        //                     plugin.__active = true;
-
-        //                     console.log(
-        //                         `%c ${name} Plugin active or mounted`,
-        //                         'color:#22c55e;font-weight:bold;'
-        //                     );
-
-        //                     if(config.dev){
-        //                         const ms = performance.now() - start;
-
-        //                         const existing = timings.get(name);
-
-        //                         if(typeof existing === 'number'){
-        //                             timings.set(name, { count: 1, total: existing, avg: existing, max: existing });
-        //                         }
-
-        //                         if(existing){
-        //                             const newTotal = existing.total + ms;
-        //                             const newCount = existing.count + 1;
-
-        //                             timings.set(name, {
-        //                                 count: newCount,
-        //                                 total: newTotal,
-        //                                 avg: newTotal / newCount,
-        //                                 max: Math.max(existing.max, ms)
-        //                             });
-        //                         }else{
-        //                             timings.set(name, {
-        //                                 count: 1,
-        //                                 total: ms,
-        //                                 avg: ms,
-        //                                 max: ms
-        //                             });
-        //                         }
-
-        //                         emit('plugin:timing', { name });
-
-        //                         if(ms > 20){
-        //                             console.warn(`[Slow mount] ${name}: ${ms.toFixed(2)}ms`);
-        //                         }
-        //                     }
-
-        //                 }catch(err){
-        //                     errors.set(name, err);
-        //                     emit('plugin:error', { name, error: err });
-        //                 }
-        //             }
-
-        //         }else{
-
-        //             // 🔥 IMPORTANT: handle unmount
-        //             if(plugin.__active){
-
-        //                 try{
-        //                     await plugin.unmount?.();
-        //                     plugin.__active = false;
-
-        //                     console.log(`%c ${name} Plugin unmounted`, 'color:red;font-weight:bold;');
-        //                 }catch(err){
-        //                     console.error(`[Plugin] Unmount failed: ${name}`, err);
-        //                 }
-
-        //             }
-        //         }
-        //     }
-        // }
         function shouldLoad(meta, context){
 
             if(!meta) return true;
@@ -568,7 +455,7 @@
 
             if(typeof pMeta.activateOn === 'function'){
                 try{
-                    console.log(`activateOn:: ${name} for ${route}`);
+                    // console.log(`activateOn:: ${name} for ${route}`);
                     if(pMeta.activateOn(route) !== true){
                         return false;
                     }
@@ -580,127 +467,6 @@
 
             return true;
         }
-
-        // async function evaluatePluginActivationO(route){
-
-        //     const manifest = global.__BORA_MANIFEST__ || {};
-
-        //     for(const name in manifest){
-
-        //         const meta = manifest[name];
-
-        //         // only plugins
-        //         if(!meta.file || !meta.file.includes('plugins/')) continue;
-
-        //         // default OFF
-        //         let shouldActivate = true;
-
-        //         // if(meta.activateOn){
-        //         //     alert(`Should Activate ${name} ` + meta.activateOn(route));
-        //         //     shouldActivate = meta.activateOn(route);
-        //         // }
-        //         /* ---------------------------
-        //         ACTIVATION DECISION (runtime-owned)
-        //         --------------------------- */
-        //         if(typeof plugin.activateOn === 'function'){
-        //             try{
-        //                 shouldActivate = plugin.activateOn(route);
-        //             }catch(e){
-        //                 console.error(`[Plugin] activateOn failed for ${name}`, e);
-        //                 shouldActivate = false;
-        //             }
-        //         }
-
-        //         if(!shouldActivate) continue;
-        //         // console.log(`should mount ${name} `);
-
-        //         await global.__BORA_LOADER__.ensure(name);
-
-        //         const plugin = plugins.get(name);
-        //         if(!plugin) continue;
-
-        //         if(!plugin.__active){
-
-        //             try{
-        //                 // console.log(`Plugin ${name} found... mounting`,plugin);
-        //                 const start = performance.now();
-        //                 await plugin.mount?.();
-        //                 plugin.__active = true;
-
-        //                 console.log(`${name} Plugin active`);
-
-        //                 if(config.dev){ 
-        //                     const ms = performance.now() - start; 
-        //                     // timings.set(name, ms); 
-        //                     const existing = timings.get(name); 
-        //                     if(typeof existing === 'number'){ 
-        //                         //migrate old format 
-        //                         timings.set(name, { count: 1, total: existing, avg: existing, max: existing }); 
-        //                         emit('plugin:timing', { name }); 
-        //                     } 
-        //                     if(existing){ 
-        //                         const newTotal = existing.total + ms; 
-        //                         const newCount = existing.count + 1; 
-        //                         timings.set(name, { count: newCount, total: newTotal, avg: newTotal / newCount, max: Math.max(existing.max, ms) }); 
-        //                         emit('plugin:timing', { name }); 
-        //                     }else{ 
-        //                         timings.set(name, { count: 1, total: ms, avg: ms, max: ms }); 
-        //                         emit('plugin:timing', { name }); 
-        //                     } 
-
-        //                     if(ms > 20){ 
-        //                         console.warn(`[Slow mount] ${name}: ${ms.toFixed(2)}ms`); 
-        //                     }
-
-        //                 }
-        //             }
-        //             catch(err){
-        //                 errors.set(name, err);
-        //                 emit('plugin:error', { name, error: err });
-        //             }
-        //         }
-        //     }
-        // }
-
-        // async function evaluatePluginActivationO(route){
-
-        //     const manifest = global.__BORA_MANIFEST__ || {};
-
-        //     for(const name in manifest){
-
-        //         const meta = manifest[name];
-
-        //         // only consider plugins
-        //         if(!meta.file || !meta.file.includes('plugins/')) continue;
-
-        //         let shouldActivate = false;
-
-        //         if(meta.activateOn){
-        //             // shouldActivate = shouldActivate && meta.activateOn(route);
-        //             let shouldActivate = true;
-        //         }
-
-        //         if(!shouldActivate) continue;
-
-        //         // ensure plugin is loaded
-        //         await global.__BORA_LOADER__.ensure(name);
-
-        //         const plugin = plugins.get(name);
-        //         if(!plugin) continue;
-
-        //         if(!plugin.__active){
-
-        //             try{
-        //                 await plugin.mount?.();
-        //                 plugin.__active = true;
-        //             }
-        //             catch(err){
-        //                 errors.set(name, err);
-        //                 emit('plugin:error', { name, error: err });
-        //             }
-        //         }
-        //     }
-        // }
 
         function normalizeUrl(fullUrl){
             const base = window.__APP_BASE_PATH__ || '';

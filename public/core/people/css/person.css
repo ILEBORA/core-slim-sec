@@ -149,7 +149,7 @@
     padding: 6px 14px;
     border-radius: 6px;
 
-    font-size: 13px;
+    font-size: small;
     cursor: pointer;
 
     transition: all 0.2s ease;

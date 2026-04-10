@@ -6,12 +6,13 @@ async function(scope){
     const sse    = await scope.getService('realtime.sse');
 
 
-    let mounted = false;
+    const state = {
+        mounted: false
+    };
 
     function mount(){
-
-        if(mounted) return;
-        mounted = true;
+        if (state.mounted) return;
+        state.mounted = true;
 
         leader.start();
 
@@ -29,9 +30,8 @@ async function(scope){
     }
 
     function unmount(){
-
-        if(!mounted) return;
-        mounted = false;
+        if (!state.mounted) return;
+        state.mounted = false;
 
         leader.stop();
         sse.closeConnection();

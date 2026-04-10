@@ -1,0 +1,62 @@
+{% extends "people/people.twig" %}
+
+{% block people_content %}
+
+<div class="person-view" data-person="{{ person.id }}">
+
+    {# ===============================
+       HEADER
+    =============================== #}
+    <header class="person-header">
+
+        <button class="back-btn">←</button>
+
+        <div class="person-info">
+            <h4>{{ person.name }}</h4>
+            <span class="meta">Profile</span>
+        </div>
+
+        <div class="actions">
+            <button class="btn-follow">
+                Follow
+            </button>
+        </div>
+
+    </header>
+
+    {# ===============================
+       TABS
+    =============================== #}
+    <nav class="person-tabs">
+        <button data-tab="profile" class="active">Profile</button>
+        <button data-tab="tree">Family</button>
+        <button data-tab="activity">Activity</button>
+        <button data-tab="events">Events</button>
+    </nav>
+
+    {# ===============================
+       CONTENT
+    =============================== #}
+    <div class="person-content">
+
+        <div class="tab-panel active" data-tab="profile">
+            {{ person.profile_html|raw }}
+        </div>
+
+        <div class="tab-panel" data-tab="tree">
+            <div lvui="people_tree_{{ person.id }}"></div>
+        </div>
+
+        <div class="tab-panel" data-tab="activity">
+            <div lvui="people_activity_{{ person.id }}"></div>
+        </div>
+
+        <div class="tab-panel" data-tab="events">
+            <div lvui="people_events_{{ person.id }}"></div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

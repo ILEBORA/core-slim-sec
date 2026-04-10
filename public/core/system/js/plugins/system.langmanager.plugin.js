@@ -4,12 +4,13 @@ async function(scope){
 
     const navigation = await scope.getService('navigation');
 
-    let mounted = false;
+    const state = {
+        mounted: false
+    };
 
     function mount(){
-
-        if(mounted) return;
-        mounted = true;
+        if (state.mounted) return;
+        state.mounted = true;
         // alert('System mounted');
 
         console.log('[System] mounted');
@@ -20,10 +21,9 @@ async function(scope){
     }
 
     function unmount(){
-        if(!mounted) return;
-        mounted = false;
+        if (!state.mounted) return;
+        state.mounted = false;  
 
-       
         console.log('[System] unmounted');
     }
     //

@@ -8,7 +8,14 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
     let dismissInstance = null;
     let openedMenu = null;
 
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         $(document).on('click','[data-dropdown]', openPanel);
 
         $(document).off('click.dropdown-panel').on('click.dropdown-panel', function(e){
@@ -127,6 +134,12 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
             });
     }
 
-    return { mount,closePanel};
+    function unmount(){
+        if (!state.mounted) return; 
+        state.mounted = false;  
+
+    }
+
+    return { mount, unmount, closePanel};
 
 });

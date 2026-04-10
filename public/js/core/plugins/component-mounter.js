@@ -2,7 +2,14 @@ __BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
 
     let mountedInstances = [];
 
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         console.log('[ComponentMounter] mounted');
         mountAll();
         scope.on('page.afterLoad', mountAll);
@@ -26,6 +33,12 @@ __BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
                 if(instance) mountedInstances.push(instance);
             }
         });
+    }
+
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;  
+
     }
 
     return { mount };

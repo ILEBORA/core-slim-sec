@@ -1,13 +1,20 @@
 .profile-stats {
     display: flex;
-    gap: 24px;
+    gap: 5px;
 
     margin-top: 10px;
+
+    align-items: center;
+    text-align: center;
 }
 
 .profile-stats div {
-    font-size: 13px;
+    font-size: smaller;
     color: #666;
+
+    background: #e9f6fc;
+    padding: 5px;
+    height: 100%;
 }
 
 .profile-stats strong {

@@ -67,6 +67,16 @@ $pipeline->register('ui.dropdown.panel', [
         'ui.anchor.positioner'
     ],
 ]);
+$pipeline->register('ui.plugin', [
+    'file'     => 'plugins/ui.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 131,
+    'preload'  => true,
+    'requires' => [
+        'runtime',
+    ],
+]);
+
 
 /* ==================================================
    COMPILE

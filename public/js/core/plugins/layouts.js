@@ -3,10 +3,13 @@ __BORA_REGISTER_PLUGIN__(
     async function(scope){
 
         // const $ = await scope.getService('jquery');
-        const state = await scope.getService('state');
+        const appState = await scope.getService('state');
 
         let menus = new Map();
-        let mounted = false;
+        
+        const state = {
+            mounted: false
+        };  
 
         /* =========================
            INTERNAL
@@ -48,40 +51,36 @@ __BORA_REGISTER_PLUGIN__(
         ========================= */
 
         function bind(){
+            // $(document)
+            //     .on('click.layouts', '.menu-link', closeAll)
+            //     .on('click.layouts', '.overlay', closeAll)
+            //     .on('click.layouts', '#cart-btn', ()=>{
+            //         toggle('#cart');
+            //         toggle('.overlay');
+            //     })
+            //     .on('click.layouts', '#switch', ()=>{
+            //         document.documentElement.classList.toggle('darkmode');
+            //         document.body.classList.toggle('darkmode');
 
-            if(mounted) return;
-            mounted = true;
+            //         appState.set('theme',
+            //             document.body.classList.contains('darkmode')
+            //                 ? 'dark'
+            //                 : 'light'
+            //         );
+            //     });
 
-            $(document)
-                .on('click.layouts', '.menu-link', closeAll)
-                .on('click.layouts', '.overlay', closeAll)
-                .on('click.layouts', '#cart-btn', ()=>{
-                    toggle('#cart');
-                    toggle('.overlay');
-                })
-                .on('click.layouts', '#switch', ()=>{
-                    document.documentElement.classList.toggle('darkmode');
-                    document.body.classList.toggle('darkmode');
-
-                    state.set('theme',
-                        document.body.classList.contains('darkmode')
-                            ? 'dark'
-                            : 'light'
-                    );
-                });
-
-            $(window).on('resize.layouts', ()=>{
-                if($(window).width() >= 992){
-                    toggle('#menu', 'close');
-                    toggle('.overlay', 'close');
-                }
-            });
+            // $(window).on('resize.layouts', ()=>{
+            //     if($(window).width() >= 992){
+            //         toggle('#menu', 'close');
+            //         toggle('.overlay', 'close');
+            //     }
+            // });
         }
 
         function unbind(){
             $(document).off('.layouts');
             $(window).off('.layouts');
-            mounted = false;
+            
         }
 
         /* =========================
@@ -89,7 +88,8 @@ __BORA_REGISTER_PLUGIN__(
         ========================= */
 
         function mount(){
-
+            if (state.mounted) return;
+            state.mounted = true;
             // addMenu('#menu');
             // addMenu('#header');
             // addMenu('#cart');
@@ -100,10 +100,14 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function unmount(){
+            if (!state.mounted) return;
+            state.mounted = false;
+
             unbind();
             menus.clear();
-        }
-
+            console.log('[Layouts] unmounted');
+        }   
+            
         return {
             mount,
             unmount,

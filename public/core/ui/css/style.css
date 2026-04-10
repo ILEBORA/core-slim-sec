@@ -758,6 +758,7 @@ table.bordered td:last {
     position: absolute;
     display: inline-block;
     right:0px;
+    top:0px;
 }
 
 .sub_menu.container{

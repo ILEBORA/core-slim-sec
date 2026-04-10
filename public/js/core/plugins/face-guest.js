@@ -2,21 +2,31 @@ __BORA_REGISTER_PLUGIN__(
     'GuestFace',
     async function(scope){
 
-        const layouts = await scope.getPlugin('Layouts');
+    const layouts = await scope.getPlugin('Layouts');
 
-        function mount(){
-            layouts?.mount();
-            console.log('[GuestFace] mounted');
-        }
+    const state = {
+        mounted: false
+    };
 
-        function unmount(){
-            layouts?.unmount();
-        }
-
-        return { mount, unmount };
-    },
-    {
-        requires:['Layouts'],
-        faces: ['guest']
+    function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+        
+        layouts?.mount();
+        console.log('[GuestFace] mounted');
     }
+
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
+        
+        layouts?.unmount();
+    }
+
+    return { mount, unmount };
+},
+{
+    requires:['Layouts'],
+    faces: ['guest']
+}
 );

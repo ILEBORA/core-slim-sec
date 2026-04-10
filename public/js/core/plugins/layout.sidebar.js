@@ -19,7 +19,14 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
 
     const MAX_WIDTH = 280; // sidebar width (adjust to your CSS)
 
+    const state = {
+        mounted: false
+    };  
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         $(function(){
             sidebar = $('#side-bar');
             main = $('.main-wrapper');
@@ -34,6 +41,9 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
     }
 
     function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;  
+        
         $(document).off('.sidebar');
         console.log('[Sidebar] unmounted');
     }

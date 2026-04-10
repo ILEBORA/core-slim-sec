@@ -7,7 +7,14 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
     let openedMenu = null;
     let dismissInstance = null;
 
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         //alert('here context menu');
         $(document).on('click', '[data-context-trigger]', openMenu);
         // $(document).on('click', closeMenu);
@@ -240,6 +247,17 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
     }
 
-    return { mount };
+    function unmount(){
+        if(!state.mounted) return;
+        state.mounted = false;
+
+        $(document).off('click', '[data-context-trigger]', openMenu);
+        $(document).off('click.contextmenu');
+        $(document).off('click', '.context-menu [data-action]', dispatch);
+        $(document).off('click','.context-menu-item');
+
+    }
+
+    return { mount, unmount };
 
 });

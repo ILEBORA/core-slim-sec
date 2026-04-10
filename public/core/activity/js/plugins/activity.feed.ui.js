@@ -40,24 +40,6 @@ __BORA_REGISTER_PLUGIN__('activity.feed.ui', async function(scope){
 
         observer.observe(document.body, { childList: true, subtree: true });
     }
-    // function init(retries = 10){
-
-    //     el = document.querySelector('#activityFeedNew');
-
-    //     if(!el){
-    //         if(retries > 0){
-    //             return setTimeout(() => init(retries - 1), 50);
-    //         }
-    //         console.warn('[activity.feed.ui] element not found');
-    //         return;
-    //     }
-
-    //     console.log('Proceed...');
-    //     scopeName = el.dataset.scope || 'home';
-
-    //     load();
-    //     bindRealtime();
-    // }
 
     function unmount(){
         if (!state.mounted) return; // ⚠️ FIXED (was wrong)

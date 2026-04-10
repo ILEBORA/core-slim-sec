@@ -12,6 +12,7 @@ __BORA_REGISTER_PLUGIN__(
         const config = scope.config || {};
 
         const state = {
+            mounted: false,
             appPerms: null,
             curRole: null,
             SSE: null,
@@ -45,6 +46,9 @@ __BORA_REGISTER_PLUGIN__(
         ========================= */
 
         async function mount(){
+            if (state.mounted) return;
+            state.mounted = true;
+
             console.log('[AppCore] mounted');
             await loadPermissions();
 
@@ -73,7 +77,7 @@ __BORA_REGISTER_PLUGIN__(
                 console.log('[AppCore] mounted');
             }
 
-            scope.emit('app:initialized');
+            scope.emit('app:initialized');            
         }
 
         /* =========================
@@ -171,58 +175,58 @@ __BORA_REGISTER_PLUGIN__(
                 .build();
         }
 
-        async function logoutO(){
-            // Allow interception (e.g. confirmation UI)
-            const proceed = await hooks.callAsync('user.logout.request');
+        // async function logoutO(){
+        //     // Allow interception (e.g. confirmation UI)
+        //     const proceed = await hooks.callAsync('user.logout.request');
 
-            if(proceed === false){
-                return;
-            }
+        //     if(proceed === false){
+        //         return;
+        //     }
 
-            hooks.call('user.logout.before');
+        //     hooks.call('user.logout.before');
 
-            new CallBora("api/auth/logout")
-                .setMethod("POST")
-                .setParams({})
-                .setCallback(() => {
-                    hooks.call('user.logout.after');
-                    redirectTo('', true);
-                })
-                .setDone(() => {
-                    if(typeof authChannel !== 'undefined'){
-                        authChannel.postMessage({cmd:'logout', usr: rd('bID')});
-                    }
-                })
-                .setError((xhr) => console.error("Logout error:", xhr))
-                .build();
-        }
+        //     new CallBora("api/auth/logout")
+        //         .setMethod("POST")
+        //         .setParams({})
+        //         .setCallback(() => {
+        //             hooks.call('user.logout.after');
+        //             redirectTo('', true);
+        //         })
+        //         .setDone(() => {
+        //             if(typeof authChannel !== 'undefined'){
+        //                 authChannel.postMessage({cmd:'logout', usr: rd('bID')});
+        //             }
+        //         })
+        //         .setError((xhr) => console.error("Logout error:", xhr))
+        //         .build();
+        // }
 
-        function logoutO(){
+        // function logoutO(){
 
-            hooks?.call?.('user.logout.before');
+        //     hooks?.call?.('user.logout.before');
 
-            callbora
-                .post("api/auth/logout", {})
-                .then(()=>{
+        //     callbora
+        //         .post("api/auth/logout", {})
+        //         .then(()=>{
 
-                    hooks?.call?.('user.logout.after');
+        //             hooks?.call?.('user.logout.after');
 
-                    navigation.go('');
+        //             navigation.go('');
 
-                })
-                .catch(err=>{
-                    console.error('[AppCore] Logout failed', err);
-                })
-                .finally(()=>{
+        //         })
+        //         .catch(err=>{
+        //             console.error('[AppCore] Logout failed', err);
+        //         })
+        //         .finally(()=>{
 
-                    if(typeof globalThis.authChannel !== 'undefined'){
-                        authChannel.postMessage({
-                            cmd:'logout',
-                            usr: globalThis.rd?.('bID')
-                        });
-                    }
-                });
-        }
+        //             if(typeof globalThis.authChannel !== 'undefined'){
+        //                 authChannel.postMessage({
+        //                     cmd:'logout',
+        //                     usr: globalThis.rd?.('bID')
+        //                 });
+        //             }
+        //         });
+        // }
 
         /* =========================
            SSE CONTROL
@@ -275,12 +279,18 @@ __BORA_REGISTER_PLUGIN__(
             state._capWaiters[cap].push(fn);
         }
 
+        function unmount(){
+            if(!state.mounted) return;
+            state.mounted = false;  
+        }
+
         /* =========================
            PUBLIC API
         ========================= */
 
         return {
             mount,
+            unmount,
             hasPermission,
             logout,
             pauseSSE,

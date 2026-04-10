@@ -3,6 +3,9 @@ __BORA_REGISTER_PLUGIN__(
 
 async function (scope) {
 
+    const popup = await scope.getPlugin('popup');
+    const uiStack = await scope.getService('uiStack');
+
     let initialized = false;
     let originalHTML = '';
     let currentIndex = -1; // for keyboard nav
@@ -30,22 +33,6 @@ async function (scope) {
         });
     }
 
-    function applyPeopleFiltersO() {
-
-            const query  = $('[data-people-search]').val().toLowerCase();
-            const filter = $('.people-filters .active').data('filter');
-
-            $('.person-card').each(function () {
-
-                const name = $(this).find('.name').text().toLowerCase();
-                const type = $(this).data('type');
-
-                const matchSearch = name.includes(query);
-                const matchFilter = (filter === 'all' || type === filter);
-
-                $(this).toggle(matchSearch && matchFilter);
-            });
-        }
 
     function debounce(fn, delay = 300) {
         let t;
@@ -145,18 +132,26 @@ async function (scope) {
                 });
             });
 
+            uiActions.register('person:link.invite', (el) => {
+                alertBora.alert('Person Invite feature is disabled!');
+            });
+
+            uiActions.register('person:edit', (el) => {
+                alertBora.alert('Person Edit feature is disabled!');
+            });
+
             /* ========================================
              * DELEGATED EVENTS (DOM-safe)
              * ====================================== */
 
             // CLICK PERSON CARD
-            $(document).on('click.people', '.person-card', function () {
-                const personId = $(this).data('person');
+            // $(document).on('click.people', '.person-card', function () {
+            //     const personId = $(this).data('person');
 
-                scope.emit('people.person.open', {
-                    personId
-                });
-            });
+            //     scope.emit('people.person.open', {
+            //         personId
+            //     });
+            // });
 
             // FOLLOW BUTTON
             $(document).on('click.people', '.btn-follow', function (e) {
@@ -190,31 +185,6 @@ async function (scope) {
             $(document).on('click.people', '.back-btn', function () {
                 scope.emit('people.back');
             });
-
-            // $(document).on('mouseenter.people', '.person-tabs button', function () {
-            //     const tab = $(this).data('tab');
-
-            //     if (tab === 'profile') return;
-
-            //     const root = $(this).closest('.person-view');
-            //     const personId = root.data('person');
-
-            //     if (!personId) return;
-
-            //     scope.emit('people.tab.preload', {
-            //         tab,
-            //         personId
-            //     });
-            // });
-
-            // $(document).on('mouseenter.people', '.person-card', function () {
-
-            //     const personId = $(this).data('person');
-
-            //     scope.emit('people.person.preload', {
-            //         personId
-            //     });
-            // });
 
             // search
             $(document).on('input.people', '[data-people-search]', debouncedSearch);// applyPeopleFilters);
@@ -284,6 +254,8 @@ async function (scope) {
 
             uiActions.register('tree:open-full', async (el) => {
 
+                return alertBora.alert('Tree feature is disabled!');
+
                 const root = $(el).closest('.person-view');
                 const personId = root.data('person');
 
@@ -300,13 +272,84 @@ async function (scope) {
 
             //
             uiActions.register('people:message', async (el) => {
-
+                alertBora.alert('Messaging feature is disabled!');
+                return;
                 const personId = $(el).closest('.person-view').data('person');
 
                 scope.emit('inbox.start', { personId });
 
             });
 
+            scope.on('people.view.list',function(){
+                // alert('list view');
+                $('.thread_context_menu').hide();
+                $('.thread-info').addClass('is-hidden');
+
+                $('.thread-info').addClass('is-hidden');
+                // $('.thread-view .composer').addClass('is-hidden');
+                
+            });
+
+            scope.on('people.view.thread',function(){
+                // alert('thread view');
+                $('.thread_context_menu').show();
+                $('.thread-info').removeClass('is-hidden'); 
+
+                // $('.thread-view .composer').removeClass('is-hidden');
+            });
+
+
+            scope.on('people.person.new', function(){
+            
+                popup.open({
+                    mode:'form',
+                    module:'people',
+                    group:'person',
+                    view:'add',
+                    size:'md'
+                });
+
+            });
+
+            formJourney.registerJourney('page.add', function ($form, done) {
+                const url = $form.attr('action');
+                const method = $form.attr('method') || 'POST';
+
+                const formData = new FormData($form[0]);
+                const btn = $form.find('button[type=submit]');
+                const btnPrev = btn.html();
+                btn.html('Processing...');
+
+                new CallBora(url)
+                    .setMethod(method)
+                    .setParams(formData) // ✅ KEEP AS FORMDATA
+                    .setCallback((resp) => {
+
+                        if (resp.success) {
+                            alertBora.notify('Person saved successfully', 'success', 4);
+
+                            if (resp.redirect) {
+                                appUI.content.loadPage(resp.redirect);
+                            }
+
+                            if (resp.esc) {
+                                uiStack.closeTop();
+                            }
+
+                            window.location.reload();
+                        } else {
+                            alertBora.notify(resp.error || 'Action failed', 'error', 5);
+                        }
+
+                        done?.(resp);
+                    })
+                    .setError((xhr) => {
+                        console.error('System error', xhr);
+                        alertBora.notify('System error. Please try again later.', 'error', 15);
+                        done?.(xhr);
+                    })
+                    .build();
+            });
         }
     };
 });

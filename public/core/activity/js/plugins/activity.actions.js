@@ -3,7 +3,14 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const feedUI  = await scope.getPlugin('activity.feed.ui');
     const activityComposer  = await scope.getPlugin('activity.composer');
 
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         console.log('[activity.actions] mounted');
         $(document).on('click','.act-react',handleReaction);
         $(document).on('click','.act-comment',handleComment);
@@ -49,6 +56,8 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     }
 
     function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
 
         $(document).off('click','.act-react',handleReaction);
         $(document).off('click','.act-comment',handleComment);

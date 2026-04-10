@@ -4,7 +4,13 @@ __BORA_REGISTER_PLUGIN__(
 
         const layouts = await scope.getPlugin('Layouts');
 
+        const state = {
+            mounted: false
+        };
+
         function mount(){
+            if (state.mounted) return;
+            state.mounted = true;
 
             layouts?.mount();
 
@@ -12,6 +18,9 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function unmount(){
+            if (!state.mounted) return;
+            state.mounted = false;  
+            
             layouts?.unmount?.();
         }
 

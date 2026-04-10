@@ -97,19 +97,19 @@ async function (scope) {
 
             await api.loadTab(personId, tab);
         });
-        scope.on('people.tab.changedO', async ({ tab, personId }) => {
-             const root = document.querySelector(
-                `.person-view[data-person="${personId}"]`
-            );
+        // scope.on('people.tab.changedO', async ({ tab, personId }) => {
+        //      const root = document.querySelector(
+        //         `.person-view[data-person="${personId}"]`
+        //     );
 
-            if (!root) return;
+        //     if (!root) return;
 
-            // ✅ update UI FIRST (instant feedback)
-            tabs.activate(root, tab);
+        //     // ✅ update UI FIRST (instant feedback)
+        //     tabs.activate(root, tab);
 
-            // ✅ then load data (async)
-            await api.loadTab(personId, tab);
-        });
+        //     // ✅ then load data (async)
+        //     await api.loadTab(personId, tab);
+        // });
 
         scope.on('people.tab.ui', ({ tab, personId, root }) => {
             tabs.setTab(root, personId, tab);
@@ -187,9 +187,9 @@ async function (scope) {
 
     activateOn: (route) => (
         route === 'portal/people' ||
-        route.startsWith('portal/people/') ||
+        route.startsWith('portal/people/')// ||
 
-        route === 'portal/person' ||
-        route.startsWith('portal/person/')
+        // route === 'portal/person' ||
+        // route.startsWith('portal/person/')
     )
 });

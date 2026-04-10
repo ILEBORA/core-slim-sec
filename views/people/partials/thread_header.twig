@@ -1,0 +1,60 @@
+<header class="thread-header" data-person="{{ person.id ?? '' }}">
+
+    {# 🔙 BACK BUTTON #}
+    <button class="back-btn"
+            aria-label="Back"
+            data-action="back">
+        ←
+    </button>
+
+    {# THREAD INFO #}
+    <div class="thread-info is-hidden">
+
+        <img
+            src="assets/images/icons/noavatar.png"
+            data-src="{{ person.avatar|default('assets/images/icons/placeholder.png') }}"
+            alt="Avatar"
+            
+        >
+
+        <div class="thread-title">
+            <div class="person-info">
+                <h4>{{ person.name }}</h4>
+                <span class="meta">Profile</span>
+            </div>
+
+            <div class="actions">
+                <button class="btn-follow">
+                    Follow
+                </button>
+            </div>
+
+            {% if followers is defined %}
+                <div class="followers-count">
+                    <span data-bind="person.followers">
+                        {{ followers }}
+                    </span>
+                    followers
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    {# ⚙️ ACTIONS #}
+    <div class="page-actions f-right">
+
+        {% if person.id is defined %}
+            <button
+                class="thread_context_menu"
+                data-context-trigger
+                data-context-type="person"
+                data-context-id="{{ person.id }}"
+            >
+                ⋮
+            </button>
+        {% endif %}
+
+    </div>
+
+</header>

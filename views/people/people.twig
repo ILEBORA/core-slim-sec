@@ -1,28 +1,43 @@
-<div class="people-layout container"
-     data-view="{{ data_view|default('grid') }}">
+<div class="inbox-layout people"
+     data-view="{{ data_view|default('list') }}">
 
     {{ lvui|raw }}
 
     {# ===============================
-       DIRECTORY (LEFT / MAIN)
+       SIDEBAR
     =============================== #}
-    <section class="people-directory">
+    <aside class="inbox-sidebar">
 
-        <header class="people-header">
-            <h3>People</h3>
-
-            <input type="search"
-                   placeholder="Search people…"
-                   data-people-search>
-        </header>
-        <div class="people-filters">
-            <button class="active" data-filter="all">All</button>
-            <button data-filter="members">Members</button>
-            <button data-filter="non-users">Non Users</button>
-            <button data-filter="favorites">Favorites</button>
+        <div class="inbox-header">
+            <span><h3>People</h3></span>
+            <button class="new-thread-btn" title="New Person">+</button>
         </div>
 
-        <div class="people-grid" lvui="people_list">
+        <div class="thread-search">
+            <input
+                type="search"
+                placeholder="Search People"
+                aria-label="Search people"
+                data-people-search
+            >
+
+            <button
+                class="filter-all"
+                aria-pressed="false"
+                title="Show online only"
+                data-people-filter="all">
+                ●
+            </button>
+        </div>
+
+        <div class="people-filters">
+            <button data-type="all" class="active">All</button>
+            <button data-type="members">Members</button>
+            <button data-type="non-users">Non-Users</button>
+            <button data-type="favorites">Favorites</button>
+        </div>
+
+        <ul class="thread-list people-grid" lvui="inbox_threads">
 
             {% for person in people %}
                 <div class="person-card"
@@ -44,24 +59,50 @@
                 </div>
             {% endfor %}
 
-        </div>
-
-    </section>
+        </ul>
+    </aside>
 
 
     {# ===============================
-       DETAIL PANEL (RIGHT)
+       MAIN CONTENT
     =============================== #}
-    <aside class="people-detail">
+    <main class="inbox-content">
 
-        {% block people_content %}
-
-            <div class="empty-state">
-                Select a person
+        {% block inbox_content %}
+            {# thread view #}
+            <div class="thread-view" data-thread="null">
+                <div class="empty-state"> Select a person </div>
             </div>
-
+            
         {% endblock %}
 
-    </aside>
+    </main>
 
+
+    {# ===============================
+       FLOATING ACTION BUTTON
+    =============================== #}
+    <button
+        class="fab-new-thread"
+        aria-label="New conversation"
+        title="New conversation"
+        >
+        +
+    </button>
+
+    {# ⚙️ ACTIONS #}
+    <div class="page-actions f-right">
+
+        {% if person.id is defined %}
+            <button
+                class="thread_context_menu"
+                data-context-trigger
+                data-context-type="person"
+                data-context-id="{{ person.id }}"
+            >
+                ⋮
+            </button>
+        {% endif %}
+
+    </div>
 </div>

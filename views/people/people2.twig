@@ -1,0 +1,67 @@
+<div class="people-layout container"
+     data-view="{{ data_view|default('grid') }}">
+
+    {{ lvui|raw }}
+
+    {# ===============================
+       DIRECTORY (LEFT / MAIN)
+    =============================== #}
+    <section class="people-directory">
+
+        <header class="people-header">
+            <h3>People</h3>
+
+            <input type="search"
+                   placeholder="Search people…"
+                   data-people-search>
+        </header>
+        <div class="people-filters">
+            <button class="active" data-filter="all">All</button>
+            <button data-filter="members">Members</button>
+            <button data-filter="non-users">Non Users</button>
+            <button data-filter="favorites">Favorites</button>
+        </div>
+
+        <div class="people-grid" lvui="people_list">
+
+            {% for person in people %}
+                <div class="person-card"
+                     data-person="{{ person.id }}"
+                     data-action="people:open"
+                     data-type="{{ person.user_id ? 'members' : 'non-users' }}"
+                     data-favorite="{{ person.is_favorite ? 1 : 0 }}"
+                     >
+
+                    <div class="avatar">
+                        <img class="lazy  userAvatar{{person.user_id}}" src="assets/images/icons/noavatar.png" data-src="{{person.avatar_url}}" />
+                        <span class="status-dot"></span>
+                    </div>
+
+                    <div class="name">
+                        {{ person.full_name }}
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    {# ===============================
+       DETAIL PANEL (RIGHT)
+    =============================== #}
+    <aside class="people-detail">
+
+        {% block people_content %}
+
+            <div class="empty-state">
+                Select a person
+            </div>
+
+        {% endblock %}
+
+    </aside>
+
+</div>

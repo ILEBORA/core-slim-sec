@@ -1,62 +1,53 @@
 {% extends "people/people.twig" %}
 
-{% block people_content %}
+{% block inbox_content %}
 
-<div class="person-view" data-person="{{ person.id }}">
+{% set view_composer = (data_view == 'list' or error) ? 'hidden' : '' %}
 
-    {# ===============================
-       HEADER
-    =============================== #}
-    <header class="person-header">
+<div class="thread-view" data-thread="{{ person.id }}">
+    {% include "people/person/header.twig" with {
+        person: person
+    } %}
 
-        <button class="back-btn">←</button>
+    <div class="messages-cont2">
+            {# ERROR STATE #}
+            {% if error %}
+                
+                <div class="thread-error">
+                    <div class="error-box">
+                        <h4>⚠️ Something went wrong</h4>
+                        <p>{{ error }}</p>
 
-        <div class="person-info">
-            <h4>{{ person.name }}</h4>
-            <span class="meta">Profile</span>
-        </div>
+                        <button class="btn retry-btn" onclick="location.reload()">
+                            Retry
+                        </button>
+                    </div>
+                </div>
 
-        <div class="actions">
-            <button class="btn-follow">
-                Follow
-            </button>
-        </div>
-
-    </header>
-
-    {# ===============================
-       TABS
-    =============================== #}
-    <nav class="person-tabs">
-        <button data-tab="profile" class="active">Profile</button>
-        <button data-tab="tree">Family</button>
-        <button data-tab="activity">Activity</button>
-        <button data-tab="events">Events</button>
-    </nav>
-
-    {# ===============================
-       CONTENT
-    =============================== #}
-    <div class="person-content">
-
-        <div class="tab-panel active" data-tab="profile">
-            {{ person.profile_html|raw }}
-        </div>
-
-        <div class="tab-panel" data-tab="tree">
-            <div lvui="people_tree_{{ person.id }}"></div>
-        </div>
-
-        <div class="tab-panel" data-tab="activity">
-            <div lvui="people_activity_{{ person.id }}"></div>
-        </div>
-
-        <div class="tab-panel" data-tab="events">
-            <div lvui="people_events_{{ person.id }}"></div>
-        </div>
-
+            {# EMPTY / LIST STATE #}
+            {% elseif data_view == 'list' or not thread %}
+                <div class="empty-state"> Select a person </div>
+            {# NORMAL THREAD VIEW #}
+            {% else %}
+                ...
+            {% endif %}
+        
     </div>
 
 </div>
+
+<script>
+    window.MAIN_USER_ID = rd('uID');
+</script>
+
+{% if person.id is defined and not error %}
+<script>
+    window.INBOX_THREAD_ID = {{ person.id }};
+
+    $(function(){
+        $('.thread-item[data-id="{{ person.id }}"]').addClass('selected');
+    });
+</script>
+{% endif %}
 
 {% endblock %}

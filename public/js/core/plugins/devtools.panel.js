@@ -4,6 +4,10 @@ __BORA_REGISTER_PLUGIN__('DevToolsPanel', async function(scope){
 
     let el = null;
 
+    const state = {
+        mounted: false
+    };
+
     function create(){
 
         if(el) return;
@@ -79,6 +83,8 @@ __BORA_REGISTER_PLUGIN__('DevToolsPanel', async function(scope){
     }
 
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
         // alert('mount dev panel');
         if(!scope.config.dev) return;
         console.log('[DevToolPanel] mounted');
@@ -102,7 +108,18 @@ __BORA_REGISTER_PLUGIN__('DevToolsPanel', async function(scope){
         });
     }
 
-    return { mount };
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
+        console.log('[DevToolPanel] unmounted');
+        scope.off('plugin:timing', render);
+        if(el){
+            el.remove();
+            el = null;
+        }
+    }
+
+    return { mount, unmount };
 
 }, {
     // requires:['devtools']

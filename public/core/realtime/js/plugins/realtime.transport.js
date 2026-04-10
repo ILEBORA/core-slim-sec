@@ -5,7 +5,13 @@ async function(scope){
     const sse = await scope.getService('realtime.sse');
     const leader = await scope.getService('realtime.leader');
 
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
         // alert('sse transport');
         sse.on('*', function(envelope){
             const event = envelope.type;
@@ -22,7 +28,13 @@ async function(scope){
 
     }
 
-    return { mount };
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;  
+        sse.off('*'); // Unbind all events
+    }   
+
+    return { mount, unmount };
 
 },
 {

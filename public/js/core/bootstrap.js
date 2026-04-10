@@ -344,7 +344,7 @@
 
         const prefs = await app.service('preferences');
         prefs?.load();
-        console.log('Prefs here');
+        console.log('Prefs here...');
 
         /* =========================================================
         8. CLEAN BUILD SURFACE

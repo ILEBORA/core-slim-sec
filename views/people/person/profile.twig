@@ -29,20 +29,36 @@
         {# STATS #}
         
         <div class="profile-stats">
-            <button data-tab="followers">
-                <strong>{{ person.followers_count }}</strong>
-                Followers
-            </button>
+            {% if person.user_id %}
+                <div data-tab="followers">
+                    <strong>{{ person.followers_count }}</strong>
+                    Followers
+                </div>
 
-            <button data-tab="following">
-                <strong>{{ person.following_count }}</strong>
-                Following
-            </button>
+                <div data-tab="following">
+                    <strong>{{ person.following_count }}</strong>
+                    Following
+                </div>
+                {% if person.added_by == current_user_id or person.user_id == current_user_id %}
+                    <button class="btn btn-info" data-id="{{ person.id }}" data-action="person:edit">
+                        Edit
+                    </button>
+                {% endif %}
+            {% else %}
+                <div class="notice">User not Linked</div>
+                <button class="btn btn-info" data-id="{{person.id}}" data-action="person:link.invite">Invite</button> 
 
-            <button data-tab="connections">
-                <strong>{{ person.connections_count }}</strong>
+                {% if person.added_by == current_user_id or person.user_id == current_user_id %}
+                    <button class="btn btn-info" data-id="{{ person.id }}" data-action="person:edit">
+                        Edit
+                    </button>
+                {% endif %}
+            {% endif %}
+
+            <div class="notice" data-tab="connections">
+                <strong>{{ person.connections_count|default('0') }}</strong>
                 <span>Connections</span>
-            </button>
+            </div>
         </div>
 
     </div>
@@ -75,19 +91,31 @@
 
     </div>
 
-    {# ===============================
-       QUICK ACTIONS (OPTIONAL)
-    =============================== #}
-    <div class="profile-actions">
-
-        {% if person.user_id %}
-            <button class="btn-follow"
-                    data-action="people:follow"
-                    data-person="{{ person.id }}">
-                {{ person.is_following ? 'Following' : 'Follow' }}
-            </button>
-        {% endif %}
-
-    </div>
+    
 
 </div>
+{% if person.user_id %}
+{# ===============================
+    QUICK ACTIONS (OPTIONAL)
+=============================== #}
+<div class="profile-actions">
+
+    
+        {% set followed = person.is_following ? 'followed' : '' %}
+        <button class="btn-follow {{ followed }}"
+                data-action="people:follow"
+                data-person="{{ person.id }}"
+                >
+            {{ person.is_following ? 'Following' : 'Follow' }}
+        </button>
+
+        <button class="btn-follow"
+                data-action="people:message"
+                data-person="{{ person.id }}">
+                Chat
+        </button>
+    
+
+</div>
+
+{% endif %}

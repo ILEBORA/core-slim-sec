@@ -20,15 +20,24 @@
 
     <div class="actions">
         {% if person.user_id %}
-            <button class="btn-follow"
-                    data-person="{{ person.id }}">
-                {{ person.is_following ? 'Following' : 'Follow' }}
-            </button>
-            <button 
-                data-action="people:message">
-                Message
-            </button>
+            
         {% endif %}
+    </div>
+
+    {# ⚙️ ACTIONS #}
+    <div class="page-actions f-right">
+
+        {# if person.user_id #}
+            <button
+                class="thread_context_menu"
+                data-context-trigger
+                data-context-type="person"
+                data-context-id="{{ person.id }}"
+            >
+                ⋮ dd
+            </button>
+        {# endif #}
+
     </div>
 
 </header>

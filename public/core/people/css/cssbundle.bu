@@ -12,4 +12,6 @@ $pipeline
     ->add('person.css')
     ->add('profile_tab.css')
     ->add('filters.css')
+    ->add('stats.css')
+
     ->send();

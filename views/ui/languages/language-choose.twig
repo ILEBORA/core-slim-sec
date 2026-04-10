@@ -1,0 +1,21 @@
+<div class="lang-list">
+    {% for language in languages %}
+        <div 
+            class="lang-item {{ currentLang == language.code ? 'active' : '' }}"
+            data-action="ui.change.language"
+            data-lang="{{ language.code }}"
+        >
+            <div class="lang-main">
+                <span class="lang-name">{{ language.native_name }}</span>
+
+                {% if currentLang == language.code %}
+                    <span class="lang-badge">✓</span>
+                {% endif %}
+            </div>
+
+            <div class="lang-meta">
+                {{ language.completion }}% translated
+            </div>
+        </div>
+    {% endfor %}
+</div>

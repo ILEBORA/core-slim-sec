@@ -6,7 +6,14 @@ __BORA_REGISTER_PLUGIN__('KeyHandlers', async function(scope){
     const handlers = {};
     const context = {};
 
+    const state = {
+        mounted: false
+    };  
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
         console.log('[KeyHandlers] mounted');
         $(document).on('keydown.keyHandler', (event) => {
 
@@ -50,6 +57,15 @@ __BORA_REGISTER_PLUGIN__('KeyHandlers', async function(scope){
         }
     }
 
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;  
+
+        destroy();
+
+        console.log('[KeyHandlers] unmounted');
+    }
+
     function on(keys, fn, ctxName){
 
         if(typeof fn !== 'function'){
@@ -73,6 +89,7 @@ __BORA_REGISTER_PLUGIN__('KeyHandlers', async function(scope){
 
     return {
         mount,
+        unmount,
         on,
         setContext,
         destroy

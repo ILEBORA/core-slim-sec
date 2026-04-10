@@ -2,7 +2,13 @@ __BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
 
     const sse = await scope.getService('realtime.sse');
 
+    const state = {
+        mounted: false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
 
         loadStories();
 
@@ -12,6 +18,9 @@ __BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
     }
 
     function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
+        
         sse?.off?.('stories', handleStories);
     }
 

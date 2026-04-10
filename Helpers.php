@@ -524,6 +524,7 @@ if (!function_exists('View')) {
             $appName = App::config('app_name') ?: 'BoraSlim App';
 
             $instance
+                ->share('current_user_id', userID())
                 ->share('base_url', $baseUrl)
                 ->share('app_name', $appName)
                 ->share('app_version', getVersion())
@@ -1554,21 +1555,12 @@ if (!function_exists('isLoggedIn')) {
     {
         try {
 
-            $app = myApp();
+            $users = With('users');
 
-            if (!$app) {
-                return false;
-            }
-
-            $usersFeature = $app->getFeature('users');
-
-            if (!$usersFeature) {
-                return false;
-            }
-
-            return (bool) $usersFeature->isAuthenticated();
+            return (bool) $users->getManager()->isAuthenticated();
 
         } catch (\Throwable $e) {
+            error_log($e->getMessage());
             return false;
         }
     }

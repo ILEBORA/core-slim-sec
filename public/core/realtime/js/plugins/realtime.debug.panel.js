@@ -9,6 +9,10 @@ __BORA_REGISTER_PLUGIN__('RealtimeDebugPanel', async function(scope){
     let el = null;
     let interval = null;
 
+    const state = {
+        mounted: false
+    };
+
     function create(){
 
         if(el) return;
@@ -63,6 +67,8 @@ __BORA_REGISTER_PLUGIN__('RealtimeDebugPanel', async function(scope){
     }
 
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
 
         create();
         refresh();
@@ -83,6 +89,8 @@ __BORA_REGISTER_PLUGIN__('RealtimeDebugPanel', async function(scope){
     }
 
     function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
 
         if(interval){
             clearInterval(interval);

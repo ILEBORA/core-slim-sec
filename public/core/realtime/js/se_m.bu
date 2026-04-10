@@ -20,7 +20,8 @@ require __DIR__ . '/../../../../../../../vendor/autoload.php';
 // use BoraSlim\Core\Utils\EnvLoader;
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
-require __DIR__ . '/../../../../../../../src/engine.php';
+//require __DIR__ . '/../../../../../../../src/engine.php';
+\BoraSlim\Core\Engine::boot();
 
 //Proceed
 use BoraSlim\Core\Modules\Realtime\Utils\SSE;

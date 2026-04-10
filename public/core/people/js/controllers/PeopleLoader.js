@@ -26,7 +26,7 @@ class PeopleLoader {
         const key = `view:${personId}`;
 
         if (this.inflight.has(key)) {
-            history.pushState({}, '', `portal/person/${personId}`);
+            history.pushState({}, '', `portal/people/person/${personId}/view`);
             return this.inflight.get(key);
         }
 
@@ -35,7 +35,7 @@ class PeopleLoader {
             .then(html => {
                 this.viewCache.set(personId, html);
                 this.inflight.delete(key);
-                history.pushState({}, '', `portal/person/${personId}`);
+                history.pushState({}, '', `portal/people/person/${personId}/view`);
                 return html;
             })
             .catch(err => {
@@ -68,16 +68,60 @@ class PeopleLoader {
 
         const promise = this.callbora
             .get(`api/modules/people/person/${personId}/tabs/${tab}`)
-            .then(html => {
-                this.tabCache.set(cacheKey, html);
+            .then(response => {
+
+                let parsed = null;
+
+                if (typeof response === 'object' && response !== null) {
+                    parsed = response;
+                } else if (typeof response === 'string') {
+                    try {
+                        parsed = JSON.parse(response);
+                    } catch (e) {
+                        parsed = null;
+                    }
+                }
+
+                if (parsed && typeof parsed === 'object') {
+                    // 🚨 JSON response → error case
+                    if (parsed.success === false) {
+                        const html = `
+                            <div class="error unauthorized">
+                                <strong>${parsed.message || 'Error'}</strong>
+                            </div>
+                        `;
+
+                        // ✅ assume HTML
+                        this.tabCache.set(cacheKey, html);
+                        this.inflight.delete(key);
+
+                        return html;
+                    }
+                }
+
+                // ✅ assume HTML
+                this.tabCache.set(cacheKey, response);
                 this.inflight.delete(key);
-                
-                return html;
+
+                return response;
             })
             .catch(err => {
                 this.inflight.delete(key);
                 throw err;
             });
+
+        // const promise = this.callbora
+        //     .get(`api/modules/people/person/${personId}/tabs/${tab}`)
+        //     .then(html => {
+        //         this.tabCache.set(cacheKey, html);
+        //         this.inflight.delete(key);
+                
+        //         return html;
+        //     })
+        //     .catch(err => {
+        //         this.inflight.delete(key);
+        //         throw err;
+        //     });
 
         this.inflight.set(key, promise);
 

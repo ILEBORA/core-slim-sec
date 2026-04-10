@@ -2,6 +2,10 @@ __BORA_REGISTER_SERVICE__('preferences', async function(scope){
 
     const jquery = await scope.getService('jquery');
     const config = scope.config || {};
+    const callbora = await scope.getService('callbora');
+
+    let languages = null;
+    let languagesPromise = null;
 
     const state = {
         theme: 'light-mode',
@@ -42,7 +46,9 @@ __BORA_REGISTER_SERVICE__('preferences', async function(scope){
             const data = await response.json() || {};
             Object.assign(state, data);
             apply();
+
             bindDOM();
+
             scope.emit('preferences:loaded', state);
 
             loading =  false;
@@ -68,16 +74,7 @@ __BORA_REGISTER_SERVICE__('preferences', async function(scope){
         );
 
         // Update theme button icon
-        // const $btn = $('.theme-btn #themeButton');
-        // const $btn = $('#themeButton');
 
-        // if($btn.length){
-        //     const icon = state.theme === 'light-mode'
-        //         ? "<abbr class='fa fa-moon'></abbr>"
-        //         : "<abbr class='fa fa-sun'></abbr>";
-
-        //     $btn.html(icon);
-        // }
 
         $('[data-pref-bind]').each(function(){
 
@@ -186,6 +183,44 @@ __BORA_REGISTER_SERVICE__('preferences', async function(scope){
 
     }
 
+    async function loadLanguages(){
+
+        if(languages) return languages;
+
+        // prevent duplicate concurrent requests
+        if(languagesPromise) return languagesPromise;
+
+        languagesPromise = callbora.get('api/modules/ui/languages')
+            .then(res => {
+                languages = res || {};
+                return languages;
+            })
+            .finally(() => {
+                languagesPromise = null;
+            });
+
+        return languagesPromise;
+    }
+
+    function renderLanguageList(){
+
+        let html = '<div class="lang-list">';
+
+        Object.entries(languages).forEach(([code, lang]) => {
+
+            html += `
+            <div class="lang-item" data-lang-select="${code}">
+                <strong>${lang.native}</strong>
+                <small>${lang.completion}% translated</small>
+            </div>`;
+        });
+
+        html += '</div>';
+        return html;
+    }
+
+
+
     function updateBoundElement($el, key){
 
         const value = state[key];
@@ -274,6 +309,8 @@ __BORA_REGISTER_SERVICE__('preferences', async function(scope){
         apply,
         set,
         get,
-        state
+        state,
+        loadLanguages,
+        renderLanguageList
     };
 });

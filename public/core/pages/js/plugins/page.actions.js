@@ -78,22 +78,7 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
             });
 
-        });
-
-        // alertBora.confirm('Are you <em>really</em> sure?', { html:true })
-        // .autoCancel(20)
-        // .then(function(){
-        //     callbora.api('api/modules/pages/page/1/delete', { id }).then(function(response){
-        //         if(response.success){
-        //             alertBora.notify('Page deleted successfully').success();
-        //         }
-        //     });
-
-        //     console.warn('Delete not implemented:', id);
-        // }, function(){
-        //     console.log('Delete cancelled');
-        // });
-        
+        });        
 
     }
 
