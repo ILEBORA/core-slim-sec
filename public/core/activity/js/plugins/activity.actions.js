@@ -295,3 +295,5 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 },{
     activateOn: (route) => route.startsWith('portal/activity')
 });
+
+alert('here actv');

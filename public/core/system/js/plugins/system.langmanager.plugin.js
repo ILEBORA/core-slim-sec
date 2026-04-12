@@ -3,6 +3,7 @@ __BORA_REGISTER_PLUGIN__(
 async function(scope){
 
     const navigation = await scope.getService('navigation');
+    const uiActions = await scope.getService('ui.actions');
 
     const state = {
         mounted: false
@@ -30,15 +31,14 @@ async function(scope){
 
     function uiBind(){
 
-        $('#loadTranslations').on('click', function(){
+        uiActions.register('system:load.translations',function(){
             const module = $('#moduleSelect').val();
             const lang   = $('#langSelect').val();
 
             navigation.go(`bo/system/langmanager/${module}/${lang}`);
         });
 
-
-        $('#saveTranslations').on('click', function(){
+        uiActions.register('system:save.translations', function(){
 
             const formData = $('#translationsForm').serialize();
             const module = $('#moduleSelect').val();
@@ -55,7 +55,7 @@ async function(scope){
         });
 
 
-        $('#syncTranslations').on('click', function(){
+        uiActions.register('system:sync.translations', function(){
 
             const module = $('#moduleSelect').val();
             const lang   = $('#langSelect').val();
@@ -116,7 +116,7 @@ async function(scope){
 },
 {
 
-    requires:['realtime'],//,'hooks','events'],
+    requires:[],//['realtime'],//,'hooks','events'],
     activateOn:(route)=> route.startsWith('bo/system/langmanager')
     //TODO:: runtime face mount
     // faces: ['client', 'admin']

@@ -1476,14 +1476,28 @@ if(!function_exists('getTranslator')){
     }
 }
 
-if(!function_exists('__t')){
-    function __t(string $key, ?string $lang = null, ?string $default = null): string
-    {
+if (!function_exists('__t')) {
+    function __t(
+        string $key,
+        ?string $lang = null,
+        ?string $default = null,
+        array $replace = []
+    ): string {
         $translator = I18nBootstrap::translator();
 
-        $lang = i18n_current_lang();
+        $lang = $lang ?? i18n_current_lang();
 
-        return $translator->translate($key, $lang, $default);
+        $text = $translator->translate($key, $lang, $default);
+
+        // Apply replacements
+        if(!empty($replace)){
+            // dieVal($text);
+            $text = preg_replace_callback('/\{\{(\w+)\}\}/', function ($matches) use ($replace) {
+                return $replace[$matches[1]] ?? $matches[0];
+            }, $text);
+        }
+
+        return $text;
     }
 }
 

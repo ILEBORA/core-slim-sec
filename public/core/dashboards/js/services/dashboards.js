@@ -8,7 +8,10 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
     | Internal API exposed to optional features
     |--------------------------------------------------------------------------
     */
-    // alert('dash');
+    function mount(){
+        alert('dash');
+    }
+
     const api = {
 
         bindClick(selector, handler){
@@ -163,11 +166,16 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
         init();
     }
 
+    alert('here');
+
     return {
-        api
+        api,
+        mount
     };
 
 },
 {
-    requires: ['ui.actions']
+    // requires: ['ui.actions']
 });
+
+alert('there'); 

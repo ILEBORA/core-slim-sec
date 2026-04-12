@@ -1,5 +1,5 @@
 {% block sidebar %}
-<div id="side-bar" class="side-bar viewtype_admin" data-id="client">
+<div id="side-bar" class="side-bar viewtype_guest" data-id="client">
 
     <div class="side-bar-top">
         {% block sidebar_top %}
@@ -23,9 +23,12 @@
 
     <div class="side-bar-tools">
         {% block sidebar_tools %}
+            
+
             {# if hasRole('Administrator') or hasRole('Developer') #}
-                <a class="fa fa-refresh" href="javascript:void(0)" data-refresh-menu data-role="{{active_role}}"></a>
-                <select id="changemenu" class="changemenu" >
+            <a class="fa fa-refresh" href="javascript:void(0)" data-refresh-menu data-role="{{active_role}}"></a>
+            
+                <select id="changemenu" class="changemenu">
                     <option value="Client" >Client</option>
                     <option value="Administrator" selected>Admin</option>
                 </select>
@@ -63,22 +66,7 @@
     <div class="side-bar-content">
         {% block sidebar_content %}
             <ul class="features-list">
-                {% block sidebar_menu %}
-                    <div align="center" style="display:none"><img src="assets/images/icons/ajax.gif"></div>  
-                    {% for item in menus.sidebar.roots %}
-                        <li>
-                            <a class="jx" href="{{ item.url }}">{{ item.label }}</a>
-
-                            {% if menus.sidebar.children[item.id] is defined %}
-                            <ul>
-                                {% for child in menus.sidebar.children[item.id] %}
-                                <li><a class="jx" href="{{ child.url }}">{{ child.label }}</a></li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                {% endblock %}
+                {{ menus.sidebar|raw }}
             </ul>
         {% endblock %}
     </div>

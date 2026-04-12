@@ -28,7 +28,7 @@
 
             <p style="margin:0;">
                 © {{ year }} {{ app_name }}. {{ __t('notifications.rights_reserved') }}<br>
-                {{ __t('notifications.build_notice')|raw }}
+                {{ __t('notifications.build_notice', null, null, { core_version: core_version })|raw }}
             </p>
 
         </div>

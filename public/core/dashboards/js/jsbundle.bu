@@ -13,7 +13,7 @@ $pipeline = new AssetPipelineJs('dashboards', __DIR__, $origin);
    CORE DASHBOARD LOGIC
 ================================================== */
 
-$pipeline->register('dashboards.core', [
+$pipeline->register('dashboards=', [
     'file'     => 'services/dashboards.js',
     'type'     => 'service', // or 'plugin' depending on behavior
     'priority' => 100,

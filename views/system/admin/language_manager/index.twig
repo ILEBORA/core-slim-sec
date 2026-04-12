@@ -24,7 +24,7 @@
                 {% endfor %}
             </select>
 
-            <button id="loadTranslations" class="btn btn-primary ms-2">
+            <button id="loadTranslations" data-action="system:load.translations" class="btn btn-primary ms-2">
                 Load
             </button>
         </div>
@@ -38,11 +38,11 @@
         <div class="card-body">
             <h5>Actions</h5>
 
-            <button id="syncTranslations" class="btn btn-warning">
+            <button id="syncTranslations" data-action="system:sync.translations" class="btn btn-warning">
                 <i class="fa fa-refresh"></i> Sync from JSON
             </button>
 
-            <button id="saveTranslations" class="btn btn-success">
+            <button id="saveTranslations" data-action="system:save.translations" class="btn btn-success">
                 <i class="fa fa-save"></i> Save Changes
             </button>
         </div>

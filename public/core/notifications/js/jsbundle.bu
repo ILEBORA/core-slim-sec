@@ -7,7 +7,7 @@ use BoraSlim\Core\Assets\AssetPipelineJs;
 
 $origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
 
-$pipeline = new AssetPipelineJs('system', __DIR__, $origin);
+$pipeline = new AssetPipelineJs('notifications', __DIR__, $origin);
 
 /* ==================================================
    LIBS (FOUNDATION)
