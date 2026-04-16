@@ -91,6 +91,18 @@ async function (scope) {
         }
     }
 
+    function openPersonEdit(personId){
+        popup.open({
+            mode:'form',
+            module:'people',
+            group:'person',
+            tab: 'edit',
+            view:'edit',
+            id:personId,
+            size:'md'
+        });
+    }
+
     return {
         async init() {
 
@@ -137,7 +149,9 @@ async function (scope) {
             });
 
             uiActions.register('person:edit', (el) => {
-                alertBora.alert('Person Edit feature is disabled!');
+                // alertBora.alert('Person Edit feature is disabled!');
+                const personId = $(el).data('id');
+                openPersonEdit(personId);
             });
 
             /* ========================================
@@ -268,6 +282,44 @@ async function (scope) {
 
                 nav.go(`portal/tree/show/${treeId}`);
 
+            });
+
+            uiActions.register('person.view', (el)=>{
+                let personId = $(el).data('id');
+                
+                const root = $(el).closest('.person-view');
+
+                scope.emit('people.tab.changed', {
+                    tab:"profile",
+                    personId:personId,
+                    root: root[0]
+                });
+            });
+
+            uiActions.register('person.edit', (el)=>{
+                let personId = $(el).data('id');
+                openPersonEdit(personId);
+
+                // popup.open({
+                //     mode:'form',
+                //     module:'people',
+                //     group:'person',
+                //     tab: 'edit',
+                //     view:'edit',
+                //     id:personId,
+                //     size:'md'
+                // });
+            });
+
+            uiActions.register('person.connections', (el)=>{
+                let personId = $(el).data('id');
+                const root = $(el).closest('.person-view');
+
+                scope.emit('people.tab.changed', {
+                    tab:"connections",
+                    personId:personId,
+                    root: root[0]
+                });
             });
 
             //

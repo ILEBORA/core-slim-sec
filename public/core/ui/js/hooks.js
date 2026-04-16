@@ -2,6 +2,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
     const hooks = await scope.getService('hooks');
     const uiActions = await scope.getService('ui.actions');
+    const uiStack = await scope.getService('uiStack');
 
     // alert('Ui Hooks');
     // Register a beforeSubmit hook
@@ -34,6 +35,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
         if(resp.esc){
             // alert('esc');
+            uiStack.closeTop();
             await __BORA_APP__.service('hooks')?.call('esc');
         }
 

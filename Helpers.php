@@ -1698,6 +1698,14 @@ if(!function_exists('ctx')){
     }
 }
 
+//Domain results
+if (!function_exists('dr')) {
+    function dr(): string
+    {
+        return \BoraSlim\Core\Domain\DomainResult::class;
+    }
+}
+
 // Widgets
 if (!function_exists('widgets')) {
 

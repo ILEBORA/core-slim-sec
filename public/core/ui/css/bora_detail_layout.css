@@ -7,6 +7,7 @@
     margin: auto auto;
     height: 700px;
     max-height: 600px;
+    overflow: hidden;
 }
 
 /* Sidebar */
@@ -67,12 +68,12 @@
     justify-content: center;
 }
 
-.thread_context_menu, .thread-info{
-    display: none;
-}
-
 .thread-header{
     position: relative;
+}
+
+.header-item-actions{
+    margin-left: auto;
 }
 /* Desktop hide FAB */
 @media (min-width: 769px) {

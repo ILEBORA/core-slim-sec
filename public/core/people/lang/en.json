@@ -1,0 +1,15 @@
+{
+    "ok": "Successful",
+
+    "forbidden": "Forbidden",
+    "not_found": "Not found",
+    "method_not_allowed": "Method not allowed",
+
+    "invalid_payload": "Invalid Payload",
+    "empty_message": "Empty Message",
+
+    "person_already_exists": "Person already exists",
+   
+    "person_create_failed": "Person create failed"
+    
+}
