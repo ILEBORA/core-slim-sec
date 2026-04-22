@@ -10,36 +10,79 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
     appCore?.setSSE?.(instance);
 
     bindNavigationLifecycle();
-    
 
+    // scope.on('runtime:started', bindNavigationLifecycle);
+    
+    let offBefore, offAfter, offError;
     function bindNavigationLifecycle(){
 
-        hooks?.add?.('page.beforeLoad', ()=>{
+        // offBefore = 
+        scope.on('page.beforeLoad', () => {
             instance?.pause?.();
         });
 
         let resumeTimer = null;
-        hooks?.add?.('page.afterLoad', ()=>{
+
+        // offAfter = 
+        scope.on('page.afterLoad', ({ url, response }) => {
             clearTimeout(resumeTimer);
-            resumeTimer = setTimeout(()=>{
+            resumeTimer = setTimeout(() => {
                 instance?.resume?.();
             }, 50);
         });
 
-        hooks?.add?.('page.loadError', ()=>{
+        // offError = 
+        scope.on('page.loadError', ({ url, error }) => {
             instance?.resume?.();
         });
 
-        // Hidden Tab
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                instance.pause();
-            } else {
-                instance.resume();
-            }
-        });
-
+        // tab visibility stays as-is (DOM event, not runtime event)
+        document.addEventListener('visibilitychange', handleVisibility);
     }
+
+    function handleVisibility(){
+        if (document.hidden) {
+            instance.pause();
+        } else {
+            instance.resume();
+        }
+    }
+
+    function unbindNavigationLifecycle(){
+        // offBefore?.();
+        // offAfter?.();
+        // offError?.();
+        document.removeEventListener('visibilitychange', handleVisibility);
+    }
+
+    // function bindNavigationLifecycleO(){
+
+    //     hooks?.add?.('page.beforeLoad', ()=>{
+    //         instance?.pause?.();
+    //     });
+
+    //     let resumeTimer = null;
+    //     hooks?.add?.('page.afterLoad', ()=>{
+    //         clearTimeout(resumeTimer);
+    //         resumeTimer = setTimeout(()=>{
+    //             instance?.resume?.();
+    //         }, 50);
+    //     });
+
+    //     hooks?.add?.('page.loadError', ()=>{
+    //         instance?.resume?.();
+    //     });
+
+    //     // Hidden Tab
+    //     document.addEventListener('visibilitychange', () => {
+    //         if (document.hidden) {
+    //             instance.pause();
+    //         } else {
+    //             instance.resume();
+    //         }
+    //     });
+
+    // }
 
     const appCompat = {
         safeParse: (str, fallback) => {
@@ -346,7 +389,8 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
         resume: () => instance?.resume?.(),
         updateWidgetVersions: (lvui) => instance?.updateWidgetVersions?.(lvui),
         closeConnection: () => instance?.closeConnecton?.(),
-        _raw: instance
+        _raw: instance,
+        unbindNavigationLifecycle
     };
 
 });

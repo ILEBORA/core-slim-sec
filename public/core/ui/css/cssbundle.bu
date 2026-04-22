@@ -15,5 +15,6 @@ $pipeline
     ->add('dropdown-menu.css')
     ->add('languages.css')
     ->add('bora_detail_layout.css')
+    ->add('info_block.css')
 
     ->send();

@@ -97,25 +97,25 @@ __BORA_REGISTER_PLUGIN__('Overlay', async function(scope){
 
     function bindHooks(){
 
-        hooks.add('page.beforeLoad', ()=>{
+        scope.on('page.beforeLoad', ()=>{
             trackSlowRequest();
         });
 
-        hooks.add('page.afterLoad', ()=>{
+        scope.on('page.afterLoad', ()=>{
             clearSlow();
             hide(true);
         });
 
-        hooks.add('page.loadError', ()=>{
+        scope.on('page.loadError', ()=>{
             clearSlow();
             hide(true);
         });
 
-        hooks.add('jobqueue.start', ()=>{
+        scope.on('jobqueue.start', ()=>{
             show('Processing job...');
         });
 
-        hooks.add('jobqueue.complete', ()=>{
+        scope.on('jobqueue.complete', ()=>{
             hide(true);
         });
     }

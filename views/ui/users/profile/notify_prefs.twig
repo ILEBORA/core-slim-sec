@@ -1,7 +1,7 @@
 <div class="inf_block">
     <div class="inf_title">
-        Notification Preferences 
-        <a title="Edit" class="edit_link" onclick="return false;" style="display:none;"></a>
+        <span>{{__t('ui.personal_details',null,'Personal Details')}}</span>
+        
     </div>
 
     <br clear="left">
@@ -10,7 +10,7 @@
         <div class="roundedge info_box" align="center">    
 
             <div class="inf_desc">
-                Please choose how you wish to be notified...
+                {{__t('ui.notification_prefs',null, 'Please choose how you wish to be notified')}}...
             </div>          
 
             <table id="spm" width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -19,7 +19,7 @@
             {% if groups is empty %}
                 <tr>
                     <td colspan="3" align="center" style="padding: 15px; opacity: 0.7;">
-                        No notification preferences available.
+                        {{__t('ui.notification_prefs_empty',null,'No notification preferences available')}}.
                     </td>
                 </tr>
             {% else %}
@@ -75,17 +75,3 @@
 
     <br clear="all">
 </div>
-
-<script>
-function updatePref(el) {
-    const type    = el.dataset.type;
-    const channel = el.dataset.channel;
-    const enabled = el.checked ? 1 : 0;
-
-    $.post('api/modules/notifications/update-preference', {
-        type,
-        channel,
-        enabled
-    });
-}
-</script>

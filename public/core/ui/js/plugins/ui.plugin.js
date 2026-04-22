@@ -71,6 +71,45 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
 
             // location.reload();
         });
+
+        formJourney.registerJourney('user.profile.edit', function ($form, done) {
+            const url = $form.attr('action');
+            const method = $form.attr('method') || 'POST';
+
+            const formData = new FormData($form[0]);
+            const btn = $form.find('button[type=submit]');
+            const btnPrev = btn.html();
+            btn.html('Processing...');
+
+            new CallBora(url)
+                .setMethod(method)
+                .setParams(formData) // ✅ KEEP AS FORMDATA
+                .setCallback((resp) => {
+
+                    if (resp.success) {
+                        alertBora.notify('Personal details updated', 'success', 4);
+
+                        if (resp.redirect) {
+                            appUI.content.loadPage(resp.redirect);
+                        }
+
+                        if (resp.esc) {
+                            uiStack.closeTop();
+                        }
+
+                    } else {
+                        alertBora.notify(resp.error || 'Action failed', 'error', 5);
+                    }
+
+                    done?.(resp);
+                })
+                .setError((xhr) => {
+                    console.error('System error', xhr);
+                    alertBora.notify('System error. Please try again later.', 'error', 15);
+                    done?.(xhr);
+                })
+                .build();
+        });
     }
 
     function uiUnbind(){

@@ -56,12 +56,22 @@ class PeopleUI {
             new CallBora(`api/modules/people/person/${personId}/view`)
                 .setMethod("POST")
                 .setCallback(res => {
+                    
                     if(!res.success) return;
-
+                    // console.log(res);
+                    // Option B: wait for server push (better)
+                    this.scope.emit('breadcrumbs:resolve', {
+                        url:`portal/people/person/${personId}/view`, 
+                        response: res
+                    });
+                    // alert({
+                    //     url:`portal/people/person/${personId}/view`, 
+                    //     response: res
+                    // });
                     // Option A: optimistic UI
                     this.clearThreadBadge(personId);
 
-                    // Option B: wait for server push (better)
+                    
                 })
                 .build();
         });
@@ -143,9 +153,6 @@ class PeopleUI {
         if(!id) return;
 
         this.setThreadSelected(id);
-
-        // mark as read
-        this.scope.emit('people.person.read', {personId: id});
 
         this.scope.emit('people.person.open', {personId:id});
     }
@@ -258,6 +265,8 @@ class PeopleUI {
 
     renderHTML(html) {
         if (!this.cache.detail) return;
+
+        this.cache.detail    = document.querySelector('.thread-view');
 
         this.cache.detail.innerHTML = html;
 

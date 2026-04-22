@@ -5,6 +5,7 @@ class PeopleAPI {
         this.loader        = loader;
         this.followService = follow;
         this.realtime      = realtime;
+
     }
 
     /* ========================================
@@ -24,6 +25,23 @@ class PeopleAPI {
         this.ui.renderHTML(html);
 
         this.ui.setActivePerson(personId);
+
+        // mark as read
+        this.ui.scope.emit('people.person.read', {personId: personId});
+
+        // 🔥 extract name from DOM (cheap + avoids extra API call)
+        const nameEl = document.querySelector('.person-view .name');
+        const name = nameEl?.textContent?.trim() || `Person ${personId}`;
+
+        const scope = window.__BORA_APP__?.scope;
+        if (scope) {
+            const breadcrumbs = await scope.getService('breadcrumbs');
+
+            breadcrumbs.set([
+                { label: 'People', href: 'portal/people' },
+                { label: name, current: true }
+            ]);
+        }
         
         return html;
     }

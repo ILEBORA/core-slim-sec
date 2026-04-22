@@ -120,6 +120,15 @@ $pipeline->register('inbox.ui.interactions', [
     // ],
 ]);
 
+$pipeline->register('inbox.breadcrumbs', [
+    'file'     => 'plugins/inbox.breadcrumbs.js',
+    'type'     => 'plugin',
+    'priority' => 142,
+    'requires' => [
+                    //'hooks'
+                ]
+]);
+
 /* ==================================================
    PLUGIN BOOTSTRAP (ENTRY POINT)
 ================================================== */

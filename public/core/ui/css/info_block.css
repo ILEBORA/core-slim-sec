@@ -1,0 +1,14 @@
+.inf_block .btn{
+    font-size: small;
+}
+.inf_title{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.flex-right{
+    margin-left: auto;
+}
+.inf_block{
+    flex: 1;
+}

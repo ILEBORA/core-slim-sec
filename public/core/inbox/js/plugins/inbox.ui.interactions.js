@@ -174,6 +174,31 @@ async function (scope) {
                 activeTab: 'add'
             });
         });
+
+        uiActions.register('inbox:view_profile', (el) => {
+            let userId = $(el).data('id');
+            let senderType = $(el).data('type');
+
+            if(senderType == 'bot'){
+                alertBora.alert('Bot info'); 
+                return;
+            }
+
+            if (!userId) return;
+
+            callbora
+                .post('api/modules/people/resolve-by-user', {
+                    user_id: userId
+                })
+                .then(res => {
+
+                    if (!res.success) return;
+
+                    navigation.go(
+                        `portal/people/person/${res.person_id}/view`
+                    );
+                });
+        });
     }
 
     function visibleItems() {

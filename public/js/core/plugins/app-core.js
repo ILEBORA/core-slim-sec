@@ -61,7 +61,7 @@ __BORA_REGISTER_PLUGIN__(
             🔥 ROUTE → ACTIVATION BRIDGE
             ========================= */
 
-            scope.on('route:changed', async (route) => {
+            scope.on('route:changed', async ({url:route}) => {
                 try{
                     await scope.evaluatePluginActivation(route);
                 }catch(err){

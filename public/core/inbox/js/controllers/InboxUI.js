@@ -52,6 +52,11 @@ class InboxUI {
                 .setCallback(res => {
                     if(!res.success) return;
 
+                    // this.scope.emit('breadcrumbs:resolve', {
+                    //     url:`portal/inbox/thread/${threadId}`, 
+                    //     response: res
+                    // });
+
                     // Option A: optimistic UI
                     this.clearThreadBadge(threadId);
 

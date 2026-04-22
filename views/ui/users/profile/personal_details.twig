@@ -1,13 +1,25 @@
 <div class="inf_block">
-    <div class="inf_title">Personal Details 
-        <a title="Edit" class="edit_link " onclick="return false;" style="display:none;"></a>
-
+    <div class="inf_title">
+        <span>{{__t('ui.personal_details',null,'Personal Details')}}</span>
+        {% if(hasPermission('profile','edit.personal.details', true)) %}
+            <button
+                class="btn btn-info flex-right"
+                data-popup
+                data-mode="form"
+                data-module="users"
+                data-group="profile"
+                data-id="{{id}}"
+                data-tab="edit"
+                data-size="lg">
+                {{__t('ui.button_edit',null,'Edit')}}
+            </button>
+        {% endif %}
     </div>
-    <br clear="left">
+    
     <div class="inf_cont shdw" align="center">
         <div class="image_box">  
             <div id="" class="roundedge" style="width:100%;position:relative;z-index:7; overflow:hidden;">
-                <a id="" title="Edit" class="avtrBox edit_link r-t" data-itm="{{ id }}" data-id="user" data-prev="{{avatar|raw}}" onclick="return mPGs.changeAvatar(this);">edit </a>
+                <a id="" title="Edit" class="avtrBox edit_link r-t" data-itm="{{ id }}" data-id="user" data-prev="{{avatar|raw}}" onclick="return mPGs.changeAvatar(this);">{{__t('ui.button_edit',null,'Edit')}} </a>
                 <img class="userAvatar{{ id }} lazy" style="width:100%;height:250px;" src="assets/images/icons/noavatar.png" data-src="{{avatar|raw}}">
             </div>   
         </div>
@@ -16,22 +28,17 @@
             <table id="spm" width="100%" border="0" cellpadding="0" cellspacing="0">
 
                 <tbody><tr>
-                    <td align="right" width="20%" valign="middle"><span>Name:</span></td>
-                    <td><span id="lable">{{ name }}</span></td>
+                    <td align="right" width="20%" valign="middle"><span>{{__t('ui.name',null,'Name')}}:</span></td>
+                    <td><span id="lable">{{ full_name }}</span></td>
                     <td width="25"></td>
                 </tr>
                 <tr>
-                    <td align="right" valign="middle"><span>Email:</span></td>
-                    <td><span id="lable">{{ email }}</span></td>
-                    <td width="25"></td>
-                </tr>
-                <tr>
-                    <td align="right" valign="middle"><span>Phone:</span></td>
+                    <td align="right" valign="middle"><span>{{__t('ui.label_phone',null,'Phone')}}:</span></td>
                     <td><span id="lable">{{ phone }}</span></td>
                     <td width="25"></td>
                 </tr>
-                <tr style="display:none;">
-                    <td align="right" valign="middle"><span>Gender:</span></td>
+                <tr>
+                    <td align="right" valign="middle"><span>{{__t('ui.label_gender',null,'Gender')}}:</span></td>
                     <td><span id="lable">{{ gender }}</span></td>
                     <td width="25"></td>
                 </tr>

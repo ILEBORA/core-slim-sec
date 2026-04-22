@@ -64,6 +64,11 @@ class InboxThreadLoader{
 
         .then(res => {
 
+            this.scope.emit('breadcrumbs:resolve', {
+                url:`portal/inbox/thread/${threadId}`, 
+                response: res
+            });
+            
             container.innerHTML = '';
 
             res.data.messages.forEach(msg => {

@@ -1633,7 +1633,26 @@ if(!function_exists('getPropertyType')){
         $ref = new ReflectionProperty($obj, $prop);
         $type = $ref->getType();
 
-        return $type ? $type->getName() : null;
+        if (!$type) return null;
+
+        // Named type (most common case)
+        if ($type instanceof ReflectionNamedType) {
+            return $type->getName();
+        }
+
+        // Union type (PHP 8+)
+        if ($type instanceof ReflectionUnionType) {
+            $types = array_map(fn($t) => $t->getName(), $type->getTypes());
+            return implode('|', $types); // e.g. "int|string"
+        }
+
+        // Intersection type (PHP 8.1+)
+        if ($type instanceof ReflectionIntersectionType) {
+            $types = array_map(fn($t) => $t->getName(), $type->getTypes());
+            return implode('&', $types);
+        }
+
+        return null;
     }
 }
 

@@ -44,3 +44,15 @@ class PeopleHelpers {
         };
     }
 }
+
+function updatePref(el) {
+    const type    = el.dataset.type;
+    const channel = el.dataset.channel;
+    const enabled = el.checked ? 1 : 0;
+
+    $.post('api/modules/notifications/update-preference', {
+        type,
+        channel,
+        enabled
+    });
+}

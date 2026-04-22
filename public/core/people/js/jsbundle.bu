@@ -144,9 +144,20 @@ $pipeline->register('people.ui.interactions', [
     'priority' => 141,
 ]);
 
+$pipeline->register('people.breadcrumbs', [
+    'file'     => 'plugins/people.breadcrumbs.js',
+    'type'     => 'plugin',
+    'priority' => 142,
+    'requires' => [
+                    'hooks'
+                ]
+]);
+
 /* ==================================================
    PLUGIN BOOTSTRAP (ENTRY POINT)
 ================================================== */
+
+
 
 $pipeline->register('people.plugin', [
     'file'     => 'plugins/people.plugin.js',

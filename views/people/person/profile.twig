@@ -1,6 +1,9 @@
 {# people/person/profile.twig #}
 
 <div class="person-profile">
+    {% if is_deleted %}
+        Deleted Person
+    {% endif %}
 
     {# ===============================
        AVATAR
@@ -99,22 +102,35 @@
     QUICK ACTIONS (OPTIONAL)
 =============================== #}
 <div class="profile-actions">
+        {% set d_state = person.is_deleted ? 'deleted' : '' %}
+        {% if person.is_deleted %}
+            Deleted
+        {% endif %}
 
-    
-        {% set followed = person.is_following ? 'followed' : '' %}
-        <button class="btn-follow {{ followed }}"
-                data-action="people:follow"
-                data-person="{{ person.id }}"
-                >
-            {{ person.is_following ? 'Following' : 'Follow' }}
-        </button>
+        {% if (current_user().id != person.user_id) %}
+            {% set followed = person.is_following ? 'followed' : '' %}
+            <button class="btn-follow {{ followed }}"
+                    data-action="people:follow"
+                    data-id="{{ person.id }}"
+                    >
+                {{ person.is_following ? 'Following' : 'Follow' }}
+            </button>
+            <button class="btn btn-info"
+                    data-action="people:message"
+                    data-id="{{ person.user_id }}">
+                    Chat
+            </button>
+        {% else %}
+            <button class="btn btn-info"
+                    data-nav="portal/profile"
+                    >
+                    Your Profile
+            </button>
 
-        <button class="btn-follow"
-                data-action="people:message"
-                data-person="{{ person.id }}">
-                Chat
-        </button>
-    
+            <button class="btn btn-info" data-id="{{ person.id }}" data-action="person:edit">
+                        Edit
+                    </button>
+        {% endif %}
 
 </div>
 

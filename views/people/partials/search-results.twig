@@ -5,7 +5,8 @@
 {% else %}
 
     {% for person in people %}
-        <div class="person-card"
+        {% set d_state = person.is_deleted ? 'deleted' : '' %}
+        <div class="person-card {{ d_state }}"
              data-person="{{ person.id }}"
              data-action="people:open"
              data-type="{{ person.user_id ? 'members' : 'non-users' }}"

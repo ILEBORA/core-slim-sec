@@ -164,8 +164,11 @@ __BORA_REGISTER_SERVICE__(
 
                 state?.set?.('route', cleanUrl);
 
-                hooks?.call?.('page.afterLoad', cleanUrl, json);
-                hooks?.call?.('page.loaded', cleanUrl);
+                scope.emit('page.afterLoad', {
+                    url:cleanUrl, 
+                    response:json
+                });
+                scope.emit('page.loaded', {url:cleanUrl});
 
                 return json;
 

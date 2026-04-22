@@ -1,11 +1,12 @@
 <div class="thread-item 
-    {{ thread.unread_count > 0 ? 'unread' : '' }}" 
-    data-thread="{{ thread.thread_id }}" data-action="thread.open">
+    {{ thread._has_unread ? 'unread' : '' }}" 
+    data-thread="{{ thread.thread_id }}" 
+    data-action="thread.open">
 
     <!-- Avatar -->
     <div class="avatar">
         {% if thread.avatar %}
-            <img src="{{ thread.avatar }}" alt="">
+            <img class="lazy" src="assets/images/icons/noavatar.png" data-src="{{thread.avatar|default('assets/images/icons/noavatar.png')}}" />
         {% endif %}
 
         {% if thread.is_online %}
@@ -13,46 +14,58 @@
         {% endif %}
     </div>
 
-    <!-- Meta (title + preview) -->
+    <!-- Meta -->
     <div class="meta">
 
+        {# Title #}
         <div class="title">
-            {{ thread.title ?: 'Conversation' }}
+            {{ thread.title ?: thread.participants.display_name ?: 'Conversation' }}
         </div>
 
+        {# Preview #}
         <div class="preview">
+
+            {# Sender label #}
             <strong class="sender">
-                {% if thread.sender_id == current_user_id %}
+                {% if thread.last_message.sender_id == current_user_id %}
                     You
-                {% elseif thread.sender_type == 'system' %}
-                    System
                 {% else %}
-                    {{ thread.last_sender }}
+                    {{ thread.last_message.sender_name ?? '' }}
                 {% endif %}
             </strong>
 
-            <span class="sep">:</span>
+            {% if thread.last_message.body %}
+                <span class="sep">:</span>
+            {% endif %}
 
+            {# Message preview #}
             <span class="message">
-                {% if thread.message_type == 'text' %}
-                    {{ thread.last_message|slice(0, 50) }}
-                {% elseif thread.message_type == 'media' %}
+
+                {% set type = thread.last_message.type ?? 'text' %}
+
+                {% if type == 'text' %}
+                    {{ thread.last_message.body|striptags|slice(0, 50) }}
+
+                {% elseif type == 'media' %}
                     📎 Media
-                {% elseif thread.message_type == 'event' %}
+
+                {% elseif type == 'event' %}
                     📅 Event update
+
                 {% else %}
-                    {{ thread.last_message|slice(0, 50) }}
+                    {{ thread.last_message.body|striptags|slice(0, 50) }}
                 {% endif %}
+
             </span>
         </div>
 
     </div>
 
-    <!-- Stats (time + unread badge) -->
+    <!-- Stats -->
     <div class="stats">
 
         <div class="time">
-            {{ thread.last_message_date|timeago }}
+            {{ thread.last_message.created_at|timeago }}
         </div>
 
         {% if thread.unread_count > 0 %}

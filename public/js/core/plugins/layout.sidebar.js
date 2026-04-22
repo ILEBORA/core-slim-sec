@@ -319,17 +319,20 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
             });
     }
 
-    function handleBeforeLoad(url){
-        // window.history.pushState({ url }, '', url);
-        //  $('.features-item').removeClass('active');
+    function handleBeforeLoad({url}){
+        if (!url) return;
+
         $(`[data-url="${url}"]`).addClass('loading');
     }
 
-    function handleAfterLoad(url){
+    function handleAfterLoad({url}){
+        if (!url) return;
+        
         $('.features-item').removeClass('loading');
 
         let el = $(`[data-url="${url}"`);
         if (!el) return;
+
         $(el).find('.menu_loading').removeClass('fa fa-spinner fa-spin');
     }
 

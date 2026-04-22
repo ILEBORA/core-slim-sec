@@ -4,9 +4,10 @@ __BORA_REGISTER_PLUGIN__(
 async function (scope) {
 
     // 🔧 Core services
-    const callbora   = await scope.getService('callbora');
-    const navigation = await scope.getService('navigation');
-    const uiInteractions = await scope.getPlugin('people.ui.interactions');
+    const callbora          = await scope.getService('callbora');
+    const navigation        = await scope.getService('navigation');
+    const uiInteractions    = await scope.getPlugin('people.ui.interactions');
+    const breadcrumbs       = await scope.getService('breadcrumbs');
 
     // 🔧 Composition root (SIMPLIFIED)
     const ui     = new PeopleUI(scope);
@@ -67,6 +68,12 @@ async function (scope) {
 
         // OPEN PERSON (🔥 now uses API)
         scope.on('people.person.open', async ({ personId }) => {
+            // optimistic breadcrumb (instant feedback)
+            breadcrumbs.set([
+                { label: 'People', href: 'portal/people' },
+                { label: 'Loading...', current: true }
+            ]);
+            
             await api.openProfile(personId);
         });
 

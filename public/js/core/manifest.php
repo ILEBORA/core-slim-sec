@@ -104,6 +104,15 @@ return [
         'preload'  => true,
     ],
 
+    'breadcrumbs' => [
+        'file'     => 'services/breadcrumbs.js',
+        'type' => 'service', 
+        'version'  => '1.0.0',
+        'priority' => 30,
+        // 'requires' => ['runtime', 'router', 'state'],
+        // 'preload'  => true,
+    ],
+
     /* ==================================================
        remaining services (lazy)
     ================================================== */
@@ -131,6 +140,7 @@ return [
     'pagecache' => ['file' => 'services/page-cache.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 44, 'requires' => ['runtime']],
     'sound' => ['file' => 'services/sound.service.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 45, 'requires' => []],
 
+
     /* ==================================================
        core plugins (lazy)
     ================================================== */
@@ -145,6 +155,8 @@ return [
     'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events']],
     'navigation.plugin' => ['file' => 'plugins/navigation.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 42],
     'alerts' => ['file' => 'plugins/alerts.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
+    'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
+
     'devtools' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
     'appcore' => ['file' => 'plugins/app-core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
     'layouts' => ['file' => 'plugins/layouts.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],

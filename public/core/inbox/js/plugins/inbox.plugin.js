@@ -6,6 +6,7 @@ async function (scope) {
     // 🔧 Resolve services FIRST
     const callbora   = await scope.getService('callbora');
     const navigation = await scope.getService('navigation');
+    const breadcrumbs = await scope.getService('breadcrumbs');
 
     // 🔧 Composition root (ONE place)
     const helpers = new InboxHelpers();
@@ -50,6 +51,10 @@ async function (scope) {
         ui.bind();
 
         scope.on('inbox.thread.open', (e) => {
+            breadcrumbs.set([
+                { label: 'Inbox', href: 'portal/inbox' },
+                { label: '<img src="assets/images/icons/ajax.gif"/>', current: true }
+            ]);
             api.openThread(e.threadId);
         });
 

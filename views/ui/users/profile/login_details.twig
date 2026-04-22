@@ -1,7 +1,19 @@
 <div class="inf_block">
-    <div class="inf_title">Login Details 
-        <a title="Edit" class="edit_link " onclick="return false;" style="display:none;"></a>
-
+    <div class="inf_title">
+        <span>{{__t('ui.login_details',null,'Login Details')}}</span>
+        {% if(hasPermission('profile','edit.login.details', true)) %}
+            <button
+                class="btn btn-info flex-right"
+                data-popup
+                data-mode="form"
+                data-module="users"
+                data-group="account"
+                data-id="{{current_user().id}}"
+                data-tab="edit"
+                data-size="lg">
+                {{__t('ui.button_edit',null,'Edit')}}
+            </button>
+        {% endif %}
     </div>
     <br clear="left">
     <div class="inf_cont shdw" align="center">
@@ -9,12 +21,18 @@
         <div class="roundedge info_box">
             <table id="spm" width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tbody><tr style="border: none;">
-                    <td align="right" width="20%" valign="middle"><span>Email:</span></td>
+                    <td align="right" width="20%" valign="middle"><span>{{__t('ui.label_email',null,'Email')}}:</span></td>
                     <td><span id="lable">{{ email }}</span></td>
                     <td width="25"></td>
-                </tr><tr style="border: none;"><td align="right" valign="middle"><span>Password:</span></td>
-                <td><span id="lable"><button data-prev="1" onclick="mPGs.resetPss()" class="custom-button">Change</button></span></td>
-                <td width="25"></td>
+                </tr>
+                <tr style="border: none;">
+                    <td align="right" valign="middle"><span>{{__t('ui.label_password',null,'Password')}}:</span></td>
+                    <td>
+                    {% if(hasPermission('profile','edit.password', true)) %}
+                        <button data-prev="1" onclick="mPGs.resetPss()" class="btn btn-warning">{{__t('ui.button_change',null,'Change')}}</button>
+                    {% endif %}
+                    </td>
+                    <td width="25"></td>
                 </tr>
             </tbody>
         </table>

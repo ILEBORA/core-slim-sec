@@ -60,7 +60,12 @@ __BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
         if(cached && !cache.isStale(cached)){
             render(cached.data);
             revalidate(url, cached);
-            hooks?.call('page.afterLoad', url, cached.data, true);
+            // hooks?.call('page.afterLoad', url, cached.data, true);
+            scope.emit('page.afterLoad', {
+                url:url, 
+                response:cached.data, 
+                force:true
+            });
             return;
         }
 
@@ -80,7 +85,12 @@ __BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
 
                 render(response);
 
-                hooks?.call('page.afterLoad', url, response, false);
+                scope.emit('page.afterLoad', {
+                    url:url, 
+                    response:response, 
+                    force:false
+                });
+
                 $('.main-content').fadeTo(200, 1);
             },
 

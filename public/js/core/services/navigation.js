@@ -312,6 +312,12 @@ __BORA_REGISTER_SERVICE__(
 
                     renderPage(json);
 
+                    //crumbs
+                    scope.emit('breadcrumbs:resolve', {
+                        url:cleanUrl, 
+                        response:json
+                    });
+
                     currentRoute = cleanUrl;
 
                     if (!options.replace){
@@ -322,14 +328,14 @@ __BORA_REGISTER_SERVICE__(
 
                     state?.set?.('route', cleanUrl);
 
-                    scope.emit('route:changed', cleanUrl);
+                    scope.emit('route:changed', {url:cleanUrl});
 
                     if (overlayVisible){
                         ov?.setProgress?.(100);
                     }
 
-                    scope.emit('page.afterLoad', cleanUrl, json);
-                    scope.emit('page.loaded', cleanUrl);
+                    scope.emit('page.afterLoad', {url:cleanUrl, response:json});
+                    scope.emit('page.loaded', {url:cleanUrl});
 
                     // ov?.hide?.(true);
                     if (overlayVisible){

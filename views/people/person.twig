@@ -4,7 +4,7 @@
 
 {% set view_composer = (data_view == 'list' or error) ? 'hidden' : '' %}
 
-<div class="thread-view" data-person="{{ person.id }}">
+<div class="thread-view person-view" data-person="{{ person.id }}">
     {% include "people/person/header.twig" with {
         person: person
     } %}
@@ -35,10 +35,6 @@
     </div>
 
 </div>
-
-<script>
-    window.MAIN_USER_ID = rd('uID');
-</script>
 
 {% if person.id is defined and not error %}
 <script>

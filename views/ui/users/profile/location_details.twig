@@ -1,7 +1,19 @@
 <div class="inf_block">
-    <div class="inf_title">Location Details 
-        <a title="Edit" class="edit_link " onclick="return false;" style="display:none;"></a>
-
+    <div class="inf_title">
+        <span>{{__t('ui.location_details',null,'Location Details')}}</span>
+        {% if(hasPermission('profile','edit.location.details', true)) %}
+            <button
+                class="btn btn-info flex-right"
+                data-popup
+                data-mode="form"
+                data-module="users"
+                data-group="location"
+                data-id="{{current_user().id}}"
+                data-tab="edit"
+                data-size="lg">
+                {{__t('ui.button_edit',null,'Edit')}}
+            </button>
+        {% endif %}
     </div>
     <br clear="left">
     <div class="inf_cont shdw" align="center">                      
@@ -10,18 +22,18 @@
 
                 <tbody>
                 <tr style="border: none;">
-                    <td align="right" width="20%" valign="middle"><span>Country:</span></td>
+                    <td align="right" width="20%" valign="middle"><span>{{__t('ui.country',null,'Country')}}:</span></td>
                     <td><span id="lable">{{ country }}</span></td>
                     <td width="25"></td>
                 </tr>
                 <tr style="border: none;">
-                    <td align="right" width="20%" valign="middle"><span>County:</span></td>
+                    <td align="right" width="20%" valign="middle"><span>{{__t('ui.county',null,'County')}}:</span></td>
                     <td><span id="lable">{{ county }}</span></td>
                     <td width="25"></td>
                 </tr>
                 <tr style="border: none;">
-                    <td align="right" valign="middle"><span>Town:</span></td>
-                    <td><span id="lable">{{ town }}</span></td>
+                    <td align="right" valign="middle"><span>{{__t('ui.town',null,'Town')}}:</span></td>
+                    <td><span id="lable">{{ city }}</span></td>
                     <td width="25"></td>
                 </tr>
             </tbody></table>

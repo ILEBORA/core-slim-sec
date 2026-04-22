@@ -396,6 +396,34 @@
             }
         };
 
+        /*
+        
+        */
+
+        const originalPush = history.pushState;
+        const originalReplace = history.replaceState;
+
+        function emitRouteChange(){
+            const scope = window.__BORA_APP__?.scope;
+            if (!scope) return;
+
+            const url = location.pathname.replace(/^\/+/, '');
+
+            scope.emit('route:changed', {url:url});
+        }
+
+        history.pushState = function(){
+            originalPush.apply(this, arguments);
+            emitRouteChange();
+        };
+
+        history.replaceState = function(){
+            originalReplace.apply(this, arguments);
+            emitRouteChange();
+        };
+
+        window.addEventListener('popstate', emitRouteChange);
+
         /* ---------------------------
            5. Ready Event
         --------------------------- */

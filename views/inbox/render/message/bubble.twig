@@ -40,7 +40,7 @@
             {% endif %}
 
             <div class="bubble-body">
-                <div class="reply-author">
+                <div class="reply-author" data-action="inbox:view_profile" data-id="{{message.sender_id}}" data-type="{{message.sender_type}}">
                     {{ message.sender_name }}
                 </div>
                 {{ message.body|raw }}
