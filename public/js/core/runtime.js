@@ -67,7 +67,8 @@
         const fired = new Map();         // event => last payload
         const replayable = new Set([
             'runtime:started',
-            'page.loaded'
+            'page.loaded',
+            'view:mounted'
         ]);
 
         function on(event, handler, options = {}){
@@ -140,6 +141,25 @@
             });
         }
 
+        function bindDom(selector){
+            let $el = null;
+
+            on('view:mounted', ({root}) => {
+                const found = $(root).find(selector);
+
+                if(found.length){
+                    $el = found;
+                }
+            });
+
+            return function(){
+                if(!$el || !$el.length){
+                    $el = $(selector); // fallback
+                }
+                return $el;
+            };
+        }
+
         /* ==================================================
            SCOPE
         ================================================== */
@@ -153,6 +173,7 @@
                 on,
                 off,
                 emit,
+                bindDom,
                 config,
                 runtimeInstance: publicAPI,
                 evaluatePluginActivation
@@ -612,6 +633,8 @@
             on,
             off,
             emit,
+
+            bindDom,
 
             // Internal (used for late module load)
             _registerPlugin,

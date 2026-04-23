@@ -6,7 +6,7 @@ async function(scope){
     const breadcrumbs = await scope.getService('breadcrumbs');
 
     function mount(){
-
+        // alert('here');
         scope.on('breadcrumbs:resolve', async ({ url, response }) => {
             console.log('resolve',{ url, response });
             if (!url?.startsWith('portal/inbox/thread/')) return;

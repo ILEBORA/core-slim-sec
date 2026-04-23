@@ -7,6 +7,8 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
     const popup = await scope.getPlugin('popup');
     const prefs = await scope.getService('preferences');
 
+    const stateService = await scope.getService('state');
+
 
     const state = {
         mounted: false
@@ -87,6 +89,13 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
                 .setCallback((resp) => {
 
                     if (resp.success) {
+                        if(resp.data?.user){
+                            Object.entries(resp.data.user).forEach(([key, value]) => {
+                                console.log('set', `user.${key}`, value);
+                                stateService.set(`user.${key}`, value);
+                            });
+                        }
+                        
                         alertBora.notify('Personal details updated', 'success', 4);
 
                         if (resp.redirect) {
@@ -94,7 +103,7 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
                         }
 
                         if (resp.esc) {
-                            uiStack.closeTop();
+                            scope.emit('esc');
                         }
 
                     } else {

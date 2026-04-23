@@ -28,6 +28,21 @@ __BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
         }
 
         meta?.apply(response.meta);
+
+        const $root = $('#page_content');
+        // scope.emit('view:mounted', {
+        //     root: $root,
+        //     response
+        // });
+        
+        // more expresive
+        scope.emit('view:mounted', {
+            root: $root,
+            type: 'page',
+            url: response?.url,
+            response
+        });
+        
     }
 
     function revalidate(url, cachedEntry){

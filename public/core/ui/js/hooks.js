@@ -4,6 +4,10 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     const uiActions = await scope.getService('ui.actions');
     const uiStack = await scope.getService('uiStack');
 
+    scope.on('esc',()=>{
+        uiStack.closeTop();
+    });
+
     // alert('Ui Hooks');
     // Register a beforeSubmit hook
     hooks.add("form:beforeSubmit", ($form) => {
@@ -34,9 +38,9 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
         }
 
         if(resp.esc){
-            // alert('esc');
-            uiStack.closeTop();
-            await __BORA_APP__.service('hooks')?.call('esc');
+            scope.emit('esc');
+            // uiStack.closeTop();
+            // await __BORA_APP__.service('hooks')?.call('esc');
         }
 
         if(resp.success){

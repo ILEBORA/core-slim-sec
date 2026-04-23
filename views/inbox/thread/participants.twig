@@ -3,7 +3,7 @@
     {% if permissions.can_invite %}
         <div class="participants-actions">
             <button class="btn btn-primary" data-action="thread.invite" data-id="{{ thread.id }}">
-                Add Participant
+                {{__t('inbox.button.add.participant', null, 'Add Participant'
             </button>
         </div>
     {% endif %}

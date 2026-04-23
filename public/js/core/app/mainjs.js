@@ -2472,10 +2472,14 @@ var formJourney = addPlugin(
 
             // Attach a global submit listener for forms with data-ajax="true"
             var self = this;
-            $(document).on('submit', 'form[data-ajax="true"]', function(e) {
+            // $(document).on('submit', 'form[data-ajax="true"]', function(e) {
+			$(document).off('submit.formJourney')
+           		.on('submit.formJourney', 'form[data-ajax="true"]', function(e){
                 e.preventDefault();
                 var $form = $(this);
                 var journey = $form.data('handler') || 'default';
+
+				if ($form.data('journey-running')) return;
 
                 // Trigger pre-submit hooks if they exist
                 if (typeof appHooks !== 'undefined') {
@@ -2488,9 +2492,18 @@ var formJourney = addPlugin(
                 }
 
                 // Execute registered journey or default
-                let handler = self.journeys[journey] || self.default;
+                // let handler = self.journeys[journey] || self.default;
+				let handler;
+
+				if(self.journeys[journey]){
+					handler = self.journeys[journey];
+				} else {
+					handler = self.default;
+				}
+
 				handler($form, function(resp) {
 					self._afterSubmit($form, resp);
+					$form.removeData('journey-running');
 				});
             });
         }
@@ -2539,7 +2552,7 @@ formJourney.addMethods({
 
 		// Pre-submit hooks (just like auto mode)
 		if (typeof appHooks !== 'undefined') {
-			let result = appHooks?.call('form:beforeSubmit', $form);
+			let result = appHooks.callHook('form:beforeSubmit', $form);
 			if (result === false) {
 				console.warn("Manual journey cancelled by beforeSubmit hook.");
 				return false;

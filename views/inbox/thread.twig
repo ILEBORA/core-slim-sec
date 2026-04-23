@@ -23,11 +23,11 @@
                 
                 <div class="thread-error">
                     <div class="error-box">
-                        <h4>⚠️ Something went wrong</h4>
+                        <h4>⚠️ {{__t('inbox.error.title', null, 'Something went wrong')}}</h4>
                         <p>{{ error }}</p>
 
                         <button class="btn retry-btn" onclick="location.reload()">
-                            Retry
+                            {{__t('inbox.button.retry', null, 'Retry')}}
                         </button>
                     </div>
                 </div>
@@ -35,8 +35,8 @@
             {# 🟡 EMPTY / LIST STATE #}
             {% elseif data_view == 'list' or not thread %}
                 <div class="empty-state">
-                    <h4>Select a conversation</h4>
-                    <button class="start-chat-btn">Start a conversation 2         </button>
+                    <h4>{{__t('inbox.title.select.conversation', null, 'Select a conversation')}}</h4>
+                    <button class="start-chat-btn">{{__t('inbox.label.start.conversation', null, 'Start a conversation')}}</button>
                 </div>
 
             {# 🟢 NORMAL THREAD VIEW #}
@@ -46,7 +46,7 @@
 
             {% if messages is empty %}
                 <div class="empty-messages">
-                    No messages yet. Start the conversation 👇
+                    {{__t('inbox.no.messages', null, 'No messages yet. Start the conversation')}} 👇
                 </div>
             {% else %}
 
@@ -84,7 +84,7 @@
                placeholder="Type a message…"
                autocomplete="off">
 
-        <button type="submit">Send</button>
+        <button type="submit">{{__t('inbox.button.send', null, 'Send')}}</button>
     </form>
 
 </div>

@@ -79,6 +79,13 @@ class InboxThreadLoader{
                 );
 
             });
+
+            // DOM lifecycle signal
+            this.scope.emit('view:mounted', {
+                root: $(container),
+                type: 'inbox.thread',
+                threadId
+            });
             
             this.scope.emit('thread.participants.updated', {count:res.data.participants.length});
 

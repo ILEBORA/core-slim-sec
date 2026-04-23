@@ -75,5 +75,18 @@
   "label.select_role" : "Select Role",
   "label.select_permission" : "Select Permission",
 
-  "title.user_access_control": "Users Access Control"
+  "auth.login": "Login",
+  "auth.email": "Email Address",
+  "label.remember_me": "Remember Me",
+  "title.user_access_control": "Users Access Control",
+  "auth.secure_access": "Secure Access to your account",
+  "auth.encrypted": "Your credentials are encrypted",
+
+
+  "button_edit": "Edit",
+  "contact_details": "Contact Details",
+  "label.phone": "Phone",
+  "label.gender": "Gender"
+
+
 }

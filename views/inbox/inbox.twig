@@ -9,14 +9,14 @@
     <aside class="inbox-sidebar">
 
         <div class="inbox-header">
-            <span><h3>Inbox</h3></span>
-            <button class="new-thread-btn" title="New chat">+</button>
+            <span><h3>{{__t('inbox.title.inbox',null,'Inbox')}}</h3></span>
+            <button class="new-thread-btn" title="{{__t('inbox.tip.new.chat',null,'New chat')}}">+</button>
         </div>
 
         <div class="thread-search">
             <input
                 type="search"
-                placeholder="Search conversations…"
+                placeholder="{{__t('inbox.search.conversations', null, 'Search conversations')}}…"
                 aria-label="Search inbox"
                 data-inbox-search
             >
@@ -24,16 +24,16 @@
             <button
                 class="filter-unread"
                 aria-pressed="false"
-                title="Show unread only"
+                title="{{__t('inbox.tip.show.unread', null, 'Show unread only')}}"
                 data-inbox-filter="unread">
                 ●
             </button>
         </div>
 
         <div class="thread-filters">
-            <button data-type="all" class="active">All</button>
-            <button data-type="direct">Direct</button>
-            <button data-type="group">Groups</button>
+            <button data-type="all" class="active">{{__t('inbox.filter.all', null, 'All')}}</button>
+            <button data-type="direct">{{__t('inbox.filter.direct', null, 'Direct')}}</button>
+            <button data-type="group">{{__t('inbox.filter.groups', null, 'Groups')}}</button>
         </div>
 
         <ul class="thread-list" lvui="inbox_threads">
@@ -95,7 +95,7 @@
     <button
         class="fab-new-thread"
         aria-label="New conversation"
-        title="New conversation"
+        title="{{__t('inbox.tip.new.conversation', null, 'New conversation')}}"
         >
         +
     </button>

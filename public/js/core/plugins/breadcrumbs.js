@@ -5,10 +5,11 @@ async function(scope){
     const hooks = await scope.getService('hooks');
     const breadcrumbs = await scope.getService('breadcrumbs');
 
-    let $container;
+    // let $container;
+    const getContainer = scope.bindDom('.breadcrumb');
 
     function mount(){
-        $container = $('.breadcrumb');
+        // const $container = getContainer();
 
         hooks?.add('breadcrumbs:changed', render);
 
@@ -25,7 +26,10 @@ async function(scope){
     }
 
     function render(list){
+        const $container = getContainer();
         if (!$container || !$container.length) return;
+
+        // $container = $('.breadcrumb');
 
         const html = list.map((item, i) => {
 
