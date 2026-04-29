@@ -16,5 +16,6 @@ $pipeline
     ->add('languages.css')
     ->add('bora_detail_layout.css')
     ->add('info_block.css')
+    ->add('agents.css')
 
     ->send();

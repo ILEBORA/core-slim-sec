@@ -196,7 +196,6 @@ async function (scope) {
         route === 'portal/people' ||
         route.startsWith('portal/people/')// ||
 
-        // route === 'portal/person' ||
-        // route.startsWith('portal/person/')
+        
     )
 });

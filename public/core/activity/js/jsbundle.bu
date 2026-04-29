@@ -56,10 +56,24 @@ $pipeline->register('activity.thread', [
     'requires' => ['runtime'],
 ]);
 
+$pipeline->register('activity.breadcrumbs', [
+    'file'     => 'plugins/activity.breadcrumbs.js',
+    'type'     => 'plugin',
+    'priority' => 231,
+    'requires' => ['runtime'],
+]);
+
 $pipeline->register('activity.stories', [
     'file'     => 'plugins/activity.stories.js',
     'type'     => 'plugin',
     'priority' => 240,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.story.composer', [
+    'file'     => 'plugins/activity.story.composer.js',
+    'type'     => 'plugin',
+    'priority' => 241,
     'requires' => ['runtime'],
 ]);
 

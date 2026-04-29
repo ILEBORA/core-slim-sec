@@ -1,0 +1,111 @@
+<div class="story-viewer" data-story="{{ id }}">
+
+    <div class="story-header">
+        <div class="story-user">
+            <img src="" class="story-avatar">
+            <span class="story-username"></span>
+        </div>
+
+        <div class="story-progress"></div>
+
+        <div class="story-close">×</div>
+    </div>
+
+    <div class="story-content">
+        <img class="story-image" src="" alt="">
+        <div class="story-text"></div>
+    </div>
+
+    <div class="story-actions">
+        <input type="text" class="story-reply" placeholder="Reply...">
+        <button class="story-send">Send</button>
+    </div>
+
+</div>
+
+<script>
+(function ($) {
+
+const StoryViewer = {
+    storyId: null,
+    timer: null,
+    duration: 5000, // 5 seconds
+
+    init() {
+        this.storyId = $('.story-viewer').data('story');
+
+        this.load();
+        this.bind();
+    },
+
+    load() {
+        $.getJSON('api/modules/activity/stories/'+this.storyId+'/get', {
+            id: this.storyId
+        }).done(resp => {
+            if (!resp.success) return;
+
+            this.render(resp.data);
+            this.startProgress();
+        });
+    },
+
+    render(data) {
+        console.log('DATA::',data);
+        $('.story-avatar').attr('src', data.actor.avatar);
+        $('.story-username').text('@' + data.actor.username);
+
+        if (data.payload?.full) {
+            $('.story-image').attr('src', data.payload.full).show();
+        }
+
+        $('.story-text').text(data.body || '');
+    },
+
+    startProgress() {
+        const $bar = $('.story-progress');
+
+        $bar.css({ width: '0%' });
+
+        setTimeout(() => {
+            $bar.css({
+                transition: `width ${this.duration}ms linear`,
+                width: '100%'
+            });
+        }, 50);
+
+        this.timer = setTimeout(() => {
+            this.close();
+        }, this.duration);
+    },
+
+    bind() {
+        $('.story-close').on('click', () => this.close());
+
+        $('.story-send').on('click', () => {
+            const msg = $('.story-reply').val().trim();
+            if (!msg) return;
+
+            $.post('api/modules/activity/stories/'+this.storyId+'/reply', {
+                story_id: this.storyId,
+                body: msg
+            }).done(() => {
+                $('.story-reply').val('');
+            });
+        });
+
+        // click to advance (future: next story)
+        $('.story-content').on('click', () => {
+            this.close();
+        });
+    },
+
+    close() {
+        clearTimeout(this.timer);
+        __BORA_APP__?.emit('esc');
+    }
+};
+
+$(document).ready(() => StoryViewer.init());
+
+})(jQuery);
+</script>

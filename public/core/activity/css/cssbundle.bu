@@ -7,8 +7,12 @@ use BoraSlim\Core\Assets\AssetPipeline;
 $pipeline = new AssetPipeline(__DIR__, 'css');
  
 $pipeline
+    ->add('theme.css')
     ->add('style.css')
     ->add('post.css')
     ->add('reactions.css')
     ->add('media.css')
+    ->add('activity.css')
+    ->add('stories.css')
+    
     ->send();

@@ -1,0 +1,23 @@
+<div class="activity-item activity-entity-created" data-id="{{ item.id }}">
+
+    {% include 'activity/header.twig' with { item: item } %}
+
+    <div class="activity-body entity-line">
+        {% set entity = item.payload.entity ?? {} %}
+        {% set actor  = item.actor ?? {} %}
+
+        <span class="icon">👤</span>
+
+        <span class="text">
+            New {{ entity.type|default('item') }}
+            <a href="{{ entity.url }}">
+                {{ entity.name }}
+            </a>
+            added by
+            <a href="portal/people/person/{{ actor.person_id }}/view">
+                {{ actor.name }}
+            </a>
+        </span>
+    </div>
+
+</div>

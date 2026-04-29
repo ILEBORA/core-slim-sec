@@ -144,7 +144,13 @@ return [
     /* ==================================================
        core plugins (lazy)
     ================================================== */
-
+    'agent.ui' => [
+        'file' => 'plugins/agent.ui.js',
+        'type' => 'plugin',
+        'version' => '1.0.0',
+        'priority' => 39,
+        'requires' => ['jquery', 'runtime']
+    ],
     'events' => [
         'file' => 'plugins/events.js',
         'type' => 'plugin',
@@ -167,11 +173,14 @@ return [
     'navigationbinder' => ['file' => 'plugins/navigation-binder.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61],
     'overlay' => ['file' => 'plugins/overlay.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61, 'preload' => true],
     'logoutux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62],
-    'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63],
+    'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63, 'requires' => ['runtime', 'store']],
 
     'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core']],
     
-    'dom.reactivity' => ['file' => 'plugins/dom.reactivity.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 65, 'requires' => ['runtime', 'state']],
+    'dom.reactivity' => ['file' => 'plugins/dom.reactivity.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 65, 'requires' => ['runtime', 'state.reactive']],
+    'store' => ['file' => 'plugins/store.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 66, 'requires' => ['runtime']],
+    'state.reactive' => ['file' => 'plugins/state.reactive.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 67, 'requires' => ['runtime']],
+    
 
 
 

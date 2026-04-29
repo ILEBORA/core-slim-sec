@@ -2574,7 +2574,6 @@ formJourney.addMethods({
 formJourney.setDebug(true);
 formJourney.init();
 
-
 $.fn.attachDragger = (function(){
     var attachment = false, lastPosition, position, difference;
     $( $(this).selector ).on("mousedown mouseup mousemove",function(e){

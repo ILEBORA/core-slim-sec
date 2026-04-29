@@ -3,6 +3,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
     const utils  = await scope.getService('activity.utils');
 
     let activityId;
+    let parentId;
     let loading=false;
 
     function init(){
@@ -11,17 +12,19 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
     }
 
     function bind(){
-
-        $('#threadSendComment').on('click', sendComment);
+        $('#threadSendComment').off().on('click', sendComment);
     }
 
-    function sendComment(){
-
+    function sendComment(el){
         const body = $('#threadCommentBody').val().trim();
-        if(!body) return;
+        if(!body){ 
+            $('#threadCommentBody').focus();
+            return;
+        }
 
         $.post('api/modules/activity/comment',{
             activity_id:activityId,
+            parent_id: parentId,
             body
         }).done(()=>{
             $('#threadCommentBody').val('');
@@ -40,6 +43,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
             if(!el) return;
 
             activityId = el.dataset.activity;
+            parentId = el.dataset.parent;
             // alert(activityId);
 
             loadComments();
@@ -52,7 +56,8 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
         loading=true;
 
         $.getJSON('api/modules/activity/comments',{
-            activity_id:activityId
+            activity_id:activityId,
+            parent_id:parentId
         }).done(resp=>{
 
             if(!resp.ok) return;
@@ -95,7 +100,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
                 <div class="comment-body">
                     <div class="comment-meta">
                         <strong>@${c.actor.username}</strong>
-                        <span class="time">${utils.timeAgo(c.created_at)}</span>
+                        <span class="time">${c.timeago_format}</span>
                     </div>
 
                     <div class="comment-text">

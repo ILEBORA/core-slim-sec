@@ -2,15 +2,17 @@
 
     {# Activity summary (hydrated via JS) #}
     <button>Go Back</button>
-    <div id="threadActivity"></div>
+    <div id="threadActivity" class="activity-entry"></div>
 
     {# Comment composer #}
     <div class="thread-composer">
         <input type="text" name="parent_id" value="{{ parent_id }}"/>
         <textarea
             id="threadCommentBody"
+            class="input-placeholder"
             placeholder="Post your reply"></textarea>
-        <button id="threadSendComment">
+
+        <button id="threadSendComment" class="btn btn-success space_left">
             Reply
         </button>
     </div>

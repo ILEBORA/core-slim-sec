@@ -1,0 +1,35 @@
+<header class="person-header">
+
+    <button class="back-btn">←</button>
+
+    <div class="person-info">
+        <h4>Back to Timeline</h4>
+
+        <div class="last-seen">
+           
+        </div>
+    </div>
+
+    <div class="actions">
+        {% if entry.added_by == current_user().id %}
+            Show options
+        {% endif %}
+    </div>
+
+    {# ⚙️ ACTIONS #}
+    <div class="header-item-actions">
+
+        {# if entry.added_by #}
+            <button
+                class="thread_context_menu"
+                data-context-trigger
+                data-context-type="timeline"
+                data-context-id="{{ entry.id }}"
+            >
+                ⋮
+            </button>
+        {# endif #}
+
+    </div>
+
+</header>

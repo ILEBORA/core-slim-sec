@@ -1,0 +1,31 @@
+<div class="activity-item activity-ad" data-id="{{ item.id }}">
+
+    <div class="ad-label">Sponsored</div>
+
+    <div class="ad-body">
+        {% if item.payload.image is defined %}
+            <div class="ad-media">
+                <img src="{{ item.payload.image }}" alt="Ad">
+            </div>
+        {% endif %}
+
+        <div class="ad-content">
+            <div class="ad-title">
+                {{ item.payload.title }}
+            </div>
+
+            <div class="ad-description">
+                {{ item.payload.description }}
+            </div>
+
+            {% if item.payload.url is defined %}
+                <div class="ad-actions">
+                    <a href="{{ item.payload.url }}" class="btn-ad" target="_blank">
+                        {{ item.payload.cta ?? 'Learn More' }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>

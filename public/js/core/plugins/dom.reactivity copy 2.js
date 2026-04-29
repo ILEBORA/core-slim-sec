@@ -9,8 +9,8 @@ __BORA_REGISTER_PLUGIN__('dom.reactivity', async function(scope){
         const isHtml = $el.data('bind-html');
 
         if(!key) return;
-        if($el.attr('data-bound')) return;
 
+        if($el.attr('data-bound')) return;
         $el.attr('data-bound', 'true');
 
         const unsub = state.subscribe(key, (value) => {
@@ -58,6 +58,10 @@ __BORA_REGISTER_PLUGIN__('dom.reactivity', async function(scope){
     function mount(container = document){
         const $root = $(container);
 
+        // $root.find('[data-bind]').each(function(){
+        //     bindElement($(this));
+        // });
+
         const $targets = $root.is('[data-bind]')
             ? $root.add($root.find('[data-bind]'))
             : $root.find('[data-bind]');
@@ -84,14 +88,15 @@ __BORA_REGISTER_PLUGIN__('dom.reactivity', async function(scope){
         });
     }
 
-    // 🔥 critical wiring
-    scope.on('view:mounted', ({root}) => {
-        requestAnimationFrame(() => mount(root));
-    });
+    function autoBind(){
+        scope.on('view:mounted', ({root}) => {
+            mount(root);
+        });
+    }
 
-    scope.on('view:destroyed', ({root}) => {
-        destroy(root);
-    });
-
-    return { mount, destroy };
+    return {
+        mount,
+        destroy,
+        autoBind
+    };
 });

@@ -1,3 +1,4 @@
+{% if hasPermission('activity','postReactions') %}
 <div class="act-button reaction-box">
     <button class="reaction-trigger">
         {% if item.reactions.me == 'love' %}❤️{% else %}🤍{% endif %} React
@@ -9,23 +10,31 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}
 
+{% if hasPermission('activity','postComments') %}
 <div class="act-button">
     <button class="act-comment">💬 Comment</button>
 </div>
+{% endif %}
 
+{% if hasPermission('activity','sharePosts') %}
 <div class="act-button">
     <button class="act-share">
         🔁 Share
     </button>
 </div>
+{% endif %}
 
+{% if hasPermission('activity','viewInsights') %}
 <div class="act-button">
     <button class="act-insights">
         📊 Insights
     </button>
 </div>
+{% endif %}
 
+{% if hasPermission('activity','contextMenu') %}
 <div class="act-button">
     <button
         data-context-trigger
@@ -35,3 +44,4 @@
         ⋯
     </button>
 </div>
+{% endif %}

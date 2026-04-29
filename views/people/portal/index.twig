@@ -22,7 +22,7 @@
     <div class="people-grid">
 
     {% for person in people %}
-        <a class="person-card" href="portal/person/{{ person.id }}">
+        <a class="person-card" href="portal/people/person/{{ person.id }}/view">
 
             <div class="avatar">
                 <img src="{{ person.avatar ?: 'assets/images/icons/noavatar.png' }}">

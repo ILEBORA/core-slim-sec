@@ -1,16 +1,16 @@
-<div class="activity-thread" data-activity="{{ itemId }}">
+<div class="activity-thread" data-activity="{{ itemId }}" data-parent="{{parent_id}}">
 
     {# Activity summary (hydrated via JS) #}
     <button class="backTo" data-id="{{itemId}}">Go Back</button>
-    <div id="threadActivity"></div>
+    <div id="threadActivity" class="activity-entry"></div>
 
     {# Comment composer #}
     <div class="thread-composer">
         <textarea
             id="threadCommentBody"
-            placeholder="Post your reply">
-        </textarea>
-        <button id="threadSendComment">
+            class="input-placeholder"
+            placeholder="Post your reply"></textarea>
+        <button id="threadSendComment" class="btn btn-success space_left">
             Reply
         </button>
     </div>
@@ -21,14 +21,14 @@
 </div>
 
 <script>
-$(function(){
-    const thread = window.__BORA_APP__?.plugin?.('activity.thread');
+$(async function(){
+    const thread = await window.__BORA_APP__?.plugin?.('activity.thread');
     if (!thread) return;
     thread.init();
-    //const ctx = window.__diagContext || {};
+    const ctx = window.__diagContext || {};
 
-    //if (ctx.state?.focus === 'composer') {
-    //    $('#threadCommentBody').focus();
-    //}
+    if (ctx.state?.focus === 'composer') {
+       $('#threadCommentBody').focus();
+    }
 })
 </script>

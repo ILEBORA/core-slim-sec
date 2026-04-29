@@ -1,7 +1,7 @@
 <div class="activity-thread" data-activity="{{ activityId }}">
 
     {# Activity summary (hydrated via JS) #}
-    <div id="threadActivity"></div>
+    <div id="threadActivity" class="activity-entry"></div>
 
     {# Comment composer #}
     <div class="thread-composer">
@@ -9,7 +9,7 @@
             id="threadCommentBody"
             placeholder="Post your reply">
         </textarea>
-        <button id="threadSendComment">
+        <button id="threadSendComment" class="btn btn-success space_left">
             Reply
         </button>
     </div>

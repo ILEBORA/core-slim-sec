@@ -1,0 +1,24 @@
+<div class="activity-item activity-system-alert" data-id="{{ item.id }}">
+
+    <div class="alert-box">
+        <div class="alert-header">
+            <span class="icon">⚠️</span>
+            <span class="title">
+                {{ item.payload.title ?? 'System Alert' }}
+            </span>
+        </div>
+
+        <div class="alert-body">
+            {{ item.payload.summary ?? '' }}
+        </div>
+
+        {% if item.payload.action_url is defined %}
+            <div class="alert-actions">
+                <a href="{{ item.payload.action_url }}" class="btn-alert">
+                    {{ item.payload.action_label ?? 'View' }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+</div>

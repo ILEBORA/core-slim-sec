@@ -3,7 +3,7 @@ __BORA_REGISTER_SERVICE__('activity.utils', function(){
     function renderMentions(text){
         return text.replace(
             /@([a-zA-Z0-9_.]{3,30})/g,
-            '<a href="portal/person/$1" class="mention">@$1</a>'
+            '<a href="portal/people/person/$1/view" class="mention">@$1</a>'
         );
     }
 

@@ -1,14 +1,16 @@
 <div class="activity-thread" data-activity="{{ itemId }}">
 
     {# Activity summary (hydrated via JS) #}
-    <div id="threadActivity"></div>
+    <div id="threadActivity" class="activity-entry"></div>
 
     {# Comment composer #}
     <div class="thread-composer">
         <textarea
             id="threadCommentBody"
+            class="input-placeholder"
             placeholder="Post your reply"></textarea>
-        <button id="threadSendComment">
+
+        <button id="threadSendComment" class="btn btn-success space_left">
             Reply
         </button>
     </div>

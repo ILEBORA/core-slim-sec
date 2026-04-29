@@ -102,6 +102,10 @@
     padding: 10px;
 }
 
+#tabContentArea .activity-thread{
+    padding: 0px;
+}
+
 /* ===============================
    Comments
 ================================ */
