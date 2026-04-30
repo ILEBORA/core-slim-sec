@@ -145,6 +145,8 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 this.setContent(urlOrHtml);
                 if (callback) callback();
             }
+
+            // alert('here');
         }
 
         load(url, callback) {
@@ -352,8 +354,6 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             if (options.tabs){
                 instance.setTabs(options.tabs, options.activeTab);
             }
-
-            
             // API.activePopup = instance;
             return instance;
         },

@@ -1,4 +1,4 @@
-{% if hasPermission('activity','postReactions') %}
+{% if hasPermission('activity','postReactions', true) %}
 <div class="act-button reaction-box">
     <button class="reaction-trigger">
         {% if item.reactions.me == 'love' %}❤️{% else %}🤍{% endif %} React
@@ -12,13 +12,13 @@
 </div>
 {% endif %}
 
-{% if hasPermission('activity','postComments') %}
+{% if hasPermission('activity','postComments', true) %}
 <div class="act-button">
-    <button class="act-comment">💬 Comment</button>
+    <button class="act-comment" data-action="act-comment">💬 Comment</button>
 </div>
 {% endif %}
 
-{% if hasPermission('activity','sharePosts') %}
+{% if hasPermission('activity','sharePosts', true) %}
 <div class="act-button">
     <button class="act-share">
         🔁 Share
@@ -26,7 +26,7 @@
 </div>
 {% endif %}
 
-{% if hasPermission('activity','viewInsights') %}
+{% if hasPermission('activity','viewInsights', true) %}
 <div class="act-button">
     <button class="act-insights">
         📊 Insights
@@ -34,7 +34,7 @@
 </div>
 {% endif %}
 
-{% if hasPermission('activity','contextMenu') %}
+{% if hasPermission('activity','contextMenu', true) %}
 <div class="act-button">
     <button
         data-context-trigger

@@ -396,44 +396,6 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
         });
     }
 
-    // function setActiveFromRoute(currentUrl){
-    //     $(function(){
-    //         highlightMenu(cleanRoute);
-    //     });
-    // }
-
-    function highlightMenuO(cleanRoute){
-
-        cleanRoute = normalizeUrl(cleanRoute || window.location);
-
-        const items = [...document.querySelectorAll('.features-item')];
-
-        let bestItem = null;
-        let bestLength = -1;
-
-        items.forEach(item => {
-
-            const dataUrl = (item.dataset.url || '').replace(/^\/|\/$/g,'');
-
-            if (!dataUrl) return;
-
-            if (
-                cleanRoute === dataUrl ||
-                cleanRoute.startsWith(dataUrl + '/')
-            ) {
-                if (dataUrl.length > bestLength) {
-                    bestLength = dataUrl.length;
-                    bestItem = item;
-                }
-            }
-        });
-
-        items.forEach(i => i.classList.remove('active'));
-        bestItem?.classList.add('active');
-
-        updateSidebar();
-    }
-
     function highlightMenu(cleanRoute){
         
         $(function(){
@@ -465,7 +427,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
             bestItem?.classList.add('active');
 
             //After load check 
-            updateSidebar();
+            // updateSidebar(); // Dublicate
         });
     }
 

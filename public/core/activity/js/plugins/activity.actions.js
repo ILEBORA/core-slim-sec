@@ -4,6 +4,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const activityComposer  = await scope.getPlugin('activity.composer');
     const uiStack = await __BORA_APP__.service('uiStack');
     const uiActions = await scope.getService('ui.actions');
+    const popup = await scope.getPlugin('popup');
 
     const state = {
         mounted: false
@@ -15,7 +16,8 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
         console.log('[activity.actions] mounted');
         $(document).on('click','.act-react',handleReaction);
-        $(document).on('click','.act-comment',handleComment);
+        // $(document).off('click').on('click','.act-comment',handleComment);
+        uiActions.register('act-comment',handleComment);
         $(document).on('click','.act-share', handleShare);
         $(document).on('click','.act-insights', handleInsights);
         $(document).on('click','.act-options', handleOptions);
@@ -97,14 +99,14 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
     }
 
-    async function handleComment(e){
-        e.preventDefault();
+    async function handleComment(el){
+        // e.preventDefault();
 
-        const id = $(this)
+        const id = $(el)
             .closest('.activity-item')
             .data('id');
 
-        const popup = await scope.getPlugin('popup');
+        // const popup = await scope.getPlugin('popup');
 
         popup.open({
             mode:'view',
@@ -161,17 +163,15 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         const id = $(this)
             .data('id');
 
-        const popup = await scope.getPlugin('popup');
-
         popup.open({
-            mode:'view',
-            module:'activity',
-            group:'timeline',
-            view:'media',
-            tab:'preview',
-            id: id,
-            size:'md',
-            meta:   { id:id, mode: 'preview' },
+            // mode:'view',
+            // module:'activity',
+            // group:'timeline',
+            // view:'media',
+            // tab:'preview',
+            // id: id,
+            // size:'md',
+            // meta:   { id:id, mode: 'preview' },
             tabs: [
                 {
                     id: 'replies',
@@ -319,7 +319,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             .closest('.comment-item')
             .data('id');
 
-        const popup = await scope.getPlugin('popup');
+        // const popup = await scope.getPlugin('popup');
 
         popup.open({
             mode:   'view',
@@ -359,7 +359,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             .closest('.comment-item')
             .data('id');
 
-        const popup = await scope.getPlugin('popup');
+        // const popup = await scope.getPlugin('popup');
 
         popup.open({
             mode:   'view',

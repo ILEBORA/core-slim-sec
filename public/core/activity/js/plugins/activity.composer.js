@@ -33,15 +33,15 @@ __BORA_REGISTER_PLUGIN__('activity.composer', function(scope){
                 contentType:false,
 
                 success(resp){
-
+                    alert('respp');
                     if(!resp.success) return;
-
+                    alert('respp2');
                     const media = {
                         file: resp.data.file,
                         preview: resp.data.preview,
                         type: resp.data.type
                     };
-
+                    console.log('MEDIA::', media);
                     attachments.push(media);
 
                     renderPreview(media);

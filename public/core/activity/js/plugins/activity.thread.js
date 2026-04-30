@@ -5,8 +5,14 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
     let activityId;
     let parentId;
     let loading=false;
+    const state = {
+        mounted: false
+    };
 
     function init(){
+        if (state.mounted) return;
+        state.mounted = true;
+        
         loadActivity();
         bind();
     }

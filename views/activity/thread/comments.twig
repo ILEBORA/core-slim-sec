@@ -22,6 +22,7 @@
 
 <script>
 $(async function(){
+    
     const thread = await window.__BORA_APP__?.plugin?.('activity.thread');
     if (!thread) return;
     thread.init();

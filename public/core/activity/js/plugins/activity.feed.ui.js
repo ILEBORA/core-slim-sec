@@ -57,6 +57,8 @@ __BORA_REGISTER_PLUGIN__('activity.feed.ui', async function(scope){
         });
 
         if(!data.length) return;
+        
+        $(el).empty();
 
         data.forEach(item=>{
             //Norma Append DESC
