@@ -1,6 +1,6 @@
 {% if hasPermission('activity','postReactions', true) %}
 <div class="act-button reaction-box">
-    <button class="reaction-trigger">
+    <button class="reaction-trigger" data-action="reaction-trigger">
         {% if item.reactions.me == 'love' %}❤️{% else %}🤍{% endif %} React
     </button>
 

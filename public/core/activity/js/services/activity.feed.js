@@ -20,7 +20,7 @@ __BORA_REGISTER_SERVICE__('activity.feed', async function(scope){
                 limit
             });
 
-            if(!resp.ok) return [];
+            if(!resp.success) return [];
 
             if(resp.data.length){
                 since = resp.data[resp.data.length-1].created_at;

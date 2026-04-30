@@ -290,8 +290,8 @@
         ================================================== */
 
         async function evaluatePluginActivation(route){
-
-            const manifest = global.__BORA_MANIFEST__ || {};
+            
+            const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
 
             const context = {
                 route,

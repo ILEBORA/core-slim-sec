@@ -916,15 +916,49 @@ function updateCe(cE){
 	// console.log('this');
 }
 
-function rd(y, d = ''){
-	return (typeof window.settings[y] === "undefined") ? d : window.settings[y];
+// function rd(y, d = ''){
+// 	return (typeof window.settings[y] === "undefined") ? d : window.settings[y];
+// }
+
+function rd(key, options = {}){
+
+    const value = (typeof window.settings[key] === "undefined")
+        ? ''
+        : window.settings[key];
+
+    if (options.parseJson && typeof value === 'string'){
+        try {
+            return JSON.parse(value);
+        } catch (e){
+            console.warn(`[rd] Failed JSON parse for key: ${key}`);
+        }
+    }
+
+    return value;
 }
 	
-function st(y,v){
-	if(v){
-		window.settings[y] = v;
-	}
+// function st(y,v){
+// 	if(v){
+// 		window.settings[y] = v;
+// 	}
+// }
+
+function st(key, value, options = {}){
+
+    if (typeof value === 'undefined') return;
+
+    if (options.stringifyJson){
+        try {
+            window.settings[key] = JSON.stringify(value);
+            return;
+        } catch (e){
+            console.error('[st] Failed to stringify JSON for key:', key);
+        }
+    }
+
+    window.settings[key] = value;
 }
+
 function Debuger(){
 	this._debug = false;
 	this.log = function(msg) {

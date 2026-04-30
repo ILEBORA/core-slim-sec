@@ -405,11 +405,12 @@ textarea {
 }
 
 .comment-replies {
-    margin-left: 46px; /* avatar width + gap */
+    /* margin-left: 46px; avatar width + gap */
     margin-top: 8px;
 }
 .comment-replies .comment-replies {
-    margin-left: 32px;
+    /* margin-left: 32px; */
+    margin-left: 4px;
 }
 
 .comment-item:hover {

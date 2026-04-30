@@ -5,10 +5,25 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const uiStack = await __BORA_APP__.service('uiStack');
     const uiActions = await scope.getService('ui.actions');
     const popup = await scope.getPlugin('popup');
+    const routeRegistry = await scope.getService('route.registry');
 
     const state = {
         mounted: false
     };
+
+    
+    // routeRegistry.register('activity.comments', ({ id, tab }) => ({
+    //     size: 'md',
+    //     tabs: [
+    //         {
+    //             id: 'replies',
+    //             label: 'Comments',
+    //             url: `api/modules/activity/timeline/comments/${id}`
+    //         }
+    //     ],
+    //     activeTab: tab || 'replies'
+    // }));
+
 
     function mount(){
         if (state.mounted) return;
@@ -24,14 +39,13 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
         $(document).on('click','.act-view-media', handleMediaView);
 
-        $(document).on('click', '.reaction-trigger', async function(e){
-
-            e.preventDefault();
+        uiActions.register('reaction-trigger', async function(el){
+            // e.preventDefault();
 
             const uiStack = await __BORA_APP__.service('uiStack');
             const dismissable = await __BORA_APP__.service('ui.dismissable');
 
-            const $box = $(this).closest('.reaction-box');
+            const $box = $(el).closest('.reaction-box');
 
             if($box.hasClass('open')){
                 $box.data('dismissInstance')?.close();
@@ -69,8 +83,8 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         if (!state.mounted) return;
         state.mounted = false;
 
-        $(document).off('click','.act-react',handleReaction);
-        $(document).off('click','.act-comment',handleComment);
+        // $(document).off('click','.act-react',handleReaction);
+        // $(document).off('click','.act-comment',handleComment);
     }
 
     function handleReaction(){
@@ -99,36 +113,92 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
     }
 
+    // async function handleComment(el){
+
+    //     const id = $(el)
+    //         .closest('.activity-item')
+    //         .data('id');
+
+    //     if (!id){
+    //         console.warn('[activity] Missing activity id');
+    //         return;
+    //     }
+
+    //     await popup.openPopupSmart({
+    //         key: 'activity-comments',
+    //         id: id,
+    //         tab: 'replies',
+
+    //         factory: (id) => ({
+    //             size: 'md',
+
+    //             tabs: [
+    //                 {
+    //                     id: 'replies',
+    //                     label: 'Comments',
+    //                     url: `api/modules/activity/timeline/comments/${id}`
+    //                 },
+    //                 // future expansion
+    //                 // {
+    //                 //     id: 'likes',
+    //                 //     label: 'Likes',
+    //                 //     url: `api/modules/activity/view/likes/${id}`
+    //                 // }
+    //             ]
+    //         })
+    //     });
+    // }
+
     async function handleComment(el){
-        // e.preventDefault();
 
         const id = $(el)
             .closest('.activity-item')
             .data('id');
 
-        // const popup = await scope.getPlugin('popup');
+        if (!id) return;
 
-        popup.open({
-            mode:'view',
-            module:'activity',
-            group:'comments',
-            view:'comments',
-            id: id,
-            tabs: [
-                {
-                    id: 'replies',
-                    label: 'Comments',
-                    url: `api/modules/activity/timeline/comments/${id}`
-                },
-                // {
-                //     id: 'likes',
-                //     label: 'Likes',
-                //     url: `api/modules/activity/view/likes/${id}`
-                // }
-            ],
+        const navigator = await scope.getService('navigator');
 
-            activeTab: 'replies'
+        navigator.go({
+            route: 'activity.comments',
+            params: { id, tab: 'replies' },
+            surface: 'popup'
         });
+    }
+
+    async function handleCommentO(el){
+        const id = $(el).closest('.activity-item').data('id');
+        if (!id) return;
+
+        await openActivityComments(id);
+    }
+
+    async function openActivityComments(id, tab = 'replies'){
+        return popup.openPopupSmart({
+            key: 'activity-comments',
+            id,
+            tab,
+            factory: (id) => ({
+                size: 'md',
+                tabs: buildActivityTabs(id)
+            })
+        });
+    }
+
+    function buildActivityTabs(id){
+        return [
+            {
+                id: 'replies',
+                label: 'Comments',
+                url: `api/modules/activity/timeline/comments/${id}`
+            },
+            // future expansion
+            // {
+            //     id: 'likes',
+            //     label: 'Likes',
+            //     url: `api/modules/activity/view/likes/${id}`
+            // }
+        ];
     }
 
     function handleShare(e){

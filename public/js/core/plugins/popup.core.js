@@ -29,7 +29,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 onLoaded: null,
                 onClose: null
             }, options);
-
+            this._initialTabLoaded = false;
             this._tabCache = {};
             this.init();
         }
@@ -192,24 +192,11 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
             // If controller tabs exist, re-bind them
             if (this.options.tabs){
+                this._tabsInitialized = true;
                 this.setTabs(this.options.tabs, this.options.activeTab);
             } else {
                 this.bindTabs();
             }
-        }
-
-        setContentO(content) {
-
-            const $html = $('<div>').html(content);
-            const $foundTabs = $html.find('.chat_hd_tbs').first();
-
-            if ($foundTabs.length) {
-                this.$tabs.html($foundTabs.html());
-                $foundTabs.remove();
-            }
-
-            this.$append.html($html.html());
-            this.bindTabs();
         }
 
         bindTabs() {
@@ -230,7 +217,9 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 this.tryLoadTabContent($link);
             });
 
-            $links.first().trigger('click');
+            if (!this.options.activeTab){
+                $links.first().trigger('click');
+            }
         }
 
         tryLoadTabContent($tab) {
@@ -323,7 +312,10 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             if (activeTab){
                 this.goToTab(activeTab);
             } else {
-                this.$tabs.find('a').first().trigger('click');
+                if (!this._initialTabLoaded){
+                    this._initialTabLoaded = true;
+                    this.$tabs.find('a').first().trigger('click');
+                }
             }
         }
     }
@@ -351,9 +343,9 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
         create(options){
             const instance = new BoraPopup(options);
 
-            if (options.tabs){
-                instance.setTabs(options.tabs, options.activeTab);
-            }
+            // if (options.tabs){
+            //     instance.setTabs(options.tabs, options.activeTab);
+            // }
             // API.activePopup = instance;
             return instance;
         },

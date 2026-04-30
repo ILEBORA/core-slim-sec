@@ -1,7 +1,7 @@
-<div class="activity-thread" data-activity="{{ id }}">
+<div class="activity-thread" data-id="{{ id }}" data-parent="{{ parent_id }}">
 
     {# Activity summary (hydrated via JS) #}
-    <div id="threadActivity" class="activity-entry"></div>
+    <div id="threadActivity" class="activity-entry"><center><img src="assets/images/icons/ajax.gif"/></center></div>
 
     {# Comment composer #}
     <div class="thread-composer">
@@ -10,13 +10,13 @@
             class="input-placeholder"
             placeholder="Post your reply"></textarea>
 
-        <button id="threadSendComment" class="btn btn-success space_left">
+        <button data-action="thread.send.comment" class="btn btn-success space_left">
             Reply
         </button>
     </div>
 
     {# Comments list #}
-    <div id="threadComments" class="thread-comments"></div>
+    <div id="threadComments" class="thread-comments"><center><img src="assets/images/icons/ajax.gif"/></center></div>
 
 </div>
 
@@ -25,7 +25,7 @@ $(async function(){
     
     const thread = await window.__BORA_APP__?.plugin?.('activity.thread');
     if (!thread) return;
-    thread.init();
+    thread.init({{ id }});
     
     const ctx = window.__diagContext || {};
 

@@ -20,22 +20,6 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
         return url;
     }
 
-    function buildFormUrlO({ module, group, tab='add', id=null, meta=null }){
-
-        const parts = ['api/modules', module, 'form', group, tab];
-
-        if (id) parts.push(id);
-
-        let url = parts.join('/');
-
-        if (meta && typeof meta === 'object'){
-            const qs = new URLSearchParams(meta).toString();
-            if (qs) url += '?' + qs;
-        }
-
-        return url;
-    }
-
     function buildViewUrl({ module, view, tab='view', id=null }){
 
         const parts = ['api/modules', module, 'view', view, tab];
@@ -93,7 +77,25 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
 
         const popup = popupCore.create({
             onOpen,
-            onClose,
+            onClose: () => {
+
+                // 1. run user-defined onClose if exists
+                if (typeof options.onClose === 'function'){
+                    options.onClose();
+                }
+
+                // 2. 🔥 central URL cleanup
+                const url = new URL(window.location);
+
+                if (url.searchParams.get('surface') === 'popup'){
+                    url.searchParams.delete('route');
+                    url.searchParams.delete('surface');
+                    url.searchParams.delete('id');
+                    url.searchParams.delete('tab');
+
+                    history.replaceState({}, '', url);
+                }
+            },
             tabs,
             activeTab
         });

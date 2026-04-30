@@ -70,6 +70,7 @@
         ========================================================== */
 
         const navigation   = await app.service('navigation');
+        const navigator   = await app.service('navigator');
         const hooksService = await app.service('hooks');
         const deprecations = await app.service('deprecations');
 
@@ -142,6 +143,29 @@
         /* ---------------------------
            4. Initial Route Activation
         --------------------------- */
+
+        async function handleRouteState(app){
+            if (restoring) return;
+            restoring = true;
+            // const navigator = await __BORA_APP__?.service('navigator');
+
+            const url = new URL(window.location);
+
+            const route   = url.searchParams.get('route');
+            const surface = url.searchParams.get('surface');
+
+            if (!route) return;
+
+            const params = Object.fromEntries(url.searchParams.entries());
+
+            restoring = false;
+
+            return navigator.go({
+                route,
+                params,
+                surface: surface || 'page'
+            });
+        }
 
         try{
 
@@ -429,6 +453,74 @@
         --------------------------- */
 
         app.emit('app:ready');
+
+        let restoring = false;
+        app.on('route:init', () => handleRouteState(app));
+        app.on('route:changed', () => handleRouteState(app));
+        
+        let restoringPopup = false;
+        app.on('page.loaded', async () => {
+
+            if (restoringPopup) return;
+
+            const url = new URL(window.location);
+
+            if (url.searchParams.get('surface') !== 'popup') return;
+
+            restoringPopup = true;
+
+            const navigator = await app.service('navigator');
+
+            await navigator.go({
+                route: url.searchParams.get('route'),
+                params: Object.fromEntries(url.searchParams.entries()),
+                surface: 'popup'
+            });
+
+            restoringPopup = false;
+        });
+        // app.on('route:init', async () => {
+        //     if (restoring) return;
+        //     restoring = true;
+        //     const navigator = await app.service('navigator');
+
+        //     const url = new URL(window.location);
+
+        //     const route   = url.searchParams.get('route');
+        //     const surface = url.searchParams.get('surface');
+
+        //     if (!route) return;
+
+        //     const params = Object.fromEntries(url.searchParams.entries());
+
+        //     navigator.go({
+        //         route,
+        //         params,
+        //         surface: surface || 'page'
+        //     });
+
+        //     restoring = false;
+        // });
+
+        // app.on('route:changed', async () => {
+
+        //     const navigator = await app.service('navigator');
+
+        //     const url = new URL(window.location);
+
+        //     const route   = url.searchParams.get('route');
+        //     const surface = url.searchParams.get('surface');
+
+        //     if (!route) return;
+
+        //     const params = Object.fromEntries(url.searchParams.entries());
+
+        //     navigator.go({
+        //         route,
+        //         params,
+        //         surface: surface || 'page'
+        //     });
+        // });
 
         const total = performance.now() - startTime;
 

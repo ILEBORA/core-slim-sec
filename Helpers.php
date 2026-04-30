@@ -1041,6 +1041,89 @@ if(!function_exists('autoIncludeCoreJs')){
     }
 }
 
+function buildCoreManifest(): array
+{
+    $corePath = vendor_path('public/js/core');
+    $manifest = include $corePath . '/manifest.php';
+
+    $currentEnv = $_ENV['ENV_DEVELOPMENT'] ? 'dev' : 'prod';
+    $tenant     = $_ENV['PRJCTN'] ?? '*';
+
+    // Filter
+    $manifest = array_filter($manifest, function ($meta) use ($currentEnv, $tenant) {
+
+        $envAllowed = in_array('*', $meta['env'] ?? ['*'])
+            || in_array($currentEnv, $meta['env'] ?? []);
+
+        $tenantAllowed = in_array('*', $meta['tenants'] ?? ['*'])
+            || in_array($tenant, $meta['tenants'] ?? []);
+
+        return $envAllowed && $tenantAllowed;
+    });
+
+    // Sort
+    uasort($manifest, function ($a, $b) {
+        return ($a['priority'] ?? 100) <=> ($b['priority'] ?? 100);
+    });
+
+    return $manifest;
+}
+
+function prepareCoreManifest(array $manifest): array
+{
+    $corePath = vendor_path('public/js/core');
+
+    foreach ($manifest as $name => &$meta) {
+
+        $file = $meta['file'] ?? null;
+
+        if ($file && $file !== '__inline__') {
+
+            $filePath = $corePath . '/' . $file;
+
+            if (!file_exists($filePath)) {
+                error_log("Error Registering file:: $name :: $filePath");
+                continue;
+            }
+
+            if (isset($meta['bypass'])) {
+                $meta['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/' . $file;
+            } else {
+                $compiled = \BoraSlim\Core\Assets\JsAssetCompiler::compile($name, $filePath);
+                $meta['file'] = $compiled['url'];
+            }
+        }
+    }
+
+    return $manifest;
+}
+
+function registerCoreScripts($hooks, array $manifest): array
+{
+    $corePath = vendor_path('public/js/core');
+    $preload = [];
+
+    foreach ($manifest as $name => $meta) {
+
+        $file = $meta['file'] ?? null;
+
+        if ($file === '__inline__') {
+            $hooks->registerInline($name, '');
+        } else {
+
+            $filePath = $corePath . '/' . ($meta['original'] ?? basename($meta['file']));
+            
+            $hooks->register($name, $filePath);
+        }
+
+        if (!empty($meta['preload'])) {
+            $preload[] = $name;
+        }
+    }
+
+    return $preload;
+}
+
 if(!function_exists('autoIncludeCoreCss')){
     function autoIncludeCoreCss($hooks) {
         $corePath = vendor_path('public/css/cores');
@@ -1769,6 +1852,22 @@ if (!function_exists('channels')) {
         }
 
         return ctx()->get(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class);
+    }
+}
+
+// Routes
+if (!function_exists('routes')) {
+
+    function routes(): \BoraSlim\Core\Routing\RouteRegistry
+    {
+        if (!ctx()->has(\BoraSlim\Core\Routing\RouteRegistry::class)) {
+            ctx()->set(
+                \BoraSlim\Core\Routing\RouteRegistry::class,
+                new \BoraSlim\Core\Routing\RouteRegistry()
+            );
+        }
+
+        return ctx()->get(\BoraSlim\Core\Routing\RouteRegistry::class);
     }
 }
 

@@ -425,18 +425,89 @@ __BORA_REGISTER_SERVICE__(
             });
         }
 
-        window.addEventListener('popstate', async (e)=>{
-            const uiStack = await scope.getService('uiStack');
-            if(uiStack && uiStack.size() > 0){
+        async function restoreFromUrl(scope){
+
+            const navigator = await scope.getService('navigator');
+
+            const url = new URL(window.location);
+
+            const route   = url.searchParams.get('route');
+            const surface = url.searchParams.get('surface');
+
+            if (!route) return;
+
+            const params = Object.fromEntries(url.searchParams.entries());
+
+            navigator.go({
+                route,
+                params,
+                surface: surface || 'page'
+            });
+        }
+
+        window.addEventListener('popstate', async (e) => {
+
+            const uiStack  = await scope.getService('uiStack');
+            const navigator = await scope.getService('navigator');
+            const popup    = await scope.getPlugin('popup');
+
+            const url = new URL(window.location);
+            const route   = url.searchParams.get('route');
+            const surface = url.searchParams.get('surface');
+
+            // 🔥 1. UI precedence (your requirement — correct)
+            if (uiStack && uiStack.size() > 0){
+
                 uiStack.closeTop();
-                // restore history so navigation does not occur
-                history.pushState(e.state, '', window.location);
+
+                // ⚠️ BUT: also reflect that in URL
+                if (!route || surface !== 'popup'){
+                    // URL already says no popup → fine
+                    return;
+                }
+
+                // URL still says popup → fix it
+                const cleanUrl = new URL(window.location);
+                cleanUrl.searchParams.delete('route');
+                cleanUrl.searchParams.delete('surface');
+                cleanUrl.searchParams.delete('id');
+                cleanUrl.searchParams.delete('tab');
+
+                history.replaceState({}, '', cleanUrl);
+
                 return;
             }
 
-            const url = e.state?.url || normalizeUrl(window.location);
-            await go(url, { replace:true });
+            // 🔥 2. No UI stack → follow URL
+            if (!route){
+                popup?.closeActive?.();
+                
+                const cleanUrl = normalizeUrl(window.location);
+                await go(cleanUrl, { replace:true });
+                return;
+            }
+
+            const params = Object.fromEntries(url.searchParams.entries());
+
+            await navigator.go({
+                route,
+                params,
+                surface: surface || 'page'
+            });
         });
+
+        // window.addEventListener('popstate', async (e)=>{
+        //     const uiStack = await scope.getService('uiStack');
+        //     if(uiStack && uiStack.size() > 0){
+        //         uiStack.closeTop();
+        //         // restore history so navigation does not occur
+        //         history.pushState(e.state, '', window.location);
+        //         return;
+        //     }
+
+        //     const url = e.state?.url || normalizeUrl(window.location);
+        //     await go(url, { replace:true });
+        // });
 
         return {
             go,

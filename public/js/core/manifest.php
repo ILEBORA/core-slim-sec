@@ -139,7 +139,8 @@ return [
     'sanity' => ['file' => 'services/sanity.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 43, 'requires' => ['runtime']],
     'pagecache' => ['file' => 'services/page-cache.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 44, 'requires' => ['runtime']],
     'sound' => ['file' => 'services/sound.service.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 45, 'requires' => []],
-
+    'navigator' => ['file' => 'services/navigator.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 46, 'requires' => []],
+    'route.registry' => ['file' => 'services/route.registry.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 47, 'requires' => []],
 
     /* ==================================================
        core plugins (lazy)
@@ -158,12 +159,12 @@ return [
         'priority' => 40,
         'requires' => ['jquery', 'runtime']
     ],
-    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events']],
+    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events'],'preload'=>true],
     'navigation.plugin' => ['file' => 'plugins/navigation.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 42],
     'alerts' => ['file' => 'plugins/alerts.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
     'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
 
-    'devtools' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
+    'devtools.plugin' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
     'appcore' => ['file' => 'plugins/app-core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
     'layouts' => ['file' => 'plugins/layouts.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
     'guestface' => ['file' => 'plugins/face-guest.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
@@ -175,10 +176,10 @@ return [
     'logoutux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62],
     'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63, 'requires' => ['runtime', 'store']],
 
-    'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core']],
+    'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core'],'preload'=>true],
     
     'dom.reactivity' => ['file' => 'plugins/dom.reactivity.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 65, 'requires' => ['runtime', 'state.reactive']],
-    'store' => ['file' => 'plugins/store.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 66, 'requires' => ['runtime']],
+    'store' => ['file' => 'plugins/store.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 66, 'requires' => ['runtime'],'preload'=>true],
     'state.reactive' => ['file' => 'plugins/state.reactive.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 67, 'requires' => ['runtime']],
     
 

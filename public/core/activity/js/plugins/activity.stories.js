@@ -79,7 +79,7 @@ __BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
 
         $.getJSON('api/modules/activity/stories/feed', resp=>{
 
-            if(!resp.ok) return;
+            if(!resp.success) return;
 
             render(resp.data);
         });

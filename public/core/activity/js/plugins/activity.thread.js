@@ -1,72 +1,98 @@
 __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
 
     const utils  = await scope.getService('activity.utils');
+    const uiActions = await scope.getService('ui.actions');
+    const callbora = await scope.getService('callbora');
 
-    let activityId;
-    let parentId;
+    // let activityId;
+    // let parentId;
     let loading=false;
     const state = {
         mounted: false
     };
 
-    function init(){
-        if (state.mounted) return;
-        state.mounted = true;
+    function init(id){
+        // if (state.mounted) return;
+        // state.mounted = true;
         
-        loadActivity();
+        // loadActivity(id);
+         const el = document.querySelector('.activity-thread');
+
+        if(!el) return;
+
+        activityId = el.dataset.id;
+        parentId = el.dataset.parent;
+        // alert(activityId);
+
+        loadComments(activityId, parentId);
+        
         bind();
     }
 
     function bind(){
-        $('#threadSendComment').off().on('click', sendComment);
+        // $('#threadSendComment').off().on('click', sendComment);
+        uiActions.register('thread.send.comment', sendComment)
     }
 
     function sendComment(el){
+        const activity = $(el).closest('.activity-thread');
+        const activityId = activity.data('id');
+        const parentId = activity.data('parent');
         const body = $('#threadCommentBody').val().trim();
+        
         if(!body){ 
             $('#threadCommentBody').focus();
             return;
         }
 
-        $.post('api/modules/activity/comment',{
+        callbora.post(`api/modules/activity/comment`, {
             activity_id:activityId,
             parent_id: parentId,
             body
-        }).done(()=>{
-            $('#threadCommentBody').val('');
-            loadComments();
+        }).then(function(res){
+            if(res.success){
+                alertBora.success(res.message|| 'Success');
+                $('#threadCommentBody').val('');
+                loadComments(activityId, parentId);
+            } else {
+                alertBora.error(res.message || 'Failed');
+            }
+
+            state.mounted = false;
         });
     }
 
-    function loadActivity(){
-
-        $.getJSON('api/modules/activity/get',{id:activityId})
+    function loadActivity(id){
+        // alert(id);
+        $.getJSON('api/modules/activity/get',{id:id})
         .done(resp=>{
-            if(!resp.ok) return;
+            if(!resp.success) return;
 
             $('#threadActivity').html(resp.data.html);
+
             const el = document.querySelector('.activity-thread');
+
             if(!el) return;
 
-            activityId = el.dataset.activity;
+            activityId = el.dataset.id;
             parentId = el.dataset.parent;
             // alert(activityId);
 
-            loadComments();
+            loadComments(activityId, parentId);
         });
     }
 
-    function loadComments(){
+    function loadComments(activityId, parentId){
 
         if(loading) return;
         loading=true;
-
+        // alert(activityId+' :: '+parentId);
         $.getJSON('api/modules/activity/comments',{
             activity_id:activityId,
             parent_id:parentId
         }).done(resp=>{
 
-            if(!resp.ok) return;
+            if(!resp.success) return;
 
             const $list = $('#threadComments').empty();
 
@@ -80,16 +106,18 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
     }
 
     function renderCommentTree(comment, depth = 0) {
+        // alert('renderCommentTree');
         const $el = $(renderComment(comment, depth));
 
         if (comment.replies && comment.replies.length) {
-            const $replies = $('<div class="comment-replies"></div>');
+            // const $replies = $('<div class="comment-replies"></div>');
+            const $replies = $($el).find('.comment-replies');
 
             comment.replies.forEach(reply => {
                 $replies.append(renderCommentTree(reply, depth + 1));
             });
 
-            $el.append($replies);
+            // $el.append($replies);
         }
 
         return $el;
@@ -116,6 +144,8 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
                     <div class="comment-actions">
                         <a href="#" class="reply-comment" data-id="${c.id}">Reply</a>
                     </div>
+
+                    <div class="comment-replies"></div>
                 </div>
             </div>
         `;

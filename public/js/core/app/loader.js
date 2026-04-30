@@ -16,7 +16,7 @@
     /* ==================================================
        INTERNAL STATE
     ================================================== */
-
+    
     const manifest = global.__BORA_MANIFEST__ || {};
 
     const loading  = new Map();   // name -> Promise

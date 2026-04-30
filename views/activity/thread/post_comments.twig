@@ -1,8 +1,9 @@
-<div class="activity-thread" data-id="{{ itemId }}" data-parent="{{parent_id}}">
+<div class="activity-thread" data-id="{{ item.item.id }}" data-parent="{{ item.item.parent_id }}">
 
     {# Activity summary (hydrated via JS) #}
-    <button class="backTo" data-id="{{itemId}}">Go Back</button>
-    <div id="threadActivity" class="activity-entry"><center><img src="assets/images/icons/ajax.gif"/></center></div>
+    <div id="threadActivity" class="activity-entry">
+        {{ item.html|raw }}
+    </div>
 
     {# Comment composer #}
     <div class="thread-composer">
@@ -10,25 +11,30 @@
             id="threadCommentBody"
             class="input-placeholder"
             placeholder="Post your reply"></textarea>
-        <button data-action="thread.send.comment" class="btn btn-success space_left" data-id="">
+
+        <button data-action="thread.send.comment" class="btn btn-success space_left">
             Reply
         </button>
     </div>
 
     {# Comments list #}
-    <div id="threadComments" class="thread-comments"><center><img src="assets/images/icons/ajax.gif"/></center></div>
+    <div id="threadComments" class="thread-comments">
+        <center><img src="assets/images/icons/ajax.gif"/></center>
+    </div>
 
 </div>
 
 <script>
 $(async function(){
+    
     const thread = await window.__BORA_APP__?.plugin?.('activity.thread');
     if (!thread) return;
-    thread.init();
+    thread.init({{ item.item.id }});
+    
     const ctx = window.__diagContext || {};
 
     if (ctx.state?.focus === 'composer') {
-       $('#threadCommentBody').focus();
+        $('#threadCommentBody').focus();
     }
 })
 </script>
