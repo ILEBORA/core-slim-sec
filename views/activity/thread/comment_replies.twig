@@ -1,0 +1,46 @@
+<div class="activity-thread" data-id="{{ item.activity_id }}" data-parent="{{ item.id }}">
+    <div class="thread-context">
+        <button data-action="act-back-to-post" data-id="{{ item.activity_id }}" class="btn btn-info btn-small">Go Back</button>
+        {# Activity summary (hydrated via JS) #}
+        <div id="threadActivity" class="activity-entry">
+            {{ item.parent.html|raw }}
+        </div>
+    </div>
+
+    <div id="threadComment" class="master-comment-entry">
+        {{ item.html|raw }}
+    </div>
+
+    {# Comment composer #}
+    <div class="thread-composer">
+        <textarea
+            id="threadCommentBody"
+            class="input-placeholder"
+            placeholder="Post your reply"></textarea>
+
+        <button data-action="thread.send.comment" class="btn btn-success space_left">
+            Reply
+        </button>
+    </div>
+
+    {# Comments list #}
+    <div id="threadComments" class="thread-comments">
+        <center><img src="assets/images/icons/ajax.gif"/></center>
+    </div>
+
+</div>
+
+<script>
+$(async function(){
+    
+    const thread = await window.__BORA_APP__?.plugin?.('activity.thread');
+    if (!thread) return;
+    thread.init({{ item.activity_id }},{{ item.id }});
+    
+    const ctx = window.__diagContext || {};
+
+    if (ctx.state?.focus === 'composer') {
+        $('#threadCommentBody').focus();
+    }
+})
+</script>

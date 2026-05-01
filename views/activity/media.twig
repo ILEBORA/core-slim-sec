@@ -2,7 +2,7 @@
 
 {% if count == 1 %}
 
-<div class="media-single act-view-media lazy" data-id="{{ item.media[0].id }}">
+<div class="media-single lazy" data-action="act-view-media" data-id="{{ item.media[0].id }}">
     <img class="lazy" src="{{ item.media[0].preview_path }}">
 </div>
 
@@ -12,11 +12,11 @@
     {% for media in item.media %}
         
         {% if media.type == 'image' %}
-            <span class="act-view-media" data-id="{{ media.id }}">
+            <span data-action="act-view-media" data-id="{{ media.id }}">
                 <img class="lazy" src="{{ media.preview_path }}">
             </span>
         {% elseif media.type == 'video' %}
-            <div class="media-video act-view-media" data-id="{{ media.id }}">
+            <div class="media-video " data-action="act-view-media" data-id="{{ media.id }}">
                 <img class="lazy" src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}">
                 <span class="play-icon">▶</span>
             </div>

@@ -14,5 +14,6 @@ $pipeline
     ->add('media.css')
     ->add('activity.css')
     ->add('stories.css')
+    ->add('comments.css')
     
     ->send();

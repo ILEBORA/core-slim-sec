@@ -33,11 +33,12 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         $(document).on('click','.act-react',handleReaction);
         // $(document).off('click').on('click','.act-comment',handleComment);
         uiActions.register('act-comment',handleComment);
+        uiActions.register('act-back-to-post',handleBacktoPost);
         $(document).on('click','.act-share', handleShare);
         $(document).on('click','.act-insights', handleInsights);
         $(document).on('click','.act-options', handleOptions);
 
-        $(document).on('click','.act-view-media', handleMediaView);
+        uiActions.register('act-view-media', handleMediaView);
 
         uiActions.register('reaction-trigger', async function(el){
             // e.preventDefault();
@@ -70,7 +71,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             return openPostPopup();
         });
 
-        $(document).on('click', '.reply-comment', handleReplies);
+        uiActions.register('reply-comment', handleReplies);
 
         $(document).on('click', '.backTo', handleBack);
 
@@ -166,6 +167,17 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         });
     }
 
+    async function handleBacktoPost(el){
+        const id = $(el).data('id');
+        const navigator = await scope.getService('navigator');
+
+        navigator.go({
+            route: 'activity.comments',
+            params: { id, tab: 'replies' },
+            surface: 'popup'
+        });
+    }
+
     async function handleCommentO(el){
         const id = $(el).closest('.activity-item').data('id');
         if (!id) return;
@@ -228,7 +240,23 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             alert('TODO:: Post '+id+' options...');
     }
 
-    async function handleMediaView(e){
+    async function handleMediaView(el){
+
+        const id = $(el)
+            .data('id');
+        
+        if (!id) return;
+
+        const navigator = await scope.getService('navigator');
+
+        navigator.go({
+            route: 'activity.media',
+            params: { id, tab: 'preview' },
+            surface: 'popup'
+        });
+    }
+
+    async function handleMediaViewO(e){
         e.preventDefault();
         const id = $(this)
             .data('id');
@@ -422,7 +450,26 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         });
     }
 
-    async function handleReplies(e){
+    async function handleReplies(el){
+
+        const id = $(el)
+            .data('id');
+        const parent = $(el)
+            .closest('.activity-thread')
+            .data('id');
+        
+        if (!id || !parent) return;
+
+        const navigator = await scope.getService('navigator');
+
+        navigator.go({
+            route: 'activity.replies',
+            params: { id, parent, tab: 'replies' },
+            surface: 'popup'
+        });
+    }
+
+    async function handleRepliesO(e){
         e.preventDefault();
 
         const activityId = $(this)

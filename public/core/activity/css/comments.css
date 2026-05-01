@@ -1,0 +1,7 @@
+.master-comment-entry{
+    background-color: var(--activity-composer-back, #d4f9e3);
+}
+
+.master-comment-entry .comment-body{
+    background-color: var(--activity-comment-master-back, wheat);
+}

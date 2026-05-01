@@ -2,6 +2,9 @@
     display:grid;
     gap:4px;
     width:100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #e6e9ec;
 }
 
 .media-grid img{
@@ -76,4 +79,20 @@
 
 .media-single{
     cursor: pointer;
+    max-width: 300px;
+}
+
+.media-single img{
+    transition:transform .2s ease;
+}
+
+.media-single img:hover{
+    transform:scale(1.03);
+}
+
+.activity-media{
+    display: flex;
+    justify-content: center;
+    background: #e6e9ec;
+    border-radius: 10px;
 }

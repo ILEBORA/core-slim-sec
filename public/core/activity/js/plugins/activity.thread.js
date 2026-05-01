@@ -11,7 +11,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
         mounted: false
     };
 
-    function init(id){
+    function init(id, parent){
         // if (state.mounted) return;
         // state.mounted = true;
         
@@ -20,18 +20,24 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
 
         if(!el) return;
 
-        activityId = el.dataset.id;
-        parentId = el.dataset.parent;
+        // activityId = el.dataset.id;
+        // parentId = el.dataset.parent;
         // alert(activityId);
 
-        loadComments(activityId, parentId);
+        if(parent){
+            loadReplies(parent);
+        }
+        else{
+            loadComments(id);
+        }
         
         bind();
     }
 
     function bind(){
         // $('#threadSendComment').off().on('click', sendComment);
-        uiActions.register('thread.send.comment', sendComment)
+        uiActions.register('thread.send.comment', sendComment);
+
     }
 
     function sendComment(el){
@@ -53,7 +59,13 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
             if(res.success){
                 alertBora.success(res.message|| 'Success');
                 $('#threadCommentBody').val('');
-                loadComments(activityId, parentId);
+                // loadComments(parentId, activityId);
+                if(parentId){
+                    loadReplies(parentId);
+                }
+                else{
+                    loadComments(activityId);
+                }
             } else {
                 alertBora.error(res.message || 'Failed');
             }
@@ -62,47 +74,77 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
         });
     }
 
-    function loadActivity(id){
-        // alert(id);
-        $.getJSON('api/modules/activity/get',{id:id})
-        .done(resp=>{
-            if(!resp.success) return;
+    // function loadActivity(id){
+    //     // alert(id);
+    //     $.getJSON('api/modules/activity/get',{id:id})
+    //     .done(resp=>{
+    //         if(!resp.success) return;
 
-            $('#threadActivity').html(resp.data.html);
+    //         $('#threadActivity').html(resp.data.html);
 
-            const el = document.querySelector('.activity-thread');
+    //         const el = document.querySelector('.activity-thread');
 
-            if(!el) return;
+    //         if(!el) return;
 
-            activityId = el.dataset.id;
-            parentId = el.dataset.parent;
-            // alert(activityId);
+    //         activityId = el.dataset.id;
+    //         parentId = el.dataset.parent;
+    //         // alert(activityId);
 
-            loadComments(activityId, parentId);
-        });
-    }
+    //         loadComments(activityId, parentId);
+    //     });
+    // }
 
     function loadComments(activityId, parentId){
-
         if(loading) return;
         loading=true;
         // alert(activityId+' :: '+parentId);
-        $.getJSON('api/modules/activity/comments',{
+        callbora.get(`api/modules/activity/comments`, {
             activity_id:activityId,
             parent_id:parentId
-        }).done(resp=>{
-
-            if(!resp.success) return;
+        }).then(function(res){
+            if(!res.success){
+                alertBora.success(res.message||'Error loading comments');
+                return;
+            }
 
             const $list = $('#threadComments').empty();
 
-            resp.data.forEach(c=>{
+            res.data.forEach(c=>{
                 $list.append(renderCommentTree(c));
             });
 
-        }).always(()=>{
+            loading=false;
+        })
+        .finally(() => {
             loading=false;
         });
+    
+    }
+
+    function loadReplies(id){
+        if(loading) return;
+        loading=true;
+        // alert(activityId+' :: '+parentId);
+        callbora.get(`api/modules/activity/replies`, {
+            comment_id:id,
+        }).then(function(res){
+            if(!res.success){
+                alertBora.success(res.message||'Error loading replies');
+                return;
+            }
+
+            const $list = $('#threadComments').empty();
+
+            res.data.forEach(c=>{
+                $list.append(renderCommentTree(c));
+            });
+
+            loading=false;
+        })
+        .finally(() => {
+            loading=false;
+        });
+
     }
 
     function renderCommentTree(comment, depth = 0) {
@@ -126,13 +168,14 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
 
     function renderComment(c, depth = 0) {
         return `
-            <div class="comment-item" data-id="${c.id}" style="margin-left:${depth * 20}px">
+            <div class="comment-item" data-id="${c.id}" style="margin-left:${depth * 2}px">
                 <div class="comment-avatar">
                     <img src="${c.actor.avatar || '/img/avatar.png'}">
                 </div>
 
                 <div class="comment-body">
                     <div class="comment-meta">
+                        <strong data-nav="portal/people/person/${c.actor.person_id}/view">${c.actor.name}</strong>
                         <strong>@${c.actor.username}</strong>
                         <span class="time">${c.timeago_format}</span>
                     </div>
@@ -142,7 +185,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
                     </div>
 
                     <div class="comment-actions">
-                        <a href="#" class="reply-comment" data-id="${c.id}">Reply</a>
+                        <a href="#" data-action="reply-comment" data-id="${c.id}">Reply</a>
                     </div>
 
                     <div class="comment-replies"></div>

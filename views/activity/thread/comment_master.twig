@@ -1,0 +1,19 @@
+<div class="comment-item" data-id="{{ item.id }}" style="">
+    <div class="comment-avatar" data-nav="portal/people/person/{{ item.actor.person_id }}/view">
+        <img src="{{ item.actor.avatar|default('assets/images/noavatar.png') }}">
+    </div>
+
+    <div class="comment-body">
+        <div class="comment-meta">
+            <strong data-nav="portal/people/person/{{ item.actor.person_id }}/view">{{ item.actor.name }}</strong>
+            <span data-nav="portal/people/person/{{ item.actor.person_id }}/view" class="activity-username">@{{ item.actor.username }}</span>
+
+            <span class="time">{{ item.timeago_format }}</span>
+        </div>
+
+        <div class="comment-text">
+            {{ item.body }}
+        </div>
+
+    </div>
+</div>
