@@ -34,6 +34,7 @@
 }
 
 .activity-item {
+    position: relative;
     background: var(--card-bg, #fff);
     border-radius: 12px;
     padding: 14px;
@@ -436,6 +437,6 @@ textarea {
     }
 
     .activity-actions {
-        gap: 10px;
+        gap: 8px;
     }
 }

@@ -20,9 +20,15 @@
         <span class="reactions">
             {% include 'activity/reactions.twig' with { reactions: item.reactions, reactionTypes: item.reactionTypes } %}
         </span>
-        <span class="comments-count">
+        <span class="comments-count" data-action="act-comment">
             💬 {{ item.comments_count ?? 0 }}
         </span>
+    </div>
+
+    <div class="reaction-picker reaction-box" data-id="{{item.id}}">
+        {% for name, icon in item.reactionTypes %}
+            <span class="act-react" data-action="act-react"  data-reaction="{{name}}">{{icon}}</span>
+        {% endfor %}
     </div>
 
     <div class="activity-actions">

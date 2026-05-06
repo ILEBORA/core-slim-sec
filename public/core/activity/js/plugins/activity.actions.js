@@ -1,5 +1,6 @@
 __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
+    const callbora = await scope.getService('callbora');
     const feedUI  = await scope.getPlugin('activity.feed.ui');
     const activityComposer  = await scope.getPlugin('activity.composer');
     const uiStack = await __BORA_APP__.service('uiStack');
@@ -7,89 +8,101 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const popup = await scope.getPlugin('popup');
     const routeRegistry = await scope.getService('route.registry');
 
+    const dismissable = await __BORA_APP__.service('ui.dismissable');
+
     const state = {
-        mounted: false
+        mounted: false,
+        initialized:false
     };
-
-    
-    // routeRegistry.register('activity.comments', ({ id, tab }) => ({
-    //     size: 'md',
-    //     tabs: [
-    //         {
-    //             id: 'replies',
-    //             label: 'Comments',
-    //             url: `api/modules/activity/timeline/comments/${id}`
-    //         }
-    //     ],
-    //     activeTab: tab || 'replies'
-    // }));
-
 
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
-
-        console.log('[activity.actions] mounted');
-        $(document).on('click','.act-react',handleReaction);
-        // $(document).off('click').on('click','.act-comment',handleComment);
-        uiActions.register('act-comment',handleComment);
-        uiActions.register('act-back-to-post',handleBacktoPost);
-        $(document).on('click','.act-share', handleShare);
-        $(document).on('click','.act-insights', handleInsights);
-        $(document).on('click','.act-options', handleOptions);
-
-        uiActions.register('act-view-media', handleMediaView);
-
-        uiActions.register('reaction-trigger', async function(el){
-            // e.preventDefault();
-
-            const uiStack = await __BORA_APP__.service('uiStack');
-            const dismissable = await __BORA_APP__.service('ui.dismissable');
-
-            const $box = $(el).closest('.reaction-box');
-
-            if($box.hasClass('open')){
-                $box.data('dismissInstance')?.close();
-                return;
-            }
-
-            // close any other dropdown
-            uiStack.closeTop();
-
-            $box.addClass('open');
-
-            const instance = dismissable.create(()=>{
-                $box.removeClass('open');
-                $box.removeData('dismissInstance');
-            });
-
-            $box.data('dismissInstance', instance);
-
-        });
-
-        $(document).on('click', '.composer-placeholder', function () {
-            return openPostPopup();
-        });
-
-        uiActions.register('reply-comment', handleReplies);
-
-        $(document).on('click', '.backTo', handleBack);
-
-        uiActions.register('popup.close', ()=>{
-            uiStack.closeTop();
-        });
     }
 
     function unmount(){
         if (!state.mounted) return;
         state.mounted = false;
-
-        // $(document).off('click','.act-react',handleReaction);
-        // $(document).off('click','.act-comment',handleComment);
     }
 
-    function handleReaction(){
-        const $btn = $(this);
+
+    function init(){
+        if (state.initialized) return;
+        state.initialized = true;
+
+        console.log('[activity.actions] mounted');
+
+        //popups
+        uiActions.register('act-comment',popupComment);
+        uiActions.register('reply-comment', popupReplies);
+        uiActions.register('act-timeline-composer', popupTimelineComposer);
+
+        //
+        uiActions.register('act-back-to-post',handleBacktoPost);
+
+        
+
+        // acttion buttons
+        uiActions.register('act-react', handleReaction);
+        uiActions.register('act-share', handleShare);
+        uiActions.register('act-insights', handleInsights);
+        uiActions.register('act-options', handleOptions);
+
+        //views
+        uiActions.register('reaction-trigger', showReactions);
+        uiActions.register('act-view-reactions', showReactionsView);
+        uiActions.register('act-view-media', showMediaView);
+
+        //Options
+        uiActions.register('activity.delete', handleDelete);
+        uiActions.register('activity.restore', handleRestore);
+        uiActions.register('activity.force-delete', handleForceDelete);
+        uiActions.register('activity.edit', popupEdit);
+        uiActions.register('activity.export', handleExport);
+        uiActions.register('activity.details', showDetailsView);
+
+        uiActions.register('popup.close', ()=>{
+            uiStack.closeTop();
+        });
+
+        // media options
+        uiActions.register('act-remove-media', activityComposer.handleRemoveMedia);
+        uiActions.register('act-rotate-media', activityComposer.handleRotateMedia);
+
+    }
+
+    //Attach
+    init();
+
+    async function showReactions(el){
+        const id = $(el)
+            .closest('.activity-item')
+            .data('id');
+
+        const $box = $(`.reaction-box[data-id="${id}"]`);
+
+        if($box.hasClass('open')){
+            $box.data('dismissInstance')?.close();
+            return;
+        }
+
+
+        // close any other dropdown
+        uiStack.closeTop();
+
+        $box.addClass('open');
+
+        const instance = dismissable.create(()=>{
+            $box.removeClass('open');
+            $box.removeData('dismissInstance');
+        });
+
+        $box.data('dismissInstance', instance);
+
+    }
+
+    function handleReaction(el){
+        const $btn = $(el);
         const reaction = $btn.data('reaction');
 
         const $item = $btn.closest('.activity-item');
@@ -114,43 +127,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
     }
 
-    // async function handleComment(el){
-
-    //     const id = $(el)
-    //         .closest('.activity-item')
-    //         .data('id');
-
-    //     if (!id){
-    //         console.warn('[activity] Missing activity id');
-    //         return;
-    //     }
-
-    //     await popup.openPopupSmart({
-    //         key: 'activity-comments',
-    //         id: id,
-    //         tab: 'replies',
-
-    //         factory: (id) => ({
-    //             size: 'md',
-
-    //             tabs: [
-    //                 {
-    //                     id: 'replies',
-    //                     label: 'Comments',
-    //                     url: `api/modules/activity/timeline/comments/${id}`
-    //                 },
-    //                 // future expansion
-    //                 // {
-    //                 //     id: 'likes',
-    //                 //     label: 'Likes',
-    //                 //     url: `api/modules/activity/view/likes/${id}`
-    //                 // }
-    //             ]
-    //         })
-    //     });
-    // }
-
-    async function handleComment(el){
+    async function popupComment(el){
 
         const id = $(el)
             .closest('.activity-item')
@@ -163,6 +140,23 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         navigator.go({
             route: 'activity.comments',
             params: { id, tab: 'replies' },
+            surface: 'popup'
+        });
+    }
+
+    async function popupEdit(el){
+        const id = $(el)
+            // .closest('.activity-item')
+            .data('id');
+        alert(id);
+
+        if (!id) return;
+
+        const navigator = await scope.getService('navigator');
+
+        navigator.go({
+            route: 'activity.edit',
+            params: { id, tab: 'edit' },
             surface: 'popup'
         });
     }
@@ -178,70 +172,54 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         });
     }
 
-    async function handleCommentO(el){
-        const id = $(el).closest('.activity-item').data('id');
-        if (!id) return;
-
-        await openActivityComments(id);
-    }
-
-    async function openActivityComments(id, tab = 'replies'){
-        return popup.openPopupSmart({
-            key: 'activity-comments',
-            id,
-            tab,
-            factory: (id) => ({
-                size: 'md',
-                tabs: buildActivityTabs(id)
-            })
-        });
-    }
-
-    function buildActivityTabs(id){
-        return [
-            {
-                id: 'replies',
-                label: 'Comments',
-                url: `api/modules/activity/timeline/comments/${id}`
-            },
-            // future expansion
-            // {
-            //     id: 'likes',
-            //     label: 'Likes',
-            //     url: `api/modules/activity/view/likes/${id}`
-            // }
-        ];
-    }
-
-    function handleShare(e){
-        e.preventDefault();
-        const id = $(this)
+    function handleShare(el){
+        const id = $(el)
             .closest('.activity-item')
             .data('id');
             // popup service
             alert('TODO:: Share '+id+' to social...');
     }
 
-    function handleInsights(e){
-        e.preventDefault();
-        const id = $(this)
+    function handleInsights(el){
+        const id = $(el)
             .closest('.activity-item')
             .data('id');
             // popup service
             alert('TODO:: Post '+id+' insights...');
     }
 
-    function handleOptions(e){
-        e.preventDefault();
-        const id = $(this)
+    function handleOptions(el){
+        const id = $(el)
             .closest('.activity-item')
             .data('id');
             // popup service
             alert('TODO:: Post '+id+' options...');
     }
 
-    async function handleMediaView(el){
+    function handleExport(el){
+        const id = $(el)
+            .closest('.activity-item')
+            .data('id');
+            // popup service
+            alert('TODO:: Post '+id+' export...');
+    }
 
+    async function showReactionsView(el){
+        const id = $(el)
+            .data('id');
+        
+        if (!id) return;
+
+        const navigator = await scope.getService('navigator');
+
+        navigator.go({
+            route: 'activity.details',
+            params: { id, tab: 'reactions' },
+            surface: 'popup'
+        });
+    }
+
+    async function showMediaView(el){
         const id = $(el)
             .data('id');
         
@@ -256,41 +234,24 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         });
     }
 
-    async function handleMediaViewO(e){
-        e.preventDefault();
-        const id = $(this)
+    async function showDetailsView(el){
+        const id = $(el)
             .data('id');
-
-        popup.open({
-            // mode:'view',
-            // module:'activity',
-            // group:'timeline',
-            // view:'media',
-            // tab:'preview',
-            // id: id,
-            // size:'md',
-            // meta:   { id:id, mode: 'preview' },
-            tabs: [
-                {
-                    id: 'replies',
-                    label: 'Preview',
-                    url: `api/modules/activity/media/preview/${id}`
-                },
-                {
-                    id: 'edit',
-                    label: 'Edit',
-                    url: `api/modules/activity/media/edit/${id}`
-                }
-            ],
-
-            activeTab: 'preview'
-        });
         
+        if (!id) return;
+
+        const navigator = await scope.getService('navigator');
+
+        navigator.go({
+            route: 'activity.details',
+            params: { id, tab: 'details' },
+            surface: 'popup'
+        });
     }
 
-    let currentPopup = null;
+    
 
-    async function openPostPopup() {
+    async function popupTimelineComposer() {
         activityComposer.open();
     }
 
@@ -300,6 +261,18 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         const btn = $form.find('button[type=submit]');
         const prevtext = btn.text();
         btn.prop('disabled', true).text('Processing...');
+        
+        //
+        const values = $form.find('.select2-ajax').val() || [];
+
+        const invalid = values.filter(v => v.startsWith('__new__:'));
+
+        if (invalid.length) {
+            e.preventDefault();
+            alert('Please select valid people from the list.');
+            return false;
+        }
+        //
 
         // If files exist, use FormData; otherwise fallback to serialize
         let hasFiles = $form.find('input[type="file"]').length > 0;
@@ -331,6 +304,9 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
                     btn.prop('disabled', false).text(prevtext);
                 }
                 if(typeof done === 'function') done(resp);
+
+                // Remove attachments from cache
+                activityComposer.reset();
             },
             error(err){
                 btn.prop('disabled', false).text(prevtext);
@@ -410,47 +386,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         $.ajax(ajaxOptions);
     });
 
-    async function handleBack(e){
-        e.preventDefault();
-
-        const activityId = $(this)
-            .closest('.comment-item')
-            .data('id');
-
-        // const popup = await scope.getPlugin('popup');
-
-        popup.open({
-            mode:   'view',
-            module: 'activity',
-            group:  'activity',
-            view:   'replies',
-            id:     activityId,
-            tab:    'replies',
-            size:   'lg',
-            meta:   {
-                size: 'lg',
-                state: {
-                    focus: 'composer'
-                }
-            },
-            tabs: [
-                {
-                    id: 'replies',
-                    label: 'Replies',
-                    url: `api/modules/activity/timeline/replies/${activityId}`
-                },
-                // {
-                //     id: 'likes',
-                //     label: 'Likes',
-                //     url: `api/modules/activity/view/likes/${activityId}`
-                // }
-            ],
-
-            activeTab: 'replies'
-        });
-    }
-
-    async function handleReplies(el){
+    async function popupReplies(el){
 
         const id = $(el)
             .data('id');
@@ -469,50 +405,114 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         });
     }
 
-    async function handleRepliesO(e){
-        e.preventDefault();
+    //
+    async function handleDelete(el){
+        let activityId = $(el).data('id');
 
-        const activityId = $(this)
-            .closest('.comment-item')
-            .data('id');
+        alertBora.prompt(
+            '<h3>Confirm Action</h3>Enter your password to continue',
+            {
+                html: true,
+                prompt: '<input type="password" name="password" placeholder="Password">'
+            }
+        ).then(function(det){
 
-        // const popup = await scope.getPlugin('popup');
+            let password = btoa(det.password);
 
-        popup.open({
-            mode:   'view',
-            module: 'activity',
-            group:  'activity',
-            view:   'replies',
-            id:     activityId,
-            tab:    'replies',
-            size:   'lg',
-            meta:   {
-                size: 'lg',
-                state: {
-                    focus: 'composer'
+            callbora.post(`api/modules/activity/timeline/${activityId}/delete`, {
+                password: password
+            }).then(function(response){
+                if(response.success){
+                    alertBora.success('Activity soft deleted');
+
+                    //remove item
+                    $('.activity-item[data-id"'+activityId+'"]').addClass('deleted');
+                    
+                    scope.emit('people.back');
+
+                } else {
+                    alertBora.error(response.message || 'Failed');
                 }
-            },
-            tabs: [
-                {
-                    id: 'replies',
-                    label: 'Replies',
-                    url: `api/modules/activity/timeline/replies/${activityId}`
-                },
-                // {
-                //     id: 'likes',
-                //     label: 'Likes',
-                //     url: `api/modules/activity/view/likes/${activityId}`
-                // }
-            ],
 
-            activeTab: 'replies'
-        });
+            });
+
+        }); 
+
+    }
+
+    async function handleRestore(el){
+        let activityId = $(el).data('id');
+
+        alertBora.prompt(
+            '<h3>Confirm Action</h3>Enter your password to continue',
+            {
+                html: true,
+                prompt: '<input type="password" name="password" placeholder="Password">'
+            }
+        ).then(function(det){
+
+            let password = btoa(det.password);
+
+            callbora.post(`api/modules/activity/timeline/${activityId}/restore`, {
+                password: password
+            }).then(function(response){
+
+                if(response.success){
+                    alertBora.success('Activity restore');
+
+                    //Restore item
+                    $('.activity-item[data-id"'+activityId+'"]').removeClass('deleted');
+
+                    if(response.redirect){
+                        navigation.go(response.redirect);
+                    }
+                    
+                } else {
+                    alertBora.error(response.message || 'Failed');
+                }
+
+            });
+
+        }); 
+
+    }
+
+    async function handleForceDelete(el){
+        let activityId = $(el).data('id');
+
+        alertBora.prompt(
+            '<h3>Confirm Action</h3>Enter your password to continue',
+            {
+                html: true,
+                prompt: '<input type="password" name="password" placeholder="Password">'
+            }
+        ).then(function(det){
+
+            let password = btoa(det.password);
+
+            callbora.post(`api/modules/activity/timeline/${activityId}/forcedelete`, {
+                password: password
+            }).then(function(response){
+
+                if(response.success){
+                    alertBora.success('Person deleted');
+
+                    //remove item
+                    $('.activity-item[data-id"'+activityId+'"]').remove();
+
+                    scope.emit('people.back');
+                } else {
+                    alertBora.error(response.message || 'Failed');
+                }
+
+            });
+
+        }); 
+
     }
     
-
-
     return { mount, unmount };
 
 },{
-    activateOn: (route) => route.startsWith('portal/activity')
+    // activateOn: (route) => route.startsWith('portal/activity')
 });

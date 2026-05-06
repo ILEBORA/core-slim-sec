@@ -1,6 +1,4 @@
-__BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
-
-    const callbora = await scope.getService('callbora');
+__BORA_REGISTER_PLUGIN__('activity.composer', function(scope){
 
     let attachments = [];
     let bound = false;
@@ -35,11 +33,10 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
                 contentType:false,
 
                 success(resp){
-                    // alert('respp');
+                    alert('respp');
                     if(!resp.success) return;
-                    // alert('respp2');
+                    alert('respp2');
                     const media = {
-                        id:resp.data.id,
                         file: resp.data.file,
                         preview: resp.data.preview,
                         type: resp.data.type
@@ -63,12 +60,8 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
 
             html = `
             <div class="composer-media">
-                <span class="remove-media" data-action="act-remove-media" data-id="${media.id}">✕</span>
-                <img class="added-media${media.id}" src="${media.preview}" data-id="${media.id}">
-                <div class="media-actions bottom">
-                    <button class="rotate-media" data-action="act-rotate-media" data-angle="-90" data-id="${media.id}">⟲</button>
-                    <button class="rotate-media" data-action="act-rotate-media" data-angle="90" data-id="${media.id}">⟳</button>
-                </div>
+                <img src="${media.preview}">
+                <span class="remove-media">✕</span>
             </div>
             `;
 
@@ -108,56 +101,6 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
         bindUI();
     }
 
-    //Options
-    async function handleRemoveMedia(el){
-        let id = $(el).data('id');
-
-        if(!id) return;
-
-        callbora.post(`api/modules/app/agent/remove/${id}`, {
-            id: id
-        }).then(function(response){
-            if(response.success){
-                alertBora.success('Media removed.');
-            } else {
-                alertBora.error(response.message || 'Failed');
-            }
-
-        });
-
-    }
-
-    async function handleRotateMedia(el){
-        let id = $(el).data('id');
-        let angle = $(el).data('angle');
-        const container = $(el).closest('.composer-media');
-
-        if(!id || !angle) return;
-
-        callbora.post(`api/modules/app/agent/rotate`, {
-            id: id,
-            angle: angle
-        }).then(function(response){
-            if(response.success){
-                alertBora.success(`Rotated ${angle}.`);
-
-                // bust cache to force reload
-                const img = container.find(`img.added-media${id}`);
-
-                const newSrc = img.attr('src') + '?v=' + Date.now();
-                img.attr('src', newSrc);
-            } else {
-                alertBora.error(response.message || 'Failed');
-            }
-
-        });
-
-    }
-
-    function reset(){
-        attachments = [];
-    }
-
-    return { open, handleRemoveMedia, handleRotateMedia, reset };
+    return { open };
 
 });

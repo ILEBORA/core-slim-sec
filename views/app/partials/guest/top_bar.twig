@@ -26,7 +26,7 @@
 				
                 {# if(isLoggedIn()) #}
 					<div class="user-menu-wrap">
-					    <a class="mini-photo-wrapper" href="javascript:void(0);"><img class="mini-photo ClientUserItemAvatar{{ app.user.id }}" src="{{ app.user.avatar | default('assets/images/icons/noavatar.png') }}" width="36" height="36"/></a>
+					    <a class="mini-photo-wrapper" href="javascript:void(0);"><img class="mini-photo ClientUserItemAvatar{{ app.user.id }}" src="{{ app.user.avatar_url | default('assets/images/icons/noavatar.png') }}" width="36" height="36"/></a>
 					
 					<div class="menu-container">
 						

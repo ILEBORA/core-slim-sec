@@ -201,19 +201,28 @@ appUI.dropDown.init();
             var prev = $(obj).attr('data-prev');
             var typ = $(obj).attr('data-id');
             var itm = $(obj).attr('data-itm');
+            var uploadid = $(obj).attr('data-uploadid');
+            
             if(prev){
                 alertBora.prompt('<h2>Change Picture</h2>', {
                     html: true,
                     prompt:'' +
-                    'Profile pic: <input type="file" data-itm="'+itm+'" data-id="'+typ+'" accept="image/jpeg" class="alertable-input" id="newimage" name="newimage" onchange="mPGs.uploadAvatar(this)">' +
-                    '<div align="center"><span id="artUpload" class="badge" style="font-size:small;"></span><img id="artHolder" src="'+prev+'" onerror="this.onerror=null;this.src=\'assets/images/icons/placeholder.png\';" width="250" class="frame" />' +
-                    '<input type="hidden" class="alertable-input hide" placeholder="path" id="artworkPath" name="artworkPath"/>' +
+                    '<div class="composer-media">Profile pic: <input type="file" data-itm="'+itm+'" data-id="'+typ+'" accept="image/jpeg" class="alertable-input" id="newimage" name="newimage" onchange="mPGs.uploadAvatar(this)">' +
+                    '<div align="center"><span id="artUpload" class="badge" style="font-size:small;"></span><img id="artHolder" class="added-media'+uploadid+'" src="'+prev+'" onerror="this.onerror=null;this.src=\'assets/images/icons/placeholder.png\';" width="250" class="frame" />' +
+                    '<input type="hidden" class="alertable-input hide" placeholder="path" id="artworkPath" name="artworkPath" value=""/>' +
                     '<input type="hidden" class="alertable-input hide" placeholder="file" id="artworkFile" name="artworkFile"/>' +
-                    '<input type="hidden" class="alertable-input hide" placeholder="id" id="artworkId" name="artworkId"/>'
+                    '<input type="hidden" class="alertable-input hide artworkId" placeholder="id" id="artworkId" name="artworkId" value="'+uploadid+'"/>' + 
+                    '<div class="media-actions bottom">' + 
+                        '<button class="rotate-media" data-action="act-rotate-media" data-angle="-90" data-id="'+uploadid+'">⟲</button>' + 
+                        '<button class="rotate-media" data-action="act-rotate-media" data-angle="90" data-id="'+uploadid+'">⟳</button>' + 
+                    '</div></div>'
                 }).then(function(det) {
                     det['typ'] = typ;
                     det['itm'] = itm;
-                    if($('#artworkFile').val()!=''){
+                    let finalDet = Object.assign({},det);
+                    console.log(finalDet, uploadid);
+                    if(finalDet.artworkId != uploadid){
+                        // alert('No change');
                         new CallBora("api/modules/ui/userprofile/avatar/change")
                             .setMethod("POST")
                             .setParams(Object.assign({},det))
@@ -223,7 +232,7 @@ appUI.dropDown.init();
                                 //Update options
                                 if(data.success){
                                     $('.'+typ+'Avatar'+itm).attr('src',data.data.avatar_url);
-                                    $('#avtrBox').attr('data-prev',data.data.avatar_url);
+                                    $('.avtrBox').attr('data-prev',data.data.avatar_url);
                                     alertBora.notify('Updated!', 'success');
                                     if($('#avtrChange'+itm).length >0){
                                         $('#avtrChange'+itm).fadeOut('slow');
@@ -239,7 +248,12 @@ appUI.dropDown.init();
                             })
                             .setError((xhr) => console.error("Error:", xhr))
                             .build();
+                    }{
+                        // alert('No change '+'.'+typ+'Avatar'+itm);
+                        $('.'+typ+'Avatar'+itm).attr('src',prev+ '?t=' +  Date.now());
+                        // $('body').find('.avtrBox').attr('data-prev',prev+ '?t=' +  Date.now());
                     }
+                    $('#artworkFile').val('');
                 }, function() {
                     logTest('Avatar Add canceled');
                     if($('#artworkFile').val()!=''){
@@ -426,6 +440,133 @@ $(function(){
 });
 
 function evaluateDependencies($form, debug = false) {
+
+    $form.find('[data-depends-on]').each(function () {
+
+        const $el  = $(this);
+        const rule = ($el.data('depends-on') || '').toString().trim();
+
+        if (!rule) return;
+
+        // OR conditions
+        const orGroups = rule.split('|');
+        let isVisible = false;
+            
+        for (let g = 0; g < orGroups.length; g++) {
+            
+            const andRules = orGroups[g].split('&');
+            let andMatch = true;
+
+            for (let r = 0; r < andRules.length; r++) {
+
+                const expr = andRules[r].trim();
+
+                // Parse operator
+                let operator = '=';
+                if (expr.includes('!=')) operator = '!=';
+                else if (expr.includes('=')) operator = '=';
+
+                const parts = expr.split(operator);
+                const field = parts[0]?.trim();
+                const expectedRaw = parts[1]?.trim();
+
+                if (!field || expectedRaw === undefined) {
+                    andMatch = false;
+                    break;
+                }
+
+                const $input = $form.find(`[name="${field}"]`);
+
+                if (!$input.length) {
+                    if (debug) console.warn('Dependency field not found:', field);
+                    andMatch = false;
+                    break;
+                }
+
+                let actual;
+
+                // Handle input types
+                if ($input.is(':checkbox')) {
+                    actual = $input.is(':checked') ? '1' : '0';
+                }
+                else if ($input.is(':radio')) {
+                    actual = $form.find(`[name="${field}"]:checked`).val();
+                }
+                else {
+                    actual = $input.val();
+                }
+
+                const expectedValues = expectedRaw.split(',').map(v => v.trim());
+
+                const match =
+                    operator === '='
+                        ? expectedValues.includes(actual)
+                        : !expectedValues.includes(actual);
+
+                if (debug) {
+                    console.log('DEPENDS:', {
+                        field,
+                        actual,
+                        operator,
+                        expectedValues,
+                        match
+                    });
+                }
+
+                if (!match) {
+                    andMatch = false;
+                    break;
+                }
+            }
+
+            if (andMatch) {
+                isVisible = true;
+                break;
+            }
+        }
+
+        // Apply visibility
+        // if (isVisible) {
+        //     $el.show();
+        // } else {
+        //     $el.hide();
+
+        //     // Clear only user-editable inputs
+        //     $el.find('input:not([type=hidden]), select, textarea')
+        //        .not(':checkbox, :radio')
+        //        .val('');
+
+        //     $el.find(':checkbox, :radio').prop('checked', false);
+        // }
+        if (isVisible) {
+            $el.show();
+
+            // Restore required fields
+            $el.find('[data-was-required="1"]').each(function () {
+                $(this).prop('required', true);
+            });
+
+        } else {
+            $el.hide();
+
+            // Remove required temporarily
+            $el.find('[required]').each(function () {
+                $(this)
+                    .attr('data-was-required', '1')
+                    .prop('required', false);
+            });
+
+            // Clear only user-editable inputs
+            $el.find('input:not([type=hidden]), select, textarea')
+            .not(':checkbox, :radio')
+            .val('');
+
+            $el.find(':checkbox, :radio').prop('checked', false);
+        }
+    });
+}
+
+function evaluateDependenciesO($form, debug = false) {
 
     $form.find('[data-depends-on]').each(function () {
 

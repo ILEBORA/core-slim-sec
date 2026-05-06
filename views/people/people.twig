@@ -41,12 +41,19 @@
 
             {% for person in people %}
                 {% set d_state = person.is_deleted ? 'deleted' : '' %}
+                {% set fav_state = person.is_favorite ? 'is-fav' : '' %}
                 <div class="person-card {{ d_state }}"
                      data-person="{{ person.id }}"
                      data-action="people:open"
                      data-type="{{ person.user_id ? 'members' : 'non-users' }}"
                      data-favorite="{{ person.is_favorite ? 1 : 0 }}"
                      >
+
+                    <div class="card-actions">
+                        <button class="favorite-toggle {{ fav_state }}" data-id="{{ person.id }}"  title="Add to favorites" data-action="act-favorite-toggle">
+                            <i class="icon-star"></i>
+                        </button>
+                    </div>
 
                     <div class="avatar">
                         <img class="lazy  userAvatar{{person.user_id}}" src="assets/images/icons/noavatar.png" data-src="{{person.avatar_url}}" />

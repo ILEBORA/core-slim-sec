@@ -46,6 +46,14 @@ return [
         'preload'  => true,
     ],
 
+     'lib.cropper' => [
+        'file'     => 'vendor/lib.cropper.js',
+        'version'  => '1.0.0',
+        'priority' => 5,
+        'bypass'  => true,
+        'preload'  => true,
+    ],
+
     /* ==================================================
        core engine
     ================================================== */
@@ -113,6 +121,24 @@ return [
         // 'preload'  => true,
     ],
 
+    'pipeline' => [
+        'file'     => 'services/pipeline.js',
+        'type' => 'service', 
+        'version'  => '1.0.0',
+        'priority' => 31,
+        // 'requires' => ['runtime', 'router', 'state'],
+        // 'preload'  => true,
+    ],
+
+    'uid' => [
+        'file'     => 'services/uid.js',
+        'type' => 'service', 
+        'version'  => '1.0.0',
+        'priority' => 32,
+        // 'requires' => ['runtime', 'router', 'state'],
+        // 'preload'  => true,
+    ],
+
     /* ==================================================
        remaining services (lazy)
     ================================================== */
@@ -141,6 +167,12 @@ return [
     'sound' => ['file' => 'services/sound.service.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 45, 'requires' => []],
     'navigator' => ['file' => 'services/navigator.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 46, 'requires' => []],
     'route.registry' => ['file' => 'services/route.registry.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 47, 'requires' => []],
+
+    'pipeline.image.validate' => ['file' => 'services/pipeline.image.validate.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 47, 'requires' => []],
+    'pipeline.image.crop' => ['file' => 'services/pipeline.image.crop.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 47, 'requires' => []],
+    'pipeline.image.compress' => ['file' => 'services/pipeline.image.compress.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 47, 'requires' => []],
+
+    
 
     /* ==================================================
        core plugins (lazy)

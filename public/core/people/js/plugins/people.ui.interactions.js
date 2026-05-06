@@ -15,13 +15,17 @@ async function (scope) {
     function applyPeopleFilters() {
 
         const query  = $('[data-people-search]').val().toLowerCase();
-        const filter = $('.people-filters .active').data('filter');
-
+        const filter = $('.people-filters .active').data('type');
+        
         $('.person-card').each(function () {
-
             const name = $(this).find('.name').text().toLowerCase();
-            const type = $(this).data('type');
-            const fav  = $(this).data('favorite');
+            const type = $(this).attr('data-type');
+            const fav  = $(this).attr('data-favorite');
+
+            if (!type && filter !== 'all') {
+                $(this).show(); // or skip filtering
+                return;
+            }
 
             const matchSearch = name.includes(query);
 
@@ -32,6 +36,8 @@ async function (scope) {
                 (filter === 'favorites' && fav == 1);
 
             $(this).toggle(matchSearch && matchFilter);
+
+            
         });
     }
 
@@ -72,7 +78,8 @@ async function (scope) {
         const container = document.querySelector('.people-grid');
 
         if (container) {
-            container.innerHTML = html;
+            container.innerHTML = html;container.innerHTML = html;
+            applyPeopleFilters(); // required to re-apply filters on new content
         }
 
     }, 300);
@@ -156,6 +163,31 @@ async function (scope) {
                 openPersonEdit(personId);
             });
 
+            uiActions.register('act-favorite-toggle', (el) => {
+                const btn = $(el);
+                const id = btn.data('id');
+
+                callbora.post('api/modules/people/favourites/toggle', {
+                    entity_id: id,
+                    entity_type: 'person'
+                }).then(res => {
+
+                    if (!res.success) return;
+
+                    const card = btn.closest('.person-card');
+
+                    const isFav = res.data;
+
+                    card.attr('data-favorite', isFav ? 1 : 0);
+
+                    btn.toggleClass('is-fav', isFav);
+
+                    applyPeopleFilters();
+                });
+
+                return;
+            });
+
             /* ========================================
              * DELEGATED EVENTS (DOM-safe)
              * ====================================== */
@@ -211,6 +243,12 @@ async function (scope) {
                 $(this).addClass('active')
                     .siblings()
                     .removeClass('active');
+
+                 const container = document.querySelector('.people-grid');
+
+                if (container && originalHTML) {
+                    container.innerHTML = originalHTML;
+                }
 
                 applyPeopleFilters();
             });

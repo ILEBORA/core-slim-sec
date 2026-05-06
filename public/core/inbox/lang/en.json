@@ -2,7 +2,7 @@
     "ok": "Successful",
 
     "forbidden": "Forbidden",
-    "inbox.not_found": "Not found",
+    "not_found": "Not found",
     "method_not_allowed": "Method not allowed",
 
     "invalid_payload": "Invalid Payload",

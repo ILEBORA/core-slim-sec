@@ -1,35 +1,29 @@
 {% if hasPermission('activity','postReactions', true) %}
-<div class="act-button reaction-box">
+<div class="act-button">
     <button class="reaction-trigger" data-action="reaction-trigger">
-        {% if item.reactions.me == 'love' %}❤️{% else %}🤍{% endif %} React
+        {% if item.reactions.me == 'love' %}❤️{% else %}🤍{% endif %} {{ __t('activity.ui.action.react', null, 'React') }}
     </button>
-
-    <div class="reaction-picker">
-        {% for name, icon in item.reactionTypes %}
-            <span class="act-react" data-reaction="{{name}}">{{icon}}</span>
-        {% endfor %}
-    </div>
 </div>
 {% endif %}
 
 {% if hasPermission('activity','postComments', true) %}
 <div class="act-button">
-    <button class="act-comment" data-action="act-comment">💬 Comment</button>
+    <button class="act-comment" data-action="act-comment">💬 {{ __t('activity.label.comment',null,'Comment') }}</button>
 </div>
 {% endif %}
 
 {% if hasPermission('activity','sharePosts', true) %}
 <div class="act-button">
-    <button class="act-share">
-        🔁 Share
+    <button data-action="act-share">
+        🔁 {{ __t('activity.ui.action.share', null, 'Share') }}
     </button>
 </div>
 {% endif %}
 
 {% if hasPermission('activity','viewInsights', true) %}
 <div class="act-button">
-    <button class="act-insights">
-        📊 Insights
+    <button data-action="act-insights">
+        📊 {{ __t('activity.ui.action.insights', null, 'Insights') }}
     </button>
 </div>
 {% endif %}

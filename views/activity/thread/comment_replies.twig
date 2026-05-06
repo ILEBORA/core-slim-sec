@@ -1,6 +1,6 @@
 <div class="activity-thread" data-id="{{ item.activity_id }}" data-parent="{{ item.id }}">
     <div class="thread-context">
-        <button data-action="act-back-to-post" data-id="{{ item.activity_id }}" class="btn btn-info btn-small">Go Back</button>
+        <button data-action="act-back-to-post" data-id="{{ item.activity_id }}" class="btn btn-info btn-small">{{ __t('activity.label.go_back', null, 'Go Back') }}</button>
         {# Activity summary (hydrated via JS) #}
         <div id="threadActivity" class="activity-entry">
             {{ item.parent.html|raw }}
@@ -16,10 +16,10 @@
         <textarea
             id="threadCommentBody"
             class="input-placeholder"
-            placeholder="Post your reply"></textarea>
+            placeholder="{{ __t('activity.placeholder.write_reply', null, 'Post your reply') }}"></textarea>
 
         <button data-action="thread.send.comment" class="btn btn-success space_left">
-            Reply
+            {{ __t('activity.label.reply', null, 'Reply') }}
         </button>
     </div>
 

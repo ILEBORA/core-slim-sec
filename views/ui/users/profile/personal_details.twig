@@ -8,7 +8,7 @@
                 data-mode="form"
                 data-module="users"
                 data-group="profile"
-                data-id="{{id}}"
+                data-id="{{user_id}}"
                 data-tab="edit"
                 data-size="lg">
                 {{__t('ui.button_edit',null,'Edit')}}
@@ -19,11 +19,11 @@
     <div class="inf_cont shdw" align="center">
         <div class="image_box">  
             <div id="" class="roundedge" style="width:100%;position:relative;z-index:7; overflow:hidden;">
-                <a id="" title="Edit" class="avtrBox edit_link r-t" data-itm="{{ id }}" data-id="user" data-prev="{{avatar|raw}}" onclick="return mPGs.changeAvatar(this);">{{__t('ui.button_edit',null,'Edit')}} </a>
+                <a id="" title="Edit" class="avtrBox edit_link r-t" data-itm="{{ user_id }}" data-id="user" data-prev="{{avatar|raw}}" data-uploadid="{{ avatar_upload_id }}" onclick="return mPGs.changeAvatar(this);">{{__t('ui.button_edit',null,'Edit')}} </a>
                 <img 
                     data-bind="user.avatar" 
                     data-bind-attr="src"
-                    class="userAvatar{{ id }} lazy" style="width:100%;height:250px;" 
+                    class="userAvatar{{ user_id }} lazy" style="width:100%;height:250px;" 
                     src="assets/images/icons/noavatar.png" 
                     data-src="{{avatar|raw}}"
                     />

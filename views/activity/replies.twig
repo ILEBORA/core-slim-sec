@@ -1,7 +1,7 @@
 <div class="activity-thread" data-id="{{ itemId }}" data-parent="{{parent_id}}">
 
     {# Activity summary (hydrated via JS) #}
-    <button>Go Back</button>
+    <button>{{ __t('activity.label.go_back', null, 'Go Back') }}</button>
     <div id="threadActivity" class="activity-entry"><center><img src="assets/images/icons/ajax.gif"/></center></div>
 
     {# Comment composer #}
@@ -10,10 +10,10 @@
         <textarea
             id="threadCommentBody"
             class="input-placeholder"
-            placeholder="Post your reply"></textarea>
+            placeholder="{{ __t('activity.placeholder.write_reply', null, 'Post your reply') }}"></textarea>
 
         <button id="thread.send.comment" class="btn btn-success space_left">
-            Reply
+            {{ __t('activity.label.reply', null, 'Reply') }}
         </button>
     </div>
 

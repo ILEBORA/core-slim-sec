@@ -164,3 +164,75 @@
     background: #e5e7eb;
     color: #111;
 }
+
+.person-card {
+    position: relative;
+}
+
+.person-card .card-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.favorite-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    color: #aaa;
+}
+
+.favorite-toggle:hover {
+    background: rgba(0,0,0,0.05);
+    color: #666;
+}
+
+.favorite-toggle.is-fav {
+    color: #f5b301; /* gold */
+}
+
+.favorite-toggle .icon-star::before {
+    content: "☆";
+}
+
+.favorite-toggle.is-fav .icon-star::before {
+    content: "★";
+}
+
+.favorite-toggle:active {
+    transform: scale(0.9);
+}
+
+.favorite-toggle {
+    transition: transform 0.15s ease, color 0.2s ease;
+}
+
+.favorite-toggle.is-fav {
+    animation: fav-pop 0.2s ease;
+}
+
+@keyframes fav-pop {
+    0%   { transform: scale(0.8); }
+    100% { transform: scale(1); }
+}
+
+.person-card[data-favorite="1"] {
+    border-color: #f5b301;
+    box-shadow: 0 0 0 1px rgba(245, 179, 1, 0.3);
+}
+
+.people-filters button[data-filter="favorites"].active {
+    color: #f5b301;
+    border-color: #f5b301;
+}
+
+.favorite-toggle:focus {
+    outline: 2px solid #f5b301;
+}
+
+.person-card[data-favorite="1"] .favorite-toggle {
+    color: #f5b301;
+}

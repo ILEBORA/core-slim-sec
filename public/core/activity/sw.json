@@ -1,0 +1,48 @@
+{
+  "ok": "Imefanikiwa",
+  "created": "Shughuli imeundwa",
+  "updated": "Shughuli imesasishwa",
+  "deleted": "Shughuli imefutwa",
+
+  "not_found": "Shughuli haijapatikana",
+  "forbidden": "Huna ruhusa ya kufanya kitendo hiki",
+  "method_not_allowed": "Njia hairuhusiwi",
+
+  "invalid_data": "Data si sahihi",
+  "invalid_route": "Njia ya shughuli si sahihi",
+  "duplicate_route": "Njia ya shughuli tayari ipo",
+
+  "invalid_parent": "Mzazi wa shughuli si sahihi",
+  "circular_reference": "Mzunguko usioruhusiwa umegunduliwa",
+
+  "type_not_found": "Aina ya shughuli haijapatikana",
+  "invalid_type": "Aina ya shughuli si sahihi",
+
+  "inactive": "Shughuli haiko hai",
+
+  "reply_created": "Jibu limeongezwa",
+  "thread_locked": "Mjadala umefungwa",
+  "max_depth_reached": "Kiwango cha juu cha majibu kimefikiwa",
+
+  "ui.action.create": "Unda",
+  "ui.action.edit": "Hariri",
+  "ui.action.delete": "Futa",
+  "ui.action.reply": "Jibu",
+  "ui.action.share": "Shiriki",
+  "ui.action.view": "Tazama",
+  "ui.action.load_more": "Pakia zaidi",
+  "ui.action.back": "Rudi kwenye chapisho",
+
+  "label.comment": "Maoni",
+  "label.reply": "Jibu",
+  "label.post": "Chapisho",
+  "label.thread": "Mjadala",
+  "label.activity": "Shughuli",
+
+  "placeholder.write_comment": "Andika maoni...",
+  "placeholder.write_reply": "Andika jibu...",
+
+  "message.confirm_delete": "Una uhakika unataka kufuta shughuli hii?",
+  "message.loading": "Inapakia shughuli...",
+  "message.no_activity": "Hakuna shughuli iliyopatikana"
+}

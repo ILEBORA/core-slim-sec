@@ -10,10 +10,10 @@
         <textarea
             id="threadCommentBody"
             class="input-placeholder"
-            placeholder="Post your reply"></textarea>
+            placeholder="{{ __t('activity.placeholder.write_reply', null, 'Post your reply') }}"></textarea>
 
         <button data-action="thread.send.comment" class="btn btn-success space_left">
-            Reply
+            {{ __t('activity.label.reply', null, 'Reply') }}
         </button>
     </div>
 

@@ -1,27 +1,27 @@
 <div class="reaction-summary" data-activity="{{ activity_id }}">
 
-<div class="reaction-icons">
+<div class="reaction-icons" data-action="act-view-reactions">
 
-{% set total = 0 %}
-{% set shown = 0 %}
+    {% set total = 0 %}
+    {% set shown = 0 %}
 
-{% for type, icon in reactionTypes %}
+    {% for type, icon in reactionTypes %}
 
-    {% set count = reactions.counts[type] ?? 0 %}
-    {% set total = total + count %}
+        {% set count = reactions.counts[type] ?? 0 %}
+        {% set total = total + count %}
 
-    {% if count > 0 and shown < 3 %}
+        {% if count > 0 and shown < 3 %}
 
-        <span class="reaction-icon"
-              title="{{ type }} {{ count }}">
-            {{ icon }}
-        </span>
+            <span class="reaction-icon"
+                title="{{ type }} {{ count }}">
+                {{ icon }}
+            </span>
 
-        {% set shown = shown + 1 %}
+            {% set shown = shown + 1 %}
 
-    {% endif %}
+        {% endif %}
 
-{% endfor %}
+    {% endfor %}
 
 </div>
 

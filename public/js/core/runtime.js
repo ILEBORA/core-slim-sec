@@ -170,6 +170,24 @@
                 getPlugin,
                 hasService: (n)=>services.has(n),
                 hasPlugin: (n)=>plugins.has(n),
+                getPluginsByPrefix: async (prefix) => {
+
+                    prefix = prefix.toLowerCase();
+
+                    const results = [];
+
+                    for (const [name, instance] of plugins.entries()){
+                        if(name.startsWith(prefix)){
+                            results.push({
+                                name,
+                                instance,
+                                meta: pluginMeta.get(name) || {}
+                            });
+                        }
+                    }
+
+                    return results;
+                },
                 on,
                 off,
                 emit,
