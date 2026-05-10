@@ -1,0 +1,298 @@
+/*
+|--------------------------------------------------------------------------
+| Focus Section
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-section{
+    position: relative;
+
+    padding: 100px 0;
+
+    background: #fff;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Inner
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-inner{
+    width: 100%;
+    max-width: 1280px;
+
+    margin: 0 auto;
+
+    padding: 0 24px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Header
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-header{
+    max-width: 760px;
+
+    margin: 0 auto 64px auto;
+
+    text-align: center;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Eyebrow
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-eyebrow{
+    display: inline-flex;
+    align-items: center;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    color: var(--landing-text-secondary);
+
+    margin-bottom: 22px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Title
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-title{
+    margin: 0;
+
+    font-size: 52px;
+    line-height: 1.08;
+    font-weight: 800;
+
+    letter-spacing: -2px;
+
+    color: #111;
+
+    margin-bottom: 24px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Description
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-description{
+    font-size: 18px;
+    line-height: 1.8;
+
+    color: #666;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Grid
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-grid{
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 24px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Card
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-card{
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 280px;
+
+    padding: 34px 30px;
+
+    background: #f8f8f4;
+
+    border: 1px solid #ecece6;
+    border-radius: 28px;
+
+    text-decoration: none;
+
+    align-items: center;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+.landing-focus-card:hover{
+    transform: translateY(-6px);
+
+    border-color: #d8dfd4;
+
+    background: #fff;
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,.06);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Icon
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-card-icon{
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: var(--landing-text-secondary);
+
+    color: #fff;
+
+    font-size: 24px;
+
+    margin-bottom: 28px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Title
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-card-title{
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+
+    color: #111;
+
+    margin-bottom: 16px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Description
+|--------------------------------------------------------------------------
+*/
+
+.landing-focus-card-description{
+    font-size: 15px;
+    line-height: 1.8;
+
+    color: #666;
+
+    margin-top: auto;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Responsive
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 1100px){
+
+    .landing-focus-grid{
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px){
+
+    .landing-focus-section{
+        padding: 72px 0;
+    }
+
+    .landing-focus-header{
+        margin-bottom: 48px;
+    }
+
+    .landing-focus-title{
+        font-size: 40px;
+    }
+
+    .landing-focus-description{
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 640px){
+
+    .landing-focus-inner{
+        padding: 0 18px;
+    }
+
+    .landing-focus-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .landing-focus-card{
+        min-height: auto;
+
+        padding: 28px 24px;
+
+        border-radius: 22px;
+    }
+
+    .landing-focus-title{
+        font-size: 32px;
+
+        letter-spacing: -1px;
+    }
+
+    .landing-focus-card-title{
+        font-size: 22px;
+    }
+}
+
+.landing-focus-card{
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease,
+        border-color .35s ease;
+}
+
+.landing-focus-card:hover{
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.12);
+}

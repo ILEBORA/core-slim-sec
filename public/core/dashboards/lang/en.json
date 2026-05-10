@@ -1,0 +1,20 @@
+{
+    "ok": "Successful",
+    "created": "Dashboard created successfully",
+    "updated": "Dashboard updated successfully",
+    "deleted": "Dashboard deleted successfully",
+    "forbidden": "Forbidden",
+    "not_found": "Dashboard not found",
+    "method_not_allowed": "Method not allowed",
+    "invalid_data": "Invalid data",
+    "invalid_route": "Invalid route",
+    "duplicate_route": "Dashboard route already exists",
+    "invalid_parent": "Invalid parent dashboard",
+    "circular_reference": "Circular reference detected",
+    "type_not_found": "Dashboard type not found",
+    "invalid_type": "Invalid dashboard type",
+    "inactive": "Dashboard is inactive",
+    "dashboard_already_exists": "Dashboard already exists",
+    "dashboard_create_failed": "Dashboard create failed",
+    "dashboards.empty.widgets": "No widgets found for "
+}

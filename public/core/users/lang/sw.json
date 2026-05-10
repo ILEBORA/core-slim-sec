@@ -1,0 +1,13 @@
+{
+    "users.account.update": "Sasisha Akaunti",
+    "users.account.invalid_user": "Mtumiaji si sahihi",
+    "users.account.user_not_found": "Mtumiaji hakupatikana",
+    "users.account.settings_title": "Mipangilio ya Akaunti",
+    "users.account.settings_description": "Dhibiti taarifa zako za kuingia",
+    "users.account.sections.login_details": "Taarifa za Kuingia",
+    "users.account.username": "Jina la Mtumiaji",
+    "users.account.email": "Barua Pepe",
+    "users.account.placeholders.username": "Weka jina la mtumiaji",
+    "users.account.placeholders.email": "Weka barua pepe",
+    "users.account.email_notice": "Kubadilisha barua pepe yako kunaweza kuathiri kuingia na arifa."
+}

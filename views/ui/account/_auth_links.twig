@@ -1,21 +1,44 @@
 {% if page == 'login' %}
   <div class="auth-links">
-    <a href="account/forgot" data-target="account.forgot" class="jx">Forgot password?</a>
+    <a href="account/forgot" data-target="account.forgot" class="jx">
+      {{ __t('ui.auth.links.forgot_password', null, 'Forgot password?') }}
+    </a>
+
     <span>•</span>
-    <a href="account/register" data-target="account.register" class="jx">Create an account</a>
+
+    <a href="account/register" data-target="account.register" class="jx">
+      {{ __t('ui.auth.links.create_account', null, 'Create an account') }}
+    </a>
   </div>
+
 {% elseif page == 'register' %}
+
   <div class="auth-links">
-    <a href="account/login" data-target="account.login" class="jx">Already have an account? Login</a>
+    <a href="account/login" data-target="account.login" class="jx">
+      {{ __t('ui.auth.links.already_have_account', null, 'Already have an account? Login') }}
+    </a>
   </div>
+
 {% elseif page == 'forgot' %}
+
   <div class="auth-links">
-    <a href="account/login" data-target="account.login" class="jx">Back to login</a>
+    <a href="account/login" data-target="account.login" class="jx">
+      {{ __t('ui.auth.links.back_to_login', null, 'Back to login') }}
+    </a>
+
     <span>•</span>
-    <a href="account/register" data-target="account.register" class="jx">Create an account</a>
+
+    <a href="account/register" data-target="account.register" class="jx">
+      {{ __t('ui.auth.links.create_account', null, 'Create an account') }}
+    </a>
   </div>
+
 {% elseif page == 'reset' %}
+
   <div class="auth-links">
-    <a href="account/login" data-target="account.login" class="jx">Return to login</a>
+    <a href="account/login" data-target="account.login" class="jx">
+      {{ __t('ui.auth.links.return_to_login', null, 'Return to login') }}
+    </a>
   </div>
+
 {% endif %}

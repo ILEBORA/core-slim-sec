@@ -1,8 +1,23 @@
 <div class="social-login">
-  <p class="or">Or continue with</p>
+
+  <p class="or">
+    {{ __t('ui.auth.social.or_continue_with', null, 'Or continue with') }}
+  </p>
+
   <div class="social-buttons">
-    <a href="curiosity" class="social-btn github">Bora Curiosity</a>
-    <a href="auth/google" class="social-btn google">Google</a>
-    <a href="auth/github" class="social-btn github">GitHub</a>
+
+    <a href="curiosity" class="social-btn github">
+      {{ __t('ui.auth.social.bora_curiosity', null, 'Bora Curiosity') }}
+    </a>
+
+    <a href="auth/google" class="social-btn google">
+      {{ __t('ui.auth.social.google', null, 'Google') }}
+    </a>
+
+    <a href="auth/github" class="social-btn github">
+      {{ __t('ui.auth.social.github', null, 'GitHub') }}
+    </a>
+
   </div>
+
 </div>

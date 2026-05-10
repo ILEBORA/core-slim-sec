@@ -1,0 +1,31 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipelineJs;
+
+$pipeline = new AssetPipelineJs('app', __DIR__, 'core');
+
+/* ==================================================
+   SERVICES
+================================================== */
+
+
+/* ==================================================
+   PLUGINS
+================================================== */
+
+$pipeline->register('app.actions', [
+    'file'     => 'plugins/app.actions.js',
+    'type'     => 'plugin',
+    'priority' => 220,
+    'requires' => ['runtime'],
+]);
+
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

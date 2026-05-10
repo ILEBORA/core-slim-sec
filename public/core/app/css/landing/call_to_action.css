@@ -1,0 +1,292 @@
+/*
+|--------------------------------------------------------------------------
+| CTA Section
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-section{
+    position: relative;
+    overflow: hidden;
+
+    padding: 110px 24px;
+
+    background-color: var(--landing-dark);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border-radius: 36px;
+
+    margin: 80px auto;
+
+    max-width: 1280px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Overlay
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-overlay{
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(17,17,17,.72),
+            rgba(17,17,17,.48)
+        );
+
+    z-index: 1;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Inner
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-inner{
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 860px;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Eyebrow
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-eyebrow{
+    display: inline-flex;
+    align-items: center;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    color: var(--landing-text-secondary);
+
+    margin-bottom: 22px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Title
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-title{
+    margin: 0;
+
+    font-size: 56px;
+    line-height: 1.08;
+    font-weight: 800;
+
+    letter-spacing: -2px;
+
+    color: #fff;
+
+    margin-bottom: 26px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Description
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-description{
+    max-width: 720px;
+
+    margin: 0 auto 40px auto;
+
+    font-size: 18px;
+    line-height: 1.8;
+
+    color: rgba(255,255,255,.82);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Actions
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-actions{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Buttons
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 56px;
+
+    padding: 0 30px;
+
+    border-radius: 999px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.landing-cta-btn:hover{
+    transform: translateY(-2px);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Primary
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-btn.primary{
+    background: var(--landing-text-secondary);
+    color: #fff;
+
+    border: 2px solid var(--landing-text-secondary);
+}
+
+.landing-cta-btn.primary:hover{
+    background: #f3f3f3;
+    border-color: #f3f3f3;
+    color: #333;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Secondary
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-btn.secondary{
+    background: transparent;
+
+    color: #fff;
+
+    border: 2px solid rgba(255,255,255,.4);
+}
+
+.landing-cta-btn.secondary:hover{
+    border-color: #fff;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Link Style
+|--------------------------------------------------------------------------
+*/
+
+.landing-cta-btn.link{
+    min-height: auto;
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+
+    color: rgba(255,255,255,.82);
+
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.landing-cta-btn.link:hover{
+    color: #fff;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Responsive
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 992px){
+
+    .landing-cta-section{
+        padding: 90px 28px;
+        border-radius: 28px;
+    }
+
+    .landing-cta-title{
+        font-size: 44px;
+    }
+}
+
+@media (max-width: 640px){
+
+    .landing-cta-section{
+        padding: 70px 20px;
+        margin: 56px 16px;
+
+        border-radius: 24px;
+    }
+
+    .landing-cta-title{
+        font-size: 34px;
+        line-height: 1.12;
+
+        letter-spacing: -1px;
+    }
+
+    .landing-cta-description{
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .landing-cta-actions{
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .landing-cta-btn{
+        width: 100%;
+    }
+
+    .landing-cta-btn.link{
+        width: auto;
+        justify-content: center;
+    }
+}

@@ -128,7 +128,7 @@ __BORA_REGISTER_SERVICE__(
             });
         }
 
-        function renderPage(response){
+        async function renderPage(response){
 
             if (!response) return;
 
@@ -145,6 +145,14 @@ __BORA_REGISTER_SERVICE__(
                     if (el){
                         el.innerHTML = response.blocks.content;
                         executeScripts(el);
+
+                        const actions =
+                            await scope.getPlugin(
+                                'app.actions'
+                            );
+
+                        actions?.scan('.content-area');
+                        
                     }
                 }
 

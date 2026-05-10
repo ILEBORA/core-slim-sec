@@ -9,6 +9,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const routeRegistry = await scope.getService('route.registry');
 
     const dismissable = await __BORA_APP__.service('ui.dismissable');
+    const bNavigator = await scope.getService('navigator');
 
     const state = {
         mounted: false,
@@ -135,9 +136,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
         if (!id) return;
 
-        const navigator = await scope.getService('navigator');
-
-        navigator.go({
+        bNavigator.go({
             route: 'activity.comments',
             params: { id, tab: 'replies' },
             surface: 'popup'
@@ -152,9 +151,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
         if (!id) return;
 
-        const navigator = await scope.getService('navigator');
-
-        navigator.go({
+        bNavigator.go({
             route: 'activity.edit',
             params: { id, tab: 'edit' },
             surface: 'popup'
@@ -163,21 +160,30 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
     async function handleBacktoPost(el){
         const id = $(el).data('id');
-        const navigator = await scope.getService('navigator');
 
-        navigator.go({
+        bNavigator.go({
             route: 'activity.comments',
             params: { id, tab: 'replies' },
             surface: 'popup'
         });
     }
 
-    function handleShare(el){
+    async function handleShare(el){
+
         const id = $(el)
             .closest('.activity-item')
             .data('id');
-            // popup service
-            alert('TODO:: Share '+id+' to social...');
+
+        if (!id) return;
+
+        bNavigator.go({
+            route: 'activity.share.options',
+            params: {
+                id
+            },
+            surface: 'popup'
+        });
+
     }
 
     function handleInsights(el){
@@ -210,9 +216,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         
         if (!id) return;
 
-        const navigator = await scope.getService('navigator');
-
-        navigator.go({
+        bNavigator.go({
             route: 'activity.details',
             params: { id, tab: 'reactions' },
             surface: 'popup'
@@ -225,9 +229,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         
         if (!id) return;
 
-        const navigator = await scope.getService('navigator');
-
-        navigator.go({
+        bNavigator.go({
             route: 'activity.media',
             params: { id, tab: 'preview' },
             surface: 'popup'
@@ -240,9 +242,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         
         if (!id) return;
 
-        const navigator = await scope.getService('navigator');
-
-        navigator.go({
+        bNavigator.go({
             route: 'activity.details',
             params: { id, tab: 'details' },
             surface: 'popup'
@@ -396,9 +396,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         
         if (!id || !parent) return;
 
-        const navigator = await scope.getService('navigator');
-
-        navigator.go({
+        bNavigator.go({
             route: 'activity.replies',
             params: { id, parent, tab: 'replies' },
             surface: 'popup'
@@ -510,6 +508,69 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         }); 
 
     }
+
+    //Share
+    uiActions.register('activity.share.whatsapp', (el)=>{
+        const url = $(el).data('url');
+        window.open(`https:\/\/wa.me\/?text=${encodeURIComponent(url)}`,
+            '_blank'
+        );
+    });
+
+    uiActions.register('activity.share.telegram', (el)=>{
+        const url = $(el).data('url');
+         window.open(`https:\/\/t.me\/share\/url?url=${encodeURIComponent(url)}`,
+            '_blank'
+        );
+    });
+
+    uiActions.register('activity.share.copylink', (el)=>{
+        const url = $(el).data('url');
+
+        navigator.clipboard
+            .writeText(url)
+            .then(()=>{
+
+                alertBora.success('Link copied');
+
+            });
+    });
+
+     uiActions.register('activity.share.native', async (el)=>{
+        const url = $(el).data('url');
+
+        if(navigator.share){
+            await navigator.share({
+                title: 'Shared Post',
+                url
+            });
+
+            return;
+        }
+
+        copyShareLink(url);
+
+    });
+
+    function copyShareLink(url){
+        navigator.clipboard
+            .writeText(url)
+            .then(()=>{
+                alertBora.success('Link copied');
+            });
+    }
+
+    uiActions.register('activity.share.timeline', (el)=>{
+        const id = $(el).data('id');
+        
+        bNavigator.go({
+            route: 'activity.share.timeline',
+            params: { id },
+            surface: 'popup'
+        });
+    });
+
+
     
     return { mount, unmount };
 

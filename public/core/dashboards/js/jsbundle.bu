@@ -82,6 +82,13 @@ $pipeline->register('dashboards=', [
 //     ],
 // ]);
 
+$pipeline->register('dashboards.actions', [
+    'file'     => 'plugins/dashboards.actions.js',
+    'type'     => 'plugin',
+    'priority' => 220,
+    'requires' => ['runtime'],
+]);
+
 /* ==================================================
    COMPILE
 ================================================== */

@@ -1,0 +1,152 @@
+{
+    "landing.meta.category": "Kurasa za Mwanzo",
+
+    "landing.hero.meta.name": "Sehemu ya Mwanzo",
+
+    "landing.hero.meta.description": "Sehemu ya mwanzo ya ukurasa yenye kichwa, maelezo, picha na vitendo",
+
+    "landing.hero.fields.eyebrow.label": "Maandishi ya Juu",
+
+    "landing.hero.fields.title.label": "Kichwa Kikuu",
+
+    "landing.hero.fields.description.label": "Maelezo",
+
+    "landing.hero.fields.image.label": "Picha ya Mwanzo",
+
+    "landing.hero.fields.buttons.label": "Vitufe",
+
+    "landing.hero.fields.buttons.fields.label": "Maandishi ya Kitufe",
+
+    "landing.hero.fields.buttons.fields.url": "Kiungo cha Kitufe",
+
+    "landing.hero.fields.buttons.fields.variant": "Muonekano",
+
+    "landing.hero.variants.primary": "Kuu",
+
+    "landing.hero.variants.secondary": "Mbadala",
+
+    "landing.hero.eyebrow": "WATU. MALENGO. MAENDELEO.",
+
+    "landing.hero.title": "Kujenga jamii imara kwa Afrika bora.",
+
+    "landing.hero.description": "Wahenga Plus ni mpango unaoongozwa na jamii unaowezesha watu, kukuza vipaji na kuunda suluhisho endelevu kwa maendeleo ya kudumu.",
+
+    "landing.hero.buttons.primary": "Shiriki Nasi",
+
+    "landing.hero.buttons.secondary": "Jifunze Zaidi",
+
+    "landing.focus.meta.name": "Maeneo ya Kuzingatia",
+
+    "landing.focus.meta.description": "Sehemu ya kadi za huduma na maeneo ya kuzingatia",
+
+    "landing.focus.fields.eyebrow.label": "Maandishi ya Juu",
+
+    "landing.focus.fields.title.label": "Kichwa cha Sehemu",
+
+    "landing.focus.fields.description.label": "Maelezo ya Sehemu",
+
+    "landing.focus.fields.cards.label": "Kadi za Maeneo",
+
+    "landing.focus.fields.cards.fields.icon": "Darasa la Ikoni",
+
+    "landing.focus.fields.cards.fields.title": "Kichwa cha Kadi",
+
+    "landing.focus.fields.cards.fields.description": "Maelezo ya Kadi",
+
+    "landing.focus.fields.cards.fields.link": "Kiungo cha Kadi",
+
+    "landing.focus.eyebrow": "TUNACHOFANYA",
+
+    "landing.focus.title": "Tunazingatia yale yaliyo muhimu zaidi.",
+
+    "landing.focus.description": "Mipango yetu imeundwa kuimarisha jamii, kuwawezesha watu binafsi na kuleta athari endelevu kote Afrika.",
+
+    "landing.focus.cards.community.title": "Jamii",
+
+    "landing.focus.cards.community.description": "Kujenga jamii imara na zenye kusaidiana kupitia ushirikiano na ushiriki.",
+
+    "landing.focus.cards.africa_rooted.title": "Mizizi ya Kiafrika",
+
+    "landing.focus.cards.africa_rooted.description": "Suluhisho za ndani zinazotokana na maadili, utamaduni na uimara wa Kiafrika.",
+
+    "landing.focus.cards.growth.title": "Ukuaji",
+
+    "landing.focus.cards.growth.description": "Kuunda fursa za elimu, uongozi na maendeleo endelevu.",
+
+    "landing.focus.cards.addition.title": "Ongezeko",
+
+    "landing.focus.cards.addition.description": "Kuongeza thamani halisi kwa maisha kupitia mipango na ushirikiano wenye athari.",
+
+
+    "landing.cta.meta.name": "Mwito wa Kuchukua Hatua",
+
+    "landing.cta.meta.description": "Sehemu ya ukurasa wa kuwashirikisha watu na kuongeza ushiriki",
+
+    "landing.cta.fields.eyebrow.label": "Maandishi ya Juu",
+
+    "landing.cta.fields.title.label": "Kichwa cha Sehemu",
+
+    "landing.cta.fields.description.label": "Maelezo",
+
+    "landing.cta.fields.background_image.label": "Picha ya Mandharinyuma",
+
+    "landing.cta.fields.buttons.label": "Vitufe",
+
+    "landing.cta.fields.buttons.fields.label": "Maandishi ya Kitufe",
+
+    "landing.cta.fields.buttons.fields.url": "Kiungo cha Kitufe",
+
+    "landing.cta.fields.buttons.fields.variant": "Muonekano",
+
+    "landing.cta.variants.primary": "Kuu",
+
+    "landing.cta.variants.secondary": "Mbadala",
+
+    "landing.cta.variants.link": "Kiungo",
+
+    "landing.cta.eyebrow": "KUWA SEHEMU YA HARAKATI",
+
+    "landing.cta.title": "Jiunge nasi katika kujenga jamii imara kote Afrika.",
+
+    "landing.cta.description": "Kwa pamoja tunaweza kuwezesha jamii, kusaidia maendeleo na kuleta athari ya kudumu kwa vizazi vijavyo.",
+
+    "landing.cta.buttons.primary": "Shiriki Nasi Leo",
+
+    "landing.cta.buttons.secondary": "Jifunze Zaidi Kuhusu Kazi Yetu",
+
+    "landing.impact.meta.name": "Takwimu za Athari",
+
+    "landing.impact.meta.description": "Sehemu ya takwimu za athari yenye mpangilio wa picha",
+
+    "landing.impact.fields.eyebrow.label": "Maandishi ya Juu",
+
+    "landing.impact.fields.title.label": "Kichwa cha Sehemu",
+
+    "landing.impact.fields.description.label": "Maelezo",
+
+    "landing.impact.fields.stats.label": "Takwimu",
+
+    "landing.impact.fields.stats.fields.icon": "Darasa la Ikoni",
+
+    "landing.impact.fields.stats.fields.value": "Thamani",
+
+    "landing.impact.fields.stats.fields.label": "Lebo",
+
+    "landing.impact.fields.main_image.label": "Picha Kuu",
+
+    "landing.impact.fields.top_image.label": "Picha ya Juu Pembeni",
+
+    "landing.impact.fields.bottom_image.label": "Picha ya Chini Pembeni",
+
+    "landing.impact.eyebrow": "ATHARI YETU",
+
+    "landing.impact.title": "Hatua ndogo. Mabadiliko makubwa.",
+
+    "landing.impact.description": "Pamoja na washirika wetu na jamii, tunaleta mabadiliko yanayopimika na kujenga kesho bora.",
+
+    "landing.impact.stats.lives_impacted": "Maisha Yaliyoguswa",
+
+    "landing.impact.stats.programs_run": "Mipango Iliyoendeshwa",
+
+    "landing.impact.stats.communities": "Jamii"
+}

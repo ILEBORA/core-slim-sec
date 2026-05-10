@@ -1,0 +1,13 @@
+{
+    "users.account.update": "Update Account",
+    "users.account.invalid_user": "Invalid User",
+    "users.account.user_not_found": "User not found",
+    "users.account.settings_title": "Account Settings",
+    "users.account.settings_description": "Manage your login identity",
+    "users.account.sections.login_details": "Login Details",
+    "users.account.username": "Username",
+    "users.account.email": "Email Address",
+    "users.account.placeholders.username": "Enter username",
+    "users.account.placeholders.email": "Enter email",
+    "users.account.email_notice": "Changing your email may affect login and notifications."
+}

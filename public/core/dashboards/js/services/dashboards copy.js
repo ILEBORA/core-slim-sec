@@ -50,7 +50,7 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
 
             const icon = el.querySelector('i');
             if(icon){
-                icon.classList.toggle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ('fa-cogs');
+                icon.classList.toggle('fa-cogs');
                 icon.classList.toggle('fa-times');
             }
         });
@@ -156,15 +156,15 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
     |--------------------------------------------------------------------------
     */
 
-    // if(document.readyState === 'loading'){
-    //     document.addEventListener('DOMContentLoaded', init);
-    //     alert('here');
-    //     $(function(){
-    //         init();
-    //     });
-    // } else {
-    //     init();
-    // }
+    if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', init);
+        alert('here');
+        $(function(){
+            init();
+        });
+    } else {
+        init();
+    }
 
     // alert('here');
 

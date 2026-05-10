@@ -1,0 +1,154 @@
+{
+    "landing.meta.category": "Landing",
+
+    "landing.hero.meta.name": "Hero Section",
+
+    "landing.hero.meta.description": "Landing page hero section with heading, description, image and actions",
+
+    "landing.hero.fields.eyebrow.label": "Eyebrow Text",
+
+    "landing.hero.fields.title.label": "Hero Title",
+
+    "landing.hero.fields.description.label": "Description",
+
+    "landing.hero.fields.image.label": "Hero Image",
+
+    "landing.hero.fields.buttons.label": "Buttons",
+
+    "landing.hero.fields.buttons.fields.label": "Button Label",
+
+    "landing.hero.fields.buttons.fields.url": "Button URL",
+
+    "landing.hero.fields.buttons.fields.variant": "Variant",
+
+    "landing.hero.variants.primary": "Primary",
+
+    "landing.hero.variants.secondary": "Secondary",
+
+    "landing.hero.eyebrow": "PEOPLE. PURPOSE. PROGRESS.",
+
+    "landing.hero.title": "Building stronger communities for a better Africa.",
+
+    "landing.hero.description": "Wahenga Plus is a community-driven initiative empowering people, nurturing potential and creating sustainable solutions for lasting impact.",
+
+    "landing.hero.buttons.primary": "Get Involved",
+
+    "landing.hero.buttons.secondary": "Learn More",
+
+     "landing.focus.meta.name": "Focus Areas",
+
+    "landing.focus.meta.description": "Landing page feature cards section",
+
+    "landing.focus.fields.eyebrow.label": "Eyebrow Text",
+
+    "landing.focus.fields.title.label": "Section Title",
+
+    "landing.focus.fields.description.label": "Section Description",
+
+    "landing.focus.fields.cards.label": "Focus Cards",
+
+    "landing.focus.fields.cards.fields.icon": "Icon Class",
+
+    "landing.focus.fields.cards.fields.title": "Card Title",
+
+    "landing.focus.fields.cards.fields.description": "Card Description",
+
+    "landing.focus.fields.cards.fields.link": "Card Link",
+
+    "landing.focus.eyebrow": "WHAT WE DO",
+
+    "landing.focus.title": "We focus on what matters most.",
+
+    "landing.focus.description": "Our programs are designed to strengthen communities, empower individuals and create sustainable impact across Africa.",
+
+    "landing.focus.cards.community.title": "Community",
+
+    "landing.focus.cards.community.description": "Building strong and supportive communities through collaboration and engagement.",
+
+    "landing.focus.cards.africa_rooted.title": "Africa Rooted",
+
+    "landing.focus.cards.africa_rooted.description": "Locally grounded solutions inspired by African values, culture and resilience.",
+
+    "landing.focus.cards.growth.title": "Growth",
+
+    "landing.focus.cards.growth.description": "Creating opportunities for education, mentorship and sustainable development.",
+
+    "landing.focus.cards.addition.title": "Addition",
+
+    "landing.focus.cards.addition.description": "Adding measurable value to lives through impactful initiatives and partnerships.",
+
+
+    "landing.cta.meta.name": "Call To Action",
+
+    "landing.cta.meta.description": "Landing page engagement and conversion section",
+
+    "landing.cta.fields.eyebrow.label": "Eyebrow Text",
+
+    "landing.cta.fields.title.label": "Section Title",
+
+    "landing.cta.fields.description.label": "Description",
+
+    "landing.cta.fields.background_image.label": "Background Image",
+
+    "landing.cta.fields.buttons.label": "Buttons",
+
+    "landing.cta.fields.buttons.fields.label": "Button Label",
+
+    "landing.cta.fields.buttons.fields.url": "Button URL",
+
+    "landing.cta.fields.buttons.fields.variant": "Variant",
+
+    "landing.cta.variants.primary": "Primary",
+
+    "landing.cta.variants.secondary": "Secondary",
+
+    "landing.cta.variants.link": "Link",
+
+    "landing.cta.eyebrow": "BE PART OF THE MOVEMENT",
+
+    "landing.cta.title": "Join us in building stronger communities across Africa.",
+
+    "landing.cta.description": "Together we can empower communities, support growth and create lasting impact for future generations.",
+
+    "landing.cta.buttons.primary": "Get Involved Today",
+
+    "landing.cta.buttons.secondary": "Learn More About Our Work",
+
+
+
+    "landing.impact.meta.name": "Impact Stats",
+
+    "landing.impact.meta.description": "Landing page impact statistics section with media grid",
+
+    "landing.impact.fields.eyebrow.label": "Eyebrow Text",
+
+    "landing.impact.fields.title.label": "Section Title",
+
+    "landing.impact.fields.description.label": "Description",
+
+    "landing.impact.fields.stats.label": "Statistics",
+
+    "landing.impact.fields.stats.fields.icon": "Icon Class",
+
+    "landing.impact.fields.stats.fields.value": "Value",
+
+    "landing.impact.fields.stats.fields.label": "Label",
+
+    "landing.impact.fields.main_image.label": "Main Image",
+
+    "landing.impact.fields.top_image.label": "Top Side Image",
+
+    "landing.impact.fields.bottom_image.label": "Bottom Side Image",
+
+    "landing.impact.eyebrow": "OUR IMPACT",
+
+    "landing.impact.title": "Small actions. Big change.",
+
+    "landing.impact.description": "Together with our partners and communities, we’re creating measurable change and building a better tomorrow.",
+
+    "landing.impact.stats.lives_impacted": "Lives Impacted",
+
+    "landing.impact.stats.programs_run": "Programs Run",
+
+    "landing.impact.stats.communities": "Communities"
+}

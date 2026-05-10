@@ -9,12 +9,11 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 $pipeline
     ->add('theme.css')
     ->add('style.css')
-    ->add('post.css')
-    ->add('reactions.css')
-    ->add('media.css')
-    ->add('activity.css')
-    ->add('stories.css')
-    ->add('comments.css')
-    ->add('share.css')
+    ->add('landing/hero.css')
+    ->add('landing/call_to_action.css')
+    ->add('landing/impact_stats.css')
+    ->add('landing/focus_areas.css')
+    
+   
     
     ->send();

@@ -1,0 +1,20 @@
+{
+    "ok": "Imefanikiwa",
+    "created": "Dashibodi imeundwa kwa mafanikio",
+    "updated": "Dashibodi imesasishwa kwa mafanikio",
+    "deleted": "Dashibodi imefutwa kwa mafanikio",
+    "forbidden": "Hairuhusiwi",
+    "not_found": "Dashibodi haijapatikana",
+    "method_not_allowed": "Njia hairuhusiwi",
+    "invalid_data": "Data si sahihi",
+    "invalid_route": "Njia si sahihi",
+    "duplicate_route": "Njia ya dashibodi tayari ipo",
+    "invalid_parent": "Dashibodi mzazi si sahihi",
+    "circular_reference": "Mzunguko wa marejeleo umegunduliwa",
+    "type_not_found": "Aina ya dashibodi haijapatikana",
+    "invalid_type": "Aina ya dashibodi si sahihi",
+    "inactive": "Dashibodi haijatumika",
+    "dashboard_already_exists": "Dashibodi tayari ipo",
+    "dashboard_create_failed": "Uundaji wa dashibodi umeshindwa",
+    "dashboards.empty.widgets": "Hakuna vidonge vilivyopatikana kwa "
+}
