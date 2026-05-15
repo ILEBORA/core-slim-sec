@@ -1,0 +1,31 @@
+{# Events/Views/types/index.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="event-types-page container">
+
+    <div class="page-header">
+
+        <h1>
+            Event Types
+        </h1>
+
+    </div>
+
+    <div class="types-grid">
+
+        {% for type in types %}
+
+            {% include "events/types/card.twig" with {
+                type: type
+            } %}
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

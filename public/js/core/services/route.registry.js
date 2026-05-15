@@ -16,8 +16,8 @@ __BORA_REGISTER_SERVICE__('route.registry', function(){
     }
 
     function resolve(name, params = {}){
-        console.log('[resolve] name:', name);
-        console.log('[resolve] available:', Object.keys(baseRoutes));
+        // console.log('[resolve] name:', name);
+        // console.log('[resolve] available:', Object.keys(baseRoutes));
         // 1. JS override
         if (dynamicRoutes[name]){
             return dynamicRoutes[name](params);

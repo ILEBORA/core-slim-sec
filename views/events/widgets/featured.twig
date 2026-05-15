@@ -1,0 +1,42 @@
+{# Events/Views/widgets/featured.twig #}
+
+<div class="events-widget featured-events-widget">
+
+    <div class="widget-header">
+
+        <h3>
+            Featured Events
+        </h3>
+
+    </div>
+
+    <div class="widget-content">
+
+        {% if events %}
+
+            <div class="featured-slider">
+
+                {% for event in events %}
+
+                    {% include "events/partials/event-card.twig" with {
+                        event: event,
+                        compact: true
+                    } %}
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="text-muted">
+
+                No featured events
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>

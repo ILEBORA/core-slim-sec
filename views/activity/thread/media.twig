@@ -1,10 +1,13 @@
 <div class="media_preview">
 {% if media.type == 'image' %}
-    <img class="lazy" src2="assets/images/icons/placeholder.png" style="width:100%;height:100%;" src="{{ media.preview_path }}/t" data-src="{{ media.preview_path }}">
+    <img class="lazy" src2="assets/images/icons/placeholder.png" 
+        style="width:100%;height:100%;" 
+        src="viewer/media/{{ media.media_id }}/t"
+        data-src="viewer/media/{{ media.media_id }}">
     <script>$(function(){lazyLoad();})</script>
 {% elseif media.type == 'video' %}
     <video controls preload="metadata">
-        <source src="{{ media.preview_path }}" type="video/mp4">
+        <source src="viewer/media/{{ media.media_id }}" type="video/mp4">
     </video>
 {% endif %}
 </div>

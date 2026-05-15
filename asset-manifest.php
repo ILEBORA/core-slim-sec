@@ -1,7 +1,7 @@
 <?php
 return array (
   'asset_api' => 4,
-  'generated_at' => '2026-05-10T19:31:11+03:00',
+  'generated_at' => '2026-05-15T19:26:16+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (
@@ -48,6 +48,12 @@ return array (
       'img' => false,
     ),
     'Dashboards' => 
+    array (
+      'js' => true,
+      'css' => true,
+      'img' => false,
+    ),
+    'Events' => 
     array (
       'js' => true,
       'css' => true,

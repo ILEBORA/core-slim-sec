@@ -1,0 +1,54 @@
+{# Events/Views/partials/event-meta.twig #}
+
+<div class="event-meta">
+
+    {% if event.starts_at %}
+
+        <div class="event-meta-item">
+
+            <i class="fas fa-calendar"></i>
+
+            <span>
+
+                {{ event.starts_at|date('M d, Y H:i') }}
+
+            </span>
+
+        </div>
+
+    {% endif %}
+
+    {% if event.location %}
+
+        <div class="event-meta-item">
+
+            <i class="fas fa-map-marker-alt"></i>
+
+            <span>
+
+                {{ event.location }}
+
+            </span>
+
+        </div>
+
+    {% endif %}
+
+    {% if event.attendees_count is defined %}
+
+        <div class="event-meta-item">
+
+            <i class="fas fa-users"></i>
+
+            <span>
+
+                {{ event.attendees_count }}
+                attending
+
+            </span>
+
+        </div>
+
+    {% endif %}
+
+</div>

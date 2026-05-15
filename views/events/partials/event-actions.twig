@@ -1,0 +1,26 @@
+{# Events/Views/partials/event-actions.twig #}
+
+<div class="event-actions">
+
+    <button
+        data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}"
+        class="btn btn-sm btn-primary"
+    >
+        View Event
+    </button>
+
+    {% if isLoggedIn() %}
+
+        <button
+            class="btn btn-sm btn-outline-primary"
+            data-action="event.toggle.favourite"
+            data-event-id="{{ event.id }}"
+        >
+
+            <i class="fas fa-heart"></i>
+
+        </button>
+
+    {% endif %}
+
+</div>

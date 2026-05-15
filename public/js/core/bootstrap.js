@@ -83,7 +83,7 @@
         //     navigate: navigation?.go,
         //     reload:   navigation?.reload,
         //     back:     navigation?.back,
-        //     logout:   () => app.plugin('AppCore')?.logout()
+        //     logout:   () => app.plugin('app.core')?.logout()
         // });
 
         global.Bora = Object.freeze({
@@ -104,7 +104,7 @@
             },
 
             async logout(){
-                const core = await __BORA_APP__?.plugin('AppCore');
+                const core = await __BORA_APP__?.plugin('app.core');
                 return core?.logout?.();
             }
 
@@ -340,7 +340,7 @@
             .then(function() {
                 // Allow change, but override flow
                 setTimeout(async () => {
-                    const appcore = await app.plugin('AppCore');
+                    const appcore = await app.plugin('app.core');
                     appcore.logout();
                 }, 0);
             }, function() {
@@ -349,11 +349,11 @@
         });
 
 
-        // const overlayLoader = await app.plugin('Overlay');
+        // const overlayLoader = await app.plugin('overlay');
         exposeLegacy(
             'overlayLoader',
             null,
-            () => __BORA_APP__?.plugin('Overlay')
+            () => __BORA_APP__?.plugin('overlay')
         );
         // if(overlayLoader){
             // overlayLoader.show('Saving data...');
@@ -420,6 +420,10 @@
             }
         };
 
+        // Debug force app.actions exposure
+        // await __BORA_LOADER__.ensure(
+        //     'app.actions'
+        // );
         /*
         
         */

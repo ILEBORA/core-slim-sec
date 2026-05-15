@@ -1,0 +1,17 @@
+{# events/event/tabs/activity.twig #}
+
+<div class="activity-feed">
+    <h3>Timeline</h3>
+    {% if activity is empty %}
+        <div class="empty-state">
+            No activity yet
+        </div>
+    {% else %}
+
+        {% for item in activity %}
+            {{ item.html|raw }}
+        {% endfor %}
+
+    {% endif %}
+
+</div>

@@ -18,7 +18,7 @@ __BORA_REGISTER_SERVICE__(
             localStorage.setItem('app.face', face);
 
             // Broadcast change
-            scope.emit?.('context.changed', face);
+            scope.emit?.('face.changed', face);
         }
 
         return { get, set };

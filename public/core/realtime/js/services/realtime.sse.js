@@ -1,7 +1,7 @@
 __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
 
     const hooks = await scope.getService('hooks');
-    const appCore = await scope.getPlugin('AppCore');
+    const appCore = await scope.getPlugin('app.core');
 
     // Create SSE connection
     const instance = createSSE();

@@ -1,0 +1,445 @@
+<?php
+
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
+EnvLoader::load(
+    __DIR__ . '/../../../../../../../',
+    'wahenga'
+);
+
+use BoraSlim\Core\Assets\AssetPipelineJs;
+
+$pipeline = new AssetPipelineJs(
+    'events',
+    __DIR__,
+    'core'
+);
+
+/* ==================================================
+   SERVICES
+================================================== */
+
+/*
+|--------------------------------------------------------------------------
+| Utils
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.utils', [
+
+    'file'     => 'services/events.utils.js',
+
+    'type'     => 'service',
+
+    'priority' => 100,
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Feed
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.feed', [
+
+    'file'     => 'services/events.feed.js',
+
+    'type'     => 'service',
+
+    'priority' => 110,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Calendar
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.calendar', [
+
+    'file'     => 'services/events.calendar.js',
+
+    'type'     => 'service',
+
+    'priority' => 120,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| RSVP
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.rsvp', [
+
+    'file'     => 'services/events.rsvp.js',
+
+    'type'     => 'service',
+
+    'priority' => 130,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Realtime
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.realtime', [
+
+    'file'     => 'services/events.realtime.js',
+
+    'type'     => 'service',
+
+    'priority' => 140,
+
+    'requires' => [
+
+        'runtime',
+
+        'realtime.sse'
+    ],
+]);
+
+/* ==================================================
+   PLUGINS
+================================================== */
+
+/*
+|--------------------------------------------------------------------------
+| Composer
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.composer', [
+
+    'file'     => 'plugins/events.composer.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 200,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.utils'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Feed UI
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.feed.ui', [
+
+    'file'     => 'plugins/events.feed.ui.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 210,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.feed'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Actions
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.actions', [
+
+    'file'     => 'plugins/events.actions.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 220,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.feed.ui'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Breadcrumbs
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.breadcrumbs', [
+
+    'file'     => 'plugins/events.breadcrumbs.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 221,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Calendar UI
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.calendar.ui', [
+
+    'file'     => 'plugins/events.calendar.ui.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 230,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.calendar'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Attendees
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.attendees', [
+
+    'file'     => 'plugins/events.attendees.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 240,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.rsvp'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Checkin
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.checkin', [
+
+    'file'     => 'plugins/events.checkin.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 241,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.rsvp'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Featured Slider
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.featured', [
+
+    'file'     => 'plugins/events.featured.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 250,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Realtime Stream
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.stream', [
+
+    'file'     => 'plugins/events.stream.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 260,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.realtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Event Maps
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.maps', [
+
+    'file'     => 'plugins/events.maps.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 270,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Event Sharing
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.share', [
+
+    'file'     => 'plugins/events.share.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 280,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Event Tabs
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.tabs', [
+
+    'file'     => 'plugins/events.tabs.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 285,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Notifications
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.notifications', [
+
+    'file'     => 'plugins/events.notifications.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 290,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.realtime'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.dashboard', [
+
+    'file'     => 'plugins/events.dashboard.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 300,
+
+    'requires' => [
+
+        'runtime',
+
+        'events.feed.ui'
+    ],
+]);
+
+/*
+|--------------------------------------------------------------------------
+| Analytics
+|--------------------------------------------------------------------------
+*/
+
+$pipeline->register('events.analytics', [
+
+    'file'     => 'plugins/events.analytics.js',
+
+    'type'     => 'plugin',
+
+    'priority' => 310,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

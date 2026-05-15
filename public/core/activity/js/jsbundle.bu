@@ -46,7 +46,7 @@ $pipeline->register('activity.actions', [
     'file'     => 'plugins/activity.actions.js',
     'type'     => 'plugin',
     'priority' => 220,
-    'requires' => ['runtime', 'activity.feed'],
+    'requires' => ['runtime', 'activity.feed.ui'],
 ]);
 
 $pipeline->register('activity.thread', [

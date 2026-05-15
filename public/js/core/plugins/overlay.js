@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('Overlay', async function(scope){
+__BORA_REGISTER_PLUGIN__('overlay', async function(scope){
 
     const hooks = await scope.getService('hooks');
 

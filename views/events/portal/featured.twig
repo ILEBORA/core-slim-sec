@@ -1,0 +1,49 @@
+{# Events/Views/portal/featured.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="events-featured-page container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Featured Events</h1>
+
+            <p class="text-muted">
+                Highlighted and trending events
+            </p>
+
+        </div>
+
+    </div>
+
+    {% if events %}
+
+        <div class="events-grid featured-grid">
+
+            {% for event in events %}
+
+                {% include "events/partials/event-card.twig" with {
+                    event: event,
+                    featured: true
+                } %}
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        {% include "events/partials/empty-state.twig" with {
+            title: 'No featured events',
+            message: 'Featured events will appear here.'
+        } %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{
+    "ok": "Imefanikiwa",
+
+    "created": "Imeundwa kwa mafanikio",
+    "updated": "Imesasishwa kwa mafanikio",
+    "deleted": "Imefutwa kwa mafanikio",
+
+    "forbidden": "Hairuhusiwi",
+    "not_found": "Haijapatikana",
+    "method_not_allowed": "Mbinu hairuhusiwi",
+
+    "invalid_payload": "Payload si sahihi",
+    "invalid_data": "Data si sahihi",
+    "invalid_route": "Njia si sahihi",
+
+    "event_already_exists": "Tukio tayari lipo",
+    "event_create_failed": "Imeshindikana kuunda tukio",
+    "event_update_failed": "Imeshindikana kusasisha tukio",
+    "event_delete_failed": "Imeshindikana kufuta tukio",
+
+    "event_not_found": "Tukio halijapatikana",
+    "event_cancelled": "Tukio limeghairiwa",
+    "event_completed": "Tukio limekamilika",
+    "event_published": "Tukio limechapishwa",
+
+    "event_type_not_found": "Aina ya tukio haijapatikana",
+    "invalid_event_type": "Aina ya tukio si sahihi",
+
+    "attendance_failed": "Mahudhurio yameshindwa",
+    "attendee_added": "Mshiriki ameongezwa",
+    "attendee_removed": "Mshiriki ameondolewa",
+    "attendee_checked_in": "Mshiriki ameingizwa",
+
+    "rsvp_closed": "RSVP imefungwa",
+    "event_full": "Tukio limejaa",
+
+    "already_attending": "Tayari unahudhuria",
+    "not_attending": "Huhudhurii",
+
+    "favourite_added": "Imeongezwa kwa vipendwa",
+    "favourite_removed": "Imeondolewa kwa vipendwa",
+
+    "unauthorized_event_access": "Ufikiaji wa tukio haujaruhusiwa",
+
+    "draft": "Rasimu",
+    "published": "Imechapishwa",
+    "cancelled": "Imeghairiwa",
+    "completed": "Imekamilika",
+
+    "public": "Umma",
+    "private": "Binafsi",
+    "unlisted": "Haijaorodheshwa",
+
+    "going": "Ninahudhuria",
+    "interested": "Ninavutiwa",
+    "declined": "Nimekataa",
+    "checked_in": "Imeingizwa"
+}

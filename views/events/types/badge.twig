@@ -1,0 +1,18 @@
+{# Events/Views/types/badge.twig #}
+
+<span
+    class="event-type-badge"
+    {% if type.color %}
+        style="background: {{ type.color }}"
+    {% endif %}
+>
+
+    {% if type.icon %}
+
+        <i class="{{ type.icon }}"></i>
+
+    {% endif %}
+
+    {{ type.name }}
+
+</span>

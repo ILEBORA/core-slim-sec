@@ -1,0 +1,37 @@
+{# Events/Views/partials/event-gallery.twig #}
+
+<div class="event-gallery">
+
+    {% if media %}
+
+        <div class="gallery-grid">
+
+            {% for item in media %}
+
+                <button
+                    data-nav="{{ item.url }}"
+                    class="gallery-item"
+                >
+
+                    <img
+                        src="{{ item.preview_url }}"
+                        alt="{{ event.title }}"
+                    >
+
+                </button>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="text-muted">
+
+            No gallery items available
+
+        </div>
+
+    {% endif %}
+
+</div>

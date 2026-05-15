@@ -1,5 +1,5 @@
 __BORA_REGISTER_PLUGIN__(
-    'Layouts',
+    'layouts',
     async function(scope){
 
         // const $ = await scope.getService('jquery');
@@ -20,7 +20,7 @@ __BORA_REGISTER_PLUGIN__(
             const $el = $(selector);
 
             if(!$el.length){
-                console.warn('[Layouts] Menu not found:', selector);
+                console.warn('[layouts] Menu not found:', selector);
                 return;
             }
 
@@ -96,7 +96,7 @@ __BORA_REGISTER_PLUGIN__(
             // addMenu('.overlay');
 
             // bind();
-            console.log('[Layouts] mounted');
+            console.log('[layouts] mounted');
         }
 
         function unmount(){
@@ -105,7 +105,7 @@ __BORA_REGISTER_PLUGIN__(
 
             unbind();
             menus.clear();
-            console.log('[Layouts] unmounted');
+            console.log('[layouts] unmounted');
         }   
             
         return {

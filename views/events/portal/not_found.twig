@@ -1,0 +1,61 @@
+{# Events/Views/portal/not_found.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="not-found-page card">
+
+        <div class="card-body text-center">
+
+            <div class="not-found-icon">
+
+                <i class="fas fa-calendar-times"></i>
+
+            </div>
+
+            <h2>
+                Event Not Found
+            </h2>
+
+            <p class="text-muted">
+
+                We could not find an event matching:
+
+                <strong>{{ query }}</strong>
+
+            </p>
+
+            {% if suggestions %}
+
+                <div class="suggestions">
+
+                    <h4>
+                        Suggested Events
+                    </h4>
+
+                    <div class="events-grid">
+
+                        {% for event in suggestions %}
+
+                            {% include "events/partials/event-card.twig" with {
+                                event: event
+                            } %}
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

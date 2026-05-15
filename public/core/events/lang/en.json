@@ -1,0 +1,58 @@
+{
+    "ok": "Successful",
+
+    "created": "Created successfully",
+    "updated": "Updated successfully",
+    "deleted": "Deleted successfully",
+
+    "forbidden": "Forbidden",
+    "not_found": "Not found",
+    "method_not_allowed": "Method not allowed",
+
+    "invalid_payload": "Invalid payload",
+    "invalid_data": "Invalid data",
+    "invalid_route": "Invalid route",
+
+    "event_already_exists": "Event already exists",
+    "event_create_failed": "Event creation failed",
+    "event_update_failed": "Event update failed",
+    "event_delete_failed": "Event delete failed",
+
+    "event_not_found": "Event not found",
+    "event_cancelled": "Event cancelled",
+    "event_completed": "Event completed",
+    "event_published": "Event published",
+
+    "event_type_not_found": "Event type not found",
+    "invalid_event_type": "Invalid event type",
+
+    "attendance_failed": "Attendance failed",
+    "attendee_added": "Attendee added",
+    "attendee_removed": "Attendee removed",
+    "attendee_checked_in": "Attendee checked in",
+
+    "rsvp_closed": "RSVP is closed",
+    "event_full": "Event is full",
+
+    "already_attending": "Already attending",
+    "not_attending": "Not attending",
+
+    "favourite_added": "Added to favourites",
+    "favourite_removed": "Removed from favourites",
+
+    "unauthorized_event_access": "Unauthorized event access",
+
+    "draft": "Draft",
+    "published": "Published",
+    "cancelled": "Cancelled",
+    "completed": "Completed",
+
+    "public": "Public",
+    "private": "Private",
+    "unlisted": "Unlisted",
+
+    "going": "Going",
+    "interested": "Interested",
+    "declined": "Declined",
+    "checked_in": "Checked in"
+}

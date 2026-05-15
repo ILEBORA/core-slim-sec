@@ -1,0 +1,58 @@
+{# Events/Views/partials/event-row.twig #}
+
+<div class="event-row card">
+
+    <div class="event-row-layout">
+
+        {% if event.cover_image %}
+
+            <div class="event-row-image">
+
+                <img
+                    src="{{ event.cover_image }}"
+                    alt="{{ event.title }}"
+                >
+
+            </div>
+
+        {% endif %}
+
+        <div class="event-row-content">
+
+            <div class="event-row-top">
+
+                {% include "events/partials/event-status-badge.twig" with {
+                    status: event.status
+                } %}
+
+            </div>
+
+            <h3>
+
+                <button data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}">
+
+                    {{ event.title }}
+
+                </button>
+
+            </h3>
+
+            {% include "events/partials/event-meta.twig" with {
+                event: event
+            } %}
+
+            {% if event.short_description %}
+
+                <p class="text-muted">
+
+                    {{ event.short_description }}
+
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>

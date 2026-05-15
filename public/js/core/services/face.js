@@ -1,9 +1,16 @@
-__BORA_REGISTER_SERVICE__('face', function(scope){
+__BORA_REGISTER_SERVICE__('face', await function(scope){
 
-    function resolve(path){
+    function resolveFace(path){
 
-        if(path.startsWith('portal/')) return 'client';
-        if(path.startsWith('bo/'))     return 'admin';
+        path = normalizeUrl(path);
+
+        if(path === 'portal' || path.startsWith('portal/')){
+            return 'client';
+        }
+
+        if(path === 'bo' || path.startsWith('bo/')){
+            return 'admin';
+        }
 
         return 'guest';
     }

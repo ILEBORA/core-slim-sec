@@ -1,0 +1,37 @@
+{# Events/Views/partials/photos.twig #}
+
+<div class="event-photos card">
+
+    <div class="card-header">
+
+        Photos
+
+    </div>
+
+    <div class="card-body">
+
+        {% if photos %}
+
+            <div class="photos-grid">
+
+                {% for photo in photos %}
+
+                    {% include "events/partials/photos-card.twig" with {
+                        photo: photo
+                    } %}
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="text-muted">
+                No photos yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>

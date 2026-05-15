@@ -283,7 +283,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             success(resp){
                 if(resp.success){
                     //Add to timeline
-                    feedUI.addToTimeline(resp.data.html);
+                    feedUI?.addToTimeline(resp.data.html);
 
                     alertBora.notify('Post Shared', 'success', 4);
                     if(resp.redirect){

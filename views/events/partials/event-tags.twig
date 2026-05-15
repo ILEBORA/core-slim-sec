@@ -1,0 +1,22 @@
+{# Events/Views/partials/event-tags.twig #}
+
+{% if event.tags %}
+
+<div class="event-tags">
+
+    {% for tag in event.tags %}
+
+        <button
+            data-nav="portal/events/search?q={{tag}}"
+            class="event-tag"
+        >
+
+            #{{ tag }}
+
+        </button>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}

@@ -32,8 +32,8 @@ __BORA_REGISTER_SERVICE__('sanity', async function(scope){
         checkService('hooks');
         checkService('meta');
 
-        checkPlugin('ContentManager');
-        checkPlugin('NavigationBinder');
+        checkPlugin('content.manager');
+        checkPlugin('navigation.binder');
 
         checkLegacy();
 

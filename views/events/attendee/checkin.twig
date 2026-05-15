@@ -1,0 +1,109 @@
+{# Events/Views/attendee/checkin.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="event-checkin-page container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Event Check-In
+            </h1>
+
+            <p class="text-muted">
+
+                Manage attendee check-ins for
+                <strong>{{ event.title }}</strong>
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="checkin-layout">
+
+        <div class="checkin-main">
+
+            {% include "events/partials/event-checkin-panel.twig" with {
+                event: event
+            } %}
+
+            <div class="card mt-3">
+
+                <div class="card-header">
+
+                    Recent Check-Ins
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if attendees %}
+
+                        <div class="checkin-list">
+
+                            {% for attendee in attendees %}
+
+                                <div class="checkin-item">
+
+                                    <div class="checkin-user">
+
+                                        {{ attendee.username|default(attendee.guest_name|default('Guest')) }}
+
+                                    </div>
+
+                                    <div class="checkin-time text-muted">
+
+                                        {% if attendee.checked_in_at %}
+
+                                            {{ attendee.checked_in_at|date('H:i') }}
+
+                                        {% else %}
+
+                                            Pending
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-muted">
+
+                            No attendees checked in yet
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="checkin-sidebar">
+
+            {% include "events/attendee/stats.twig" with {
+                stats: stats,
+                event: event
+            } %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

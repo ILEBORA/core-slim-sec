@@ -26,6 +26,19 @@
 
     const scriptCache = new Map(); // src -> Promise
 
+    function waitForRegistration(name){
+
+        const app = global.__BORA_APP__;
+
+        if(app._getServices().has(name) || app._getPlugins().has(name)){
+            return Promise.resolve();
+        }
+
+        return new Promise(resolve => {
+            app._registrationWaiters.set(name, resolve);
+        });
+    }
+
     /* ==================================================
        UTIL: LOAD SCRIPT ONCE
     ================================================== */
@@ -80,9 +93,16 @@
        CORE: ENSURE MODULE
     ================================================== */
 
-    async function ensure(name, stack = []){
+    async function ensure(name, options = {}){
+
+        const {
+            stack = [],
+            activate = true
+        } = options;
 
         name = name.toLowerCase();
+
+        console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
 
         if(stack.includes(name)){
             const cycle = [...stack, name].join(' → ');
@@ -145,7 +165,11 @@
                 if(entry.requires && entry.requires.length){
 
                     for(const dep of entry.requires){
-                        await ensure(dep, [...stack, name]);
+                        // await ensure(dep, [...stack, name]);
+                        await ensure(dep, {
+                            stack:[...stack, name],
+                            activate
+                        });
                     }
 
                 }
@@ -165,7 +189,10 @@
                 --------------------------- */
 
                 if(typeof app.integratePending === 'function'){
-                    app.integratePending();
+                    // await app.integratePending();
+                    await app.integratePending({
+                        activate
+                    });
                 }
 
                 // ✅ NEW: handle libs
@@ -179,11 +206,13 @@
                    4. Validate Registration
                 --------------------------- */
 
-                if(!services.has(name) && !plugins.has(name)){
-                    console.warn(
-                        `[Loader] Module "${name}" loaded but not registered.`
-                    );
-                }
+                // if(!services.has(name) && !plugins.has(name)){
+                //     console.warn(
+                //         `[Loader] Module "${name}" loaded but not registered.`
+                //     );
+                // }
+
+                
 
                 loaded.add(name);
 

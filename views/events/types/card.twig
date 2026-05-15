@@ -1,0 +1,44 @@
+{# Events/Views/types/card.twig #}
+
+<div class="event-type-card card">
+
+    <div class="card-body">
+
+        <div
+            class="event-type-icon"
+            {% if type.color %}
+                style="background: {{ type.color }}"
+            {% endif %}
+        >
+
+            {% if type.icon %}
+
+                <i class="{{ type.icon }}"></i>
+
+            {% else %}
+
+                <i class="fas fa-calendar"></i>
+
+            {% endif %}
+
+        </div>
+
+        <h3>
+
+            {{ type.name }}
+
+        </h3>
+
+        {% if type.description %}
+
+            <p class="text-muted">
+
+                {{ type.description }}
+
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>

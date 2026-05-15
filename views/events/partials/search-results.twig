@@ -1,0 +1,40 @@
+{# Events/Views/partials/search-results.twig #}
+
+{% if events %}
+
+    <div class="search-results-list">
+
+        {% for event in events %}
+
+            <button
+                data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}"
+                class="search-result-item"
+            >
+
+                <div class="search-result-title">
+
+                    {{ event.title }}
+
+                </div>
+
+                <div class="search-result-meta">
+
+                    {{ event.starts_at|date('M d, Y') }}
+
+                </div>
+
+            </button>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="search-empty text-muted">
+
+        No events found
+
+    </div>
+
+{% endif %}

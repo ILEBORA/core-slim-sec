@@ -1,0 +1,17 @@
+{# Events/Views/calendar/week.twig #}
+
+<div class="calendar-week-view">
+
+    {% for event in events %}
+
+        <div class="week-event">
+
+            {% include "events/partials/event-row.twig" with {
+                event: event
+            } %}
+
+        </div>
+
+    {% endfor %}
+
+</div>

@@ -7,7 +7,7 @@ __BORA_REGISTER_PLUGIN__('dom.reactivity', async function(scope){
 
     // 👇 assume store is globally shared (important!)
     const store = await scope.getService('store'); 
-    // (you must expose this from ContentManager or a central store plugin)
+    // (you must expose this from content.manager or a central store plugin)
 
     // ----------------------------------------
     // 🔍 Resolve dot-path (e.g. "user.name")

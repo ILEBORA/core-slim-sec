@@ -1,0 +1,352 @@
+{# Events/Views/emails/attendee-confirmation.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Event Attendance Confirmed
+    </title>
+
+</head>
+
+<body
+    style="
+        margin:0;
+        padding:0;
+        background:#f5f7fb;
+        font-family:Arial,sans-serif;
+    "
+>
+
+    <table
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+    >
+
+        <tr>
+
+            <td align="center">
+
+                <table
+                    width="600"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="
+                        background:#ffffff;
+                        margin:40px 0;
+                        border-radius:12px;
+                        overflow:hidden;
+                    "
+                >
+
+                    {# -------------------------------------------------
+                     | Header
+                     |-------------------------------------------------#}
+
+                    <tr>
+
+                        <td
+                            style="
+                                background:#2563eb;
+                                padding:30px;
+                                text-align:center;
+                                color:#ffffff;
+                            "
+                        >
+
+                            <h1
+                                style="
+                                    margin:0;
+                                    font-size:28px;
+                                "
+                            >
+
+                                Attendance Confirmed
+
+                            </h1>
+
+                        </td>
+
+                    </tr>
+
+                    {# -------------------------------------------------
+                     | Body
+                     |-------------------------------------------------#}
+
+                    <tr>
+
+                        <td
+                            style="
+                                padding:40px 35px;
+                            "
+                        >
+
+                            <p
+                                style="
+                                    margin-top:0;
+                                    font-size:16px;
+                                    color:#374151;
+                                "
+                            >
+
+                                Hello
+
+                                <strong>
+                                    {{ attendee.username|default(attendee.guest_name|default('Guest')) }}
+                                </strong>,
+
+                            </p>
+
+                            <p
+                                style="
+                                    font-size:15px;
+                                    line-height:1.7;
+                                    color:#4b5563;
+                                "
+                            >
+
+                                Your attendance has been successfully
+                                confirmed for the following event:
+
+                            </p>
+
+                            {# -------------------------------------------------
+                             | Event Card
+                             |-------------------------------------------------#}
+
+                            <table
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                style="
+                                    background:#f9fafb;
+                                    border:1px solid #e5e7eb;
+                                    border-radius:10px;
+                                    margin:25px 0;
+                                "
+                            >
+
+                                <tr>
+
+                                    <td
+                                        style="
+                                            padding:25px;
+                                        "
+                                    >
+
+                                        <h2
+                                            style="
+                                                margin:0 0 12px;
+                                                color:#111827;
+                                                font-size:24px;
+                                            "
+                                        >
+
+                                            {{ event.title }}
+
+                                        </h2>
+
+                                        {% if event.short_description %}
+
+                                            <p
+                                                style="
+                                                    margin:0 0 16px;
+                                                    color:#6b7280;
+                                                    font-size:14px;
+                                                    line-height:1.6;
+                                                "
+                                            >
+
+                                                {{ event.short_description }}
+
+                                            </p>
+
+                                        {% endif %}
+
+                                        <p
+                                            style="
+                                                margin:0 0 10px;
+                                                color:#6b7280;
+                                                font-size:14px;
+                                            "
+                                        >
+
+                                            <strong>Date:</strong>
+
+                                            {{ event.starts_at|date('F d, Y H:i') }}
+
+                                        </p>
+
+                                        {% if event.ends_at %}
+
+                                            <p
+                                                style="
+                                                    margin:0 0 10px;
+                                                    color:#6b7280;
+                                                    font-size:14px;
+                                                "
+                                            >
+
+                                                <strong>Ends:</strong>
+
+                                                {{ event.ends_at|date('F d, Y H:i') }}
+
+                                            </p>
+
+                                        {% endif %}
+
+                                        {% if event.location %}
+
+                                            <p
+                                                style="
+                                                    margin:0 0 10px;
+                                                    color:#6b7280;
+                                                    font-size:14px;
+                                                "
+                                            >
+
+                                                <strong>Location:</strong>
+
+                                                {{ event.location }}
+
+                                            </p>
+
+                                        {% endif %}
+
+                                        {% if attendee.status %}
+
+                                            <p
+                                                style="
+                                                    margin:0 0 10px;
+                                                    color:#6b7280;
+                                                    font-size:14px;
+                                                "
+                                            >
+
+                                                <strong>Status:</strong>
+
+                                                {{ attendee.status|replace({'_':' '})|title }}
+
+                                            </p>
+
+                                        {% endif %}
+
+                                        {% if attendee.ticket_code %}
+
+                                            <p
+                                                style="
+                                                    margin:0;
+                                                    color:#6b7280;
+                                                    font-size:14px;
+                                                "
+                                            >
+
+                                                <strong>Ticket Code:</strong>
+
+                                                {{ attendee.ticket_code }}
+
+                                            </p>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                            {# -------------------------------------------------
+                             | CTA
+                             |-------------------------------------------------#}
+
+                            {% if event_url %}
+
+                                <div
+                                    style="
+                                        text-align:center;
+                                        margin:35px 0;
+                                    "
+                                >
+
+                                    <button
+                                        data-nav="{{ event_url }}"
+                                        style="
+                                            display:inline-block;
+                                            padding:14px 28px;
+                                            background:#2563eb;
+                                            color:#ffffff;
+                                            text-decoration:none;
+                                            border-radius:8px;
+                                            font-weight:bold;
+                                        "
+                                    >
+
+                                        View Event
+
+                                    </button>
+
+                                </div>
+
+                            {% endif %}
+
+                            <p
+                                style="
+                                    font-size:14px;
+                                    line-height:1.7;
+                                    color:#6b7280;
+                                "
+                            >
+
+                                Please keep this confirmation for your
+                                records. Additional updates regarding the
+                                event may be sent to you before the event
+                                begins.
+
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                    {# -------------------------------------------------
+                     | Footer
+                     |-------------------------------------------------#}
+
+                    <tr>
+
+                        <td
+                            style="
+                                background:#f3f4f6;
+                                padding:20px;
+                                text-align:center;
+                                font-size:12px;
+                                color:#9ca3af;
+                            "
+                        >
+
+                            © {{ "now"|date("Y") }}
+                            {{ app_name|default('Events Platform') }}
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+</body>
+
+</html>

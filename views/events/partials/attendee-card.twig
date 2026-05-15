@@ -1,0 +1,42 @@
+{# Events/Views/partials/attendee-card.twig #}
+
+<div class="attendee-card">
+
+    <div class="attendee-avatar">
+
+        {% if attendee.avatar_upload_id %}
+
+            <img
+                src="{{ media( attendee.avatar_upload_id ) }}"
+                alt="{{ attendee.username }}"
+            >
+
+        {% else %}
+
+            <div class="avatar-placeholder">
+
+                <i class="fas fa-user"></i>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="attendee-info">
+
+        <div class="attendee-name">
+
+            {{ attendee.username|default('Guest') }}
+
+        </div>
+
+        <div class="attendee-status text-muted">
+
+            {{ attendee.status|replace({'_':' '})|title }}
+
+        </div>
+
+    </div>
+
+</div>

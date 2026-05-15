@@ -1,0 +1,84 @@
+<div
+    class="event-view"
+
+    data-tabs
+    data-tabs-id="{{ event.id }}"
+    data-tabs-provider="events.tabs"
+
+    data-tabs-default="overview"
+    data-tabs-cache="true"
+    data-tabs-lazy="true"
+>
+
+    <!-- NAVIGATION -->
+    <div class="event-tabs tabs-nav">
+
+        <button
+            type="button"
+            data-tabs-trigger="overview"
+            class="tab-btn"
+        >
+            Overview
+        </button>
+
+        <button
+            type="button"
+            data-tabs-trigger="attendees"
+            class="tab-btn"
+        >
+            Attendees
+        </button>
+
+        <button
+            type="button"
+            data-tabs-trigger="photos"
+            class="tab-btn"
+        >
+            Photos
+        </button>
+
+        <button
+            type="button"
+            data-tabs-trigger="activity"
+            class="tab-btn"
+        >
+            Activity
+        </button>
+
+    </div>
+
+    <!-- PANELS -->
+    <div class="tabs-content">
+
+        <!-- STATIC -->
+        <section
+            class="tab-panel"
+            data-tabs-panel="overview"
+            data-tabs-lazy="false"
+        >
+
+            {% include
+                'events/event/tabs/overview.twig'
+            %}
+
+        </section>
+
+        <!-- ASYNC -->
+        <section
+            class="tab-panel"
+            data-tabs-panel="attendees"
+        ></section>
+
+        <section
+            class="tab-panel"
+            data-tabs-panel="photos"
+        ></section>
+
+        <section
+            class="tab-panel"
+            data-tabs-panel="activity"
+        ></section>
+
+    </div>
+
+</div>

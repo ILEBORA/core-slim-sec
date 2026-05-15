@@ -1,0 +1,53 @@
+{# Events/Views/partials/event-admin-actions.twig #}
+
+{% if isLoggedIn() %}
+
+<div class="event-admin-actions card">
+
+    <div class="card-header">
+
+        Event Management
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="admin-action-list">
+
+            <button
+                class="btn btn-outline-primary btn-block"
+                data-action="event.edit"
+                data-event-id="{{ event.id }}"
+            >
+
+                Edit Event
+
+            </button>
+
+            <button
+                class="btn btn-outline-warning btn-block"
+                data-action="event.publish"
+                data-event-id="{{ event.id }}"
+            >
+
+                Publish Event
+
+            </button>
+
+            <button
+                class="btn btn-outline-danger btn-block"
+                data-action="event.delete"
+                data-event-id="{{ event.id }}"
+            >
+
+                Delete Event
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}

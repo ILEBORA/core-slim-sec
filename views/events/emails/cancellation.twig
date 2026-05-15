@@ -1,0 +1,32 @@
+{# Events/Views/emails/reminder.twig #}
+
+<h2>
+    Event Reminder
+</h2>
+
+<p>
+
+    Reminder for your upcoming event:
+
+</p>
+
+<h3>
+
+    {{ event.title }}
+
+</h3>
+
+<p>
+
+    Starts at:
+    {{ event.starts_at|date('F d, Y H:i') }}
+
+</p>
+
+<p>
+
+    <button data-nav="{{ event_url }}">
+        Open Event
+    </button>
+
+</p>

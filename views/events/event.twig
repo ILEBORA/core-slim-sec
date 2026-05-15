@@ -1,0 +1,62 @@
+{# Events/Views/event.twig #}
+
+{# extends layout('main') #}
+
+
+{% block content %}
+
+<div class="event-view-page" data-event="{{ event.id }}" >
+
+    {% include "events/partials/event-header.twig" with {
+        event: event
+    } %}
+
+    <div class="container">
+
+        <div class="event-layout">
+
+            <div class="event-main">
+                {% include 'events/event/tabs.twig' with{ event:event} %}
+
+            </div>
+
+            <div class="event-sidebar">
+
+                {% include "events/partials/event-sidebar.twig" with {
+                    event: event,
+                    isAttending: isAttending
+                } %}
+
+                {% if related %}
+
+                    <div class="card related-events">
+
+                        <div class="card-header">
+                            Related Events
+                        </div>
+
+                        <div class="card-body">
+
+                            {% for item in related %}
+
+                                {% include "events/partials/mini-event-card.twig" with {
+                                    event: item
+                                } %}
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

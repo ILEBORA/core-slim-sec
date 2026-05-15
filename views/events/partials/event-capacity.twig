@@ -1,0 +1,46 @@
+{# Events/Views/partials/event-capacity.twig #}
+
+<div class="event-capacity card">
+
+    <div class="card-header">
+
+        Capacity
+
+    </div>
+
+    <div class="card-body">
+
+        {% set max = event.max_attendees|default(0) %}
+        {% set current = event.attendees_count|default(0) %}
+
+        <div class="capacity-count">
+
+            {{ current }}
+
+            {% if max > 0 %}
+
+                /
+                {{ max }}
+
+            {% endif %}
+
+        </div>
+
+        {% if max > 0 %}
+
+            {% set percent = (current / max) * 100 %}
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="width: {{ percent }}%"
+                ></div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>

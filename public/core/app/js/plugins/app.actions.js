@@ -3,6 +3,8 @@ __BORA_REGISTER_PLUGIN__(
 
 async function(scope){
 
+    const $ = await scope.getService('jquery');
+
     const state = {
         mounted:false,
         initialized:false,
@@ -20,6 +22,8 @@ async function(scope){
         if(state.mounted){
             return;
         }
+
+        // alert('app actions mount');
 
         state.mounted = true;
 
@@ -159,4 +163,4 @@ async function(scope){
 
     };
 
-});
+}, { requires: ['jquery'] });

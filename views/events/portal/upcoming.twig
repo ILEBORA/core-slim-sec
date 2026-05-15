@@ -1,0 +1,48 @@
+{# Events/Views/portal/upcoming.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="events-upcoming-page container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Upcoming Events</h1>
+
+            <p class="text-muted">
+                Browse scheduled upcoming events
+            </p>
+
+        </div>
+
+    </div>
+
+    {% if events %}
+
+        <div class="events-list">
+
+            {% for event in events %}
+
+                {% include "events/partials/event-row.twig" with {
+                    event: event
+                } %}
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        {% include "events/partials/empty-state.twig" with {
+            title: 'No upcoming events',
+            message: 'There are no upcoming events at the moment.'
+        } %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

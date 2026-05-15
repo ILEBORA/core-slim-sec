@@ -1,0 +1,50 @@
+{# Events/Views/portal/search_page.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="events-search-page container">
+
+    <div class="page-header">
+
+        <h1>
+            Search Results
+        </h1>
+
+        {% if query %}
+
+            <p class="text-muted">
+                Results for "{{ query }}"
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    {% if events %}
+
+        <div class="events-grid">
+
+            {% for event in events %}
+
+                {% include "events/partials/event-card.twig" with {
+                    event: event
+                } %}
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        {% include "events/partials/empty-state.twig" with {
+            title: 'No matching events',
+            message: 'Try another search keyword.'
+        } %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+<table class="table admin-events-table">
+
+    <thead>
+
+        <tr>
+
+            <th>ID</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Type</th>
+            <th>Attendees</th>
+            <th>Starts</th>
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for event in events %}
+
+            <tr>
+
+                <td>
+                    #{{ event.id }}
+                </td>
+
+                <td>
+
+                    <button data-nav="admin/events/view/{{event.id}}">
+
+                        {{ event.title }}
+
+                    </button>
+
+                </td>
+
+                <td>
+
+                    {% include "events/partials/event-status-badge.twig" with {
+                        status: event.status
+                    } %}
+
+                </td>
+
+                <td>
+
+                    {{ event.event_type_name|default('-') }}
+
+                </td>
+
+                <td>
+
+                    {{ event.attendees_count|default(0) }}
+
+                </td>
+
+                <td>
+
+                    {{ event.starts_at|date('M d, Y H:i') }}
+
+                </td>
+
+                <td>
+
+                    {% include "events/admin/partials/event-quick-actions.twig" with {
+                        event: event
+                    } %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>

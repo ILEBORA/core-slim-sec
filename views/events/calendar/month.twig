@@ -1,0 +1,17 @@
+{# Events/Views/calendar/month.twig #}
+
+<div class="calendar-month-view">
+
+    <div class="calendar-grid">
+
+        {% for event in events %}
+
+            {% include "events/partials/calendar-card.twig" with {
+                event: event
+            } %}
+
+        {% endfor %}
+
+    </div>
+
+</div>

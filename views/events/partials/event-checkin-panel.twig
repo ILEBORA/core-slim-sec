@@ -1,0 +1,44 @@
+{# Events/Views/partials/event-checkin-panel.twig #}
+
+<div class="event-checkin-panel card">
+
+    <div class="card-header">
+
+        Check-In
+
+    </div>
+
+    <div class="card-body">
+
+        <form
+            class="event-checkin-form"
+            data-event-id="{{ event.id }}"
+        >
+
+            <div class="form-group">
+
+                <label>
+                    Ticket / User Code
+                </label>
+
+                <input
+                    type="text"
+                    name="ticket_code"
+                    class="form-control"
+                    placeholder="Scan or enter code"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Check In
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

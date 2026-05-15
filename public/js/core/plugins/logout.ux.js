@@ -1,8 +1,8 @@
-__BORA_REGISTER_PLUGIN__('LogoutUX', async function(scope){
+__BORA_REGISTER_PLUGIN__('logout.ux', async function(scope){
 
     const hooks   = await scope.getService('hooks');
     const alerts  = await scope.getPlugin('alerts');
-    const overlay = await scope.getPlugin('Overlay');
+    const overlay = await scope.getPlugin('overlay');
 
     const   state = {       
         mounted: false
@@ -12,7 +12,7 @@ __BORA_REGISTER_PLUGIN__('LogoutUX', async function(scope){
         if (state.mounted) return;
         state.mounted = true;
 
-        console.log('[LogoutUX] mounted');
+        console.log('[logout.ux] mounted');
         hooks.add('user.logout.request', async () => {
 
             return alerts.confirm('Are you <em>really</em> sure?', {
@@ -36,4 +36,6 @@ __BORA_REGISTER_PLUGIN__('LogoutUX', async function(scope){
     }
 
     return { mount, unmount };
+},{
+    requires: ['hooks', 'alerts', 'overlay', 'layout.sidebar']
 });

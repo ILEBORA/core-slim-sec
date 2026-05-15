@@ -1,0 +1,76 @@
+{# Events/Views/partials/event-card.twig #}
+
+<div class="event-card card">
+
+    {% if event.cover_image %}
+
+        <button
+            data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}"
+            class="event-card-image"
+        >
+
+            <img
+                src="{{ event.cover_image }}"
+                alt="{{ event.title }}"
+            >
+
+        </button>
+
+    {% endif %}
+
+    <div class="card-body">
+
+        <div class="event-card-meta">
+
+            {% include "events/partials/event-status-badge.twig" with {
+                status: event.status
+            } %}
+
+            {% include "events/partials/event-type-badge.twig" with {
+                event: event
+            } %}
+
+            {# if event.created_by == current_user_id #}
+                <button
+                    class="thread_context_menu"
+                    data-context-trigger
+                    data-context-type="event"
+                    data-context-id="{{ event.id }}"
+                >
+                    ⋮
+                </button>
+            {# endif #}
+
+        </div>
+
+        <h3 class="event-card-title">
+
+            <button data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}">
+
+                {{ event.title }}
+
+            </button>
+
+        </h3>
+
+        {% if event.short_description %}
+
+            <p class="event-card-description">
+
+                {{ event.short_description }}
+
+            </p>
+
+        {% endif %}
+
+        {% include "events/partials/event-meta.twig" with {
+            event: event
+        } %}
+
+        {% include "events/partials/event-actions.twig" with {
+            event: event
+        } %}
+
+    </div>
+
+</div>

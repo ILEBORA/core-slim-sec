@@ -1,0 +1,77 @@
+{# Events/Views/partials/event-sidebar.twig #}
+
+<div class="event-sidebar-inner">
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="event-sidebar-actions">
+
+                {% if isLoggedIn() %}
+                    {% if not isAttending %}
+                        {% set attendAction = 'event.attend' %}
+                    {% else %}
+                        {% set attendAction = '' %}
+                    {% endif %}
+                    <button
+                        class="btn btn-primary btn-block"
+                        data-action="{{attendAction}}"
+                        data-event-id="{{ event.id }}"
+                    >
+
+                        {% if isAttending %}
+
+                            Attending
+
+                        {% else %}
+
+                            Attend Event
+
+                        {% endif %}
+
+                    </button>
+
+                {% endif %}
+
+                <button
+                    class="btn btn-outline-primary btn-block"
+                    data-action="event.share"
+                    data-event-id="{{ event.id }}"
+                >
+                    Share Event
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+            Event Details
+        </div>
+
+        <div class="card-body">
+
+            {% include "events/partials/event-meta.twig" with {
+                event: event
+            } %}
+
+            {% if event.address %}
+
+                <div class="event-address">
+
+                    {{ event.address }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>

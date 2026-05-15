@@ -1,0 +1,56 @@
+{# Events/Views/partials/event-organizer.twig #}
+
+<div class="event-organizer card">
+
+    <div class="card-header">
+
+        Organizer
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="organizer-layout">
+
+            <div class="organizer-avatar">
+
+                {% if event.creator_avatar_upload_id %}
+
+                    <img
+                        src="{{ media(event.creator_avatar_upload_id) }}"
+                        alt="Organizer"
+                    >
+
+                {% else %}
+
+                    <div class="avatar-placeholder">
+
+                        <i class="fas fa-user"></i>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="organizer-content">
+
+                <div class="organizer-name">
+
+                    {{ event.creator_name|default('Organizer') }}
+
+                </div>
+
+                <div class="text-muted">
+
+                    Event Organizer
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

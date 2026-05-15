@@ -1,0 +1,37 @@
+{# Events/Views/partials/attendees.twig #}
+
+<div class="event-attendees card">
+
+    <div class="card-header">
+
+        Attendees
+
+    </div>
+
+    <div class="card-body">
+
+        {% if attendees %}
+
+            <div class="attendees-grid">
+
+                {% for attendee in attendees %}
+
+                    {% include "events/partials/attendee-card.twig" with {
+                        attendee: attendee
+                    } %}
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="text-muted">
+                No attendees yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>

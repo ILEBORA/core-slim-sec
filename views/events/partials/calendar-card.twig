@@ -1,0 +1,45 @@
+{# Events/Views/partials/calendar-card.twig #}
+
+<div class="calendar-card">
+
+    <div class="calendar-date">
+
+        <div class="day">
+
+            {{ event.starts_at|date('d') }}
+
+        </div>
+
+        <div class="month">
+
+            {{ event.starts_at|date('M') }}
+
+        </div>
+
+    </div>
+
+    <div class="calendar-content">
+
+        <h4>
+
+            <button data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}">
+
+                {{ event.title }}
+
+            </button>
+
+        </h4>
+
+        {% if event.location %}
+
+            <div class="text-muted">
+
+                {{ event.location }}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>

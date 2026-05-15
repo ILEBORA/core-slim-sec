@@ -1887,6 +1887,21 @@ if(!function_exists('contextMenu')){
     }
 }
 
+// Menus
+if(!function_exists('menus')){
+    function menus(): \BoraSlim\Core\Ui\Menus\MenuManager
+    {
+        return ctx()->make(\BoraSlim\Core\Ui\Menus\MenuManager::class);
+    }
+}
+if(!function_exists('menuCtx')){
+    function menuCtx(...$params): \BoraSlim\Core\Ui\Menus\MenuContext
+    {
+        return ctx()->make(\BoraSlim\Core\Ui\Menus\MenuContext::class);
+    }
+}
+
+
 // Dropdown
 if(!function_exists('dropdown')){
     function dropdown(): \BoraSlim\Core\Modules\Ui\Services\DropdownPanel
@@ -1937,5 +1952,164 @@ if (!function_exists('validate')) {
         }
 
         return $data;
+    }
+}
+
+if(!function_exists('slugify')){
+
+    /**
+     * Convert text into URL-safe slug
+     *
+     * Example:
+     *
+     * slugify('Music Festival 2026');
+     * // music-festival-2026
+     */
+
+    function slugify(
+        ?string $text,
+        string $separator = '-'
+    ): string {
+
+        $text = trim(
+            (string)$text
+        );
+
+        if($text === ''){
+            return '';
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Transliterate UTF-8
+        |--------------------------------------------------------------------------
+        */
+
+        $text = iconv(
+            'UTF-8',
+            'ASCII//TRANSLIT//IGNORE',
+            $text
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Lowercase
+        |--------------------------------------------------------------------------
+        */
+
+        $text = strtolower($text);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Remove apostrophes
+        |--------------------------------------------------------------------------
+        */
+
+        $text = str_replace(
+            ["'", "`"],
+            '',
+            $text
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Replace non alphanumeric
+        |--------------------------------------------------------------------------
+        */
+
+        $text = preg_replace(
+
+            '/[^a-z0-9]+/',
+
+            $separator,
+
+            $text
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Remove duplicate separators
+        |--------------------------------------------------------------------------
+        */
+
+        $escaped = preg_quote(
+            $separator,
+            '/'
+        );
+
+        $text = preg_replace(
+
+            '/'.$escaped.'+/',
+
+            $separator,
+
+            $text
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Trim separators
+        |--------------------------------------------------------------------------
+        */
+
+        $text = trim(
+            $text,
+            $separator
+        );
+
+        return $text;
+    }
+}
+
+use BoraSlim\Core\Support\Str;
+
+if (!function_exists('media')) {
+
+    /**
+     * Generate media viewer URL.
+     *
+     * @param int|string|null $media
+     * @param string|null $size
+     * @return string|null
+     */
+    function media(
+        int|string|null $media,
+        ?string $size = null
+    ): ?string {
+
+        if (empty($media)) {
+            return null;
+        }
+
+        $sizes = [
+
+            'thumbnail' => 't',
+            'thumb'     => 't',
+            't'         => 't',
+
+            'small'     => 's',
+            's'         => 's',
+
+            'medium'    => 'm',
+            'm'         => 'm',
+
+            'large'     => 'l',
+            'l'         => 'l',
+
+            'original'  => null,
+            'full'      => null
+        ];
+
+        $size = $size
+            ? ($sizes[strtolower($size)] ?? null)
+            : null;
+
+        $url = 'viewer/media/' . $media;
+
+        if ($size) {
+            $url .= '/' . $size;
+        }
+
+        return $url;
     }
 }

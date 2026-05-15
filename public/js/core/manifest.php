@@ -151,7 +151,7 @@ return [
     'deprecations' => ['file' => 'services/deprecations.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 25, 'requires' => ['runtime']],
     'meta' => ['file' => 'services/meta.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 27],
     'devtools' => ['file' => 'services/devtools.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 30, 'requires' => ['runtime', 'state']],
-    'jobqueue' => ['file' => 'services/job-queue.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 31, 'requires' => ['runtime', 'callbora']],
+    'job.queue' => ['file' => 'services/job.queue.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 31, 'requires' => ['runtime', 'callbora']],
     'face' => ['file' => 'services/face.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 32, 'requires' => ['runtime']],
     'menu' => ['file' => 'services/menu.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 33, 'requires' => ['runtime']],
     'context' => ['file' => 'services/context.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 34, 'requires' => ['runtime']],
@@ -197,24 +197,26 @@ return [
     'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
 
     'devtools.plugin' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
-    'appcore' => ['file' => 'plugins/app-core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
-    'layouts' => ['file' => 'plugins/layouts.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
-    'guestface' => ['file' => 'plugins/face-guest.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
-    'clientface' => ['file' => 'plugins/face-client.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 58],
-    'adminface' => ['file' => 'plugins/face-admin.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 59],
-    'sidebar' => ['file' => 'plugins/layout.sidebar.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 60],
-    'navigationbinder' => ['file' => 'plugins/navigation-binder.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61],
+    'app.core' => ['file' => 'plugins/app.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
+    'layouts' => ['file' => 'plugins/layouts.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57,'preload'=>true],
+    'face.guest' => ['file' => 'plugins/face.guest.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
+    'face.client' => ['file' => 'plugins/face.client.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 58],
+    'face.admin' => ['file' => 'plugins/face.admin.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 59],
+    'layout.sidebar' => ['file' => 'plugins/layout.sidebar.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 60,'preload'=>true],
+    'navigation.binder' => ['file' => 'plugins/navigation.binder.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61, 'requires' => ['runtime', 'store', 'layout.sidebar']],
     'overlay' => ['file' => 'plugins/overlay.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61, 'preload' => true],
-    'logoutux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62],
-    'contentmanager' => ['file' => 'plugins/content-manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63, 'requires' => ['runtime', 'store']],
+    'logout.ux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62, 'preload' => true],
+    'content.manager' => ['file' => 'plugins/content.manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63, 'requires' => ['runtime', 'store'], 'preload' => true],
 
-    'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core'],'preload'=>true],
+    'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core'], 'preload'=>true],
     
     'dom.reactivity' => ['file' => 'plugins/dom.reactivity.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 65, 'requires' => ['runtime', 'state.reactive']],
     'store' => ['file' => 'plugins/store.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 66, 'requires' => ['runtime'],'preload'=>true],
     'state.reactive' => ['file' => 'plugins/state.reactive.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 67, 'requires' => ['runtime']],
+    'component.mounter' => ['file' => 'plugins/component-mounter.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 68, 'requires' => ['runtime']],
+    'key.handlers' => ['file' => 'plugins/key.handlers.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 69, 'requires' => ['runtime']],
+    'ui.tabs' => ['file' => 'plugins/ui.tabs.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 70, 'requires' => ['runtime']],
     
-
 
 
     /* ==================================================

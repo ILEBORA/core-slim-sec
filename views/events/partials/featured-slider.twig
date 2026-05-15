@@ -1,0 +1,24 @@
+{# Events/Views/partials/featured-slider.twig #}
+
+<div class="featured-events-slider swiper">
+
+    <div class="swiper-wrapper">
+
+        {% for event in events %}
+
+            <div class="swiper-slide">
+
+                {% include "events/partials/event-card.twig" with {
+                    event: event,
+                    featured: true
+                } %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="swiper-pagination"></div>
+
+</div>

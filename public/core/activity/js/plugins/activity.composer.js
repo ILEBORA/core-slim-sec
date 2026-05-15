@@ -36,7 +36,14 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
 
                 success(resp){
                     // alert('respp');
-                    if(!resp.success) return;
+                    if(!resp.success){
+                        alertBora.notify(
+                            resp.message || 'Action failed',
+                            'error',
+                            5
+                        );
+                        return;
+                    }
                     // alert('respp2');
                     const media = {
                         id:resp.data.id,
@@ -49,7 +56,13 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
 
                     renderPreview(media);
 
-                    updateHiddenField();
+                    updateHiddenField();  
+
+                    alertBora.notify(
+                            resp.message || 'Successful',
+                            'success',
+                            5
+                        );
                 }
             });
         }

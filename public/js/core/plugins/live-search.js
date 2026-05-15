@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('LiveSearch', async function(scope){
+__BORA_REGISTER_PLUGIN__('live.search', async function(scope){
 
     // const $ = await scope.getService('jquery');
 

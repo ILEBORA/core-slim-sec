@@ -1,0 +1,125 @@
+{# Events/Views/attendee/stats.twig #}
+
+<div class="event-attendee-stats">
+
+    <div class="card">
+
+        <div class="card-header">
+
+            Attendance Stats
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="stats-grid">
+
+                <div class="stat-item">
+
+                    <div class="stat-value">
+
+                        {{ stats.total|default(0) }}
+
+                    </div>
+
+                    <div class="stat-label">
+
+                        Total
+
+                    </div>
+
+                </div>
+
+                <div class="stat-item">
+
+                    <div class="stat-value">
+
+                        {{ stats.going|default(0) }}
+
+                    </div>
+
+                    <div class="stat-label">
+
+                        Going
+
+                    </div>
+
+                </div>
+
+                <div class="stat-item">
+
+                    <div class="stat-value">
+
+                        {{ stats.interested|default(0) }}
+
+                    </div>
+
+                    <div class="stat-label">
+
+                        Interested
+
+                    </div>
+
+                </div>
+
+                <div class="stat-item">
+
+                    <div class="stat-value">
+
+                        {{ stats.checked_in|default(0) }}
+
+                    </div>
+
+                    <div class="stat-label">
+
+                        Checked In
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% if event.max_attendees > 0 %}
+
+        <div class="card mt-3">
+
+            <div class="card-header">
+
+                Capacity
+
+            </div>
+
+            <div class="card-body">
+
+                {% set current = stats.going|default(0) %}
+                {% set max = event.max_attendees %}
+
+                {% set percent = (current / max) * 100 %}
+
+                <div class="capacity-value">
+
+                    {{ current }} / {{ max }}
+
+                </div>
+
+                <div class="progress mt-2">
+
+                    <div
+                        class="progress-bar"
+                        style="width: {{ percent }}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>

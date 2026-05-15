@@ -1,0 +1,23 @@
+<div class="event-content card">
+
+    <div class="card-body">
+
+        {% if event.description %}
+
+            <div class="event-description">
+
+                {{ event.description|raw }}
+
+            </div>
+
+        {% else %}
+
+            <p class="text-muted">
+                No event description available.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>

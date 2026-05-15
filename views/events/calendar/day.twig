@@ -1,0 +1,35 @@
+{# Events/Views/calendar/day.twig #}
+
+<div class="calendar-day-view">
+
+    <div class="day-header">
+
+        <h3>
+
+            {{ day|date('F d, Y') }}
+
+        </h3>
+
+    </div>
+
+    {% if events %}
+
+        {% for event in events %}
+
+            {% include "events/partials/event-row.twig" with {
+                event: event
+            } %}
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="text-muted">
+
+            No events scheduled
+
+        </div>
+
+    {% endif %}
+
+</div>

@@ -1,4 +1,4 @@
-__BORA_REGISTER_SERVICE__('uiElementDismiss', async function(scope){
+__BORA_REGISTER_SERVICE__('ui.element.dismiss', async function(scope){
 
     const dismissable = await scope.getService('ui.dismissable');
 

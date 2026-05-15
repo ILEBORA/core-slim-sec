@@ -1,0 +1,27 @@
+{# Events/Views/partials/empty-state.twig #}
+
+<div class="empty-state card">
+
+    <div class="card-body text-center">
+
+        <div class="empty-icon">
+
+            <i class="fas fa-calendar-times"></i>
+
+        </div>
+
+        <h3>
+
+            {{ title|default('Nothing here') }}
+
+        </h3>
+
+        <p class="text-muted">
+
+            {{ message|default('No content available.') }}
+
+        </p>
+
+    </div>
+
+</div>

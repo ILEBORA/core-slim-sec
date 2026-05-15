@@ -1,0 +1,37 @@
+{# Events/Views/emails/invitation.twig #}
+
+<h2>
+    You're Invited!
+</h2>
+
+<p>
+
+    You have been invited to:
+
+</p>
+
+<h3>
+
+    {{ event.title }}
+
+</h3>
+
+<p>
+
+    {{ event.starts_at|date('F d, Y H:i') }}
+
+</p>
+
+<p>
+
+    {{ event.location }}
+
+</p>
+
+<p>
+
+    <button data-nav="{{ event_url }}">
+        View Event
+    </button>
+
+</p>

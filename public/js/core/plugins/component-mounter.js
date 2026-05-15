@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
+__BORA_REGISTER_PLUGIN__('component.mounter', function(scope){
 
     let mountedInstances = [];
 
@@ -10,7 +10,7 @@ __BORA_REGISTER_PLUGIN__('ComponentMounter', function(scope){
         if (state.mounted) return;
         state.mounted = true;
 
-        console.log('[ComponentMounter] mounted');
+        console.log('[component.mounter] mounted');
         mountAll();
         scope.on('page.afterLoad', mountAll);
     }

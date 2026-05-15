@@ -1,0 +1,19 @@
+{# Events/Views/partials/mini-event-card.twig #}
+
+<div class="mini-event-card">
+
+    <button
+        data-nav="portal/events/event/view/{{ event.slug|default(event.id) }}"
+    >
+
+        {{ event.title }}
+
+    </button>
+
+    <div class="text-muted">
+
+        {{ event.starts_at|date('M d, Y') }}
+
+    </div>
+
+</div>

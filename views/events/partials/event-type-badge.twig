@@ -1,0 +1,22 @@
+{# Events/Views/partials/event-type-badge.twig #}
+
+{% if event.event_type_name %}
+
+    <span
+        class="event-type-badge"
+        {% if event.event_type_color %}
+            style="background: {{ event.event_type_color }}"
+        {% endif %}
+    >
+
+        {% if event.event_type_icon %}
+
+            <i class="{{ event.event_type_icon }}"></i>
+
+        {% endif %}
+
+        {{ event.event_type_name }}
+
+    </span>
+
+{% endif %}

@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
+__BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
 
     // const $ = await scope.getService('jquery');
     // const dismiss = await scope.getService('dismiss');
@@ -48,7 +48,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
         console.log('[Sidebar] unmounted');
     }
 
-    function bindEvents(){
+    async function bindEvents(){
         // console.log('dropMenu::',dropMenu);
         if(dropMenu.length == 0){
             dropMenu = $('.menu-container');
@@ -101,6 +101,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
         // alert(window.location);
         // Also handle initial load
         // highlightMenu(window.location);
+
+        
         
 
         document.addEventListener('change', async function(e){
@@ -112,8 +114,8 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
             window.APP_CURRENT_ROLE = face;
             $('[data-refresh-menu]').data('role', face);
 
-            const menu = await __BORA_APP__.service('menu'); // ✅ FIX
-            await menu.refresh(face);
+            // const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+            // await menu.refresh(face);
 
             // After menu reload, highlight current route again
             // const cleanRoute = await scope.service('router').clean();
@@ -136,10 +138,15 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
         });
 
         // React to changes
-        __BORA_APP__.on('context.changed', applyFace);
+        __BORA_APP__.on('face.changed', applyFace);
 
         // Apply initial state
-        applyFace(context.get());
+        // applyFace(context.get());
+        applyFace(scope.face || context.get());
+
+        // alert('Sidebar initialized with face: ' + (scope.face || context.get()));
+        const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+        await menu.refresh(scope.face || context.get());
 
         //
         // scope.on('esc', onEscKeyPress);
@@ -337,7 +344,7 @@ __BORA_REGISTER_PLUGIN__('Sidebar', async function(scope){
     }
 
     function handlePageLoaded(ctx){
-
+        
         // const current = normalizeUrl(url || window.location);
         const url = ctx?.url || window.location;
         const current = normalizeUrl(url);

@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
+__BORA_REGISTER_PLUGIN__('content.manager', async function(scope){
 
     const $         = await scope.getService('jquery');
     const reactive  = await scope.getPlugin('state.reactive');
@@ -103,7 +103,7 @@ __BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
     // ----------------------------------------
     return {
         mount(){
-            console.log('[ContentManager Reactive] mounted');
+            console.log('[content.manager Reactive] mounted');
         },
         store
     };

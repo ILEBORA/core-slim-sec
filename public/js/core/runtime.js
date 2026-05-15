@@ -8,6 +8,61 @@
 
     const pendingPlugins  = new Map();
     const pendingServices = new Map();
+    const registrationWaiters = new Map();
+
+    function notifyRegisteredO(name){
+
+        name = name.toLowerCase();
+
+        const waiter = registrationWaiters.get(name);
+
+        if(waiter){
+            waiter();
+            registrationWaiters.delete(name);
+        }
+    }
+
+    function notifyRegistered(name){
+
+        name = name.toLowerCase();
+
+        const waiters =
+            registrationWaiters.get(name);
+
+        if(!waiters){
+            return;
+        }
+
+        // legacy single-function waiter
+        if(typeof waiters === 'function'){
+
+            waiters();
+
+        }
+
+        // modern array waiters
+        else if(Array.isArray(waiters)){
+
+            for(const resolve of waiters){
+
+                try{
+                    resolve();
+                }
+                catch(err){
+                    console.error(
+                        '[Waiter resolve failed]',
+                        name,
+                        err
+                    );
+                }
+
+            }
+
+        }
+
+        registrationWaiters.delete(name);
+
+    }
 
     function registerPluginDuringBuild(name, factory, meta = {}){
         name = name.toLowerCase();
@@ -20,7 +75,26 @@
             //global.__BORA_APP__?.integratePending();
         }
 
-        global.__BORA_APP__?.integratePending();
+        // global.__BORA_APP__?.integratePending();
+        //replace direct integration with notification to avoid multiple integrations during build
+        scheduleIntegration();
+    }
+
+    let integrationScheduled = false;
+
+    function scheduleIntegration(){
+
+        if(integrationScheduled) return;
+
+        integrationScheduled = true;
+
+        queueMicrotask(async ()=>{
+
+            integrationScheduled = false;
+
+            await global.__BORA_APP__?.integratePending();
+
+        });
     }
 
     function registerServiceDuringBuild(name, factory, meta = {}){
@@ -211,6 +285,11 @@
             return services.get(name);
         }
 
+        function useService(name){
+            name = name.toLowerCase();
+            return services.get(name) || null;
+        }
+
         async function getPlugin(name){
             name = name.toLowerCase();
             if(!plugins.has(name)){
@@ -235,6 +314,7 @@
             try{
                 const instance = await factory(createScope());
                 services.set(name, instance);
+                notifyRegistered(name);
             }
             catch(err){
                 console.error('[Service failed]', name, err);
@@ -242,18 +322,24 @@
         }
 
         async function _registerPlugin(name, factory, meta = {}){
+            console.log(
+                '[REGISTER PLUGIN]',
+                name
+            );
             name = name.toLowerCase();
 
             if(plugins.has(name)){
                 console.warn('[Plugin exists]', name);
                 return;
             }
+            
 
             try{
                 const instance = await factory(createScope());
 
                 plugins.set(name, instance);
                 pluginMeta.set(name, meta);
+                notifyRegistered(name);
 
                 // lazy-safe activation trigger
                 // await evaluatePluginActivation(normalizeUrl(window.location));
@@ -268,40 +354,162 @@
         /* ==================================================
            INTEGRATION (LOADER HOOK)
         ================================================== */
+        let integrating = false;
+        let integrateAgain = false;
 
         async function integratePending(){
 
-            if(!started) return;
+            if(integrating){
+                integrateAgain = true;
+                return;
+            }
 
-            // services
-            pendingServices.forEach(({factory, meta}, name)=>{
-                name = name.toLowerCase();
-                if(!services.has(name)){
-                    _registerService(name, factory, meta);
+            integrating = true;
+
+            try{
+                do {
+                    integrateAgain = false;
+
+                    if(!started) break;
+
+                    // services
+                    // pendingServices.forEach(({factory, meta}, name)=>{
+                    //     name = name.toLowerCase();
+                    //     if(!services.has(name)){
+                    //         await _registerService(name, factory, meta);
+                    //     }
+                    // });
+
+                    const serviceBatch = [...pendingServices.entries()];
+
+                    pendingServices.clear();    
+
+                    for(const [name, {factory, meta}] of serviceBatch){
+
+                        const normalized = name.toLowerCase();
+
+                        if(!services.has(normalized)){
+                            await _registerService(normalized, factory, meta);
+                        }
+
+                    }
+
+                    // pendingServices.clear();
+
+                    // plugins
+                    let newPlugins = false;
+
+                    // pendingPlugins.forEach(({factory, meta}, name)=>{
+                    //     name = name.toLowerCase();
+                    //     if(!plugins.has(name)){
+                    //         await _registerPlugin(name, factory, meta);
+                    //          newPlugins = true;
+                    //     }
+                    // });
+
+                    // for(const [name, {factory, meta}] of pendingPlugins){
+
+                    //     const normalized = name.toLowerCase();
+
+                    //     if(!plugins.has(normalized)){
+                    //         await _registerPlugin(normalized, factory, meta);
+                    //     }
+
+                    // }
+
+                    // for(const [name, {factory, meta}] of pendingPlugins){
+
+                    //     const normalized = name.toLowerCase();
+
+                    //     if(!plugins.has(normalized)){
+
+                    //         await _registerPlugin(
+                    //             normalized,
+                    //             factory,
+                    //             meta
+                    //         );
+
+                    //         newPlugins = true;
+
+                    //     }
+
+                    // }
+
+                    // pendingPlugins.clear();
+
+                    const pluginBatch = [...pendingPlugins.entries()];
+
+                    pendingPlugins.clear();
+
+                    for(const [name, {factory, meta}] of pluginBatch){
+
+                        const normalized = name.toLowerCase();
+
+                        if(!plugins.has(normalized)){
+
+                            await _registerPlugin(
+                                normalized,
+                                factory,
+                                meta
+                            );
+
+                            newPlugins = true;
+
+                        }
+
+                    }
+
+                    // 🔥 CRITICAL: trigger activation only if new plugins arrived
+                    if(newPlugins){
+                        console.log('NEW PLUGINS:: ', newPlugins);
+                        await evaluatePluginActivation(normalizeUrl(window.location));
+                    }
+
+                    
                 }
-            });
-
-            pendingServices.clear();
-
-            // plugins
-            let newPlugins = false;
-
-            pendingPlugins.forEach(({factory, meta}, name)=>{
-                name = name.toLowerCase();
-                if(!plugins.has(name)){
-                    _registerPlugin(name, factory, meta);
-                     newPlugins = true;
-                }
-            });
-
-            pendingPlugins.clear();
-
-            // 🔥 CRITICAL: trigger activation only if new plugins arrived
-            if(newPlugins){
-                // console.log('NEW PLUGINS:: ', newPlugins);
-                await evaluatePluginActivation(normalizeUrl(window.location));
+                while(integrateAgain);
+            }
+            finally{
+                integrating = false;
             }
         }
+
+        function resolveFace(path){
+
+            path = normalizeUrl(path);
+
+            if(path === 'portal' || path.startsWith('portal/')){
+                return 'client';
+            }
+
+            if(path === 'bo' || path.startsWith('bo/')){
+                return 'admin';
+            }
+
+            return 'guest';
+        }
+
+        function getFace(){
+            return global.__BORA_FACE__ || resolveFace(normalizeUrl(window.location));
+        }
+
+        async function syncFace(face){
+
+            global.__BORA_FACE__ = face;
+
+            try{
+
+                const context = services.get('context');
+
+                if(context){
+                    context.set(face);
+                }
+
+            }catch(err){
+                console.warn('[Face sync failed]', err);
+            }
+        }
+
 
         /* ==================================================
            ACTIVATION (LAZY SAFE)
@@ -310,11 +518,21 @@
         async function evaluatePluginActivation(route){
             
             const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
+            console.warn('[MANIFEST]', manifest);
 
+            global.__BORA_FACE__ = resolveFace(route);
+            await syncFace(global.__BORA_FACE__);
+           
+            if(config.dev){
+                console.log(`[Runtime] evaluatePluginActivation for face: ${global.__BORA_FACE__}`);
+            }
+
+            // alert(global.__BORA_FACE__ + ' route: ' + route);
+        
             const context = {
                 route,
-                face: global.__BORA_FACE__ || 'guest',
-                appcore: plugins.get('appcore'),
+                face: global.__BORA_FACE__ || 'guest', // default to guest if face service or resolution fails
+                appcore: plugins.get('app.core'),
                 plugins
             };
 
@@ -325,10 +543,15 @@
             const pluginNames = Object.keys(manifest)
                 .filter(name => manifest[name].type === 'plugin')
                 .sort((a, b) => {
-                    const pa = pluginMeta.get(a)?.priority || 0;
-                    const pb = pluginMeta.get(b)?.priority || 0;
+                    const pa = manifest[a]?.priority || 0;
+                    const pb = manifest[b]?.priority || 0;
                     return pb - pa; // higher first
                 });
+
+
+            if(config.dev){
+                console.warn('[Sorted plugins]', pluginNames);
+            }
 
             /* ---------------------------
             LOOP
@@ -343,16 +566,25 @@
                     continue;
                 }
 
+                console.warn(`[Loader-success] Loading plugin: ${name}`);
                 // ensure code is loaded
-                await global.__BORA_LOADER__.ensure(name);
+                await global.__BORA_LOADER__.ensure(name, {
+                    activate:false
+                });
 
                 const plugin = plugins.get(name);
-                if(!plugin) continue;
+                console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
+                // Plugin not loaded yet (loader should have loaded it by now, but just in case)
+                if(!plugin){
+                    console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
+                    console.log(pluginMeta.get(name));
+                    continue;
+                }
 
                 const pMeta = pluginMeta.get(name);
 
                 const shouldActivate = evaluateMeta(name, pMeta, context);
-
+                
                 /* ---------------------------
                 DEBUG (optional but useful)
                 --------------------------- */
@@ -417,6 +649,7 @@
         }
 
         function shouldLoad(meta, context){
+            // console.log('[Should Load?]', meta, context);
 
             if(!meta) return true;
 
@@ -569,17 +802,44 @@
                 services.set('jquery', global.jQuery);
             }
 
+            //detect face (important for initial route activation)
+            if(!global.__BORA_FACE__){
+                global.__BORA_FACE__ = resolveFace(normalizeUrl(window.location));
+                if(config.dev){
+                    console.log(`[Runtime] Detected face: ${global.__BORA_FACE__}`);
+                }
+            }
+
             // register pending services
-            pendingServices.forEach(({factory, meta}, name)=>{
-                _registerService(name, factory, meta);
-            });
+            // pendingServices.forEach(({factory, meta}, name)=>{
+            //     await _registerService(name, factory, meta);
+            // });
+            for(const [name, {factory, meta}] of pendingServices){
+
+                const normalized = name.toLowerCase();
+
+                if(!services.has(normalized)){
+                    await _registerService(normalized, factory, meta);
+                }
+
+            }
 
             emit('runtime:servicesReady');
 
             // register pending plugins (only already loaded ones)
-            pendingPlugins.forEach(({factory, meta}, name)=>{
-                _registerPlugin(name, factory, meta);
-            });
+            // pendingPlugins.forEach(({factory, meta}, name)=>{
+            //     await _registerPlugin(name, factory, meta);
+            // });
+            for(const [name, {factory, meta}] of pendingPlugins){
+
+                const normalized = name.toLowerCase();
+
+                if(!plugins.has(normalized)){
+                    await _registerPlugin(normalized, factory, meta);
+                }
+
+            }
+
 
             emit('runtime:started');
 
@@ -657,7 +917,9 @@
             // Internal (used for late module load)
             _registerPlugin,
             _registerService,
-            evaluatePluginActivation
+            evaluatePluginActivation,
+            _registrationWaiters: registrationWaiters,
+            face: getFace
         };
 
         return Object.freeze(publicAPI);

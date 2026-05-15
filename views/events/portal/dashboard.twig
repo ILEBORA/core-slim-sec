@@ -1,0 +1,112 @@
+{# Events/Views/portal/dashboard.twig #}
+
+{# extends layout('main') #}
+
+{% block content %}
+
+<div class="events-dashboard-page container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Events Dashboard</h1>
+
+            <p class="text-muted">
+                Manage and monitor your events
+            </p>
+
+        </div>
+
+        <div>
+
+            <button
+                data-nav="portal/events/create'"
+                class="btn btn-primary"
+            >
+                <i class="fas fa-plus"></i>
+                Create Event
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-stats">
+
+        <div class="stat-card card">
+
+            <div class="card-body">
+
+                <div class="stat-value">
+                    {{ stats.total|default(0) }}
+                </div>
+
+                <div class="stat-label">
+                    Total Events
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card card">
+
+            <div class="card-body">
+
+                <div class="stat-value">
+                    {{ stats.upcoming|default(0) }}
+                </div>
+
+                <div class="stat-label">
+                    Upcoming
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card card">
+
+            <div class="card-body">
+
+                <div class="stat-value">
+                    {{ stats.attendees|default(0) }}
+                </div>
+
+                <div class="stat-label">
+                    Attendees
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-events">
+
+        {% if events %}
+
+            {% for event in events %}
+
+                {% include "events/partials/event-row.twig" with {
+                    event: event
+                } %}
+
+            {% endfor %}
+
+        {% else %}
+
+            {% include "events/partials/empty-state.twig" with {
+                title: 'No events yet',
+                message: 'Create your first event to get started.'
+            } %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

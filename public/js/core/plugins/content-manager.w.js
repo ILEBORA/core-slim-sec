@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
+__BORA_REGISTER_PLUGIN__('content.manager', async function(scope){
 
     const $     = await scope.getService('jquery');
     const state = await scope.getService('state');
@@ -208,7 +208,7 @@ __BORA_REGISTER_PLUGIN__('ContentManager', async function(scope){
     // ----------------------------------------
     function mount(){
 
-        console.log('[ContentManager] mounted');
+        console.log('[content.manager] mounted');
 
         // Route drives everything
         state.subscribe('route', onRouteChange);

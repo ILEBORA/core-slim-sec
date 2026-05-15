@@ -11,7 +11,7 @@ __BORA_REGISTER_SERVICE__(
         const app     = window.__BORA_APP__;
         let overlayTimer = null;
         let overlayVisible = false;
-        const overlay = () => app?.plugin?.('Overlay');
+        const overlay = () => app?.plugin?.('overlay');
         const alerts  = () => app?.plugin?.('alerts');
 
         let currentRoute = normalizeUrl(window.location);

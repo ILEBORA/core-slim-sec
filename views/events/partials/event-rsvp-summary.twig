@@ -1,0 +1,57 @@
+{# Events/Views/partials/event-rsvp-summary.twig #}
+
+<div class="event-rsvp-summary card">
+
+    <div class="card-header">
+
+        RSVP Summary
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="rsvp-stat">
+
+            <span class="label">
+                Going
+            </span>
+
+            <span class="value">
+
+                {{ stats.going|default(0) }}
+
+            </span>
+
+        </div>
+
+        <div class="rsvp-stat">
+
+            <span class="label">
+                Interested
+            </span>
+
+            <span class="value">
+
+                {{ stats.interested|default(0) }}
+
+            </span>
+
+        </div>
+
+        <div class="rsvp-stat">
+
+            <span class="label">
+                Declined
+            </span>
+
+            <span class="value">
+
+                {{ stats.declined|default(0) }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>

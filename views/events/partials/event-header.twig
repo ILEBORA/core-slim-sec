@@ -1,0 +1,65 @@
+{# Events/Views/partials/event-header.twig #}
+
+<div class="event-header">
+
+    {% if event.banner_image %}
+
+        <div class="event-banner">
+
+            <img
+                src="{{ event.banner_image }}"
+                alt="{{ event.title }} alt"
+            >
+
+        </div>
+
+    {% endif %}
+
+    <div class="event-header-content container">
+
+        <div class="event-header-top">
+
+            {% include "events/partials/event-status-badge.twig" with {
+                status: event.status
+            } %}
+
+            {% include "events/partials/event-type-badge.twig" with {
+                event: event
+            } %}
+
+            {# if event.created_by == current_user_id #}
+                <button
+                    class="thread_context_menu"
+                    data-context-trigger
+                    data-context-type="event"
+                    data-context-id="{{ event.id }}"
+                >
+                    ⋮
+                </button>
+            {# endif #}
+
+        </div>
+
+        <h1>
+
+            {{ event.title }}
+
+        </h1>
+
+        {% if event.short_description %}
+
+            <p class="event-tagline">
+
+                {{ event.short_description }}
+
+            </p>
+
+        {% endif %}
+
+        {% include "events/partials/event-meta.twig" with {
+            event: event
+        } %}
+
+    </div>
+
+</div>

@@ -1,6 +1,6 @@
 __BORA_REGISTER_SERVICE__('permissions', async function(scope){
 
-    const app = await scope.getPlugin('appcore');
+    const app = await scope.getPlugin('app.core');
 
     function can(group, sub){
         return app?.hasPermission(group, sub) === true;
