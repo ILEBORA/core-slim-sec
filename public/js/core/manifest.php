@@ -206,7 +206,7 @@ return [
     'navigation.binder' => ['file' => 'plugins/navigation.binder.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61, 'requires' => ['runtime', 'store', 'layout.sidebar']],
     'overlay' => ['file' => 'plugins/overlay.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 61, 'preload' => true],
     'logout.ux' => ['file' => 'plugins/logout.ux.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 62, 'preload' => true],
-    'content.manager' => ['file' => 'plugins/content.manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63, 'requires' => ['runtime', 'store'], 'preload' => true],
+    // 'content.manager' => ['file' => 'plugins/content.manager.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 63, 'requires' => ['runtime', 'store'], 'preload' => true],
 
     'popup' => ['file' => 'plugins/popup.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 64, 'requires' => ['runtime', 'popup.core'], 'preload'=>true],
     
