@@ -1,3 +1,32 @@
+## [1.1.1] - 2026-05-20
+- patch version bump
+
+### New Commits
+72eb892 New runtime loader stable
+f18e4f7 Stable2
+a5ee4ce Added: landing page
+0ca7024 Added: Cropping, rotate and filter 2
+7662b09 Stable Activity module
+a53fe27 Fixed: dublicate activity posts
+290d93e Moved uploader from viewer to mediauploader
+ed85bec Activity module + Stories fix
+942eeab fixed: ensure user profile exists
+eb8d446 Upgraded baseentity for soft delete and restore 3
+2e5d71d Fixed: contextmenu, inbox create-thread
+11ca858 V1.2.3
+1de4de9 Fixed recovery
+48dfa96 Fixed navigation alert
+a0cc605 Deployment: Module 1 April 2026
+a00dc80 Version v1.1.48
+04107fc Fixed eventRouter sessions
+ec1efd6 Css fix
+19e2588 April 2026 build 3
+1628dcd April 2026 build 2
+5eae319 Stability update for JS modules - refined AssetPipeline
+c4f0782 Stable version - uiActions test
+c90c2ba Stable version - UiActions
+d35cfc4 Version v1.1.0
+
 ## [1.1.0] - 2026-03-15
 - minor version bump
 
