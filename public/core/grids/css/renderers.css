@@ -1,0 +1,194 @@
+.grid-sticky-header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 5;
+}
+
+.grid-table-wrapper {
+
+    overflow: auto;
+}
+
+.density-compact td {
+
+    padding: .35rem;
+}
+
+.density-normal td {
+
+    padding: .65rem;
+}
+
+.density-comfortable td {
+
+    padding: 1rem;
+}
+
+
+/* Cards */
+.grid-cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            var(--grid-columns, auto-fit),
+            minmax(260px, 1fr)
+        );
+
+    gap: 1rem;
+}
+
+.cards-compact .grid-card {
+
+    padding: .5rem;
+}
+
+.cards-masonry {
+
+    columns: 3;
+}
+
+.grid-card.hover {
+
+    transform: translateY(-2px);
+}
+
+.grid-card.selected {
+
+    outline: 2px solid var(--primary);
+}
+
+
+/* Kanban */
+.grid-kanban {
+
+    display: flex;
+
+    gap: 1rem;
+
+    overflow-x: auto;
+}
+
+.kanban-lane {
+
+    min-width: 320px;
+}
+
+.kanban-card.dragging {
+
+    opacity: .5;
+}
+
+.kanban-lane.dragover {
+
+    outline: 2px dashed var(--primary);
+}
+
+.kanban-lane.collapsed .kanban-lane-body {
+
+    display: none;
+}
+
+/* Calendar */
+.grid-calendar {
+
+    display: grid;
+}
+
+.calendar-slot {
+
+    min-height: 100px;
+}
+
+.calendar-slot.today {
+
+    background: rgba(0,0,0,.05);
+}
+
+.calendar-event {
+
+    border-radius: 6px;
+}
+
+.calendar-event:hover {
+
+    z-index: 5;
+}
+
+
+/* Timeline */
+.grid-timeline {
+
+    overflow-y: auto;
+}
+
+.timeline-item {
+
+    position: relative;
+}
+
+.timeline-group-label {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 5;
+}
+
+.density-compact .timeline-item {
+
+    padding: .35rem;
+}
+
+/* Feed */
+
+.grid-feed {
+
+    overflow-y: auto;
+}
+
+.feed-item {
+
+    border-radius: 12px;
+}
+
+.feed-item + .feed-item {
+
+    margin-top: 1rem;
+}
+
+.feed-loading {
+
+    opacity: .7;
+}
+
+.density-compact .feed-item {
+
+    padding: .5rem;
+}
+
+/* Mobile */
+.mobile-mode .mobile-item {
+
+    border-radius: 12px;
+}
+
+.mobile-compact .mobile-item {
+
+    padding: .5rem;
+}
+
+.mobile-item.touching {
+
+    opacity: .7;
+}
+
+.mobile-item.selected {
+
+    outline: 2px solid var(--primary);
+}

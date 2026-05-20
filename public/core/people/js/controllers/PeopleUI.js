@@ -59,6 +59,7 @@ class PeopleUI {
                     
                     if(!res.success) return;
                     // console.log(res);
+                    // alert('need bread');
                     // Option B: wait for server push (better)
                     this.scope.emit('breadcrumbs:resolve', {
                         url:`portal/people/person/${personId}/view`, 

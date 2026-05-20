@@ -1,6 +1,5 @@
 {# Events/Views/events.twig #}
 
-
 {% block content %}
 
 <div class="events-page container">
@@ -8,11 +7,13 @@
     <div class="page-header">
 
         <div>
-            <h1>Events</h1>
+
+            <h1>{{ title|default('Events')}}</h1>
 
             <p class="text-muted">
                 Discover upcoming events and experiences
             </p>
+
         </div>
 
         <div class="page-actions">
@@ -29,11 +30,89 @@
 
     </div>
 
+    {# =======================================================
+     # FILTERS
+     # ===================================================== #}
+
+    <div class="events-filters">
+
+        <button
+            data-nav="portal/events?filter=published"
+            class="
+                btn btn-sm
+                {{ activeFilter == "published"
+                    ? "btn-primary"
+                    : "btn-light"
+                }}
+            "
+        >
+            Published
+        </button>
+
+        <button
+            data-nav="portal/events?filter=all"
+            class="
+                btn btn-sm
+                {{ activeFilter == "all"
+                    ? "btn-primary"
+                    : "btn-light"
+                }}
+            "
+        >
+            All
+        </button>
+
+        <button
+            data-nav="portal/events?filter=drafts"
+            class="
+                btn btn-sm
+                {{ activeFilter == "drafts"
+                    ? "btn-primary"
+                    : "btn-light"
+                }}
+            "
+        >
+            Your Drafts
+        </button>
+
+        <button
+            data-nav="portal/events?filter=deleted"
+            class="
+                btn btn-sm
+                {{ activeFilter == "deleted"
+                    ? "btn-danger"
+                    : "btn-light"
+                }}
+            "
+        >
+            Deleted
+        </button>
+
+        <button
+            data-nav="portal/events?filter=past"
+            class="
+                btn btn-sm
+                {{ activeFilter == "past"
+                    ? "btn-primary"
+                    : "btn-light"
+                }}
+            "
+        >
+            Past
+        </button>
+
+    </div>
+
+    {# =======================================================
+     # SEARCH
+     # ===================================================== #}
+
     <div class="events-search">
 
         <form
             method="GET"
             action="portal/events/search"
+            class="events-search-form"
         >
 
             <input
@@ -41,11 +120,24 @@
                 name="q"
                 class="form-control"
                 placeholder="Search events..."
+                value=""
             >
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                <i class="fas fa-search"></i>
+                Search
+            </button>
 
         </form>
 
     </div>
+
+    {# =======================================================
+     # EVENTS
+     # ===================================================== #}
 
     {% if events %}
 
@@ -53,9 +145,12 @@
 
             {% for event in events %}
 
-                {% include "events/partials/event-card.twig" with {
-                    event: event
-                } %}
+                {% include
+                    "events/partials/event-card.twig"
+                    with {
+                        event: event
+                    }
+                %}
 
             {% endfor %}
 
@@ -63,10 +158,16 @@
 
     {% else %}
 
-        {% include "events/partials/empty-state.twig" with {
-            title: 'No events found',
-            message: 'There are currently no events available.'
-        } %}
+        {% include
+            "events/partials/empty-state.twig"
+            with {
+
+                title:"No events found",
+
+                message:
+                    "There are currently no events available."
+            }
+        %}
 
     {% endif %}
 

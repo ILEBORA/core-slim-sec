@@ -567,4 +567,7 @@ async function (scope) {
             });
         }
     };
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/people')
 });

@@ -33,4 +33,7 @@ __BORA_REGISTER_PLUGIN__('events.composer', async function(scope){
         mount,
         unmount
     };
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/events')
 });

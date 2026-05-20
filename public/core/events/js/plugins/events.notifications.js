@@ -30,4 +30,7 @@ __BORA_REGISTER_PLUGIN__('events.notifications', async function(scope){
         mount,
         unmount
     };
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/events')
 });

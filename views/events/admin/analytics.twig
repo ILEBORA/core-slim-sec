@@ -1,0 +1,182 @@
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1 class="page-title">
+            Events Analytics
+        </h1>
+
+        <p class="page-subtitle">
+            Overview and statistics for the events system.
+        </p>
+
+    </div>
+
+</div>
+
+<div class="stats-grid">
+
+    <!-- Total Events -->
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Total Events
+        </div>
+
+        <div class="stat-value">
+            {{ stats.total }}
+        </div>
+
+    </div>
+
+    <!-- Upcoming -->
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Upcoming Events
+        </div>
+
+        <div class="stat-value">
+            {{ stats.upcoming }}
+        </div>
+
+    </div>
+
+    <!-- Featured -->
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Featured Events
+        </div>
+
+        <div class="stat-value">
+            {{ stats.featured }}
+        </div>
+
+    </div>
+
+    <!-- Drafts -->
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Draft Events
+        </div>
+
+        <div class="stat-value">
+            {{ stats.drafts }}
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card mt-4">
+
+    <div class="card-header">
+
+        <h3>
+            Quick Insights
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <ul class="analytics-list">
+
+            <li>
+                Total events in system:
+                <strong>
+                    {{ stats.total }}
+                </strong>
+            </li>
+
+            <li>
+                Upcoming scheduled events:
+                <strong>
+                    {{ stats.upcoming }}
+                </strong>
+            </li>
+
+            <li>
+                Featured/public promoted events:
+                <strong>
+                    {{ stats.featured }}
+                </strong>
+            </li>
+
+            <li>
+                Draft events pending publication:
+                <strong>
+                    {{ stats.drafts }}
+                </strong>
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+<div class="card mt-4">
+
+    <div class="card-header">
+
+        <h3>
+            Management Actions
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="action-grid">
+
+            <a
+                href="bo/events"
+                class="btn btn-secondary"
+            >
+                View All Events
+            </a>
+
+            <a
+                href="bo/events/upcoming"
+                class="btn btn-secondary"
+            >
+                Upcoming Events
+            </a>
+
+            <a
+                href="bo/events/drafts"
+                class="btn btn-secondary"
+            >
+                Draft Events
+            </a>
+
+            <a
+                href="bo/events/calendar"
+                class="btn btn-secondary"
+            >
+                Calendar View
+            </a>
+
+            <button
+                data-action="events.add"
+                class="btn btn-primary"
+            >
+                Create Event
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

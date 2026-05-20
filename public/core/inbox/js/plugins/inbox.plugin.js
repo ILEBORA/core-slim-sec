@@ -50,6 +50,11 @@ async function (scope) {
 
         ui.bind();
 
+        breadcrumbs.set([
+            { label: 'Inbox', href: 'portal/inbox' },
+            // { label: 'Loading...', current: true }
+        ]);
+
         scope.on('inbox.thread.open', (e) => {
             breadcrumbs.set([
                 { label: 'Inbox', href: 'portal/inbox' },

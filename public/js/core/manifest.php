@@ -194,7 +194,7 @@ return [
     'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery', 'runtime', 'events'],'preload'=>true],
     'navigation.plugin' => ['file' => 'plugins/navigation.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 42],
     'alerts' => ['file' => 'plugins/alerts.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
-    'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
+    'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.plugin.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => ['runtime']],
 
     'devtools.plugin' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
     'app.core' => ['file' => 'plugins/app.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
@@ -216,7 +216,7 @@ return [
     'component.mounter' => ['file' => 'plugins/component-mounter.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 68, 'requires' => ['runtime']],
     'key.handlers' => ['file' => 'plugins/key.handlers.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 69, 'requires' => ['runtime']],
     'ui.tabs' => ['file' => 'plugins/ui.tabs.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 70, 'requires' => ['runtime']],
-    
+    'entity.lifecycle' => ['file' => 'plugins/entity.lifecycle.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 71, 'requires' => ['runtime']],
 
 
     /* ==================================================

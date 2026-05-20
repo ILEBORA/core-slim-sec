@@ -35,9 +35,26 @@ __BORA_REGISTER_SERVICE__('events.calendar', async function(scope){
         );
     }
 
+    async function year(start, end){
+
+        return await callbora.get(
+
+            'api/modules/events/calendar/year',
+
+            {
+                start,
+                end
+            }
+        );
+    }
+
     return {
         month,
         week,
-        day
+        day,
+        year
     };
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/events/calendar')
 });

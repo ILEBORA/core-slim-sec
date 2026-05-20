@@ -344,4 +344,7 @@ __BORA_REGISTER_PLUGIN__('inbox.composer', async function(scope){
         close
     };
 
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/inbox')
 });

@@ -1,39 +1,218 @@
 {% set count = item.media|length %}
 
-{% if count == 1 %}
+{% if count > 0 %}
 
-<div class="media-single lazy" data-action="act-view-media" data-id="{{ item.media[0].id }}">
-    <img class="lazy" src="{{ item.media[0].preview_path }}?t={{ "now"|date("U") }}">
-</div>
+<div class="activity-media">
 
-{% elseif count <= 4 %}
+    {# ==================================================
+       SINGLE MEDIA
+    ================================================== #}
 
-<div class="media-grid grid-{{count}}">
-    {% for media in item.media %}
-        
-        {% if media.type == 'image' %}
-            <span data-action="act-view-media" data-id="{{ media.id }}">
-                <img class="lazy" src="{{ media.preview_path }}?t={{ "now"|date("U") }}">
-            </span>
-        {% elseif media.type == 'video' %}
-            <div class="media-video " data-action="act-view-media" data-id="{{ media.id }}">
-                <img class="lazy" src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}">
-                <span class="play-icon">▶</span>
+    {% if count == 1 %}
+
+        {% set media = item.media[0] %}
+        {% set type = media.type|lower %}
+
+        <div
+            class="media-single"
+            data-action="act-view-media"
+            data-id="{{ media.id }}"
+        >
+
+            {# ---------------- IMAGE ---------------- #}
+
+            {% if type == 'image' %}
+
+                <img
+                    class="lazy"
+                    src="{{ media.preview_path }}"
+                    loading="lazy"
+                    onerror="
+                        this.onerror=null;
+                        this.src='assets/images/icons/placeholder.png';
+                    "
+                >
+
+            {# ---------------- VIDEO ---------------- #}
+
+            {% elseif type == 'video' or type == 'mp4' %}
+
+                <div class="media-video">
+
+                    <img
+                        class="lazy"
+                        src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}"
+                        loading="lazy"
+                        onerror="
+                            this.onerror=null;
+                            this.src='assets/images/icons/placeholder.png';
+                        "
+                    >
+
+                    <span class="play-icon">▶</span>
+
+                </div>
+
+            {# ---------------- UNKNOWN ---------------- #}
+
+            {% else %}
+
+                <img
+                    class="lazy"
+                    src="assets/images/icons/placeholder.png"
+                    loading="lazy"
+                >
+
+            {% endif %}
+
+        </div>
+
+    {# ==================================================
+       GRID (2 - 4)
+    ================================================== #}
+
+    {% elseif count <= 4 %}
+
+        <div class="media-grid grid-{{ count }}">
+
+            {% for media in item.media %}
+
+                {% set type = media.type|lower %}
+
+                <div
+                    class="media-grid-item"
+                    data-action="act-view-media"
+                    data-id="{{ media.id }}"
+                >
+
+                    {# ---------------- IMAGE ---------------- #}
+
+                    {% if type == 'image' %}
+
+                        <img
+                            class="lazy"
+                            src="{{ media.preview_path }}"
+                            loading="lazy"
+                            onerror="
+                                this.onerror=null;
+                                this.src='assets/images/icons/placeholder.png';
+                            "
+                        >
+
+                    {# ---------------- VIDEO ---------------- #}
+
+                    {% elseif type == 'video' or type == 'mp4' %}
+
+                        <div class="media-video">
+
+                            <img
+                                class="lazy"
+                                src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}"
+                                loading="lazy"
+                                onerror="
+                                    this.onerror=null;
+                                    this.src='assets/images/icons/placeholder.png';
+                                "
+                            >
+
+                            <span class="play-icon">▶</span>
+
+                        </div>
+
+                    {# ---------------- UNKNOWN ---------------- #}
+
+                    {% else %}
+
+                        <img
+                            class="lazy"
+                            src="assets/images/icons/placeholder.png"
+                            loading="lazy"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {# ==================================================
+       CAROUSEL (5+)
+    ================================================== #}
+
+    {% else %}
+
+        <div class="media-carousel swiper">
+
+            <div class="swiper-wrapper">
+
+                {% for media in item.media %}
+
+                    {% set type = media.type|lower %}
+
+                    <div
+                        class="swiper-slide"
+                        data-action="act-view-media"
+                        data-id="{{ media.id }}"
+                    >
+
+                        {# ---------------- IMAGE ---------------- #}
+
+                        {% if type == 'image' %}
+
+                            <img
+                                class="lazy"
+                                src="{{ media.preview_path }}"
+                                loading="lazy"
+                                onerror="
+                                    this.onerror=null;
+                                    this.src='assets/images/icons/placeholder.png';
+                                "
+                            >
+
+                        {# ---------------- VIDEO ---------------- #}
+
+                        {% elseif type == 'video' or type == 'mp4' %}
+
+                            <div class="media-video">
+
+                                <img
+                                    class="lazy"
+                                    src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}"
+                                    loading="lazy"
+                                    onerror="
+                                        this.onerror=null;
+                                        this.src='assets/images/icons/placeholder.png';
+                                    "
+                                >
+
+                                <span class="play-icon">▶</span>
+
+                            </div>
+
+                        {# ---------------- UNKNOWN ---------------- #}
+
+                        {% else %}
+
+                            <img
+                                class="lazy"
+                                src="assets/images/icons/placeholder.png"
+                                loading="lazy"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
             </div>
-        {% endif %}
-    {% endfor %}
-</div>
 
-{% else %}
+        </div>
 
-<div class="media-carousel swiper">
-    <div class="swiper-wrapper">
-        {% for media in item.media %}
-            <div class="swiper-slide">
-                <img class="lazy" src="{{ media.preview_path }}?t={{ "now"|date("U") }}">
-            </div>
-        {% endfor %}
-    </div>
+    {% endif %}
+
 </div>
 
 {% endif %}

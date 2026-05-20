@@ -7,6 +7,13 @@ use BoraSlim\Core\Assets\AssetPipelineJs;
 
 $pipeline = new AssetPipelineJs('people', __DIR__);
 
+/* GLOBAL */
+$pipeline->register('people.actions', [
+    'file'     => 'plugins/people.actions.js',
+    'type'     => 'plugin',
+    'priority' => 99,
+]);
+
 /* ==================================================
    HELPERS
 ================================================== */
@@ -148,9 +155,9 @@ $pipeline->register('people.breadcrumbs', [
     'file'     => 'plugins/people.breadcrumbs.js',
     'type'     => 'plugin',
     'priority' => 142,
-    'requires' => [
-                    'hooks'
-                ]
+    // 'requires' => [
+    //                 'hooks'
+    //             ]
 ]);
 
 /* ==================================================

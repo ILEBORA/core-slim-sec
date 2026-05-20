@@ -1,43 +1,26 @@
-__BORA_REGISTER_SERVICE__('events.calendar', async function(scope){
+__BORA_REGISTER_SERVICE__(
+'events.calendar',
+async function(scope){
 
-    const callbora = await scope
-        .getService('callbora');
-
-    async function month(start, end){
-
-        return await callbora.get(
-            'api/modules/events/calendar/month',
-            {
-                start,
-                end
-            }
+    const callbora =
+        await scope.getService(
+            'callbora'
         );
-    }
 
-    async function week(start, end){
-
-        return await callbora.get(
-            'api/modules/events/calendar/week',
-            {
-                start,
-                end
-            }
-        );
-    }
-
-    async function day(date){
+    async function load(
+        view,
+        params = {}
+    ){
 
         return await callbora.get(
-            'api/modules/events/calendar/day',
-            {
-                date
-            }
+
+            `api/modules/events/calendar/${view}`,
+
+            params
         );
     }
 
     return {
-        month,
-        week,
-        day
+        load
     };
 });

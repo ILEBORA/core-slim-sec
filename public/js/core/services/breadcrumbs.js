@@ -7,18 +7,23 @@ async function(scope){
     let crumbs = [];
     
     function set(newCrumbs = []){
+        // alert('crumbs set');
         crumbs = normalize(newCrumbs);
-        hooks?.call('breadcrumbs:changed', crumbs);
+        // hooks?.call('breadcrumbs:changed', crumbs);
+        scope.emit('breadcrumbs:changed', crumbs);
     }
 
     function add(crumb){
         crumbs.push(normalizeItem(crumb));
-        hooks?.call('breadcrumbs:changed', crumbs);
+        // hooks?.call('breadcrumbs:changed', crumbs);
+        scope.emit('breadcrumbs:changed', crumbs);
     }
 
     function clear(){
+        // alert('Clear crumbs');
         crumbs = [];
-        hooks?.call('breadcrumbs:changed', crumbs);
+        // hooks?.call('breadcrumbs:changed', crumbs);
+        scope.emit('breadcrumbs:changed', crumbs);
     }
 
     function get(){
@@ -48,8 +53,13 @@ async function(scope){
        Auto: reset on navigation
     -------------------------- */
 
-    scope.on('page.beforeLoad', ()=>{
-        clear();
+    // scope.on('page.beforeLoad', ()=>{
+    //     clear();
+    // });
+    scope.on('page.beforeLoad', ({initial})=>{
+        if (!initial){
+            clear();
+        }
     });
 
     return {

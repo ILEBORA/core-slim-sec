@@ -21,8 +21,16 @@ __BORA_REGISTER_SERVICE__(
          * Helpers
          * -------------------------------------------------- */
 
-        function normalize(url){
+        function normalizeO(url){
             return url.split('?')[0].replace(/\/+$/, '');
+        }
+
+        function normalize(url){
+
+            return url;
+            return url
+                .split('?')[0]
+                .replace(/\/+$/, '');
         }
 
         function normalizeUrl(fullUrl){
@@ -179,17 +187,41 @@ __BORA_REGISTER_SERVICE__(
          * -------------------------------------------------- */
 
         function fetchJson(url){
-
+            console.trace('fetchJson called:', url);
             if (currentXHR){
                 currentXHR.abort();
             }
-
+            // alert('here x');
             return new Promise((resolve, reject)=>{
-
+                
                 const xhr = new XMLHttpRequest();
                 currentXHR = xhr;
+                // alert(url);
+                // xhr.open('GET', url + '?t=1', true);
+                
+                /*
+                |--------------------------------------------------------------------------
+                | Proper query handling
+                |--------------------------------------------------------------------------
+                */
 
-                xhr.open('GET', url + '?t=1', true);
+                const base = window.__APP_BASE_PATH__ || '';
+
+                const parsed = new URL(url, base);
+
+                parsed.searchParams.set(
+                    't',
+                    '1'
+                );
+
+                xhr.open(
+                    'GET',
+                    parsed.toString(),
+                    true
+                );
+
+                //
+
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
                 xhr.onprogress = function(e){
@@ -241,7 +273,9 @@ __BORA_REGISTER_SERVICE__(
             
             if (!url) return Promise.resolve();
 
-            const cleanUrl = normalize(url);
+            const cleanUrl = url;//normalize(url);
+
+            // alert(cleanUrl);
 
             const guardResult = await router?.runGuards?.(cleanUrl, currentRoute);
 
@@ -268,22 +302,18 @@ __BORA_REGISTER_SERVICE__(
             await new Promise(requestAnimationFrame);
 
             try {
-
+                // alert('go');
                 const json = await fetchJson(cleanUrl);
+
+                scope.emit('page.response', {
+                    url: cleanUrl,
+                    response: json,
+                    options
+                });
 
                 const isValid = json?.ok === true || json?.success === true;
                 if (!isValid){
-                
-                    // alertBora?.notifyRich?({
-                    //     title: 'Permission',
-                    //     body: json.message,
-                    //     delay: 8,
-                    //     sound: true,
-                    //     onClick: () => {
-                    //         this.navigation.go(``);
-                    //     }
-                    // });
-
+            
                     alertBora.notifyRich({
                         type: 'error',
                         title: 'Permission Error',
@@ -299,7 +329,6 @@ __BORA_REGISTER_SERVICE__(
 
                     scope.emit('page.loadError', cleanUrl, json);
 
-                    // ov?.hide?.(true);
                     if (overlayVisible) ov?.hide?.(true);
 
                     return Promise.reject(json);
@@ -454,7 +483,6 @@ __BORA_REGISTER_SERVICE__(
         }
 
         window.addEventListener('popstate', async (e) => {
-
             const uiStack  = await scope.getService('uiStack');
             const navigator = await scope.getService('navigator');
             const popup    = await scope.getPlugin('popup');
@@ -503,19 +531,6 @@ __BORA_REGISTER_SERVICE__(
                 surface: surface || 'page'
             });
         });
-
-        // window.addEventListener('popstate', async (e)=>{
-        //     const uiStack = await scope.getService('uiStack');
-        //     if(uiStack && uiStack.size() > 0){
-        //         uiStack.closeTop();
-        //         // restore history so navigation does not occur
-        //         history.pushState(e.state, '', window.location);
-        //         return;
-        //     }
-
-        //     const url = e.state?.url || normalizeUrl(window.location);
-        //     await go(url, { replace:true });
-        // });
 
         return {
             go,

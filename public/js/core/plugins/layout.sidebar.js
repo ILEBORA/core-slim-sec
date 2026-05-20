@@ -84,15 +84,14 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
             handleClick(this);
         });
 
-        document.addEventListener('click', (e)=>{
+        // document.addEventListener('click', (e)=>{
+        //     const el = e.target.closest('[data-sidebar-link]');
+        //     if(!el) return;
 
-            const el = e.target.closest('[data-sidebar-link]');
-            if(!el) return;
+        //     e.preventDefault();
+        //     handleClick(el);
 
-            e.preventDefault();
-            handleClick(el);
-
-        });
+        // });
 
         // Runtime hook integration
         scope.on('page.beforeLoad', handleBeforeLoad);
@@ -146,7 +145,7 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
 
         // alert('Sidebar initialized with face: ' + (scope.face || context.get()));
         const menu = await __BORA_APP__.service('menu'); // ✅ FIX
-        await menu.refresh(scope.face || context.get());
+        // await menu.refresh(scope.face || context.get());
 
         //
         // scope.on('esc', onEscKeyPress);
@@ -319,7 +318,7 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
         $('.features-list .active').removeClass('active');
         $(el).addClass('active loading');
         $(el).find('.menu_loading').addClass('fa fa-spinner fa-spin');
-
+        // alert('hh');
         navigation.navigate(url)
             .finally(() => {
                 // $(el).removeClass('loading');

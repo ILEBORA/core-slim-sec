@@ -7,6 +7,13 @@ use BoraSlim\Core\Assets\AssetPipelineJs;
 
 $pipeline = new AssetPipelineJs('inbox', __DIR__);
 
+/* GLOBAL */
+$pipeline->register('inbox.actions', [
+    'file'     => 'plugins/inbox.actions.js',
+    'type'     => 'plugin',
+    'priority' => 99,
+]);
+
 /* ==================================================
    HELPERS
 ================================================== */

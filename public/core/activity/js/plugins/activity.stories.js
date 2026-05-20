@@ -120,6 +120,6 @@ __BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
     return { mount, unmount };
 
 },{
-    // requires:['realtime.sse'],
+    requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/activity/stories')
 });

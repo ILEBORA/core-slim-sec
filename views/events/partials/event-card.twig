@@ -1,6 +1,7 @@
 {# Events/Views/partials/event-card.twig #}
 
-<div class="event-card card">
+{% set d_state = event.is_deleted ? 'deleted' : '' %}
+<div class="event-card card {{d_state}}" data-id="{{event.id}}">
 
     {% if event.cover_image %}
 

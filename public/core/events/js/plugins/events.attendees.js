@@ -69,4 +69,7 @@ __BORA_REGISTER_PLUGIN__('events.attendees', async function(scope){
         mount,
         unmount
     };
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/events')
 });

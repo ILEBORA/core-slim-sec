@@ -1,24 +1,24 @@
-{% extends layout('admin') %}
+{# extends layout('admin') #}
 
 {% block content %}
 
 <div class="events-admin-dashboard">
 
-    {% include "events/admin/partials/admin-topbar.twig" %}
+    {% include "events/partials/admin-topbar.twig" %}
 
     <div class="stats-grid">
 
-        {% include "events/admin/partials/admin-stat-card.twig" with {
+        {% include "events/partials/admin-stat-card.twig" with {
             title: 'Total Events',
             value: stats.total
         } %}
 
-        {% include "events/admin/partials/admin-stat-card.twig" with {
+        {% include "events/partials/admin-stat-card.twig" with {
             title: 'Live Events',
             value: stats.live
         } %}
 
-        {% include "events/admin/partials/admin-stat-card.twig" with {
+        {% include "events/partials/admin-stat-card.twig" with {
             title: 'Drafts',
             value: stats.drafts
         } %}
@@ -29,15 +29,15 @@
 
         <div class="dashboard-main">
 
-            {% include "events/admin/widgets/pending-events.twig" %}
+            {% include "events/widgets/pending-events.twig" %}
 
-            {% include "events/admin/widgets/realtime-feed.twig" %}
+            {% include "events/widgets/realtime-feed.twig" %}
 
         </div>
 
         <div class="dashboard-sidebar">
 
-            {% include "events/admin/widgets/quick-stats.twig" %}
+            {% include "events/widgets/quick-stats.twig" %}
 
         </div>
 

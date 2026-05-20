@@ -1,23 +1,575 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
 
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+EnvLoader::load(
+
+    __DIR__ . '/../../../../../../../',
+
+    'wahenga'
+);
 
 use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipelineJs('grids', __DIR__);
+$pipeline = new AssetPipelineJs(
 
+    'grids',
 
+    __DIR__,
 
-$pipeline->register('grids.plugin', [
-    'file'     => 'plugins/grids.plugin.js',
-    'type'     => 'plugin',
-    'priority' => 101,
-    'requires' => [],
+    'core'
+);
+
+/* ==================================================
+   SERVICES
+================================================== */
+
+$pipeline->register('grids.events', [
+
+    'file' =>
+
+        'services/grids/grids.events.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        100,
+]);
+
+$pipeline->register('grids.store', [
+
+    'file' =>
+
+        'services/grids/grids.store.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        110,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.events'
+    ],
+]);
+
+$pipeline->register('grids.subscriptions', [
+
+    'file' =>
+
+        'services/grids/grids.subscriptions.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        120,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store'
+    ],
+]);
+
+$pipeline->register('grids.patchResolver', [
+
+    'file' =>
+
+        'services/grids/grids.patchResolver.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        130,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.selection', [
+
+    'file' =>
+
+        'services/grids.selection.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        131,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.transport', [
+
+    'file' =>
+
+        'services/grids.transport.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        132,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.state', [
+
+    'file' =>
+
+        'services/grids.state.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        133,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.optimistic', [
+
+    'file' =>
+
+        'services/grids.optimistic.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        140,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store'
+    ],
+]);
+
+$pipeline->register('grids.offline', [
+
+    'file' =>
+
+        'services/grids/grids.offline.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        150,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store'
+    ],
+]);
+
+$pipeline->register('grids.sync', [
+
+    'file' =>
+
+        'services/grids.sync.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        160,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store',
+
+        'grids.events'
+    ],
+]);
+
+$pipeline->register('grids.sse', [
+
+    'file' =>
+
+        'services/grids/grids.sse.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        170,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.subscriptions'
+    ],
+]);
+
+$pipeline->register('grids.stream', [
+
+    'file' =>
+
+        'services/grids/grids.stream.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        180,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.sse',
+
+        'grids.patchResolver',
+
+        'grids.store'
+    ],
+]);
+
+$pipeline->register('grids.runtime', [
+
+    'file' =>
+
+        'services/grids/grids.runtime.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        190,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store',
+
+        'grids.events',
+
+        'grids.subscriptions',
+
+        'grids.patchResolver',
+
+        'grids.stream'
+    ],
 ]);
 
 /* ==================================================
-   COMPILE → manifest
+   PLUGINS
+================================================== */
+
+$pipeline->register('grids.table', [
+
+    'file' =>
+
+        'plugins/grids.table.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        200,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.runtime'
+    ],
+]);
+
+$pipeline->register('grids.cards', [
+
+    'file' =>
+
+        'plugins/grids.cards.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        210,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.runtime'
+    ],
+]);
+
+$pipeline->register('grids.pagination', [
+
+    'file' =>
+
+        'plugins/grids.pagination.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        220,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store'
+    ],
+]);
+
+$pipeline->register('grids.search', [
+
+    'file' =>
+
+        'plugins/grids.search.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        230,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.store'
+    ],
+]);
+
+$pipeline->register('grids.export', [
+
+    'file' =>
+
+        'plugins/grids.export.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        240,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.actions', [
+
+    'file' =>
+
+        'services/grids.actions.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        100,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.registry', [
+
+    'file' =>
+
+        'services/grids.registry.js',
+
+    'type' =>
+
+        'service',
+
+    'priority' =>
+
+        100,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.contextmenu', [
+
+    'file' =>
+
+        'plugins/grids.contextmenu.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        250,
+
+    'requires' => [
+
+        'runtime',
+        'grids.actions'
+    ],
+]);
+
+$pipeline->register('grids.inlineedit', [
+
+    'file' =>
+
+        'plugins/grids.inlineedit.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        260,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.optimistic',
+        'grids.actions'
+    ],
+]);
+
+$pipeline->register('grids.dragscroll', [
+
+    'file' =>
+
+        'plugins/grids.dragscroll.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        270,
+
+    'requires' => [
+
+        'runtime'
+    ],
+]);
+
+$pipeline->register('grids.realtime', [
+
+    'file' =>
+
+        'plugins/grids.realtime.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        280,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.stream'
+    ],
+]);
+
+$pipeline->register('grids.renderers', [
+
+    'file' =>
+
+        'plugins/grids.renderers.js',
+
+    'type' =>
+
+        'plugin',
+
+    'priority' =>
+
+        280,
+
+    'requires' => [
+
+        'runtime',
+
+        'grids.stream'
+    ],
+]);
+
+/* ==================================================
+   COMPILE
 ================================================== */
 
 $pipeline->compile();

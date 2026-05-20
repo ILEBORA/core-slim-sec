@@ -516,7 +516,7 @@
         ================================================== */
 
         async function evaluatePluginActivation(route){
-            
+            // alert('evaluatePluginActivation :: ' + route);
             const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
             console.warn('[MANIFEST]', manifest);
 
@@ -601,7 +601,7 @@
                 --------------------------- */
 
                 if(shouldActivate){
-
+                    // alert('Plugin:: '+name);
                     if(!plugin.__active){
 
                         try{

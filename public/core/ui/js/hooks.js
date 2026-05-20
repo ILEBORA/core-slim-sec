@@ -11,7 +11,8 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     // alert('Ui Hooks');
     // Register a beforeSubmit hook
     hooks.add("form:beforeSubmit", ($form) => {
-        console.log("Before submitting:", $form.attr('id'));
+      
+        console.log("Before submitting:", $form.data('handler'));
         if ($form.closest('.bora-alert').length) {
             console.log("Inside popup form - letting AJAX handle it");
             return true;
@@ -25,7 +26,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
     // Register an afterSubmit hook
     hooks.add("form:afterSubmit", async ($form, resp) => {
-        console.log("Form submitted:", $form.attr('id'), resp);
+        console.log("Form submitted:", $form.data('handler'), resp);
         // e.g., show a toast or update Ui
         if (resp.message){
             var type = resp.success ? 'success' : 'error';
@@ -39,12 +40,14 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
         if(resp.esc){
             scope.emit('esc');
-            // uiStack.closeTop();
-            // await __BORA_APP__.service('hooks')?.call('esc');
         }
 
         if(resp.success){
-            // $form.reset();
+            const boraForm =
+                $form.data('bora-form');
+
+            boraForm?.markSubmitted(resp);
+
             $form[0]?.reset();
         }
     });

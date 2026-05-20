@@ -73,9 +73,11 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
     ================================================== */
 
     function bind(){
-
+        console.log('navigation bind');
         document.addEventListener('click', async function(e){
-
+            console.count(
+                '[ui.actions] click handler'
+            );
             /* ==================================================
                NEW SYSTEM — data-action
             ================================================== */

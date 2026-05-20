@@ -1,12 +1,12 @@
-{% extends layout('admin') %}
+{# extends layout('admin') #}
 
 {% block content %}
 
 <div class="admin-events-page">
 
-    {% include "events/admin/partials/event-filters.twig" %}
+    {% include "events/partials/event-filters.twig" %}
 
-    {% include "events/admin/partials/event-table.twig" with {
+    {% include "events/partials/event-table.twig" with {
         events: events
     } %}
 

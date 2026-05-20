@@ -8,13 +8,33 @@ async function(scope){
     // let $container;
     const getContainer = scope.bindDom('.breadcrumb');
 
+    const state = {
+        mounted: false,
+        initialized:false
+    };
+
     function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
         // const $container = getContainer();
 
-        hooks?.add('breadcrumbs:changed', render);
+        scope.on('page.afterLoad', ()=>{
+            // TODO:: init bread
+            // alert('page.afterLoad');
+        });
+
+        scope.on('breadcrumbs:changed', render);
+
+         // INITIAL RENDER
+        render(breadcrumbs.get());
+
+        // hooks?.add('breadcrumbs:changed', render);
 
         scope.on('route:changed', async ({url:url}) => {
+            // alert('route changed bread here :: ' + url);
             // optional: pass last known response if you have it
+            breadcrumbs.clear();
+
             scope.emit('breadcrumbs:resolve', {
                 url: url,
                 response:null
@@ -26,8 +46,10 @@ async function(scope){
     }
 
     function render(list){
+        // alert('render');
+
         const $container = getContainer();
-        if (!$container || !$container.length) return;
+        if (!$container || !$container.length){ alert('container not found'); return;}
 
         // $container = $('.breadcrumb');
 
@@ -44,9 +66,23 @@ async function(scope){
             return `<span>${item.label}</span>`;
 
         }).join(' <span class="sep">»</span> ');
-
+        // alert('content: '+html);
         $container.html(html);
+
+        // We should not need this
+        $(function(){
+            //Extra bind
+            // alert('here');
+            $cnt = $('.breadcrumb');
+            if($cnt){
+                $cnt.html(html);
+            }
+        });
     }
 
-    return { mount, render };
+    function unmount(){
+        state.mounted = false;
+    }
+
+    return { mount, unmount, render };
 });

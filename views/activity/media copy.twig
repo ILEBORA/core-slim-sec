@@ -1,0 +1,39 @@
+{% set count = item.media|length %}
+
+{% if count == 1 %}
+
+<div class="media-single lazy" data-action="act-view-media" data-id="{{ item.media[0].id }}">
+    <img class="lazy" src="{{ item.media[0].preview_path }}">
+</div>
+
+{% elseif count <= 4 %}
+
+<div class="media-grid grid-{{count}}">
+    {% for media in item.media %}
+        
+        {% if media.type == 'image' %}
+            <span data-action="act-view-media" data-id="{{ media.id }}">
+                <img class="lazy" src="{{ media.preview_path }}">
+            </span>
+        {% elseif media.type == 'video' %}
+            <div class="media-video " data-action="act-view-media" data-id="{{ media.id }}">
+                <img class="lazy" src="{{ media.thumb|default('assets/images/icons/placeholder.png') }}">
+                <span class="play-icon">▶</span>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% else %}
+
+<div class="media-carousel swiper">
+    <div class="swiper-wrapper">
+        {% for media in item.media %}
+            <div class="swiper-slide">
+                <img class="lazy" src="{{ media.preview_path }}">
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endif %}

@@ -88,13 +88,29 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
             if (this.options.onOpen) this.options.onOpen();
 
-            events && events.emit && events.emit('popup:open', this);
+            scope && scope.emit && scope.emit('popup:open', this);
         }
 
-        close() {
+        async close() {
 
             if (API.activePopup === this){
                 API.activePopup = null;
+            }
+
+            // alert('close');
+
+            const result =
+                await scope.emit?.(
+                    'popup:beforeClose',
+                    this
+                );
+
+            /*
+            | Any listener can cancel close
+            */
+
+            if(result === false){
+                return;
             }
             
             this.$popup.fadeOut(200, () => {
@@ -103,10 +119,11 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
                 if (this.options.onClose) this.options.onClose();
 
-                events && events.emit && events.emit('popup:close', this);
+                scope && scope.emit && scope.emit('popup:close', this);
 
                 this.destroy();
             });
+
         }
 
         destroy() {
@@ -164,7 +181,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                     if (callback) callback();
                     if (this.options.onLoaded) this.options.onLoaded(url);
 
-                    events && events.emit && events.emit('popup:loaded', { url });
+                    scope && scope.emit && scope.emit('popup:loaded', { url });
                 },
                 error: () => {
                     this.$append.html('<div class="popup-error">Failed to load content.</div>');

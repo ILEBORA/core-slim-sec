@@ -8,6 +8,7 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
     const popup = await scope.getPlugin('popup');
 
     const uiStack = await __BORA_APP__.service('uiStack');
+    const lifecycle = await scope.getPlugin('entity.lifecycle');
 
     const dismissable = await __BORA_APP__
         .service('ui.dismissable');
@@ -28,12 +29,13 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
         if(!state.mounted) return;
         state.mounted = false;
     }
-
+    init();
     function init(){
 
         if(state.initialized) return;
-
         state.initialized = true;
+
+        // alert('events.actions init');
 
         console.log('[events.actions] mounted');
 
@@ -124,7 +126,7 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
             'event.force-delete',
             handleForceDelete
         );
-
+        // alert('actions');
         // Types
         // uiActions.register(
         //     'event-type.view',
@@ -186,6 +188,41 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
             }
         );
 
+        // Listeners
+        scope.on(
+            'event.add',
+            (data) => {
+                console.log('data', data);
+                prependEventCard(data);
+            }
+        );
+
+        scope.on(
+            'event.delete',
+            (data) => {
+
+                $(`.activity-item[data-id="${data.id}"]`)
+                    .addClass('deleted');
+            }
+        );
+
+        scope.on(
+            'event.restore',
+            (data) => {
+
+                $(`.activity-item[data-id="${data.id}"]`)
+                    .removeClass('deleted');
+            }
+        );
+
+        scope.on(
+            'event.force-delete',
+            (data) => {
+
+                $(`.activity-item[data-id="${data.id}"]`)
+                    .remove();
+            }
+        );
 
     }
 
@@ -436,31 +473,6 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
         }
     }
 
-    async function handleDelete(el){
-
-        const id = $(el)
-            .data('event-id');
-
-        const response = await callbora.post(
-            `api/modules/events/event/delete/${id}`
-        );
-
-        if(response.success){
-
-            alertBora.success(
-                'Event deleted'
-            );
-
-            $(`.event-card[data-id="${id}"]`)
-                .fadeOut();
-
-        } else {
-
-            alertBora.error(
-                response.message || 'Failed'
-            );
-        }
-    }
 
     /* =====================================================
      | Favourite
@@ -514,107 +526,188 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
 
     //
     async function handleDelete(el){
-        let activityId = $(el).data('id');
+        return lifecycle.mutate({
 
-        alertBora.prompt(
-            '<h3>Confirm Action</h3>Enter your password to continue',
-            {
-                html: true,
-                prompt: '<input type="password" name="password" placeholder="Password">'
-            }
-        ).then(function(det){
+            module: 'events',
 
-            let password = btoa(det.password);
+            entity: 'event',
 
-            callbora.post(`api/modules/events/event/${activityId}/delete`, {
-                password: password
-            }).then(function(response){
-                if(response.success){
-                    alertBora.success('Activity soft deleted');
+            id: $(el).data('id'),
 
-                    //remove item
-                    $('.activity-item[data-id"'+activityId+'"]').addClass('deleted');
+            action: 'delete',
+
+            source: el
+        });
+
+        // let activityId = $(el).data('id');
+
+        // alertBora.prompt(
+        //     '<h3>Confirm Action</h3>Enter your password to continue',
+        //     {
+        //         html: true,
+        //         prompt: '<input type="password" name="password" placeholder="Password">'
+        //     }
+        // ).then(function(det){
+
+        //     let password = btoa(det.password);
+
+        //     callbora.post(`api/modules/events/event/${activityId}/delete`, {
+        //         password: password
+        //     }).then(function(response){
+        //         if(response.success){
+        //             alertBora.success('Activity soft deleted');
+
+        //             //remove item
+        //             // $('.activity-item[data-id"'+activityId+'"]').addClass('deleted');
+        //             scope.emit(
+        //                 'event.delete',
+        //                 {
+        //                     entity: 'event',
+        //                     action: 'delete',
+
+        //                     data: {
+        //                         id: activityId
+        //                     },
+
+        //                     response,
+
+        //                     source: el
+        //                 }
+        //             );
                     
-                    scope.emit('events.back');
+        //             scope.emit('events.back');
 
-                } else {
-                    alertBora.error(response.message || 'Failed');
-                }
+        //         } else {
+        //             alertBora.error(response.message || 'Failed');
+        //         }
 
-            });
+        //     });
 
-        }); 
-
+        // }); 
     }
 
     async function handleRestore(el){
-        let activityId = $(el).data('id');
+        return lifecycle.mutate({
 
-        alertBora.prompt(
-            '<h3>Confirm Action</h3>Enter your password to continue',
-            {
-                html: true,
-                prompt: '<input type="password" name="password" placeholder="Password">'
-            }
-        ).then(function(det){
+            module: 'events',
 
-            let password = btoa(det.password);
+            entity: 'event',
 
-            callbora.post(`api/modules/events/event/${activityId}/restore`, {
-                password: password
-            }).then(function(response){
+            id: $(el).data('id'),
 
-                if(response.success){
-                    alertBora.success('Activity restore');
+            action: 'restore',
 
-                    //Restore item
-                    $('.activity-item[data-id"'+activityId+'"]').removeClass('deleted');
+            source: el
+        });
+        // let activityId = $(el).data('id');
 
-                    if(response.redirect){
-                        navigation.go(response.redirect);
-                    }
+        // alertBora.prompt(
+        //     '<h3>Confirm Action</h3>Enter your password to continue',
+        //     {
+        //         html: true,
+        //         prompt: '<input type="password" name="password" placeholder="Password">'
+        //     }
+        // ).then(function(det){
+
+        //     let password = btoa(det.password);
+
+        //     callbora.post(`api/modules/events/event/${activityId}/restore`, {
+        //         password: password
+        //     }).then(function(response){
+
+        //         if(response.success){
+        //             alertBora.success('Event restore');
+
+        //             //Restore item
+        //             // $('.activity-item[data-id"'+activityId+'"]').removeClass('deleted');
+        //             scope.emit(
+        //                 'event.restore',
+        //                 {
+        //                     entity: 'event',
+        //                     action: 'restore',
+
+        //                     data: {
+        //                         id: activityId
+        //                     },
+
+        //                     response,
+
+        //                     source: el
+        //                 }
+        //             );
+
+        //             if(response.redirect){
+        //                 navigation.go(response.redirect);
+        //             }
                     
-                } else {
-                    alertBora.error(response.message || 'Failed');
-                }
+        //         } else {
+        //             alertBora.error(response.message || 'Failed');
+        //         }
 
-            });
+        //     });
 
-        }); 
+        // }); 
 
     }
 
     async function handleForceDelete(el){
-        let activityId = $(el).data('id');
+        return lifecycle.mutate({
 
-        alertBora.prompt(
-            '<h3>Confirm Action</h3>Enter your password to continue',
-            {
-                html: true,
-                prompt: '<input type="password" name="password" placeholder="Password">'
-            }
-        ).then(function(det){
+            module: 'events',
 
-            let password = btoa(det.password);
+            entity: 'event',
 
-            callbora.post(`api/modules/events/event/${activityId}/forcedelete`, {
-                password: password
-            }).then(function(response){
+            id: $(el).data('id'),
 
-                if(response.success){
-                    alertBora.success('event deleted');
+            action: 'force-delete',
 
-                    //remove item
-                    $('.activity-item[data-id"'+activityId+'"]').remove();
+            source: el
+        });
+        // let activityId = $(el).data('id');
 
-                    scope.emit('events.back');
-                } else {
-                    alertBora.error(response.message || 'Failed');
-                }
+        // alertBora.prompt(
+        //     '<h3>Confirm Action</h3>Enter your password to continue',
+        //     {
+        //         html: true,
+        //         prompt: '<input type="password" name="password" placeholder="Password">'
+        //     }
+        // ).then(function(det){
 
-            });
+        //     let password = btoa(det.password);
 
-        }); 
+        //     callbora.post(`api/modules/events/event/${activityId}/forcedelete`, {
+        //         password: password
+        //     }).then(function(response){
+
+        //         if(response.success){
+        //             alertBora.success('event deleted');
+
+        //             //remove item
+        //             // $('.activity-item[data-id"'+activityId+'"]').remove();
+        //             scope.emit(
+        //                 'event.force-delete',
+        //                 {
+        //                     entity: 'event',
+        //                     action: 'force-delete',
+
+        //                     data: {
+        //                         id: activityId
+        //                     },
+
+        //                     response,
+
+        //                     source: el
+        //                 }
+        //             );
+
+        //             scope.emit('events.back');
+        //         } else {
+        //             alertBora.error(response.message || 'Failed');
+        //         }
+
+        //     });
+
+        // }); 
 
     }
 
@@ -769,6 +862,20 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
 
     //     el.innerHTML = html;
     // }
+
+    function prependEventCard(data){
+        const eventsGrid = $('.events-grid');
+        if(data.response.html){
+            eventsGrid.append(data.response.html);
+        }
+    }
+
+    function removeEventCard(id){
+        const card = $(`.event-card[data-id="${id}"]`);
+        if(card.length){
+            
+        }
+    }
 
 
     return {

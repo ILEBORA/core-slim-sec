@@ -1,0 +1,46 @@
+{# Events/Views/calendar/year.twig #}
+
+<div class="calendar-year-view">
+
+    {% for month, monthEvents in groupedEvents %}
+
+        <div class="year-month-section">
+
+            <div class="month-header">
+
+                <h3>{{ month }}</h3>
+
+            </div>
+
+            {% if monthEvents %}
+
+                <div class="month-events">
+
+                    {% for event in monthEvents %}
+
+                        {% include
+                            "events/partials/event-row.twig"
+                            with {
+                                event: event
+                            }
+                        %}
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="text-muted">
+
+                    No events
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+</div>

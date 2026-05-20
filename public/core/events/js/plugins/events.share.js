@@ -44,4 +44,7 @@ __BORA_REGISTER_PLUGIN__('events.share', async function(){
         mount,
         unmount
     };
+},{
+    requires:['realtime'],
+    activateOn: (route) => route.startsWith('portal/events')
 });

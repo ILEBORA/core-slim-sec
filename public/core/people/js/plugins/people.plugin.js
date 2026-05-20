@@ -60,11 +60,17 @@ async function (scope) {
         });
     }
 
+    attachInteractions();
+
     /* ========================================
      * EVENTS
      * ====================================== */
 
     function bindEvents() {
+         breadcrumbs.set([
+            { label: 'People', href: 'portal/people' },
+            // { label: 'Loading...', current: true }
+        ]);
 
         // OPEN PERSON (🔥 now uses API)
         scope.on('people.person.open', async ({ personId }) => {
@@ -195,7 +201,5 @@ async function (scope) {
     activateOn: (route) => (
         route === 'portal/people' ||
         route.startsWith('portal/people/')// ||
-
-        
     )
 });

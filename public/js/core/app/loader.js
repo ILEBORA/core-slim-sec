@@ -26,6 +26,48 @@
 
     const scriptCache = new Map(); // src -> Promise
 
+    const progress = {
+        total: 0,
+        loaded: 0,
+        failed: 0,
+        active: false
+    };
+
+   
+
+    function emitProgress(type, extra = {}){
+
+        const app = global.__BORA_APP__;
+
+        if(!app?.emit){
+            return;
+        }
+
+        app.emit(type, {
+            ...progress,
+            percent:
+                progress.total > 0
+                    ? Math.round(
+                        (progress.loaded + progress.failed)
+                        / progress.total * 100
+                    )
+                    : 0,
+            ...extra
+        });
+
+    }
+
+    function beginLoading(total){
+
+        progress.total = total;
+        progress.loaded = 0;
+        progress.failed = 0;
+        progress.active = true;
+
+        emitProgress('loader:start');
+
+    }
+
     function waitForRegistration(name){
 
         const app = global.__BORA_APP__;
@@ -89,11 +131,41 @@
         return promise;
     }
 
+    function collectDependencies(name, set = new Set()){
+
+        if(set.has(name)){
+            return set;
+        }
+
+        set.add(name);
+
+        const entry = manifest[name];
+
+        if(entry?.requires){
+
+            entry.requires.forEach(dep => {
+                collectDependencies(dep, set);
+            });
+
+        }
+
+        return set;
+
+    }
+
     /* ==================================================
        CORE: ENSURE MODULE
     ================================================== */
 
     async function ensure(name, options = {}){
+
+        progress.loaded++;
+
+        emitProgress('loader:progress', {
+            module:name
+        });
+
+        //
 
         const {
             stack = [],
@@ -101,6 +173,14 @@
         } = options;
 
         name = name.toLowerCase();
+
+        // New
+        const isRootCall = stack.length === 0;
+        if(isRootCall){
+            const deps = collectDependencies(name);
+            beginLoading(deps.size);
+        }
+        //end new
 
         console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
 
@@ -226,10 +306,31 @@
 
                 failed.set(name, err);
                 console.error(`[Loader] Failed: ${name}`, err);
+                //
+                progress.failed++;
+                emitProgress('loader:error', {
+                    module:name,
+                    error:err
+                });
+                //
+
                 throw err;
 
             }finally{
                 loading.delete(name);
+
+                if(
+                    isRootCall &&
+                    loading.size === 0
+                ){
+
+                    progress.active = false;
+
+                    emitProgress(
+                        'loader:complete'
+                    );
+
+                }
             }
 
         })();

@@ -2565,10 +2565,32 @@ formJourney.addMethods({
                 console.log('Default form saved', resp);
                 if (typeof done === 'function') done(resp);
             },
-            error: function(err) {
-                console.error('Form error', err);
-                if (typeof done === 'function') done(err);
-            }
+            // error: function(err) {
+            //     console.error('Form error', err);
+            //     if (typeof done === 'function') done(err);
+            // }
+			error: function(xhr) {
+
+				console.error('Form error', xhr);
+
+				let resp = xhr.responseJSON;
+
+				// fallback if responseJSON missing
+				if (!resp && xhr.responseText) {
+					try {
+						resp = JSON.parse(xhr.responseText);
+					} catch(e) {
+						resp = {
+							success: false,
+							message: 'Unknown server error'
+						};
+					}
+				}
+
+				if (typeof done === 'function') {
+					done(resp);
+				}
+			}
         });
     },
 

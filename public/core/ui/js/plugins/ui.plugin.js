@@ -15,6 +15,8 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
         mounted: false
     };
 
+    let bar;
+
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
@@ -129,6 +131,27 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
                     done?.(xhr);
                 })
                 .build();
+        });
+
+        bar = document.querySelector('.loader-bar');
+
+        scope.on('loader:progress', data => {
+
+            console.log(data);
+
+            if(bar){
+                bar.style.width =
+                    data.percent + '%';
+            }
+
+        });
+
+        scope.on('loader:complete', ()=>{
+
+            document.body.classList.add(
+                'app-loaded'
+            );
+
         });
     }
 

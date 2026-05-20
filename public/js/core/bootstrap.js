@@ -159,7 +159,7 @@
             const params = Object.fromEntries(url.searchParams.entries());
 
             restoring = false;
-
+            // alert('handle route state '+route);
             return navigator.go({
                 route,
                 params,
@@ -170,7 +170,7 @@
         try{
 
             const route = normalizeUrl(window.location);
-            // alert(route);
+            
             // trigger plugin activation cycle
             await app.emit('route:init', route);
 

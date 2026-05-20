@@ -5,9 +5,12 @@
         src="viewer/media/{{ media.media_id }}/t"
         data-src="viewer/media/{{ media.media_id }}">
     <script>$(function(){lazyLoad();})</script>
-{% elseif media.type == 'video' %}
+{% elseif media.type == 'video' or media.type == 'mp4' %}
     <video controls preload="metadata">
         <source src="viewer/media/{{ media.media_id }}" type="video/mp4">
     </video>
+
+{% else %}
+    <center>Preview not allowed.</center>
 {% endif %}
 </div>

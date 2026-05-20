@@ -1,64 +1,55 @@
-{# Events/Views/calendar.twig #}
-
-{# extends layout('main') #}
-
-{% block content %}
-
 <div class="events-calendar-page container">
 
-    <div class="page-header">
+    <div class="calendar-toolbar">
 
-        <div>
+        <div class="calendar-nav">
 
-            <h1>Events Calendar</h1>
+            <button data-calendar-prev>
+                Prev
+            </button>
 
-            <p class="text-muted">
-                Browse upcoming events by date
-            </p>
+            <button data-calendar-today>
+                Today
+            </button>
+
+            <button data-calendar-next>
+                Next
+            </button>
+
+        </div>
+
+        <div class="calendar-view-switch">
+
+            <button data-view="day">
+                Day
+            </button>
+
+            <button data-view="week">
+                Week
+            </button>
+
+            <button data-view="month"
+                    class="active">
+                Month
+            </button>
+
+            <button data-view="year">
+                Year
+            </button>
 
         </div>
 
     </div>
 
-    <div class="calendar-wrapper card">
+    <div
+        class="calendar-content"
+        data-calendar-view="month"
+        data-start="{{ start }}"
+        data-end="{{ end }}"
+    >
 
-        <div class="card-body">
-
-            <div
-                class="events-calendar"
-                data-start="{{ start }}"
-                data-end="{{ end }}"
-            >
-
-                {% if events %}
-
-                    <div class="calendar-events">
-
-                        {% for event in events %}
-
-                            {% include "events/partials/calendar-card.twig" with {
-                                event: event
-                            } %}
-
-                        {% endfor %}
-
-                    </div>
-
-                {% else %}
-
-                    {% include "events/partials/empty-state.twig" with {
-                        title: 'No calendar events',
-                        message: 'There are no events scheduled for this period.'
-                    } %}
-
-                {% endif %}
-
-            </div>
-
-        </div>
+        {% include "events/calendar/month.twig" %}
 
     </div>
 
 </div>
-
-{% endblock %}
