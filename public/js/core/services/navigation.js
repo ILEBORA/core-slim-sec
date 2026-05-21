@@ -344,7 +344,7 @@ __BORA_REGISTER_SERVICE__(
 
                     //TODO
                     if (!(scope?.config?.dev ?? false)) { 
-                        // clearConsole();
+                        clearConsole();
                     }
 
                     renderPage(json);
