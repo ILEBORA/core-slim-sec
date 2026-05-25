@@ -1,17 +1,32 @@
-{# Stories Rail #}
 <div id="storiesRail" class="stories-rail">
 
-    {# Create Story #}
     {% if canCreate %}
-    <div class="story-item story-create" id="createStoryBtn">
-        <div class="story-avatar">
-            <span class="plus">+</span>
+        <div
+            class="story-card story-create"
+            data-action="story.create"
+        >
+
+            <div class="story-create-inner">
+
+                <div class="story-create-icon">+</div>
+
+                <div class="story-create-label">
+                    Create Story
+                </div>
+
+            </div>
+
         </div>
-        <div class="story-label">Your Story</div>
-    </div>
     {% endif %}
 
-    {# Stories injected here by JS #}
-    <div id="storiesContainer" class="stories-container"></div>
+    <div id="storiesContainer" class="stories-container">
+
+        {% for group in stories %}
+            {% include 'activity/stories/item.twig' with {
+                group: group
+            } %}
+        {% endfor %}
+
+    </div>
 
 </div>

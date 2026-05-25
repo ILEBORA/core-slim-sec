@@ -1,0 +1,60 @@
+{% set first = group|first %}
+{% set count = group|length %}
+
+{% set viewed = true %}
+{% for s in group %}
+    {% if not s.viewed %}
+        {% set viewed = false %}
+    {% endif %}
+{% endfor %}
+
+<div
+    class="story-card
+        {{ viewed ? 'viewed' : 'unviewed' }}
+        {{ count > 1 ? 'multi' : 'single' }}"
+    data-action="story.open"
+    data-story="{{ first.id }}"
+    data-actor="{{ first.actor_id }}"
+>
+
+    <div class="story-thumb">
+
+        <img
+            src="{{ first.payload.preview ?: first.payload.full }}"
+            alt=""
+        >
+
+        <div class="story-overlay"></div>
+
+        {% if count > 1 %}
+            <div class="story-count">
+                {{ count }}
+            </div>
+        {% endif %}
+
+        <div class="story-user">
+
+            {% if first.actor.avatar_url %}
+                <img
+                    class="story-user-avatar"
+                    src="{{ first.actor.avatar_url }}"
+                >
+            {% endif %}
+
+            <div class="story-user-meta">
+
+                <div class="story-username">
+                    {{ first.actor.username ?? 'You' }}
+                </div>
+
+                <div class="story-time">
+                    {{ first.created_at|date('H:i') }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

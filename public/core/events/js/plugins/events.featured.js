@@ -1,7 +1,7 @@
 __BORA_REGISTER_PLUGIN__('events.featured', async function(){
 
     function mount(){
-        alert('featured mount');
+        // alert('featured mount');
         if(typeof Swiper === 'undefined') return;
 
         const el = document.querySelector(

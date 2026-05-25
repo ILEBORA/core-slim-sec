@@ -4,7 +4,7 @@ __BORA_REGISTER_SERVICE__('navigator', async function(scope){
     const navigation    = await scope.getService('navigation');
     const popup         = await scope.getPlugin('popup');
 
-    async function go({ route, params = {}, surface = 'page' }){
+    async function go({ route, params = {}, surface = 'page', ...rest }){
         
         let config;
         try {
@@ -23,7 +23,10 @@ __BORA_REGISTER_SERVICE__('navigator', async function(scope){
                 key: route,
                 id: params.id,
                 tab: params.tab,
-                factory: () => config
+                factory: () => ({
+                    ...config,
+                    ...rest
+                })
             });
         }
 

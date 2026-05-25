@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
+__BORA_REGISTER_PLUGIN__('activity.stories.feed', async function(scope){
 
     // const storyComposer = await scope.getPlugin('activity.story.composer');
     const sse           = await scope.getService('realtime.sse');

@@ -56,6 +56,7 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
             html = null,
             size = 'md',
             onOpen = null,
+            onLoaded = null,
             onClose = null,
             callback = null,
             tabs = null,
@@ -96,6 +97,7 @@ __BORA_REGISTER_PLUGIN__('popup', async function(scope){
                     history.replaceState({}, '', url);
                 }
             },
+            onLoaded,
             tabs,
             activeTab
         });

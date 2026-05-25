@@ -1,6 +1,10 @@
 {# Timeline Wrapper #}
 <div class="timeline">
     {{lvui|raw}}
+
+     {# Stories #}
+    {% include 'activity/stories.twig' %}
+
     {# Composer placeholder (future use) #}
     <div class="timeline-composer">
         <div class="composer-placeholder" data-action="act-timeline-composer">

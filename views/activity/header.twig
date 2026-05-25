@@ -13,5 +13,16 @@
             <span class="activity-username">{{ username }}</span>
         </div>
         <div class="activity-time">{{ item.timeago_format }}</div>
+
+        {% if hasPermission('activity','contextMenu', true) %}
+        <button
+            data-context-trigger
+            data-context-type="activity"
+            data-context-id="{{item.id}}"
+            >
+            ⋮
+        </button>
+        {% endif %}
+
     </div>
 </div>

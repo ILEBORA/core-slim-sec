@@ -6,14 +6,40 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
     let bound = false;
 
     function bindUI(){
-        if(bound) return;
-        // alert('bind');
-        $(document).on('click','.attach-photo', openFileDialog);
-        $(document).on('change','#composerUpload', uploadFiles);
 
-        bound = true;
+        /*
+        | Remove previous namespace
+        */
+
+        $(document).off('.activity-composer');
+
+        /*
+        | Upload
+        */
+
+        $(document).on(
+            'click.activity-composer',
+            '.attach-photo',
+            openFileDialog
+        );
+
+        $(document).on(
+            'change.activity-composer',
+            '#composerUpload',
+            uploadFiles
+        );
 
     }
+
+    // function bindUIO(){
+    //     // if(bound) return;
+    //     // alert('bind');
+    //     $(document).on('click','.attach-photo', openFileDialog);
+    //     $(document).on('change','#composerUpload', uploadFiles);
+
+    //     bound = true;
+
+    // }
 
     function openFileDialog(){
         $('#composerUpload').click();
@@ -72,6 +98,92 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
 
         let html = '';
 
+        /*
+        | IMAGE
+        */
+
+        if(isImage(media.type)){
+
+            html = `
+            <div class="composer-media">
+
+                <span
+                    class="remove-media"
+                    data-action="act-remove-media"
+                    data-id="${media.id}"
+                >
+                    ✕
+                </span>
+
+                <img
+                    class="added-media${media.id}"
+                    src="${media.preview}"
+                    data-id="${media.id}"
+                >
+
+                <div class="media-actions bottom">
+
+                    <button
+                        class="rotate-media"
+                        data-action="act-rotate-media"
+                        data-angle="-90"
+                        data-id="${media.id}"
+                    >
+                        ⟲
+                    </button>
+
+                    <button
+                        class="rotate-media"
+                        data-action="act-rotate-media"
+                        data-angle="90"
+                        data-id="${media.id}"
+                    >
+                        ⟳
+                    </button>
+
+                </div>
+
+            </div>
+            `;
+
+        }
+
+        /*
+        | VIDEO
+        */
+
+        if(isVideo(media.type)){
+
+            html = `
+            <div class="composer-media">
+
+                <video
+                    src="${media.preview}"
+                    controls
+                    preload="metadata"
+                ></video>
+
+                <span
+                    class="remove-media"
+                    data-action="act-remove-media"
+                    data-id="${media.id}"
+                >
+                    ✕
+                </span>
+
+            </div>
+            `;
+
+        }
+
+        $('#composerPreview').append(html);
+
+    }
+
+    function renderPreviewO(media){
+
+        let html = '';
+
         if(media.type === 'image'){
 
             html = `
@@ -100,6 +212,36 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
         $('#composerPreview').append(html);
     }
 
+    function isImage(type=''){
+
+        type = type.toLowerCase();
+
+        return [
+            'jpg',
+            'jpeg',
+            'png',
+            'gif',
+            'webp',
+            'bmp',
+            'svg'
+        ].includes(type);
+
+    }
+
+    function isVideo(type=''){
+
+        type = type.toLowerCase();
+
+        return [
+            'mp4',
+            'webm',
+            'mov',
+            'avi',
+            'mkv'
+        ].includes(type);
+
+    }
+
     function updateHiddenField(){
 
         $('input.post-attachments')
@@ -108,17 +250,35 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
 
     async function open(){
 
-        const popup = await scope.getPlugin('popup');
+        // const popup = await scope.getPlugin('popup');
 
-        popup.open({
-            mode:'form',
-            module:'activity',
-            group:'timeline',
-            view:'add',
-            size:'md'
+        // popup.open({
+        //     mode:'form',
+        //     module:'activity',
+        //     group:'timeline',
+        //     view:'add',
+        //     size:'md'
+        // });
+
+        const bNavigator = await scope.getService('navigator');
+
+        // console.log('bNavigator',bNavigator);
+
+        bNavigator.go({
+
+            route: 'activity.composer',
+
+            params:{},
+
+            surface:'popup',
+
+            onLoaded: ()=>{
+                // alert('bind');
+                bindUI();
+            }
         });
 
-        bindUI();
+        // bindUI();
     }
 
     //Options

@@ -256,8 +256,27 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 return;
             }
 
+            // if (this._tabCache[url]) {
+            //     target.html(this._tabCache[url]);
+            //     return;
+            // }
             if (this._tabCache[url]) {
+
                 target.html(this._tabCache[url]);
+
+                if (this.options.onLoaded){
+                    this.options.onLoaded(
+                        url,
+                        this._tabCache[url]
+                    );
+                }
+
+                scope?.emit?.('popup:loaded', {
+                    url,
+                    html:this._tabCache[url],
+                    popup:this
+                });
+
                 return;
             }
 
@@ -267,9 +286,20 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 url,
                 method: 'GET',
                 dataType: 'html',
-                success: (html) => {
+                success: async (html) => {
                     this._tabCache[url] = html;
                     target.html(html);
+
+                    if (this.options.onLoaded){
+                        // this.options.onLoaded(url, html);
+                        await this.options.onLoaded?.(url, html);
+                    }
+
+                    scope?.emit?.('popup:loaded', {
+                        url,
+                        html,
+                        popup:this
+                    });
                 },
                 error: () => {
                     target.html('<div class="popup-error">Failed to load content.</div>');

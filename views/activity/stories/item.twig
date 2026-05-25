@@ -1,0 +1,83 @@
+{% set first = group|first %}
+{% set count = group|length %}
+{% set type = first.payload.type|lower %}
+
+<div
+    class="story-card"
+    data-action="story.open"
+    data-actor="{{ first.actor_id }}"
+>
+
+    <div class="story-thumb">
+
+        {# =========================
+           IMAGE
+        ========================= #}
+
+        {% if type in ['jpg','jpeg','png','webp','gif'] %}
+
+            <img
+                src="{{ first.payload.preview }}"
+                alt=""
+            >
+
+        {% endif %}
+
+        {# =========================
+           VIDEO
+        ========================= #}
+
+        {% if type in ['mp4','webm','mov'] %}
+
+            <video
+                class="story-thumb-video"
+                src="{{ first.payload.preview }}"
+                muted
+                playsinline
+                autoplay
+                loop
+                preload="metadata"
+            ></video>
+
+            <div class="story-video-icon">
+                ▶
+            </div>
+
+        {% endif %}
+
+        <div class="story-overlay"></div>
+
+        {% if count > 1 %}
+            <div class="story-count">
+                {{ count }}
+            </div>
+        {% endif %}
+
+        <div class="story-user">
+
+            <img
+                class="story-user-avatar"
+                data-action="inbox:view_profile"
+                data-id="{{ first.actor_id }}"
+                data-type="user"
+                src="{{ first.actor.avatar_url ?? '' }}"
+            >
+
+            <div class="story-user-meta">
+
+                <div
+                    class="story-username"
+                    data-action="inbox:view_profile"
+                    data-id="{{ first.actor_id }}"
+                    data-type="user"
+                >
+                    {{ first.actor.username ?? 'User' }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
