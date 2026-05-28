@@ -32,6 +32,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             this._initialTabLoaded = false;
             this._tabCache = {};
             this.init();
+            this.tabsBound = false;
         }
 
         /* =========================
@@ -175,7 +176,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 method: 'GET',
                 dataType: 'html',
                 success: (html) => {
-
+                    // alert('setcontent' );
                     this.setContent(html);
 
                     if (callback) callback();
@@ -216,28 +217,124 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             }
         }
 
-        bindTabs() {
+        bindTabs(){
+            /*
+            | Initial tab
+            */
 
-            const $links = this.$tabs.find('a');
+            const $links =
+                this.$tabs.find('a');
 
-            if (!$links.length) return;
+            if(
+                !$links.length
+            ){
+                return;
+            }
 
-            $links.off('click').on('click', (e) => {
+            if(this.options.activeTab){
 
-                e.preventDefault();
+                this.goToTab(
+                    this.options.activeTab
+                );
 
-                const $link = $(e.currentTarget);
+            }
+            else{
 
-                $links.removeClass('active');
-                $link.addClass('active');
+                this.goToTab(
+                    $links.first().data('tab')
+                );
 
-                this.tryLoadTabContent($link);
-            });
-
-            if (!this.options.activeTab){
-                $links.first().trigger('click');
             }
         }
+
+        bindTabsO(){
+            // alert('bindTabs');
+            /*
+            | Prevent duplicate delegated handlers
+            */
+
+            this.$tabs.off(`click.${this._id}`);
+
+            this.$tabs.on(
+                `click.${this._id}`,
+                'a',
+                (e) => {
+
+                    e.preventDefault();
+
+                    const $link =
+                        $(e.currentTarget);
+
+                    this.$tabs
+                        .find('a')
+                        .removeClass('active');
+
+                    $link.addClass('active');
+
+                    console.log(
+                        '[popup] tab click',
+                        $link.data('tab')
+                    );
+                    // alert('here clicked');
+                    this.tryLoadTabContent($link);
+
+                }
+            );
+
+            /*
+            | Initial tab
+            */
+
+            const $links =
+                this.$tabs.find('a');
+
+            if(
+                !$links.length
+            ){
+                return;
+            }
+
+            if(this.options.activeTab){
+
+                this.goToTab(
+                    this.options.activeTab
+                );
+
+            }
+            else{
+
+                this.goToTab(
+                    $links.first().data('tab')
+                );
+
+            }
+
+        }
+
+        // bindTabsO() {
+        //     if(this.tabsBound) return;
+        //     this.tabsBound = true;
+
+        //     const $links = this.$tabs.find('a');
+
+        //     if (!$links.length) return;
+
+        //     $links.off('click').on('click', (e) => {
+
+        //         e.preventDefault();
+
+        //         const $link = $(e.currentTarget);
+
+        //         $links.removeClass('active');
+        //         $link.addClass('active');
+        //         alert('here bind');
+        //         this.tryLoadTabContent($link);
+        //     });
+
+        //     if (!this.options.activeTab){
+        //         $links.first().trigger('click');
+        //     }
+        // }
 
         tryLoadTabContent($tab) {
 
@@ -287,6 +384,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 method: 'GET',
                 dataType: 'html',
                 success: async (html) => {
+                    // alert('this.tryLoadTabContent');
                     this._tabCache[url] = html;
                     target.html(html);
 
@@ -308,7 +406,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
         }
 
         goToTab(tabId){
-
+            // alert('gototab '+ tabId);
             // Guard against destroyed popup
             if (!this.$tabs || !this.$append){
                 console.warn('[popup] Attempted to use destroyed popup');
@@ -321,7 +419,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
             this.$tabs.find('a').removeClass('active');
             $tabLink.addClass('active');
-
+            // alert('call here');
             this.tryLoadTabContent($tabLink);
         }
 
@@ -356,14 +454,30 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             this.bindTabs();
 
             // Activate default tab
-            if (activeTab){
+            if (activeTab){ //alert('ts 1');
                 this.goToTab(activeTab);
             } else {
                 if (!this._initialTabLoaded){
+                    //alert('ts 2');
                     this._initialTabLoaded = true;
                     this.$tabs.find('a').first().trigger('click');
                 }
             }
+            // const $links =
+            //     this.$tabs.find('a');
+
+            // if(activeTab){
+
+            //     this.goToTab(activeTab);
+
+            // }
+            // else if($links.length){
+
+            //     this.goToTab(
+            //         $links.first().data('tab')
+            //     );
+
+            // }
         }
     }
 

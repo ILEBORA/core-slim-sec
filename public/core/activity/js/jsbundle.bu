@@ -77,14 +77,14 @@ $pipeline->register('activity.stories.feed', [
 $pipeline->register('activity.stories.actions', [
     'file'     => 'plugins/stories/actions.js',
     'type'     => 'plugin',
-    'priority' => 241,
+    'priority' => 242,
     'requires' => ['runtime'],
 ]);
 
 $pipeline->register('activity.stories.viewer', [
     'file'     => 'plugins/stories/viewer.js',
     'type'     => 'plugin',
-    'priority' => 242,
+    'priority' => 241,
     'requires' => ['runtime'],
 ]);
 

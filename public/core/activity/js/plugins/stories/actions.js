@@ -2,6 +2,8 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
 
     const popup = await scope.getPlugin('popup');
     const uiActions = await scope.getService('ui.actions');
+    const bNavigator = await scope.getService('navigator');
+    // const viewer = await scope.getPlugin('activity.stories.viewer');
                                                                                                                              
 
     const state = {
@@ -24,17 +26,33 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
     }
 
     async function popupStory(el){
+        
+        const id =
+            $(el).data('actor');
+        
+        if(!id) return;
 
-        const id = $(el)
-            .data('story-id');
-
+        const bNavigator = await scope.getService('navigator');
         bNavigator.go({
 
             route: 'stories.view',
 
             params:{ id },
 
-            surface:'popup'
+            surface:'popup',
+            onLoaded: async (url)=>{
+                // alert('here');
+                const viewer = await scope.getPlugin(
+                        'activity.stories.viewer'
+                    );
+                console.log('Viewer:', viewer);
+                viewer?.open(id,
+                    popupInstance
+                );
+
+                // alert('here finally');
+
+            }
         });
     }
 
@@ -42,10 +60,10 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
         // alert('openStory');
         const actorId =
             $(el).data('actor');
-
+        // alert(actorId);
         if(!actorId) return;
 
-        popup.open({
+        const popupInstance = await popup.open({
             mode:'view',
             module:'activity',
             group:'stories',
@@ -68,7 +86,10 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
                         'activity.stories.viewer'
                     );
 
-                viewer.mount(actorId);
+                viewer.open(
+                    actorId,
+                    popupInstance
+                );
 
             }
         });
@@ -76,18 +97,20 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
     }
 
     async function createStory(){
-
         const bNavigator = await scope.getService('navigator');
-
-        // console.log('bNavigator',bNavigator);
-
         bNavigator.go({
 
             route: 'stories.add',
 
             params:{},
 
-            surface:'popup'
+            surface:'popup',
+
+            onclose: async ()=>{
+                alert('Refresh here');
+                const feed = await scope.getPlugin('activity.stories.feed');
+                feed.refresh();
+            }
         });
 
     }

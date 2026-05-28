@@ -46,17 +46,33 @@ async function(scope){
             prev
         );
 
+        scope.on('popup:close', popup => {
+            if(
+                popup === state.popupInstance
+            ){
+                destroy();
+            }
+        });
+
     }
 
     /* ==================================================
        MOUNT
     ================================================== */
+    function mount(){
+        // alert('activity.stories.viewer ready');
+    }
 
-    function mount(actorId){
+    function open(
+        actorId,
+        popupInstance
+    ){
+        // alert(actorId);
 
         if(!actorId) return;
 
         state.actorId = actorId;
+        state.popupInstance = popupInstance;
 
         const $viewer =
             $('.story-viewer').last();
@@ -365,7 +381,7 @@ async function(scope){
 
                     buildProgress();
 
-                    startTimer();
+                    // startTimer();
 
                     video.play()
                         .catch(()=>{});
@@ -554,8 +570,12 @@ async function(scope){
                 $bar.parent().width()
             );
 
+        // state.progress =
+        //     (width / parent) * 100;
         state.progress =
-            (width / parent) * 100;
+            parent > 0
+                ? (width / parent) * 100
+                : 0;
 
         $bar.css({
             transition:'none',
@@ -775,11 +795,17 @@ async function(scope){
 
     }
 
-    function close(){
+    async function close(){
 
-        clearTimeout(state.timer);
+        // clearTimeout(state.timer);
 
-        __BORA_APP__?.emit('esc');
+        // __BORA_APP__?.emit('esc');
+
+        destroy();
+        const popup =
+            await scope.getPlugin('popup');
+
+        popup.closeActive();
 
     }
 
@@ -823,12 +849,63 @@ async function(scope){
 
     }
 
+    function destroy(){
+
+        clearTimeout(state.timer);
+
+        state.timer = null;
+
+        state.paused = false;
+
+        /*
+        | Stop video
+        */
+
+        const video =
+            state.$viewer
+            ?.find('.story-video')
+            ?.get(0);
+
+        if(video){
+
+            video.pause();
+
+            video.src = '';
+
+        }
+
+        /*
+        | Remove handlers
+        */
+
+        state.$viewer
+            ?.off('.storyViewer');
+
+        /*
+        | Reset
+        */
+
+        state.stories = [];
+
+        state.index = 0;
+
+        state.remaining = state.duration;
+
+        state.progress = 0;
+
+        state.actorId = null;
+
+        state.$viewer = null;
+
+    }
+
     /* ==================================================
        PUBLIC
     ================================================== */
 
     return {
         mount,
+        open,
         next,
         prev,
         pause,

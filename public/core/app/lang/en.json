@@ -27,9 +27,9 @@
 
     "landing.hero.eyebrow": "PEOPLE. PURPOSE. PROGRESS.",
 
-    "landing.hero.title": "Building stronger communities for a better Africa.",
+    "landing.hero.title": "Building stronger families for a better Africa.",
 
-    "landing.hero.description": "Wahenga Plus is a community-driven initiative empowering people, nurturing potential and creating sustainable solutions for lasting impact.",
+    "landing.hero.description": "Wahenga Plus is a an initiative empowering people, nurturing families and creating sustainable solutions for buildng stronger families.",
 
     "landing.hero.buttons.primary": "Get Involved",
 
@@ -59,19 +59,19 @@
 
     "landing.focus.title": "We focus on what matters most.",
 
-    "landing.focus.description": "Our programs are designed to strengthen communities, empower individuals and create sustainable impact across Africa.",
+    "landing.focus.description": "Build your family tree and understand who you are.",
 
-    "landing.focus.cards.community.title": "Community",
+    "landing.focus.cards.community.title": "Secure Database",
 
-    "landing.focus.cards.community.description": "Building strong and supportive communities through collaboration and engagement.",
+    "landing.focus.cards.community.description": "Your personal data is safe and secure with Wahenga encrypted and secure database.",
 
-    "landing.focus.cards.africa_rooted.title": "Africa Rooted",
+    "landing.focus.cards.africa_rooted.title": "Find Families",
 
-    "landing.focus.cards.africa_rooted.description": "Locally grounded solutions inspired by African values, culture and resilience.",
+    "landing.focus.cards.africa_rooted.description": "Use wahenga to find and connect with family members wherever they are in the world.",
 
-    "landing.focus.cards.growth.title": "Growth",
+    "landing.focus.cards.growth.title": "Memories",
 
-    "landing.focus.cards.growth.description": "Creating opportunities for education, mentorship and sustainable development.",
+    "landing.focus.cards.growth.description": "Use our calendar to create and schedule family meet ups.",
 
     "landing.focus.cards.addition.title": "Addition",
 
@@ -106,13 +106,13 @@
 
     "landing.cta.eyebrow": "BE PART OF THE MOVEMENT",
 
-    "landing.cta.title": "Join us in building stronger communities across Africa.",
+    "landing.cta.title": "Join us in building stronger family trees across Africa.",
 
-    "landing.cta.description": "Together we can empower communities, support growth and create lasting impact for future generations.",
+    "landing.cta.description": "Together we can empower, support growth and create lasting impact for future generations.",
 
     "landing.cta.buttons.primary": "Get Involved Today",
 
-    "landing.cta.buttons.secondary": "Learn More About Our Work",
+    "landing.cta.buttons.secondary": "Learn More About Wahenga",
 
 
 
@@ -142,13 +142,13 @@
 
     "landing.impact.eyebrow": "OUR IMPACT",
 
-    "landing.impact.title": "Small actions. Big change.",
+    "landing.impact.title": "Small actions. Big impact.",
 
-    "landing.impact.description": "Together with our partners and communities, we’re creating measurable change and building a better tomorrow.",
+    "landing.impact.description": "Together we are creating measurable change and building a better tomorrow.",
 
     "landing.impact.stats.lives_impacted": "Lives Impacted",
 
-    "landing.impact.stats.programs_run": "Programs Run",
+    "landing.impact.stats.programs_run": "Active Trees",
 
-    "landing.impact.stats.communities": "Communities"
+    "landing.impact.stats.communities": "Families"
 }
