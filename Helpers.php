@@ -528,6 +528,7 @@ if (!function_exists('View')) {
                 ->share('base_url', $baseUrl)
                 ->share('app_name', $appName)
                 ->share('app_version', getVersion())
+                ->share('perm_version', getRolesVersion(userID()))
                 ->share('core_version', getCoreVersion());
 
             foreach($appConfig as $key => $val){
@@ -589,6 +590,7 @@ if (!function_exists('modView')) {
         $app_name = App::config('app_name');
         $app_name = !empty($app_name) ? $app_name : 'BoraSlim App';
         $base_url = BASE_URL ?? '/';
+        $channelId = defined('CHANNEL_ID') ? CHANNEL_ID : '';
 
         if ($instance === null) {
             $modulePath = ($module) ? 'modules/'.ucfirst($module).'/Views' : null;
@@ -597,6 +599,8 @@ if (!function_exists('modView')) {
                 ->share('base_url', $base_url)
                 ->share('app_name', $app_name)
                 ->share('app_version', getVersion())
+                ->share('perm_version', getRolesVersion(userID()))
+                ->share('channel_id', $channelId)
                 ->share('meta_description', 'Learn more about our company and values.')
                 ->share('meta_keywords', 'about, company, values')
                 ->share('meta_author', 'MySite Team')
@@ -635,6 +639,70 @@ if (!function_exists('getCoreVersion')) {
 
         return $currentVersion;
 
+    }
+}
+
+if(!function_exists('getRolesVersion')){
+    function getRolesVersion(?int $userId = null): int
+    {
+        $role = $_SESSION['current_role']??'Guest';
+        $versionFile = '.cache/system/perm.version.'.strtolower($role);
+
+        $sysCacheDir = BASE_DIR . '/.cache/system';
+        if (!is_dir($sysCacheDir)) {
+            mkdir($sysCacheDir, 0777, true);
+        }
+
+        // dieVal($versionFile);
+        if (!file_exists($versionFile)) {
+            //Get Once 
+            $v = getRolesVersionO($userId);
+            // dieVal($v);
+            file_put_contents($versionFile, $v??'1');
+        }
+
+        $globalVersion = (int) file_get_contents($versionFile);
+
+        // if (
+        //     !isset($_SESSION['permVersion']) ||
+        //     $_SESSION['permVersion'] !== $globalVersion
+        // ) {
+        //     $_SESSION['permVersion'] = $globalVersion;
+        // }
+
+        // return $_SESSION['permVersion'];
+        return $globalVersion;
+    }
+    function getRolesVersionOW(?int $userId): int {
+        return $_SESSION['permVersion'] ?? 1;
+    }
+    function getRolesVersionO(?int $userId) {
+        $params = [];
+        $userCondition = '';
+
+        $userId = empty($userId) ? NULL : $userId;
+
+        if ($userId) {
+            // Normal case: specific user
+            $userCondition = 'user_id = ?';
+            $params[] = $userId;
+        } else {
+            // Handle guest or null user
+            $userCondition = 'user_id IS NULL';
+        }
+
+        $sql = "
+            SELECT MAX(r.perms_version) AS mx
+            FROM access_roles r
+            WHERE r.role_id IN (
+                SELECT ur.role_id
+                FROM access_user_role ur
+                WHERE {$userCondition}
+            )
+        ";
+
+        $row = appDB()->getOne($sql, $params);
+        return $row ? ($row['mx'] ?? 1) : 1;
     }
 }
 

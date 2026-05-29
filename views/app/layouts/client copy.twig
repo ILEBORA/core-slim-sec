@@ -45,7 +45,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:site_name" content="{{ app_name }}">
-    <link rel="stylesheet" href="assets/css/main.css?v={{ app_version }}"/>
+    <link rel="stylesheet" href="assets/css/main.css?v={{ app_version }}&c={{channel_id}}&p={{perm_version}}"/>
     <link rel="stylesheet" href="assets/client/css/client.bundle.css?v={{ app_version }}">
     <link rel="stylesheet" href="{{cdn_url}}/assets/libs/font-awesome/v5.7.2/css/font-awesome.min.css">
     
@@ -54,7 +54,7 @@
     {{ renderInlineStyles()|raw }}
     <script src="assets/js/jquery.js"></script>
     <script src="assets/js/vendor/crypto-js.min.js"></script>
-    <script src="assets/js/app.js?v={{ app_version }}&c={{channelID}}"></script>
+    <script src="assets/js/app.js?v={{ app_version }}&c={{channel_id}}"></script>
     <script src="assets/client/js/client.bundle.js?v={{ app_version }}"></script>
 
     <script>

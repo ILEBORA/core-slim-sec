@@ -46,7 +46,7 @@
         </script>
     {% endif %}
 
-    <link rel="stylesheet" href="assets/css/main.css?v={{ app_version }}"/>
+    <link rel="stylesheet" href="assets/css/main.css?v={{ app_version }}&c={{channel_id}}&p={{perm_version}}"/>
     <link rel="stylesheet" href="assets/guest/css/guest.bundle.css?v={{ app_version }}">
     <link rel="stylesheet" href="{{cdn_url}}/assets/libs/font-awesome/v5.7.2/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{cdn_url}}/assets/plugins/unsrtd/bootstrap.min.css">
@@ -55,7 +55,7 @@
     {{ renderInlineStyles()|raw }}
     <script src="assets/js/jquery.js"></script>
     <script src="assets/js/vendor/crypto-js.min.js"></script>
-    <script src="assets/js/app.js?v={{ app_version }}&c={{channelID}}"></script>
+    <script src="assets/js/app.js?v={{ app_version }}&c={{channel_id}}&p={{perm_version}}"></script>
     <script src="assets/guest/js/guest.bundle.js?v={{ app_version }}"></script>
 
     <script>
