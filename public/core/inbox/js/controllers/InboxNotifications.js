@@ -40,7 +40,7 @@ class InboxNotifications {
 
     }
     notifyThread(data){
-
+        // alert('notifyThread: ' + data.thread_id);
         const preview = this.formatPreview(data);
 
         const isActiveThread =

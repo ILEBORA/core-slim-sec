@@ -247,8 +247,8 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
 
             scope.on(
                 'popup:beforeClose',
-                async (popup, force = false) => {
-                    
+                async (popup) => {
+
                     /*
                     | Only forms inside popup
                     */
@@ -400,6 +400,8 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                             .each((_, form) => {
 
                                 this.initForm(form);
+
+                                initTaxonomies(node);
                             });
                         });
                     });
@@ -546,188 +548,69 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
         }
     );
 
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Taxonomy Fields
-    |--------------------------------------------------------------------------
-    */
+    // $('.bora-taxonomy').each(function(){
+    //     alert('bora-taxonomy');
+    //     const $el = $(this);
 
-    function initTaxonomies(context = document)
-    {
-        $(context)
-        .find('.bora-taxonomy')
-        .each(function(){
+    //     const allowCreate =
+    //         Number(
+    //             $el.data('taxonomy-create')
+    //         ) === 1;
 
-            const $el = $(this);
+    //     $el.select2({
 
-            /*
-            |--------------------------------------------------------------------------
-            | Prevent Double Init
-            |--------------------------------------------------------------------------
-            */
+    //         width: '100%',
 
-            if(
-                $el.data('taxonomy-init')
-            ){
-                return;
-            }
+    //         tags: allowCreate,
 
-            $el.data(
-                'taxonomy-init',
-                true
-            );
+    //         ajax: {
 
-            console.log(
-                'Initializing taxonomy:',
-                $el.attr('name')
-            );
+    //             url: 'api/modules/form/taxonomy/search',
 
-            const allowCreate =
-                Number(
-                    $el.data(
-                        'taxonomy-create'
-                    )
-                ) === 1;
+    //             dataType: 'json',
 
-            /*
-            |--------------------------------------------------------------------------
-            | Ensure Select2 Exists
-            |--------------------------------------------------------------------------
-            */
+    //             delay: 250,
 
-            if(
-                typeof $.fn.select2 !== 'function'
-            ){
+    //             data(params){
 
-                console.error(
-                    'Select2 is not loaded'
-                );
+    //                 return {
 
-                return;
-            }
+    //                     q: params.term,
 
-            $el.select2({
+    //                     source:
+    //                         $el.data('taxonomy-source')
+    //                 };
+    //             },
 
-                width: '100%',
+    //             processResults(data){
 
-                tags: allowCreate,
+    //                 return {
+    //                     results: data.results
+    //                 };
+    //             }
+    //         },
 
-                ajax: {
+    //         createTag(params){
 
-                    url:
-                        'api/modules/form/taxonomy/search',
+    //             const term =
+    //                 $.trim(params.term);
 
-                    dataType: 'json',
+    //             if(term === ''){
 
-                    delay: 250,
+    //                 return null;
+    //             }
 
-                    cache: true,
+    //             return {
 
-                    data(params){
+    //                 id:
+    //                     '__new__:' + term,
 
-                        return {
+    //                 text: term,
 
-                            q:
-                                params.term || '',
-
-                            source:
-                                $el.data(
-                                    'taxonomy-source'
-                                )
-                        };
-                    },
-
-                    processResults(data){
-
-                        return {
-
-                            results:
-                                data.results || []
-                        };
-                    }
-                },
-
-                /*
-                |--------------------------------------------------------------------------
-                | Allow Custom Creation
-                |--------------------------------------------------------------------------
-                */
-
-                createTag(params){
-
-                    const term =
-                        $.trim(
-                            params.term
-                        );
-
-                    if(term === ''){
-
-                        return null;
-                    }
-
-                    return {
-
-                        // id:
-                        //     '__new__:' + term,
-                        id:
-                            '__taxonomy__|'
-                            + $el.data('taxonomy-source')
-                            + '|'
-                            + term,
-
-                        text:
-                            term,
-
-                        newTag:
-                            true
-                    };
-                }
-            });
-        });
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Initialize Existing
-    |--------------------------------------------------------------------------
-    */
-
-    initTaxonomies();
-
-    /*
-    |--------------------------------------------------------------------------
-    | Observe Dynamic DOM Changes
-    |--------------------------------------------------------------------------
-    */
-
-    const taxonomyObserver =
-        new MutationObserver(
-            (mutations) => {
-
-            mutations.forEach(
-                (mutation) => {
-
-                mutation.addedNodes.forEach(
-                    (node) => {
-
-                    if(
-                        node.nodeType !== 1
-                    ){
-                        return;
-                    }
-
-                    initTaxonomies(node);
-                });
-            });
-        });
-
-    taxonomyObserver.observe(
-        document.body,
-        {
-            childList: true,
-            subtree: true
-        }
-    );
+    //                 newTag: true
+    //             };
+    //         }
+    //     });
+    // });
 
 });

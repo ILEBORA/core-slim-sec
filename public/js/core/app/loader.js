@@ -286,11 +286,11 @@
                    4. Validate Registration
                 --------------------------- */
 
-                // if(!services.has(name) && !plugins.has(name)){
-                //     console.warn(
-                //         `[Loader] Module "${name}" loaded but not registered.`
-                //     );
-                // }
+                if(!services.has(name) && !plugins.has(name)){
+                    console.warn(
+                        `[Loader] Module "${name}" loaded but not registered.`
+                    );
+                }
 
                 
 

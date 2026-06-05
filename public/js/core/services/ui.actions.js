@@ -49,6 +49,7 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
         }
 
         try{
+            console.log(`[ui.actions] '${name}' try...`);
             action(el, event);
         }
         catch(e){
@@ -88,7 +89,7 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
                 e.preventDefault();
 
                 const name = actionEl.dataset.action;
-
+                // alert(name);
                 // if(run(name, actionEl, e)){
                 //     return;
                 // }
@@ -143,17 +144,63 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
             /* ---------- NAVIGATION ---------- */
 
             const navEl = e.target.closest('[data-nav]');
+
             if (navEl){
 
                 e.preventDefault();
 
-                const navigation = await app?.service?.('navigation');
-                if (!navigation) return;
+                const navigation =
+                    await app?.service?.('navigation');
 
-                navigation.go(navEl.dataset.nav);
+                if (!navigation){
+                    return;
+                }
+
+                const targetRoute =
+                    navEl.dataset.nav;
+
+                const currentRoute =
+                    app.currentRoute
+                        ? app.currentRoute()
+                        : window.location.pathname;
+
+                /* =========================
+                SAME PAGE
+                ========================= */
+                
+                if(
+                    normalizeRoute(targetRoute) ===
+                    normalizeRoute(currentRoute)
+                ){
+                    // alert('same route');
+                    scope.emit?.(
+                        'page.sameRoute',
+                        {
+                            route: targetRoute,
+                            element: navEl
+                        }
+                    );
+
+                    // injectRefreshUI(navEl);
+
+                    return;
+                }
+
+                navigation.go(targetRoute);
 
                 return;
             }
+            // if (navEl){
+
+            //     e.preventDefault();
+
+            //     const navigation = await app?.service?.('navigation');
+            //     if (!navigation) return;
+
+            //     navigation.go(navEl.dataset.nav);
+
+            //     return;
+            // }
 
             /* ---------- MENU REFRESH ---------- */
 
@@ -208,6 +255,53 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
 
         });
     }
+
+    function normalizeRoute(route){
+
+        if(!route){
+            return '';
+        }
+
+        return String(route)
+            .replace(/^\/+/, '')
+            .replace(/\/+$/, '')
+            .split('?')[0];
+
+    }
+
+    // function injectRefreshUI(navEl){
+
+    //     if(
+    //         document.querySelector(
+    //             '#page_refresh'
+    //         )
+    //     ){
+    //         return;
+    //     }
+
+    //     const div =
+    //         document.createElement('div');
+
+    //     div.id = 'page_refresh';
+
+    //     div.setAttribute(
+    //         'align',
+    //         'center'
+    //     );
+
+    //     div.innerHTML = `
+    //         <span
+    //             class="jx"
+    //             data-action="page.reload"
+    //         >
+    //             <abbr class="fa fa-refresh"></abbr>
+    //             Refresh Page
+    //         </span>
+    //     `;
+
+    //     document.body.appendChild(div);
+
+    // }
 
     /* ==================================================
        INIT

@@ -3,6 +3,8 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
     const hooks = await scope.getService('hooks');
     const callbora = await scope.getService('callbora');
 
+    const uiActions  = await scope.getService('ui.actions');
+
     /* ---------------------------------------
        Internal helper
     --------------------------------------- */
@@ -117,6 +119,97 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
         }
 
     });
+    function init(){
+        uiActions.register(
+            'page.reload',
+
+            ()=>{
+
+                window.location.reload();
+
+            }
+        );
+
+        scope.on('page.sameRoute',({route,element})=>{
+
+            injectRefreshUI();
+        })
+    }
+
+    init();
+
+    let refreshTimeout = null;
+
+    function injectRefreshUI(){
+
+        const pageContent =
+            document.querySelector(
+                '#page_content'
+            );
+
+        if(!pageContent){
+            return;
+        }
+
+        let refresh =
+            document.querySelector(
+                '#page_refresh'
+            );
+
+        /* =========================
+        CREATE
+        ========================= */
+
+        if(!refresh){
+
+            refresh =
+                document.createElement('div');
+
+            refresh.id = 'page_refresh';
+
+            refresh.innerHTML = `
+                <span
+                    class="jx"
+                    data-action="page.reload"
+                >
+                    <abbr class="fa fa-refresh"></abbr>
+                    Refresh Page
+                </span>
+            `;
+
+            pageContent.prepend(refresh);
+
+        }
+
+        /* =========================
+        SHOW
+        ========================= */
+
+        refresh.style.display = 'block';
+
+        refresh.classList.add('visible');
+
+        /* =========================
+        AUTO HIDE
+        ========================= */
+
+        clearTimeout(refreshTimeout);
+
+        refreshTimeout = setTimeout(()=>{
+
+            refresh.classList.remove('visible');
+
+            setTimeout(()=>{
+
+                if(refresh){
+                    refresh.style.display = 'none';
+                }
+
+            }, 250);
+
+        }, 7000);
+
+    }
 
     return {
         openPageEditor,

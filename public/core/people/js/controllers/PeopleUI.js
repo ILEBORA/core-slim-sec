@@ -1,89 +1,163 @@
 class PeopleUI {
 
-    constructor(scope) {
+    constructor(scope){
+
         this.scope = scope;
-
-        this.cache = {};
-
-        this.refreshCache();
 
         this.personId = null;
 
-        //
         this.bound = false;
 
-        // bind handlers once
-        this.handleThreadClick = this.handleThreadClick.bind(this);
-        this.handleBack = this.handleBack.bind(this);
-        this.handleKeyNav = this.handleKeyNav.bind(this);
-        this.handleNewThread = this.handleNewThread.bind(this);
-
-        //
         this.loading = false;
 
         this.lastSound = 0;
 
+        /* =====================================
+         * REACTIVE DOM LOCATORS
+         * =================================== */
 
-        this.cache = {
-            container: null, // people grid (list)
-            detail: null     // right panel
+        this.dom = {
+
+            layout:
+                scope.bindDom(
+                    '.inbox-layout.people'
+                ),
+
+            grid:
+                scope.bindDom(
+                    '.people-grid'
+                ),
+
+            detail:
+                scope.bindDom(
+                    '.thread-view'
+                ),
+
+            threadList:
+                scope.bindDom(
+                    '.thread-list'
+                ),
+
+            messages:
+                scope.bindDom(
+                    '.messages'
+                ),
+
+            messagesCont:
+                scope.bindDom(
+                    '.messages-cont'
+                )
+
         };
+
+        /* =====================================
+         * BIND METHODS
+         * =================================== */
+
+        this.handleThreadClick =
+            this.handleThreadClick.bind(this);
+
+        this.handleBack =
+            this.handleBack.bind(this);
+
+        this.handleKeyNav =
+            this.handleKeyNav.bind(this);
+
+        this.handleNewThread =
+            this.handleNewThread.bind(this);
+
     }
 
     /* ========================================
      * BIND / UNBIND
      * ====================================== */
 
-    async bind() {
-        if(this.bound) return;
+    async bind(){
+
+        if(this.bound){
+            return;
+        }
+
         this.bound = true;
 
-        this.refreshCache(); //safe
-
         $(document)
-            .on('click.people','.person-card',this.handleThreadClick)
-            .on('click.people','.back-btn',this.handleBack)
-            .on('click.people','.fab-new-thread',this.handleNewThread)
-            .on('click.people','.new-thread-btn',this.handleNewThread)
-            .on('keydown.people',this.handleKeyNav);
+
+            .on(
+                'click.people',
+                '.person-card',
+                this.handleThreadClick
+            )
+
+            .on(
+                'click.people',
+                '.back-btn',
+                this.handleBack
+            )
+
+            .on(
+                'click.people',
+                '.fab-new-thread',
+                this.handleNewThread
+            )
+
+            .on(
+                'click.people',
+                '.new-thread-btn',
+                this.handleNewThread
+            )
+
+            .on(
+                'keydown.people',
+                this.handleKeyNav
+            );
 
         console.log('[PeopleUI] bound');
 
-        // this.bindThreadSearch();
-        
-        this.scope.on('people.person.read', ({personId}) => {
+        this.scope.on(
+            'people.person.read',
 
-            new CallBora(`api/modules/people/person/${personId}/view`)
-                .setMethod("POST")
+            ({personId}) => {
+
+                new CallBora(
+                    `api/modules/people/person/${personId}/view`
+                )
+
+                .setMethod('POST')
+
                 .setCallback(res => {
-                    
-                    if(!res.success) return;
-                    // console.log(res);
-                    // alert('need bread');
-                    // Option B: wait for server push (better)
-                    this.scope.emit('breadcrumbs:resolve', {
-                        url:`portal/people/person/${personId}/view`, 
-                        response: res
-                    });
-                    // alert({
-                    //     url:`portal/people/person/${personId}/view`, 
-                    //     response: res
-                    // });
-                    // Option A: optimistic UI
-                    this.clearThreadBadge(personId);
 
-                    
+                    if(!res.success){
+                        return;
+                    }
+
+                    this.scope.emit(
+                        'breadcrumbs:resolve',
+                        {
+                            url:
+                                `portal/people/person/${personId}/view`,
+
+                            response: res
+                        }
+                    );
+
+                    this.clearThreadBadge(
+                        personId
+                    );
+
                 })
-                .build();
-        });
 
-        
-        this.cache.container = document.querySelector('.people-grid');
-        this.cache.detail    = document.querySelector('.thread-view');
+                .build();
+
+            }
+        );
+
     }
 
-    unbind() {
-        if(!this.bound) return;
+    unbind(){
+
+        if(!this.bound){
+            return;
+        }
 
         $(document).off('.people');
 
@@ -91,291 +165,489 @@ class PeopleUI {
 
         console.log('[PeopleUI] unbound');
 
-        this.cache.container = null;
-        this.cache.detail    = null;
     }
 
-    refreshCache(){
-        this.cache.layout         = document.querySelector('.inbox-layout.people');
-        this.cache.threadList     = document.querySelector('.thread-list');
-        this.cache.messages       = document.querySelector('.messages');
-        this.cache.messagesCont   = document.querySelector('.messages-cont');
+    /* ========================================
+     * HELPERS
+     * ====================================== */
+
+    getGrid(){
+        return this.dom.grid();
+    }
+
+    getDetail(){
+        return this.dom.detail();
+    }
+
+    getLayout(){
+        return this.dom.layout();
+    }
+
+    getThreadList(){
+        return this.dom.threadList();
+    }
+
+    /* ========================================
+     * THREAD HELPERS
+     * ====================================== */
+
+    getThreadItem(personId){
+
+        return this
+            .getGrid()
+            ?.find(
+                `.person-card[data-person="${personId}"]`
+            );
+
     }
 
     clearThreadBadge(personId){
 
-        const item = this.getThreadItem(personId);
+        const $item =
+            this.getThreadItem(personId);
 
-        if(!item) return;
+        if(!$item?.length){
+            return;
+        }
 
-        item.querySelector('.badge')?.remove();
+        $item.find('.badge').remove();
 
-    }
-
-    /* =========================
-       VIEW
-    ========================= */
-    setView(view){
-        this.cache.layout = document.querySelector('.inbox-layout.people');
-        this.cache.layout
-            ?.setAttribute('data-view', view);
-
-        this.refreshCache();
-
-        //Mount 
-        if(view == 'list'){
-            // $('.thred_context_menu').hide();
-            // $('.thread-info').hide();
-            this.scope.emit('people.view.list');
-        }else{
-            // $('.thred_context_menu').show();
-            // $('.thread-info').show();
-            this.scope.emit('people.view.thread');
-        } 
-
-    }
-
-    //
-    setActiveThread(personId){
-        this.personId = personId;
-    }
-    getActiveThread(){
-        return this.personId;
-    }
-
-    //
-    /* =========================
-       UI EVENTS
-    ========================= */
-
-    handleThreadClick(e){
-        // alert('thread clicked: ' + $(e.currentTarget).data('person'));
-        const id = $(e.currentTarget).data('person');
-        if(!id) return;
-
-        this.setThreadSelected(id);
-
-        this.scope.emit('people.person.open', {personId:id});
     }
 
     setThreadSelected(personId){
 
-        document
-            .querySelectorAll('.person-card')
-            .forEach(el => el.classList.remove('selected'));
+        this.getGrid()
+            ?.find('.person-card')
+            .removeClass('selected');
 
-        const item = this.getThreadItem(personId);
+        const $item =
+            this.getThreadItem(personId);
 
-        if(item){
-            item.classList.add('selected');
-        }
+        $item?.addClass('selected');
 
         this.setActiveThread(personId);
 
         this.clearThreadBadge(personId);
+
+    }
+
+    /* ========================================
+     * ACTIVE PERSON
+     * ====================================== */
+
+    setActiveThread(personId){
+        this.personId = personId;
+    }
+
+    getActiveThread(){
+        return this.personId;
+    }
+
+    /* ========================================
+     * VIEW STATE
+     * ====================================== */
+
+    setView(view){
+
+        this.getLayout()
+            ?.attr('data-view', view);
+
+        if(view === 'list'){
+
+            this.scope.emit(
+                'people.view.list'
+            );
+
+        }else{
+
+            this.scope.emit(
+                'people.view.thread'
+            );
+
+        }
+
+    }
+
+    /* ========================================
+     * UI EVENTS
+     * ====================================== */
+
+    handleThreadClick(e){
+
+        const personId =
+            $(e.currentTarget)
+                .data('person');
+
+        if(!personId){
+            return;
+        }
+
+        this.setThreadSelected(
+            personId
+        );
+
+        this.scope.emit(
+            'people.person.open',
+            {
+                personId
+            }
+        );
+
     }
 
     handleBack(){
 
         this.setView('list');
 
-        // this.navigation.go('portal/inbox');
-        history.pushState({},'',`portal/people`);
+        history.pushState(
+            {},
+            '',
+            'portal/people'
+        );
+
     }
 
     async handleNewThread(){
-        this.scope.emit('people.person.new');
+
+        this.scope.emit(
+            'people.person.new'
+        );
+
     }
 
     handleKeyNav(e){
 
-        if(!['ArrowUp','ArrowDown','Enter'].includes(e.key)) return;
-
-        const list = document.querySelector('.thread-list');
-        if(!list) return;
-
-        const items = [...list.querySelectorAll('.person-card')];
-
-        let index = items.findIndex(i => i.classList.contains('selected'));
-
-        if(e.key === 'ArrowDown') index = Math.min(index+1, items.length-1);
-        if(e.key === 'ArrowUp')   index = Math.max(index-1, 0);
-
-        if(e.key === 'Enter'){
-            items[index]?.click();
+        if(
+            ![
+                'ArrowUp',
+                'ArrowDown',
+                'Enter'
+            ].includes(e.key)
+        ){
             return;
         }
 
-        items.forEach(i => i.classList.remove('selected'));
-        items[index]?.classList.add('selected');
-    }
+        const $list =
+            this.getThreadList();
 
-    getThreadItem(id){
+        if(!$list?.length){
+            return;
+        }
 
-        return document.querySelector(
-            `.person-card[data-person="${id}"]`
-        );
-    }
+        const items =
+            $list
+                .find('.person-card')
+                .toArray();
 
-    // Search
-    bindThreadSearch(){
+        let index =
+            items.findIndex(
+                el => el.classList.contains('selected')
+            );
 
-        const input = document.querySelector('.thread-search input');
-        if(!input) return;
+        if(e.key === 'ArrowDown'){
 
-        input.addEventListener('input', e=>{
+            index = Math.min(
+                index + 1,
+                items.length - 1
+            );
 
-            const q = e.target.value.toLowerCase();
+        }
 
-            document
-                .querySelectorAll('.person-card')
-                .forEach(item=>{
+        if(e.key === 'ArrowUp'){
 
-                    const text = item.textContent.toLowerCase();
+            index = Math.max(
+                index - 1,
+                0
+            );
 
-                    item.style.display =
-                        text.includes(q) ? '' : 'none';
+        }
 
-                });
+        if(e.key === 'Enter'){
 
+            items[index]?.click();
+
+            return;
+
+        }
+
+        items.forEach(el => {
+            el.classList.remove('selected');
         });
 
-    }
+        items[index]
+            ?.classList
+            .add('selected');
 
-    async playMessageSound(){
-        const sound = await this.scope.getService('sound');
-        const now = Date.now();
-        if(now - this.lastSound < 800) return; // debounce
-        this.lastSound = now;
-        sound.play('message');
     }
 
     /* ========================================
-     * DIRECTORY (LIST)
+     * LIST RENDERING
      * ====================================== */
 
-    renderListHTML(html) {
-        if (!this.cache.container) return;
+    renderListHTML(html){
 
-        this.cache.container.innerHTML = html;
+        const $grid =
+            this.getGrid();
+
+        if(!$grid?.length){
+            return;
+        }
+
+        $grid.html(html);
+
     }
 
     /* ========================================
-     * DETAIL VIEW (MAIN PANEL)
+     * DETAIL VIEW
      * ====================================== */
 
-    renderHTML(html) {
-        if (!this.cache.detail) return;
+    renderHTML(html){
 
-        this.cache.detail    = document.querySelector('.thread-view');
+        const $detail =
+            this.getDetail();
 
-        this.cache.detail.innerHTML = html;
+        if(!$detail?.length){
+            return;
+        }
+
+        $detail.html(html);
 
         this.showDetailPanel();
 
-        // 🔁 IMPORTANT: rebind dependent modules
-        this.scope.emit('people.view.rendered');
+        this.scope.emit(
+            'people.view.rendered'
+        );
+
     }
 
-    clearDetail() {
-        if (!this.cache.detail) return;
+    clearDetail(){
 
-        this.cache.detail.innerHTML = `
+        const $detail =
+            this.getDetail();
+
+        if(!$detail?.length){
+            return;
+        }
+
+        $detail.html(`
             <div class="empty-state">
                 Select a person
             </div>
-        `;
+        `);
 
         this.hideDetailPanel();
+
     }
 
     /* ========================================
-     * TABS (SERVER-RENDERED)
+     * TABS
      * ====================================== */
 
-    renderTabHTML(tab, html) {
-        const el = document.querySelector(
-            `.tab-panel[data-tab="${tab}"]`
-        );
+    renderTabHTML(tab, html){
 
-        if (!el) return;
+        const $detail =
+            this.getDetail();
 
-        el.innerHTML = html;
-    }
-
-    /* ========================================
-     * STATE (VISUAL)
-     * ====================================== */
-
-    setActivePerson(personId) {
-        document.querySelectorAll('.person-card')
-            .forEach(el => el.classList.remove('selected'));
-
-        const active = document.querySelector(
-            `.person-card[data-person="${personId}"]`
-        );
-
-        active?.classList.add('selected');
-
-
-    }
-
-    updateFollowState(personId, isFollowing) {
-
-        // card
-        const card = document.querySelector(
-            `.person-card[data-person="${personId}"]`
-        );
-
-        card?.classList.toggle('following', isFollowing);
-
-        // detail view button
-        const btn = document.querySelector(
-            `.btn-follow[data-person="${personId}"]`
-        );
-
-        if (btn) {
-            btn.textContent = isFollowing ? 'Following' : 'Follow';
+        if(!$detail?.length){
+            return;
         }
+
+        const $panel =
+            $detail.find(
+                `.tab-panel[data-tab="${tab}"]`
+            );
+
+        if(!$panel.length){
+            return;
+        }
+
+        $panel.html(html);
+
     }
 
     /* ========================================
-     * PANEL CONTROL (MOBILE SUPPORT)
+     * PERSON STATE
      * ====================================== */
 
-    showDetailPanel() {
-        this.cache.detail?.classList.add('active');
+    setActivePerson(personId){
+
+        this.getGrid()
+            ?.find('.person-card')
+            .removeClass('selected');
+
+        this.getThreadItem(personId)
+            ?.addClass('selected');
+
     }
 
-    hideDetailPanel() {
-        this.cache.detail?.classList.remove('active');
+    updateFollowState(
+        personId,
+        isFollowing
+    ){
+
+        const $card =
+            this.getThreadItem(personId);
+
+        $card?.toggleClass(
+            'following',
+            isFollowing
+        );
+
+        const $btn =
+            this.getDetail()
+                ?.find(
+                    `.btn-follow[data-person="${personId}"]`
+                );
+
+        if($btn?.length){
+
+            $btn.text(
+                isFollowing
+                    ? 'Following'
+                    : 'Follow'
+            );
+
+        }
+
     }
 
     /* ========================================
-     * LOADING STATES (OPTIONAL BUT IMPORTANT)
+     * PANEL CONTROL
      * ====================================== */
 
-    showLoading() {
-        if (!this.cache.detail) return;
+    showDetailPanel(){
 
-        this.cache.detail.innerHTML = `
+        this.getDetail()
+            ?.addClass('active');
+
+    }
+
+    hideDetailPanel(){
+
+        this.getDetail()
+            ?.removeClass('active');
+
+    }
+
+    /* ========================================
+     * LOADING
+     * ====================================== */
+
+    showLoading(){
+
+        const $detail =
+            this.getDetail();
+
+        if(!$detail?.length){
+            return;
+        }
+
+        $detail.html(`
             <div class="loading-state">
                 Loading...
             </div>
-        `;
+        `);
+
     }
 
-    showTabLoading(tab) {
-        const el = document.querySelector(
-            `.tab-panel[data-tab="${tab}"]`
-        );
+    showTabLoading(tab){
 
-        if (!el) return;
+        const $detail =
+            this.getDetail();
 
-        el.innerHTML = `
+        if(!$detail?.length){
+            return;
+        }
+
+        const $panel =
+            $detail.find(
+                `.tab-panel[data-tab="${tab}"]`
+            );
+
+        if(!$panel.length){
+            return;
+        }
+
+        $panel.html(`
             <div class="loading-state small">
                 Loading...
             </div>
-        `;
+        `);
+
     }
+
+    /* ========================================
+     * SEARCH
+     * ====================================== */
+
+    bindThreadSearch(){
+
+        const $list =
+            this.getThreadList();
+
+        if(!$list?.length){
+            return;
+        }
+
+        const $input =
+            $list.find(
+                '.thread-search input'
+            );
+
+        if(!$input.length){
+            return;
+        }
+
+        $input.on(
+            'input',
+
+            e => {
+
+                const q =
+                    e.target.value
+                        .toLowerCase();
+
+                this.getGrid()
+                    ?.find('.person-card')
+                    .each(function(){
+
+                        const text =
+                            this.textContent
+                                .toLowerCase();
+
+                        this.style.display =
+                            text.includes(q)
+                                ? ''
+                                : 'none';
+
+                    });
+
+            }
+        );
+
+    }
+
+    /* ========================================
+     * SOUND
+     * ====================================== */
+
+    async playMessageSound(){
+
+        const sound =
+            await this.scope.getService(
+                'sound'
+            );
+
+        const now = Date.now();
+
+        if(now - this.lastSound < 800){
+            return;
+        }
+
+        this.lastSound = now;
+
+        sound.play('message');
+
+    }
+
 }

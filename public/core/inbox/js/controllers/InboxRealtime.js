@@ -15,9 +15,9 @@ class InboxRealtime{
     }
 
     initUserChannel(){
-
         if(!this.userId) return;
-
+        // alert('initUserChannel: ' + this.userId);
+        this.scope.off(`realtime:inbox:user:${this.userId}`);
         this.scope.on(
             `realtime:inbox:user:${this.userId}`,
             this.handleUserEvent.bind(this)
@@ -36,7 +36,7 @@ class InboxRealtime{
 
         this.scope.on(this.threadHook, this.handleThreadEvent.bind(this));
 
-        this.scope.on('inbox.message.received', (msg) => {
+        this.scope.on('realtime:inbox.message.received', (msg) => {
 
             const isActive = msg.thread_id === this.ui.getActiveThread();
             const isMine   = msg.sender_id === currentUserId;
@@ -51,18 +51,17 @@ class InboxRealtime{
             this.ui.appendMessage(msg);
         });
 
-        this.scope.on('inbox.message.delivered', (data) => {
+        this.scope.on('realtime:inbox.message.delivered', (data) => {
             this.ui.updateMessageStatus(data.message_id, 'delivered');
         });
 
-        this.scope.on('inbox.message.read', (data) => {
+        this.scope.on('realtime:inbox.message.read', (data) => {
             this.ui.updateMessageStatus(data.message_id, 'read');
         });
 
     }
 
     handleUserEvent(e){
-
         const data = e?.payload;
         if(!data) return;
 

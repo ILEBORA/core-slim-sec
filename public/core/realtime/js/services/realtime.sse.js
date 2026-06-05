@@ -42,9 +42,11 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
 
     function handleVisibility(){
         if (document.hidden) {
-            instance.pause();
+            // instance.pause();
         } else {
-            instance.resume();
+            // instance.resume();
+            // alertBora.alert('visible again');
+            console.log('[UI] tab visible again');
         }
     }
 
@@ -54,35 +56,6 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
         // offError?.();
         document.removeEventListener('visibilitychange', handleVisibility);
     }
-
-    // function bindNavigationLifecycleO(){
-
-    //     hooks?.add?.('page.beforeLoad', ()=>{
-    //         instance?.pause?.();
-    //     });
-
-    //     let resumeTimer = null;
-    //     hooks?.add?.('page.afterLoad', ()=>{
-    //         clearTimeout(resumeTimer);
-    //         resumeTimer = setTimeout(()=>{
-    //             instance?.resume?.();
-    //         }, 50);
-    //     });
-
-    //     hooks?.add?.('page.loadError', ()=>{
-    //         instance?.resume?.();
-    //     });
-
-    //     // Hidden Tab
-    //     document.addEventListener('visibilitychange', () => {
-    //         if (document.hidden) {
-    //             instance.pause();
-    //         } else {
-    //             instance.resume();
-    //         }
-    //     });
-
-    // }
 
     const appCompat = {
         safeParse: (str, fallback) => {
@@ -223,13 +196,14 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
                         try {
                             payload = JSON.parse(e.data);
                             console.log('PAYLOAD N:: ', payload);
+                            console.log('PAYLOAD TYPE:: ', payload.data.events);
                         } catch {
                             return;
                         }
 
                         // Batch support
-                        if (payload.batch && Array.isArray(payload.batch)) {
-                            payload.batch.forEach(self.queueFact);
+                        if (payload.data.events && Array.isArray(payload.data.events)) {
+                            payload.data.events.forEach(self.queueFact);
                             return;
                         }
 
@@ -301,36 +275,19 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
         // });
 
         this.dispatchFact = function (msg) {
-            if (!Array.isArray(msg.data)) return;
+            console.log('dispatchFact to realtime:' + msg.channel, msg);
 
-            msg.data.forEach(event => {
-                const type = event.type;
-
-                // 1. Global handlers (*)
-                const wildcardHandlers = self.factHandlers['*'] || [];
-
-                // 2. Type-specific handlers
-                const typeHandlers = self.factHandlers[type] || [];
-
-                const handlers = [...wildcardHandlers, ...typeHandlers];
-
-                if (handlers.length === 0) return;
-
-                handlers.forEach(fn => {
-                    try {
-                        fn(event, msg); // pass event + envelope if needed
-                    } catch (e) {
-                        console.error('SSE handler failed:', type, e);
-                    }
-                });
-            });
+            scope.emit(
+                'realtime:' + msg.channel, 
+                msg
+            );
         };
 
         this.queueFact =  function(msg) {
-            console.log('queueFact N',msg);
+            console.log('queueFact N'+msg.id, msg);
             self.factQueue.push(msg);
-            if (!self.processing) self.processQueue();
-        };
+                if (!self.processing) self.processQueue();
+            };
 
         this.processQueue = function() {
             console.log('processQueue N...');

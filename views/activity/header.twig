@@ -7,7 +7,7 @@
     <img class="activity-avatar lazy" src="{{ avatar|default('assets/images/icons/noavatar.png') }}" alt="">
     <div class="activity-header-meta">
         <div class="activity-author">
-            <a href="portal/people/person/{{ actor.person_id }}/view">
+            <a data-nav="portal/people/person/{{ actor.person_id }}/view">
                 {{ name }}
             </a>
             <span class="activity-username">{{ username }}</span>

@@ -105,6 +105,8 @@
         if(global.__BORA_APP__?.isStarted()){
             global.__BORA_APP__._registerService(name, factory, meta);
         }
+
+        scheduleIntegration();
     }
 
     /* ==================================================
@@ -514,9 +516,9 @@
         /* ==================================================
            ACTIVATION (LAZY SAFE)
         ================================================== */
-
+        let cn = 0;
         async function evaluatePluginActivation(route){
-            // alert('evaluatePluginActivation :: ' + route);
+            // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
             const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
             console.warn('[MANIFEST]', manifest);
 
@@ -556,9 +558,9 @@
             /* ---------------------------
             LOOP
             --------------------------- */
-
+            let cnt = 0;
             for(const name of pluginNames){
-
+                // alert('Load name:: '+name);
                 const meta = manifest[name];
 
                 // 🧠 Phase 1: should load?
@@ -601,7 +603,7 @@
                 --------------------------- */
 
                 if(shouldActivate){
-                    // alert('Plugin:: '+name);
+                    // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
                     if(!plugin.__active){
 
                         try{
@@ -809,11 +811,8 @@
                     console.log(`[Runtime] Detected face: ${global.__BORA_FACE__}`);
                 }
             }
-
+            
             // register pending services
-            // pendingServices.forEach(({factory, meta}, name)=>{
-            //     await _registerService(name, factory, meta);
-            // });
             for(const [name, {factory, meta}] of pendingServices){
 
                 const normalized = name.toLowerCase();
@@ -827,9 +826,6 @@
             emit('runtime:servicesReady');
 
             // register pending plugins (only already loaded ones)
-            // pendingPlugins.forEach(({factory, meta}, name)=>{
-            //     await _registerPlugin(name, factory, meta);
-            // });
             for(const [name, {factory, meta}] of pendingPlugins){
 
                 const normalized = name.toLowerCase();
@@ -843,14 +839,13 @@
 
             emit('runtime:started');
 
+            // initial activation (lazy)
+            await evaluatePluginActivation(normalizeUrl(window.location));
             
             emit('page.loaded', {
                 source: 'initial',
                 url: window.location
             });
-
-            // initial activation (lazy)
-            // await evaluatePluginActivation(normalizeUrl(window.location));
 
             Object.freeze(services);
             Object.freeze(plugins);
@@ -879,6 +874,10 @@
                     })) 
                 );
             }
+        }
+
+        function currentRoute(){
+            return normalizeUrl(window.location);
         }
 
         /* ==================================================
@@ -919,7 +918,8 @@
             _registerService,
             evaluatePluginActivation,
             _registrationWaiters: registrationWaiters,
-            face: getFace
+            face: getFace,
+            currentRoute: () => normalizeUrl(window.location),
         };
 
         return Object.freeze(publicAPI);

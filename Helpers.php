@@ -528,7 +528,7 @@ if (!function_exists('View')) {
                 ->share('base_url', $baseUrl)
                 ->share('app_name', $appName)
                 ->share('app_version', getVersion())
-                ->share('perm_version', getRolesVersion(userID()))
+                ->share('perm_version', getRolesVersion((int)userID()))
                 ->share('core_version', getCoreVersion());
 
             foreach($appConfig as $key => $val){
@@ -599,7 +599,7 @@ if (!function_exists('modView')) {
                 ->share('base_url', $base_url)
                 ->share('app_name', $app_name)
                 ->share('app_version', getVersion())
-                ->share('perm_version', getRolesVersion(userID()))
+                ->share('perm_version', getRolesVersion((int)userID()))
                 ->share('channel_id', $channelId)
                 ->share('meta_description', 'Learn more about our company and values.')
                 ->share('meta_keywords', 'about, company, values')
@@ -1881,14 +1881,11 @@ if (!function_exists('widgets')) {
 
     function widgets(): \BoraSlim\Core\Kernel\Widgets\WidgetRegistry
     {
-        if (!ctx()->has(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class)) {
-            ctx()->set(
-                \BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class,
-                new \BoraSlim\Core\Kernel\Widgets\WidgetRegistry()
-            );
+        $ctx = ctx();
+        if (!$ctx->registered(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class)) {
+            $ctx->singleton(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class, fn() => new \BoraSlim\Core\Kernel\Widgets\WidgetRegistry());
         }
-
-        return ctx()->get(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class);
+        return $ctx->resolve(\BoraSlim\Core\Kernel\Widgets\WidgetRegistry::class);
     }
 }
 
@@ -1896,14 +1893,11 @@ if (!function_exists('widgets')) {
 if(!function_exists('forms')){
     function forms(): \BoraSlim\Core\Kernel\Forms\FormRegistry
     {
-        if (!ctx()->has(\BoraSlim\Core\Kernel\Forms\FormRegistry::class)) {
-            ctx()->set(
-                \BoraSlim\Core\Kernel\Forms\FormRegistry::class,
-                new \BoraSlim\Core\Kernel\Forms\FormRegistry()
-            );
+        $ctx = ctx();
+        if (!$ctx->registered(\BoraSlim\Core\Kernel\Forms\FormRegistry::class)) {
+            $ctx->singleton(\BoraSlim\Core\Kernel\Forms\FormRegistry::class, fn() => new \BoraSlim\Core\Kernel\Forms\FormRegistry());
         }
-
-        return ctx()->get(\BoraSlim\Core\Kernel\Forms\FormRegistry::class);
+        return $ctx->resolve(\BoraSlim\Core\Kernel\Forms\FormRegistry::class);
     }
 }
 
@@ -1912,14 +1906,11 @@ if (!function_exists('channels')) {
 
     function channels(): \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry
     {
-        if (!ctx()->has(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class)) {
-            ctx()->set(
-                \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class,
-                new \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry()
-            );
+        $ctx = ctx();
+        if (!$ctx->registered(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class)) {
+            $ctx->singleton(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class, fn() => new \BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry());
         }
-
-        return ctx()->get(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class);
+        return $ctx->resolve(\BoraSlim\Core\Modules\Notifications\Services\ChannelRegistry::class);
     }
 }
 
@@ -1928,14 +1919,11 @@ if (!function_exists('routes')) {
 
     function routes(): \BoraSlim\Core\Routing\RouteRegistry
     {
-        if (!ctx()->has(\BoraSlim\Core\Routing\RouteRegistry::class)) {
-            ctx()->set(
-                \BoraSlim\Core\Routing\RouteRegistry::class,
-                new \BoraSlim\Core\Routing\RouteRegistry()
-            );
+        $ctx = ctx();
+        if (!$ctx->registered(\BoraSlim\Core\Routing\RouteRegistry::class)) {
+            $ctx->singleton(\BoraSlim\Core\Routing\RouteRegistry::class, fn() => new \BoraSlim\Core\Routing\RouteRegistry());
         }
-
-        return ctx()->get(\BoraSlim\Core\Routing\RouteRegistry::class);
+        return $ctx->resolve(\BoraSlim\Core\Routing\RouteRegistry::class);
     }
 }
 
@@ -1943,7 +1931,7 @@ if (!function_exists('routes')) {
 if(!function_exists('queue')){
     function queue(): \BoraSlim\Core\Infrastructure\Queue\DatabaseQueue
     {
-        return ctx()->make(\BoraSlim\Core\Infrastructure\Queue\DatabaseQueue::class);
+        return ctx()->resolve(\BoraSlim\Core\Infrastructure\Queue\DatabaseQueue::class);
     }
 }
 
@@ -1951,7 +1939,7 @@ if(!function_exists('queue')){
 if(!function_exists('contextMenu')){
     function contextMenu(): \BoraSlim\Core\Modules\Ui\Services\ContextMenu
     {
-        return ctx()->make(\BoraSlim\Core\Modules\Ui\Services\ContextMenu::class);
+        return ctx()->resolve(\BoraSlim\Core\Modules\Ui\Services\ContextMenu::class);
     }
 }
 
@@ -1959,13 +1947,13 @@ if(!function_exists('contextMenu')){
 if(!function_exists('menus')){
     function menus(): \BoraSlim\Core\Ui\Menus\MenuManager
     {
-        return ctx()->make(\BoraSlim\Core\Ui\Menus\MenuManager::class);
+        return ctx()->resolve(\BoraSlim\Core\Ui\Menus\MenuManager::class);
     }
 }
 if(!function_exists('menuCtx')){
     function menuCtx(...$params): \BoraSlim\Core\Ui\Menus\MenuContext
     {
-        return ctx()->make(\BoraSlim\Core\Ui\Menus\MenuContext::class);
+        return ctx()->resolve(\BoraSlim\Core\Ui\Menus\MenuContext::class);
     }
 }
 
@@ -1974,21 +1962,42 @@ if(!function_exists('menuCtx')){
 if(!function_exists('dropdown')){
     function dropdown(): \BoraSlim\Core\Modules\Ui\Services\DropdownPanel
     {
-        return ctx()->make(\BoraSlim\Core\Modules\Ui\Services\DropdownPanel::class);
+        return ctx()->resolve(\BoraSlim\Core\Modules\Ui\Services\DropdownPanel::class);
+    }
+}
+
+if (!function_exists('taxonomies')) {
+
+    function taxonomies():
+        \BoraSlim\Core\Modules\Form\Taxonomy\TaxonomyRegistry
+    {
+        $ctx = ctx();
+
+        if (
+            !$ctx->registered(
+                \BoraSlim\Core\Modules\Form\Taxonomy\TaxonomyRegistry::class
+            )
+        ) {
+
+            $ctx->singleton(
+
+                \BoraSlim\Core\Modules\Form\Taxonomy\TaxonomyRegistry::class,
+
+                fn() =>
+                    new \BoraSlim\Core\Modules\Form\Taxonomy\TaxonomyRegistry()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Modules\Form\Taxonomy\TaxonomyRegistry::class
+        );
     }
 }
 
 // API
 if (!function_exists('api')) {
-    function api(): \BoraSlim\Core\Http\ApiRegistry
-    {
-        $ctx = ctx();
-
-        if (!$ctx->bound('api.registry')) {
-            $ctx->bind('api.registry', fn() => new \BoraSlim\Core\Http\ApiRegistry());
-        }
-
-        return $ctx->make('api.registry');
+    function api(): \BoraSlim\Core\Http\ApiRegistry { 
+        return ctx()->resolve( \BoraSlim\Core\Http\ApiRegistry::class ); 
     }
 }
 
@@ -2179,5 +2188,56 @@ if (!function_exists('media')) {
         }
 
         return $url;
+    }
+}
+
+if(!function_exists('class_basename')){
+
+    function class_basename(
+        string|object $class
+    ): string {
+
+        if(is_object($class)){
+
+            $class =
+                get_class($class);
+        }
+
+        return basename(
+            str_replace(
+                '\\',
+                '/',
+                $class
+            )
+        );
+    }
+}
+
+if (!function_exists('boraIdentity')) {
+
+    function boraIdentity(?string $key = null, mixed $default = null): mixed
+    {
+        static $identity = null;
+
+        if ($identity === null) {
+
+            $identity = [];
+
+            $identityFile = '.bora';
+
+            if (is_file($identityFile)) {
+
+                $identity = json_decode(
+                    file_get_contents($identityFile),
+                    true
+                ) ?: [];
+            }
+        }
+
+        if ($key === null) {
+            return $identity;
+        }
+
+        return $identity[$key] ?? $default;
     }
 }

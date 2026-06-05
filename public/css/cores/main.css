@@ -196,11 +196,33 @@ section{
     padding-right: 5px;
 }
 #page_refresh{
-    display: none;
+    display:none;
+
     background:#dffdab;
+
     padding:3px;
-    cursor: pointer;
+
+    cursor:pointer;
+
     color:#8b8e86;
+
+    width: 100%;
+
+    opacity:0;
+
+    transform:translateY(-4px);
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+#page_refresh.visible{
+
+    opacity:1;
+
+    transform:translateY(0);
+
 }
 
 #page_refresh.sticky{

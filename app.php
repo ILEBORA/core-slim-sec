@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.17
- *  Build ID:   90652095BFA6
- *  Timestamp:  2026-05-29 19:05:50
+ *  Build ID:   78C800CDE4FE
+ *  Timestamp:  2026-06-05 15:42:54
  *  License:    Proprietary - Unauthorized modification prohibited.
  *  © 2025 ILEBORA Technologies. All Rights Reserved.
  * ================================================================
@@ -25,16 +25,64 @@ if (!defined('CORE_SECURE_APP_FOLDER')) {
 
     // Resolve project value from all possible sources
     $project =
-        $_SERVER['PRJCT_MUST_BE_SET'] ??
-        getenv('PRJCT_MUST_BE_SET') ??
-        null;
+        boraIdentity('project')
+        ?? $_SERVER['PRJCT_MUST_BE_SET']
+        ?? getenv('PRJCT_MUST_BE_SET')
+        ?? null;
+
+    // Resolve environment
+    $environment =
+        boraIdentity('environment')
+        ?: ($_SERVER['APP_ENV']
+        ?? getenv('APP_ENV')
+        ?? 'development');
+        
+    define(
+        'APP_ENV',
+        strtolower((string)$environment)
+    );
+
+    define(
+        'APP_BRANCH',
+        boraIdentity('branch', 'unknown')
+    );
+
+    define(
+        'APP_COMMIT',
+        boraIdentity('commit', '')
+    );
+
+    define(
+        'APP_DEPLOYED_AT',
+        boraIdentity('deployed_at', '')
+    );
 
     if ($project !== null) {
-        define('PRJCT_MUST_BE_SET', $project);
-        define('CORE_SECURE_APP_FOLDER', 'secure/' . $project);
+
+        define(
+            'PRJCT_MUST_BE_SET',
+            $project
+        );
+
+        define(
+            'CORE_SECURE_APP_FOLDER',
+            'secure/' . $project
+        );
+
     } else {
-        define('CORE_SECURE_APP_FOLDER', 'secure/core-landing');
+
+        define(
+            'CORE_SECURE_APP_FOLDER',
+            'secure/core-landing'
+        );
     }
+
+    define(
+        'CORE_RUNTIME_FOLDER',
+        CORE_SECURE_APP_FOLDER .
+        '/runtime/' .
+        APP_ENV
+    );
 }
 
 $envPath = realpath($basePath . '/' . CORE_SECURE_APP_FOLDER);

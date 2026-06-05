@@ -21,7 +21,7 @@ class PeopleAPI {
         this.ui.showLoading();
 
         const html = await this.loader.loadPersonView(personId);
-
+        
         this.ui.renderHTML(html);
 
         this.ui.setActivePerson(personId);

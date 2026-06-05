@@ -1,6 +1,6 @@
 <div class="thread-view person-view" data-person="{{ person.id }}">
 
-    {% include 'people/person/header.twig' with{person:person} %}
+    {% include 'people/person/header.twig' with{ person: person } %}
 
     <nav class="person-tabs">
         <button data-tab="profile" class="active">Profile</button>
@@ -12,7 +12,7 @@
     <div class="person-content">
 
         <div class="tab-panel active" data-tab="profile">
-            {% include 'people/person/profile.twig' with{person:person}%}
+            {% include 'people/person/profile.twig' with{ person: person }%}
         </div>
 
         <div class="tab-panel" data-tab="connections">

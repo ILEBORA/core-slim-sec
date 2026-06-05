@@ -154,15 +154,17 @@ $callback = function () use (&$lastSentm, $ackFile) {
             'base'  => $base,
             'since' => $since
         ];
+
+    // dieVal($params);
         
     $url = $base."api/modules/realtime/semain/".$sessionID."/".$event."/notify";
-
+    // die($url);
     $out =  callApiB('POST',$url, $params);
-    // dieVal($out);
+    // jsonExit(json_decode($out,true)??$out);
     if(isJson($out)){
         $out = json_decode($out,true);
     }else{
-        //error_log("SSE Error:: ".$out);
+        error_log("SSE Error:: ".$out);
         $out = [];
         return false;
     }
@@ -185,4 +187,13 @@ $callback = function () use (&$lastSentm, $ackFile) {
 
 $listener = isset($req['event']) ? $req['event'] : 'noevent';
 // die($listener);
+// jsonExit([
+//     'response' => 'success',
+//     'message' => 'SE::✅ Stream started...',//'Acknowledgment from api '.time(),
+//     'data' => [
+//         'listener' => $listener,
+//         'timer' => $timer
+//     ],
+//     'callback' => $callback()
+// ]);
 (new SSE(new Event($callback, $listener, $timer)))->start(10);

@@ -161,16 +161,41 @@ $pipeline->register('people.breadcrumbs', [
 ]);
 
 /* ==================================================
-   PLUGIN BOOTSTRAP (ENTRY POINT)
+   GLOBAL CONTROLLER
 ================================================== */
 
+$pipeline->register('people.controller', [
+    'file'     => 'controllers/people.controller.js',
+    'type'     => 'plugin',
+    'priority' => 150,
 
+    'requires' => [
+        'people.helpers',
+        'people.ui',
+
+        'people.loader',
+        'people.follow',
+
+        'people.api'
+    ],
+
+    'preload' => false,
+
+    // global capability
+    'faces' => ['client']
+]);
+
+/* ==================================================
+   PLUGIN BOOTSTRAP (ENTRY POINT)
+================================================== */
 
 $pipeline->register('people.plugin', [
     'file'     => 'plugins/people.plugin.js',
     'type'     => 'plugin',
     'priority' => 200,
     'requires' => [
+        'people.controller',
+
         'people.helpers',
         'people.composer',
         'people.ui',
@@ -187,9 +212,9 @@ $pipeline->register('people.plugin', [
 
         'people.presence',
 
-        'people.api',
+        'people.api'
     ],
-    'preload' => false
+    'preload' => true
 ]);
 
 /* ==================================================

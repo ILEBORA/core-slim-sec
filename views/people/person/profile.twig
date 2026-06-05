@@ -43,16 +43,16 @@
                     Following
                 </div>
                 {% if person.added_by == current_user_id or person.user_id == current_user_id %}
-                    <button class="btn btn-info" data-id="{{ person.id }}" data-action="person:edit">
+                    <button class="btn btn-info" data-id="{{ person.id }}" data-action="person.edit">
                         Edit
                     </button>
                 {% endif %}
             {% else %}
                 <div class="notice">User not Linked</div>
-                <button class="btn btn-info" data-id="{{person.id}}" data-action="person:link.invite">Invite</button> 
+                <button class="btn btn-info" data-id="{{person.id}}" data-action="person.link.invite">Invite</button> 
 
                 {% if person.added_by == current_user_id or person.user_id == current_user_id %}
-                    <button class="btn btn-info" data-id="{{ person.id }}" data-action="person:edit">
+                    <button class="btn btn-info" data-id="{{ person.id }}" data-action="person.edit">
                         Edit
                     </button>
                 {% endif %}
@@ -111,7 +111,7 @@
             {% set followed = person.is_following ? 'followed' : '' %}
             <button class="btn-follow {{ followed }}"
                     data-action="people:follow"
-                    data-id="{{ person.id }}"
+                    data-person="{{ person.id }}"
                     >
                 {{ person.is_following ? 'Following' : 'Follow' }}
             </button>
@@ -127,7 +127,7 @@
                     Your Profile
             </button>
 
-            <button class="btn btn-info" data-id="{{ person.id }}" data-action="person:edit">
+            <button class="btn btn-info" data-id="{{ person.id }}" data-action="person.edit">
                         Edit
                     </button>
         {% endif %}
