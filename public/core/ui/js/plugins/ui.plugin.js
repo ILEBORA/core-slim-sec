@@ -137,7 +137,7 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
 
         scope.on('loader:progress', data => {
 
-            console.log(data);
+            // console.log(data);
 
             if(bar){
                 bar.style.width =

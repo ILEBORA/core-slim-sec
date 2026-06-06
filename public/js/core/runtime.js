@@ -324,10 +324,10 @@
         }
 
         async function _registerPlugin(name, factory, meta = {}){
-            console.log(
-                '[REGISTER PLUGIN]',
-                name
-            );
+            // console.log(
+            //     '[REGISTER PLUGIN]',
+            //     name
+            // );
             name = name.toLowerCase();
 
             if(plugins.has(name)){
@@ -568,18 +568,18 @@
                     continue;
                 }
 
-                console.warn(`[Loader-success] Loading plugin: ${name}`);
+                // console.warn(`[Loader-success] Loading plugin: ${name}`);
                 // ensure code is loaded
                 await global.__BORA_LOADER__.ensure(name, {
                     activate:false
                 });
 
                 const plugin = plugins.get(name);
-                console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
+                // console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
                 // Plugin not loaded yet (loader should have loaded it by now, but just in case)
                 if(!plugin){
-                    console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
-                    console.log(pluginMeta.get(name));
+                    // console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
+                    // console.log(pluginMeta.get(name));
                     continue;
                 }
 
@@ -612,10 +612,10 @@
                             await plugin.mount?.();
                             plugin.__active = true;
 
-                            console.log(
-                                `%c ${name} Plugin active`,
-                                'color:#22c55e;font-weight:bold;'
-                            );
+                            // console.log(
+                            //     `%c ${name} Plugin active`,
+                            //     'color:#22c55e;font-weight:bold;'
+                            // );
 
                             /* timing (optional keep your existing logic) */
 
@@ -791,7 +791,7 @@
         async function start(){
 
             if(started){
-                console.warn('[Runtime already started]');
+                // console.warn('[Runtime already started]');
                 return;
             }
 

@@ -44,7 +44,10 @@ $timer      = isset($req['timer']) ? $req['timer'] : 10;
 $timer      = (int) ($timer * 1000);
 //die($sessionID );
 
-$ackFile = BASE_DIR."/.realtime/state/{$userID}_{$sessionID}.json";
+// $ackFile = BASE_DIR."/.realtime/state/{$userID}_{$sessionID}.json";
+$ackFile = paths()->realtimeState(
+                        "{$userID}_{$sessionID}.json"
+                    );
 $acked = is_file($ackFile)
     ? json_decode(file_get_contents($ackFile), true)
     : [];

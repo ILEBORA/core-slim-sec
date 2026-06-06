@@ -18,7 +18,7 @@
     ================================================== */
 
     const CONFIG = global.__BORA_CONFIG__ || {
-        dev: true, //rd('devMode', false), //false,
+        dev: false, //rd('devMode', false), //false,
         // securityMode: 'strict'
     };
 

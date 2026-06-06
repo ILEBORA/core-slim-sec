@@ -42,9 +42,9 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
 
     function handleVisibility(){
         if (document.hidden) {
-            // instance.pause();
+            instance.pause();
         } else {
-            // instance.resume();
+            instance.resume();
             // alertBora.alert('visible again');
             console.log('[UI] tab visible again');
         }
@@ -110,7 +110,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
 
         this.on = function(type, handler) {
             // alert('SSE Tree');
-            console.log(`LISTENER N1:: ${type}`);
+            // console.log(`LISTENER N1:: ${type}`);
             if (!self.factHandlers[type]) {
                 self.factHandlers[type] = [];
                 
@@ -141,7 +141,7 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
             // var versions = appUtils.getCookie('lvui_versions')
             // params.since = JSON.parse(versions) ?? {};
 
-            console.log('PARAMS N:: ',params);
+            // console.log('PARAMS N:: ',params);
 
                 if (typeof (EventSource) !== "undefined" && typeof (params) !== "undefined" ) {
                     // var url = "https://api.ilebora.com/assets/plugins/sse/sse_p.bu?id="+id+'&userID='+usr+'&event='+event;

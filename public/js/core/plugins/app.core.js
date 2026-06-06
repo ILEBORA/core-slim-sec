@@ -107,8 +107,8 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function hasPermission(perm, sub){
-            console.log('PERMS::', state.appPerms);
-            console.log('ROLE::', state.curRole);
+            // console.log('PERMS::', state.appPerms);
+            // console.log('ROLE::', state.curRole);
 
             return state.appPerms?.[perm]?.includes(sub) === true;
         }

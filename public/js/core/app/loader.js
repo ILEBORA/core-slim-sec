@@ -182,7 +182,7 @@
         }
         //end new
 
-        console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
+        // console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
 
         if(stack.includes(name)){
             const cycle = [...stack, name].join(' → ');
@@ -287,9 +287,9 @@
                 --------------------------- */
 
                 if(!services.has(name) && !plugins.has(name)){
-                    console.warn(
-                        `[Loader] Module "${name}" loaded but not registered.`
-                    );
+                    // console.warn(
+                    //     `[Loader] Module "${name}" loaded but not registered.`
+                    // );
                 }
 
                 

@@ -52,10 +52,10 @@ __BORA_REGISTER_PLUGIN__(
             );
 
             L.tileLayer(
-                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
                     attribution:
-                        '&copy; OpenStreetMap'
+                        "&copy; OpenStreetMap"
                 }
             ).addTo(map);
 
@@ -107,7 +107,7 @@ __BORA_REGISTER_PLUGIN__(
             initMap
         };
 
-    }
+}
 ,{
     requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events')

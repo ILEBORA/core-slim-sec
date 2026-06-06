@@ -2241,3 +2241,47 @@ if (!function_exists('boraIdentity')) {
         return $identity[$key] ?? $default;
     }
 }
+
+if (!function_exists('paths')) {
+
+    function paths(): \BoraSlim\Core\Support\Paths
+    {
+        $ctx = ctx();
+
+        if (!$ctx->registered(\BoraSlim\Core\Support\Paths::class)) {
+
+            $ctx->singleton(
+                \BoraSlim\Core\Support\Paths::class,
+                fn() => new \BoraSlim\Core\Support\Paths()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Support\Paths::class
+        );
+    }
+}
+
+if (!function_exists('presence')) {
+
+    function presence(): \BoraSlim\Core\Modules\Realtime\Services\RealtimePresenceService
+    {
+        $ctx = ctx();
+
+        if (
+            !$ctx->registered(
+                \BoraSlim\Core\Modules\Realtime\Services\RealtimePresenceService::class
+            )
+        ) {
+
+            $ctx->singleton(
+                \BoraSlim\Core\Modules\Realtime\Services\RealtimePresenceService::class,
+                fn() => new \BoraSlim\Core\Modules\Realtime\Services\RealtimePresenceService()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Modules\Realtime\Services\RealtimePresenceService::class
+        );
+    }
+}
