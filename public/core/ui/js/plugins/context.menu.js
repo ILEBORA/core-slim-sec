@@ -200,10 +200,29 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
                 const cls = item.class ? item.class : '';
 
+                const attrs = Object.entries(item)
+
+                    .filter(([key]) =>
+                        key.startsWith('data_')
+                    )
+
+                    .map(([key, value]) => {
+
+                        const attr =
+                            key
+                                .replace(/^data_/, 'data-')
+                                .replaceAll('_', '-');
+
+                        return `${attr}="${String(value)}"`;
+
+                    })
+
+                    .join(' ');
+
                 html += `
                 <li class="context-menu-item ${cls}"
                     data-action="${item.action || ''}"
-                    data-id="${item?.data_id || ''}"
+                    ${attrs}
                     >
                     ${item.label}
                 </li>`;

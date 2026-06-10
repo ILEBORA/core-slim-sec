@@ -683,4 +683,104 @@ class InboxUI {
         sound.play('message');
     }
 
+
+    // New
+    appendOptimisticMessage({
+        tempId,
+        body,
+        senderName = 'You'
+    }){
+
+        const container = document.querySelector('.messages');
+
+        if(!container) return;
+
+        const wrapper = document.createElement('div');
+
+        wrapper.innerHTML = `
+            <div
+                class="message outgoing pending"
+                data-message-id="${tempId}"
+                data-client-id="${tempId}"
+                data-status="sending">
+
+                <div class="bubble">
+
+                    <div class="bubble-body">
+                        <div class="reply-author">
+                            ${senderName}
+                        </div>
+
+                        ${this.escapeHtml(body)}
+                    </div>
+
+                    <div class="bubble-meta">
+
+                        <time class="bubble-time">
+                            ${new Date().toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                        </time>
+
+                        <span class="bubble-status">
+                            Sending...
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+        const el = wrapper.firstElementChild;
+
+        el.classList.add(
+            'msg-enter',
+            'msg-user-enter',
+            'msg-enter-active'
+        );
+
+        container.appendChild(el);
+
+        this.scrollBottomSmooth();
+
+        return el;
+    }
+
+    escapeHtml(text){
+
+        const div = document.createElement('div');
+
+        div.textContent = text;
+
+        return div.innerHTML;
+    }
+
+    replaceOptimisticMessage(tempId, html){
+
+        const optimistic = document.querySelector(
+            `[data-client-id="${tempId}"]`
+        );
+
+        if(!optimistic){
+            return;
+        }
+
+        const wrapper = document.createElement('div');
+
+        wrapper.innerHTML = atob(html);
+
+        const realNode = wrapper.firstElementChild;
+
+        if(!realNode){
+            return;
+        }
+
+        optimistic.replaceWith(realNode);
+
+        this.scrollBottomSmooth();
+    }
+
 }

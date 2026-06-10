@@ -181,12 +181,12 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
         |--------------------------------------------------------------------------
         */
 
-        uiActions.register(
-            'popup.close',
-            ()=>{
-                uiStack.closeTop();
-            }
-        );
+        // uiActions.register(
+        //     'popup.close',
+        //     ()=>{
+        //         uiStack.closeTop();
+        //     }
+        // );
 
         // Listeners
         scope.on(

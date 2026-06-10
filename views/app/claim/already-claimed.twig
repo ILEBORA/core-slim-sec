@@ -1,0 +1,98 @@
+<div class="container claim-page">
+
+    <div class="claim-card">
+
+        <div class="claim-header">
+
+            <div class="claim-badge">
+                ✅ Profile Claimed
+            </div>
+
+            <h1>
+
+                This Profile Has Already Been Claimed
+
+            </h1>
+
+            <p class="text-muted">
+
+                This family profile is already
+                connected to an account.
+
+            </p>
+
+        </div>
+
+        <div class="person-preview">
+
+            {% if person.image %}
+
+                <img
+                    src="{{ person.image }}"
+                    class="person-avatar"
+                    alt="{{ person.full_name }}"
+                >
+
+            {% else %}
+
+                <div class="person-avatar-placeholder">
+
+                    {{ person.first_name|slice(0,1) }}
+
+                </div>
+
+            {% endif %}
+
+            <h2>
+
+                {{ person.full_name }}
+
+            </h2>
+
+            {% if person.birth_year %}
+
+                <div class="person-years">
+
+                    Born {{ person.birth_year }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="claim-message">
+
+            This invitation can no longer be used
+            because the profile has already been
+            linked to a member account.
+
+        </div>
+
+        <div class="claim-actions">
+
+            {% if isLoggedIn() %}
+
+                <a
+                    href="portal/people/person/{{ person.id }}/view"
+                    class="btn btn-primary"
+                >
+                    View Profile
+                </a>
+
+            {% else %}
+
+                <a
+                    href="portal/login"
+                    class="btn btn-primary"
+                >
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>

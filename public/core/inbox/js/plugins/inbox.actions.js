@@ -7,7 +7,7 @@ __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
     const uiActions = await scope.getService('ui.actions');
     const navigation = await scope.getService('navigation');
     const popup = await scope.getPlugin('popup');
-    const routeRegistry = await scope.getService('route.registry');
+    // const routeRegistry = await scope.getService('route.registry');
 
     const dismissable = await __BORA_APP__.service('ui.dismissable');
     const bNavigator = await scope.getService('navigator');

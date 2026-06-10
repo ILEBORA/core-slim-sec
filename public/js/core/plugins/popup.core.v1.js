@@ -3,7 +3,6 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
     // const $ = await scope.getService('jquery');
     const events = await scope.getService('events'); // optional
     const uiStack = await scope.getService('uiStack');
-    const callbora = await scope.getService('callbora');
 
     let activePopup = null;
 
@@ -161,23 +160,23 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             if (typeof urlOrHtml === 'string' && !urlOrHtml.startsWith('<')) {
                 this.load(urlOrHtml, callback);
             } else {
-                // alert('here');
                 this.setContent(urlOrHtml);
                 if (callback) callback();
             }
 
-            // alert('here'+urlOrHtml);
+            // alert('here');
         }
 
         load(url, callback) {
-            this.$append.html('<div class="popup-loader">Loading...</div>');
 
+            this.$append.html('<div class="popup-loader">Loading...</div>');
+            alert(url);
             $.ajax({
                 url,
                 method: 'GET',
                 dataType: 'html',
                 success: (html) => {
-                    // alert('setcontent' );
+                    alert('setcontent' );
                     this.setContent(html);
 
                     if (callback) callback();
@@ -337,11 +336,11 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
         //     }
         // }
 
-        async tryLoadTabContent($tab) {
+        tryLoadTabContent($tab) {
 
             const url = $tab.data('url');
             const target = this.$append.find('#tabContentArea');
-            
+
             if (!url) {
 
                 const targetId = $tab.attr('href');
@@ -380,42 +379,30 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
             target.html('<div class="popup-loader">Loading...</div>');
 
-            try {
+            $.ajax({
+                url,
+                method: 'GET',
+                dataType: 'html',
+                success: async (html) => {
+                    // alert('this.tryLoadTabContent');
+                    this._tabCache[url] = html;
+                    target.html(html);
 
-                const html =
-                    await callbora.get(url);
+                    if (this.options.onLoaded){
+                        // this.options.onLoaded(url, html);
+                        await this.options.onLoaded?.(url, html);
+                    }
 
-                this._tabCache[url] = html;
-
-                target.html(html);
-
-                await this.options.onLoaded?.(
-                    url,
-                    html
-                );
-
-                scope?.emit?.(
-                    'popup:loaded',
-                    {
+                    scope?.emit?.('popup:loaded', {
                         url,
                         html,
                         popup:this
-                    }
-                );
-
-            }
-            catch(err){
-
-                console.error(err);
-
-                target.html(`
-                    <div class="popup-error">
-                        Failed to load content.
-                    </div>
-                `);
-
-            }
-
+                    });
+                },
+                error: () => {
+                    target.html('<div class="popup-error">Failed to load content.</div>');
+                }
+            });
         }
 
         goToTab(tabId){
@@ -435,6 +422,18 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             // alert('call here');
             this.tryLoadTabContent($tabLink);
         }
+
+        // goToTabO(tabId) {
+
+        //     const $tabLink = this.$tabs.find(`a[href="#${tabId}"]`);
+
+        //     if (!$tabLink.length) return;
+
+        //     this.$tabs.find('a').removeClass('active');
+        //     $tabLink.addClass('active');
+
+        //     this.tryLoadTabContent($tabLink);
+        // }
 
         setTabs(tabs = [], activeTab = null){
 

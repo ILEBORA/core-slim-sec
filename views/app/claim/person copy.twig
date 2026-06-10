@@ -1,0 +1,189 @@
+<div class="container claim-page">
+
+    <div class="claim-card">
+
+        <div class="claim-header">
+
+            <div class="claim-badge">
+                🌳 Family Invitation
+            </div>
+
+            <h1>
+                You've Been Invited
+            </h1>
+
+            <p class="text-muted">
+                Someone has identified you in a family tree and
+                would like you to claim your profile.
+            </p>
+
+        </div>
+
+        <div class="person-preview">
+
+            {% if person.image %}
+
+                <img
+                    src="{{ person.image }}"
+                    class="person-avatar"
+                    alt="{{ person.full_name }}"
+                >
+
+            {% else %}
+
+                <div class="person-avatar-placeholder">
+
+                    {{ person.first_name|slice(0,1) }}
+
+                </div>
+
+            {% endif %}
+
+            <h2>
+
+                {{ person.full_name }}
+
+            </h2>
+
+            {% if person.birth_year %}
+
+                <div class="person-years">
+
+                    Born {{ person.birth_year }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="person-stats">
+
+            <div class="stat">
+
+                <strong>
+                    {{ person.parents_count ?? 0 }}
+                </strong>
+
+                <span>
+                    Parents
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <strong>
+                    {{ person.children_count ?? 0 }}
+                </strong>
+
+                <span>
+                    Children
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <strong>
+                    {{ person.connections_count ?? 0 }}
+                </strong>
+
+                <span>
+                    Connections
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="claim-actions">
+
+            {% if isLoggedIn() %}
+
+                <a
+                    href="portal/people/claim/{{ token }}"
+                    class="btn btn-success btn-lg"
+                >
+                    Claim This Profile
+                </a>
+
+            {% else %}
+
+                <a
+                    href="portal/login?claim={{ token }}"
+                    class="btn btn-primary btn-lg"
+                >
+                    Login & Claim
+                </a>
+
+                <a
+                    href="portal/register?claim={{ token }}"
+                    class="btn btn-outline-secondary btn-lg"
+                >
+                    Create Account
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="claim-insights">
+
+        <h4>
+            This profile is already connected to:
+        </h4>
+
+        <ul class="claim-connections">
+
+            {% if person.has_father %}
+                <li>✓ Father</li>
+            {% endif %}
+
+            {% if person.has_mother %}
+                <li>✓ Mother</li>
+            {% endif %}
+
+            {% if person.siblings_count > 0 %}
+                <li>
+                    ✓ {{ person.siblings_count }}
+                    Sibling{{ person.siblings_count > 1 ? 's' : '' }}
+                </li>
+            {% endif %}
+
+            {% if person.spouses_count > 0 %}
+                <li>
+                    ✓ {{ person.spouses_count }}
+                    Spouse{{ person.spouses_count > 1 ? 's' : '' }}
+                </li>
+            {% endif %}
+
+            {% if person.children_count > 0 %}
+                <li>
+                    ✓ {{ person.children_count }}
+                    Child{{ person.children_count > 1 ? 'ren' : '' }}
+                </li>
+            {% endif %}
+
+            {% if person.relatives_count > 0 %}
+                <li>
+                    ✓ {{ person.relatives_count }}
+                    Relatives
+                </li>
+            {% endif %}
+
+        </ul>
+
+        <p class="claim-message">
+
+            Claim your profile to view your family connections,
+            contribute stories, upload photos, and help preserve
+            your family history.
+
+        </p>
+
+    </div>
+
+</div>

@@ -150,7 +150,7 @@ appHooks.addHook('realtime:inbox:thread:{{ thread_id }}', e => {
 
 appHooks.addHook('realtime:inbox:user:{{ main_id }}', e => {
     console.log('realtime:inbox:user:{{ main_id }}');
-    alert('here');
+    //alert('here');
     if (e.type === 'thread.reordered') {
         appInbox.bumpThread(e.thread_id);
     }

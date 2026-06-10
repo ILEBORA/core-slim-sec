@@ -68,7 +68,7 @@ async function (scope) {
             }
 
             if (e.key === 'Enter' && index >= 0) {
-                items[index].click();
+                // items[index].click();
                 return;
             }
 
@@ -83,9 +83,32 @@ async function (scope) {
             const form = e.target.closest('.composer');
             if (!form) return;
 
+             if (form.dataset.sending === '1') {
+                return;
+            }
+
+            form.dataset.sending = '1';
+
             const input = form.querySelector('input[name="body"]');
             const body = input.value.trim();
             if (!body) return;
+
+            const tempId =
+                'tmp_' +
+                Date.now() +
+                '_' +
+                Math.random().toString(36).slice(2);
+
+            scope.emit(
+                'inbox.message.optimistic',
+                {
+                    tempId,
+                    body
+                }
+            );
+
+            input.value = '';
+            
 
             fetch(form.action, {
                 method: 'POST',
@@ -102,20 +125,36 @@ async function (scope) {
             })
             .then(res => {
                 console.log('RESPONSE:: ',res);
-                scope.emit('inbox.message.sent',{
-                    res
-                });
+               
                 if (!res.success) {
                     alert('Message failed to send');
                     return;
                 }
-                input.value = '';
+                
+                scope.emit(
+                    'inbox.message.sent',
+                    {
+                        tempId,
+                        response: res
+                    }
+                );
+
             })
             .catch(err => {
                 console.error(err);
                 alert('Network error');
+                scope.emit(
+                    'inbox.message.failed',
+                    {
+                        tempId
+                    }
+                );
+            }).finally(() => {
+                delete form.dataset.sending;
             });
         });
+
+
 
         scope.on('inbox.view.list',function(){
             $('.thread_context_menu').hide();

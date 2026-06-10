@@ -49,7 +49,7 @@
                 {% endif %}
             {% else %}
                 <div class="notice">User not Linked</div>
-                <button class="btn btn-info" data-id="{{person.id}}" data-action="person.link.invite">Invite</button> 
+                <button class="btn btn-info" data-id="{{person.id}}" data-action="person.claim.invite">Invite</button> 
 
                 {% if person.added_by == current_user_id or person.user_id == current_user_id %}
                     <button class="btn btn-info" data-id="{{ person.id }}" data-action="person.edit">

@@ -755,10 +755,11 @@ table.bordered td:last {
 
 /*Page Styles*/
 .page-actions {
-    position: absolute;
+    /* position: absolute; */
     display: inline-block;
     right:0px;
     top:0px;
+    margin-left: auto;
 }
 
 .sub_menu.container{

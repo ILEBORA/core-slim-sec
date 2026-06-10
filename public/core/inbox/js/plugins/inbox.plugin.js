@@ -81,6 +81,32 @@ async function (scope) {
             realtime.initUserChannel();
         });
 
+        scope.on(
+            'inbox.message.optimistic',
+            ({ tempId, body }) => {
+
+                ui.appendOptimisticMessage({
+                    tempId,
+                    body
+                });
+
+            }
+        );
+
+        scope.on(
+            'inbox.message.sent',
+            ({ tempId, response }) => {
+
+                ui.replaceOptimisticMessage(
+                    tempId,
+                    response.html
+                );
+
+            }
+        );
+
+        
+
         $(async function(){
             await attachInteractions();
         });

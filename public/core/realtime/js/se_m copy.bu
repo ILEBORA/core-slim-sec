@@ -42,13 +42,16 @@ $userID     = isset($req['userID']) ? $req['userID'] : 'guest';
 $sessionID  = isset($req['sessionID']) ? $req['sessionID'] : 'null';
 $timer      = isset($req['timer']) ? $req['timer'] : 10;
 $timer      = (int) ($timer * 1000);
-//die($sessionID );
 
 // $ackFile = BASE_DIR."/.realtime/state/{$userID}_{$sessionID}.json";
 $ackFile = paths()->realtimeState(
                         "{$userID}_{$sessionID}.json"
                     );
-$acked = file_exists($ackFile)
+
+// $acked = paths()->ensureAckFile($ackFile);
+
+// dieVal($acked);
+$acked = is_file($ackFile)
     ? json_decode(file_get_contents($ackFile), true)
     : paths()->ensureAckFile($ackFile);
 
@@ -165,12 +168,9 @@ $callback = function () use (&$lastSentm, $ackFile) {
     $out =  callApiB('POST',$url, $params);
     // jsonExit(json_decode($out,true)??$out);
     if(isJson($out)){
-        //error_log("SSE response:: ".$out);
-        error_log("SSE response:: found ");
         $out = json_decode($out,true);
-        
     }else{
-        // error_log("SSE Error blank:: ".$out);
+        error_log("SSE Error:: ".$out);
         $out = [];
         return false;
     }

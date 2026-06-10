@@ -4,11 +4,39 @@ __BORA_REGISTER_SERVICE__('navigator', async function(scope){
     const navigation    = await scope.getService('navigation');
     const popup         = await scope.getPlugin('popup');
 
-    async function go({ route, params = {}, surface = 'page', ...rest }){
+    async function go({ route, params = {}, meta = {}, surface = 'page', ...rest }){
         
         let config;
         try {
             config = routeRegistry.resolve(route, params);
+            if (
+                surface === 'popup' &&
+                config.tabs &&
+                meta &&
+                Object.keys(meta).length
+            ){
+
+                config.tabs =
+                    config.tabs.map(tab => {
+
+                        const qs =
+                            new URLSearchParams(
+                                meta
+                            ).toString();
+
+                        return {
+
+                            ...tab,
+
+                            url: qs
+                                ? `${tab.url}?${qs}`
+                                : tab.url
+
+                        };
+
+                    });
+
+            }
         } catch (err) {
             const fn = await routeRegistry.waitFor(route);
             config = fn(params);
@@ -23,6 +51,7 @@ __BORA_REGISTER_SERVICE__('navigator', async function(scope){
                 key: route,
                 id: params.id,
                 tab: params.tab,
+                
                 factory: () => ({
                     ...config,
                     ...rest

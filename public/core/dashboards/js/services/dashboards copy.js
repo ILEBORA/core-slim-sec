@@ -158,7 +158,7 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
 
     if(document.readyState === 'loading'){
         document.addEventListener('DOMContentLoaded', init);
-        alert('here');
+        // alert('here');
         $(function(){
             init();
         });

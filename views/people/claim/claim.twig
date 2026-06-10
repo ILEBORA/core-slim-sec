@@ -1,0 +1,104 @@
+<div class="container claim-page">
+
+    <div class="claim-card">
+
+        <div class="claim-header">
+
+            <div class="claim-badge">
+                🌳 Profile Claim
+            </div>
+
+            <h1>
+                Claim Your Profile
+            </h1>
+
+            <p class="text-muted">
+
+                This profile has been identified as belonging
+                to you. Claiming it will connect your account
+                to your family tree.
+
+            </p>
+
+        </div>
+
+        <div class="person-preview">
+
+            {% if person.image %}
+
+                <img
+                    src="{{ person.image }}"
+                    class="person-avatar"
+                    alt="{{ person.full_name }}"
+                >
+
+            {% else %}
+
+                <div class="person-avatar-placeholder">
+
+                    {{ person.first_name|slice(0,1) }}
+
+                </div>
+
+            {% endif %}
+
+            <h2>
+                {{ person.full_name }}
+            </h2>
+
+            {% if person.birth_year %}
+                <div class="person-years">
+                    Born {{ person.birth_year }}
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="claim-message">
+
+            Once claimed, this profile will become
+            associated with your account and you'll
+            be able to contribute to your family tree.
+
+        </div>
+
+        <form
+            method="post"
+            action="api/modules/people/person/claim"
+        >
+
+            <input
+                type="hidden"
+                name="token"
+                value="{{ token }}"
+            >
+
+            <div class="claim-actions">
+
+                <button
+                    data-token="{{token}}"
+                    data-action="people.claim.person"
+                    class="btn btn-success btn-lg"
+                >
+                    Claim This Profile
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-success btn-lg"
+                    style="display:none"
+                >
+                    Claim This Profile
+                </button>
+
+                <button class="btn btn-info flex-right" data-popup="" data-mode="form" data-module="users" data-group="profile" data-id="{{current_user().id}}" data-tab="edit" data-size="lg">
+                    Not You? Edit you profile instead
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

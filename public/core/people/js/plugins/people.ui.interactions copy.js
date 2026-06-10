@@ -153,9 +153,9 @@ async function (scope) {
                 });
             });
 
-            uiActions.register('person.link.invite', (el) => {
-                alertBora.alert('Person Invite feature is disabled!');
-            });
+            // uiActions.register('person.claim.invite', (el) => {
+            //     alertBora.alert('Person Invite feature is disabled!');
+            // });
 
             uiActions.register('person.edit', (el) => {
                 // alertBora.alert('Person Edit feature is disabled!');
@@ -306,9 +306,9 @@ async function (scope) {
 
             });
 
-            uiActions.register('tree:open-full', async (el) => {
+            uiActions.register('tree.open-full', async (el) => {
 
-                return alertBora.alert('Tree feature is disabled!');
+                // return alertBora.alert('Tree feature is disabled!');
 
                 const root = $(el).closest('.person-view');
                 const personId = root.data('person');

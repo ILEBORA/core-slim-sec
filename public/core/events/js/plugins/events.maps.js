@@ -51,13 +51,13 @@ __BORA_REGISTER_PLUGIN__(
                 13
             );
 
-            L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-                    attribution:
-                        "&copy; OpenStreetMap"
-                }
-            ).addTo(map);
+            // L.tileLayer(
+            //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            //     {
+            //         attribution:
+            //             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            //     }
+            // ).addTo(map);
 
             const marker = L.marker(
                 [lat, lng],

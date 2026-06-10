@@ -97,7 +97,8 @@ __BORA_REGISTER_PLUGIN__('agent.ui', async function(scope){
         }
     };
     // alert('this');
-    async function mount(){ alert('Mount bot');
+    async function mount(){ 
+        // alerBora.alert('Mount bot');
         await AgentState.load();
         await AgentState.syncFromServer();
 
@@ -175,6 +176,6 @@ __BORA_REGISTER_PLUGIN__('agent.ui', async function(scope){
 
     permissions: (appcore) => {
         if(!appcore) return false;
-        return appcore.hasPermission('bots', 'assistant') === true;
+        return appcore.hasPermission('bots', 'assistant', true) === true;
     },
 });

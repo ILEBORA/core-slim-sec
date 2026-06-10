@@ -16,9 +16,9 @@ ILEBORA.use('https://unpkg.com/leaflet/dist/leaflet.js', function(){
         var map = L.map('user-input').setView([0, 0], 2); // world view
 
         // add tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //     attribution: '&copy; OpenStreetMap contributors'
+        // }).addTo(map);
 
         var marker = null;
         var selectedLocation = null;

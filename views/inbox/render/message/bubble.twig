@@ -10,6 +10,15 @@
      data-status="{{ message.status|default('sent') }}">
 
     <div class="bubble">
+        <div class="bubble_context_menu">
+            <button
+                class="thread_context_menu"
+                data-context-trigger
+                data-context-type="inbox.message"
+                data-context-id="{{ message.id }}">
+                ⋮
+            </button>
+        </div>
 
         {# ---------------------------------
            Deleted Message

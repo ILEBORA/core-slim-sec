@@ -1,0 +1,278 @@
+<div class="container claim-page">
+
+    <div class="claim-card">
+
+        {# =====================================================
+           Header
+        ====================================================== #}
+
+        <div class="claim-header">
+
+            <div class="claim-badge">
+                🌳 Family Invitation
+            </div>
+
+            <h1>
+                You've Been Invited
+            </h1>
+
+            <p class="text-muted">
+
+                Someone has identified you in a family tree and
+                would like you to claim your profile.
+
+            </p>
+
+        </div>
+
+        {# =====================================================
+           Person Preview
+        ====================================================== #}
+
+        <div class="person-preview">
+
+            {% if person.image %}
+
+                <img
+                    src="{{ person.image }}"
+                    class="person-avatar"
+                    alt="{{ person.full_name }}"
+                >
+
+            {% else %}
+
+                <div class="person-avatar-placeholder">
+
+                    {{ person.first_name|slice(0,1) }}
+
+                </div>
+
+            {% endif %}
+
+            <h2>
+
+                {{ person.full_name }}
+
+            </h2>
+
+            {% if person.birth_year %}
+
+                <div class="person-years">
+
+                    Born {{ person.birth_year }}
+
+                </div>
+
+            {% endif %}
+
+            {% if invite.invited_by_name %}
+
+                <div class="claim-invited-by">
+
+                    Invited by
+
+                    <strong>
+                        {{ invite.invited_by_name }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        {# =====================================================
+           Snapshot Stats
+        ====================================================== #}
+
+        <div class="person-stats">
+
+            <div class="stat">
+
+                <strong>
+                    {{ person.parents_count ?? 0 }}
+                </strong>
+
+                <span>
+                    Parents
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <strong>
+                    {{ person.children_count ?? 0 }}
+                </strong>
+
+                <span>
+                    Children
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <strong>
+                    {{ person.connections_count ?? 0 }}
+                </strong>
+
+                <span>
+                    Connections
+                </span>
+
+            </div>
+
+        </div>
+
+        {# =====================================================
+           Call To Action
+        ====================================================== #}
+
+        <div class="claim-actions">
+
+            {% if isLoggedIn() %}
+
+                <a
+                    href="portal/people/claim/{{ token }}"
+                    class="btn btn-success btn-lg"
+                >
+
+                    {% if currentUserHasPerson %}
+                        Merge With My Profile
+                    {% else %}
+                        Claim This Profile
+                    {% endif %}
+
+                </a>
+
+            {% else %}
+
+                <a
+                    href="javascript:void(0)"
+                    data-nav="account/login?claim={{ token }}"
+                    class="btn btn-primary btn-lg"
+                >
+                    Login & Claim
+                </a>
+
+                <a
+                    href="javascript:void(0)"
+                    data-nav="account/register?claim={{ token }}"
+                    class="btn btn-outline-secondary btn-lg"
+                >
+                    Create Account
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {# =========================================================
+       Family Insight Panel
+    ========================================================== #}
+
+    <div class="claim-insights">
+
+        <h4>
+
+            Your Family Is Already Connected
+
+        </h4>
+
+        <p class="claim-intro">
+
+            This profile already exists inside a growing family tree.
+
+            Claim it to discover relatives, contribute memories,
+            and help preserve your family's history.
+
+        </p>
+
+        <ul class="claim-connections">
+
+            {% if person.has_father %}
+                <li>✓ Father Connected</li>
+            {% endif %}
+
+            {% if person.has_mother %}
+                <li>✓ Mother Connected</li>
+            {% endif %}
+
+            {% if person.siblings_count > 0 %}
+                <li>
+
+                    ✓ {{ person.siblings_count }}
+
+                    Sibling{{ person.siblings_count > 1 ? 's' : '' }}
+
+                </li>
+            {% endif %}
+
+            {% if person.spouses_count > 0 %}
+                <li>
+
+                    ✓ {{ person.spouses_count }}
+
+                    Spouse{{ person.spouses_count > 1 ? 's' : '' }}
+
+                </li>
+            {% endif %}
+
+            {% if person.children_count > 0 %}
+                <li>
+
+                    ✓ {{ person.children_count }}
+
+                    Child{{ person.children_count > 1 ? 'ren' : '' }}
+
+                </li>
+            {% endif %}
+
+            {% if person.relatives_count > 0 %}
+                <li>
+
+                    ✓ {{ person.relatives_count }}
+
+                    Relative{{ person.relatives_count > 1 ? 's' : '' }}
+
+                </li>
+            {% endif %}
+
+        </ul>
+
+        <div class="claim-benefits">
+
+            <h5>
+
+                What You'll Be Able To Do
+
+            </h5>
+
+            <ul>
+
+                <li>
+                    📸 Upload family photos
+                </li>
+
+                <li>
+                    📝 Add stories and life events
+                </li>
+
+                <li>
+                    👨‍👩‍👧 Discover family connections
+                </li>
+
+                <li>
+                    🌳 Help preserve your family history
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>

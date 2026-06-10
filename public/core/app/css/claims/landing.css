@@ -1,0 +1,178 @@
+.claim-page{
+
+    max-width:800px;
+
+    margin:50px auto;
+
+}
+
+.claim-card{
+
+    background:#fff;
+
+    border-radius:16px;
+
+    padding:40px;
+
+    text-align:center;
+
+    box-shadow:
+        0 10px 30px rgba(
+            0,0,0,.08
+        );
+
+}
+
+.claim-badge{
+
+    display:inline-block;
+
+    padding:8px 16px;
+
+    border-radius:50px;
+
+    background:#f0f7f1;
+
+    color:#2e7d32;
+
+    font-weight:600;
+
+    margin-bottom:20px;
+
+}
+
+.person-preview{
+
+    margin:30px 0;
+
+}
+
+.person-avatar{
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:4px solid #eee;
+
+}
+
+.person-avatar-placeholder{
+
+    width:140px;
+
+    height:140px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#ececec;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:48px;
+
+    font-weight:bold;
+
+}
+
+.person-years{
+
+    color:#777;
+
+}
+
+.person-stats{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:30px;
+
+    margin:25px 0;
+
+}
+
+.person-stats .stat{
+
+    text-align:center;
+
+}
+
+.person-stats strong{
+
+    display:block;
+
+    font-size:24px;
+
+}
+
+.claim-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.claim-insights{
+
+    margin-top:30px;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    background:#f8f9fa;
+
+    text-align:left;
+
+}
+
+.claim-insights h4{
+
+    margin-bottom:15px;
+
+    font-weight:600;
+
+}
+
+.claim-connections{
+
+    list-style:none;
+
+    padding:0;
+
+    margin:0 0 20px;
+
+}
+
+.claim-connections li{
+
+    padding:8px 0;
+
+    font-size:15px;
+
+}
+
+.claim-message{
+
+    margin:0;
+
+    color:#666;
+
+}

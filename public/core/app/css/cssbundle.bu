@@ -13,6 +13,8 @@ $pipeline
     ->add('landing/call_to_action.css')
     ->add('landing/impact_stats.css')
     ->add('landing/focus_areas.css')
+
+    ->add('claims/landing.css')
     
    
     

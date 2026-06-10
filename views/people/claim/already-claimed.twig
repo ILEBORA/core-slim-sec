@@ -1,0 +1,229 @@
+<div class="container claim-page">
+
+    <div class="claim-card">
+
+        <div class="claim-header">
+
+            <div class="claim-badge">
+                🌳 Family Profile
+            </div>
+
+            <h1>
+
+                This Profile Has Already Been Claimed
+
+            </h1>
+
+            <p class="text-muted">
+
+                This family profile is already connected
+                to a member account and can no longer
+                be claimed using this invitation.
+
+            </p>
+
+        </div>
+
+        <div class="person-preview">
+
+            {% if person.image %}
+
+                <img
+                    src="{{ person.image }}"
+                    class="person-avatar"
+                    alt="{{ person.full_name }}"
+                >
+
+            {% else %}
+
+                <div class="person-avatar-placeholder">
+
+                    {{ person.first_name|slice(0,1) }}
+
+                </div>
+
+            {% endif %}
+
+            <h2>
+
+                {{ person.full_name }}
+
+            </h2>
+
+            {% if person.birth_year %}
+
+                <div class="person-years">
+
+                    Born {{ person.birth_year }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="person-stats">
+
+            <div class="stat">
+
+                <strong>
+
+                    {{ person.parents_count ?? 0 }}
+
+                </strong>
+
+                <span>
+
+                    Parents
+
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <strong>
+
+                    {{ person.children_count ?? 0 }}
+
+                </strong>
+
+                <span>
+
+                    Children
+
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <strong>
+
+                    {{ person.connections_count ?? 0 }}
+
+                </strong>
+
+                <span>
+
+                    Connections
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="claim-insights">
+
+            <h4>
+
+                Family Connections
+
+            </h4>
+
+            <ul class="claim-connections">
+
+                {% if person.has_father %}
+                    <li>✓ Father Connected</li>
+                {% endif %}
+
+                {% if person.has_mother %}
+                    <li>✓ Mother Connected</li>
+                {% endif %}
+
+                {% if person.siblings_count > 0 %}
+                    <li>
+
+                        ✓ {{ person.siblings_count }}
+
+                        Sibling{{ person.siblings_count > 1 ? 's' : '' }}
+
+                    </li>
+                {% endif %}
+
+                {% if person.spouses_count > 0 %}
+                    <li>
+
+                        ✓ {{ person.spouses_count }}
+
+                        Spouse{{ person.spouses_count > 1 ? 's' : '' }}
+
+                    </li>
+                {% endif %}
+
+                {% if person.children_count > 0 %}
+                    <li>
+
+                        ✓ {{ person.children_count }}
+
+                        Child{{ person.children_count > 1 ? 'ren' : '' }}
+
+                    </li>
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+        <div class="claim-message">
+
+            This profile is already linked to an account.
+
+            {% if isLoggedIn() %}
+
+                If you believe this profile belongs to you,
+                contact a tree administrator or the person
+                who sent the invitation.
+
+            {% else %}
+
+                If this profile belongs to you,
+                log in with the account that originally
+                claimed it.
+
+            {% endif %}
+
+        </div>
+
+        <div class="claim-actions">
+
+            {% if isLoggedIn() %}
+
+                <a
+                    href="portal/people/person/{{ person.id }}/view"
+                    class="btn btn-primary btn-lg"
+                >
+                    View Profile
+                </a>
+
+                <a
+                    href="portal/tree"
+                    class="btn btn-outline-secondary btn-lg"
+                >
+                    Browse Trees
+                </a>
+
+            {% else %}
+
+                <a
+                    href="portal/login"
+                    class="btn btn-primary btn-lg"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="/"
+                    class="btn btn-outline-secondary btn-lg"
+                >
+                    Home
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>

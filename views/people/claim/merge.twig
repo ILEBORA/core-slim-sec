@@ -1,0 +1,151 @@
+<div class="container claim-page">
+
+    <div class="claim-card">
+
+        <div class="claim-header">
+
+            <div class="claim-badge">
+                🔀 Profile Merge Required
+            </div>
+
+            <h1>
+                We Found Another Profile
+            </h1>
+
+            <p class="text-muted">
+
+                Your account is already linked to a person.
+                The invited profile appears to represent you
+                as well.
+
+            </p>
+
+        </div>
+
+        <div class="merge-comparison">
+
+            <div class="merge-person">
+
+                <h4>
+                    Your Current Profile
+                </h4>
+
+                <div class="person-preview small">
+
+                    {% if currentPerson.image %}
+
+                        <img
+                            src="{{ currentPerson.image }}"
+                            class="person-avatar"
+                        >
+
+                    {% else %}
+
+                        <div class="person-avatar-placeholder">
+
+                            {{ currentPerson.first_name|slice(0,1) }}
+
+                        </div>
+
+                    {% endif %}
+
+                    <strong>
+
+                        {{ currentPerson.full_name }}
+
+                    </strong>
+
+                    {% if currentPerson.birth_year %}
+                        <div>
+                            Born {{ currentPerson.birth_year }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="merge-arrow">
+
+                ⟷
+
+            </div>
+
+            <div class="merge-person">
+
+                <h4>
+                    Invited Profile
+                </h4>
+
+                <div class="person-preview small">
+
+                    {% if invitedPerson.image %}
+
+                        <img
+                            src="{{ invitedPerson.image }}"
+                            class="person-avatar"
+                        >
+
+                    {% else %}
+
+                        <div class="person-avatar-placeholder">
+
+                            {{ invitedPerson.first_name|slice(0,1) }}
+
+                        </div>
+
+                    {% endif %}
+
+                    <strong>
+
+                        {{ invitedPerson.full_name }}
+
+                    </strong>
+
+                    {% if invitedPerson.birth_year %}
+                        <div>
+                            Born {{ invitedPerson.birth_year }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="claim-message">
+
+            Merging will combine family connections,
+            relationships and historical information
+            from both profiles.
+
+        </div>
+
+        <form
+            method="post"
+            action="api/modules/people/person/merge"
+        >
+
+            <input
+                type="hidden"
+                name="token"
+                value="{{ token }}"
+            >
+
+            <div class="claim-actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-lg"
+                >
+                    Merge Profiles
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

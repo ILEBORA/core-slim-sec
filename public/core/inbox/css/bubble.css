@@ -26,6 +26,7 @@
 
 /* Bubble */
 .message .bubble {
+    position: relative;
     padding: 8px 12px;
     border-radius: 14px;
     font-size: 14px;
@@ -127,4 +128,10 @@
 
 .message.outgoing .reply-author{
     color: #dbf2f9;
+}
+
+.bubble_context_menu{
+    position: absolute;
+    right: -5px;
+    top: -10px;
 }

@@ -7,6 +7,7 @@ async function(scope){
     const popup      = await scope.getPlugin('popup');
     const callbora   = await scope.getService('callbora');
     const navigation = await scope.getService('navigation');
+    const bNavigator = await scope.getService('navigator');
 
     const state = {
         initialized:false,
@@ -31,6 +32,46 @@ async function(scope){
             view:'edit',
             id:personId,
             size:'md'
+        });
+
+    }
+
+    function personClaim(el){
+        const id = $(el)
+            .data('id');
+
+        if (!id) return;
+
+        bNavigator.go({
+            route:'person.invite',
+            params:{
+                id:id
+            },
+            surface:'popup'
+        });
+    }
+
+    function claimPerson(el){
+        const token = $(el)
+            .data('token');
+
+        if (token) return;
+
+        callbora.post(`api/modules/people/person/claim`, {
+            token: token
+        }).then(function(response){
+
+            if(response.success){
+                alertBora.success(response.message||'Claim successful.');
+
+                if(response.redirect){
+                    navigation.go(response.redirect);
+                }
+                
+            } else {
+                alertBora.error(response.message || 'Claim Failed');
+            }
+
         });
 
     }
@@ -179,13 +220,13 @@ async function(scope){
         );
 
         uiActions.register(
-            'person.link.invite',
+            'person.claim.invite',
+            personClaim 
+        );
 
-            (el)=>{
-
-                alertBora.alert('Person Invite feature is disabled!');
-
-            }
+        uiActions.register(
+            'people.claim.person',
+            claimPerson
         );
 
         /* =========================
