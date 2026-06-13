@@ -1,0 +1,14 @@
+<h3 style="margin-top:0;">
+    {{ actor_name }} invited you
+</h3>
+
+<div style="background:#f9fafb; padding:12px; border-radius:6px; margin:12px 0;">
+    <p style="margin:0; color:#374151;">
+        {{ comment }}
+    </p>
+</div>
+
+<a href="{{ url }}" 
+   style="display:inline-block; padding:10px 14px; background:#2563eb; color:#fff; text-decoration:none; border-radius:4px; font-size:14px;">
+    {{ __t('notifications.view_activity') }}
+</a>

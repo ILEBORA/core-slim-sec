@@ -57,7 +57,7 @@ __BORA_REGISTER_PLUGIN__(
 
         const response =
             await callbora.post(
-                `api/modules/${module}/${entity}/${id}/${action}`,
+                `api/modules/${module}/${entity}/${action}/${id}`,
                 payload
             );
 

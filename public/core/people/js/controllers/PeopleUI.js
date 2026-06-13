@@ -35,7 +35,7 @@ class PeopleUI {
 
             threadList:
                 scope.bindDom(
-                    '.thread-list'
+                    '.people-list'
                 ),
 
             messages:

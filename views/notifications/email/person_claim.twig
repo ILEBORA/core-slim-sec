@@ -1,0 +1,80 @@
+<h2 style="margin-top:0;">
+    Claim Your Family Profile
+</h2>
+
+<p>
+    {{ actor_name }} believes that the profile for
+    <strong>{{ person_name }}</strong>
+    belongs to you.
+</p>
+
+<div
+    style="
+        background:#f9fafb;
+        padding:12px;
+        border-radius:6px;
+        margin:12px 0;
+    "
+>
+    <p
+        style="
+            margin:0;
+            color:#374151;
+        "
+    >
+        {{ comment }}
+    </p>
+</div>
+
+<p>
+    By claiming this profile, you'll be able to:
+</p>
+
+<ul>
+    <li>Confirm your identity</li>
+    <li>Manage your profile information</li>
+    <li>Participate in your family tree</li>
+</ul>
+
+<p>
+    Click below to review and claim your profile.
+</p>
+
+<a
+    href="{{ url }}"
+    style="
+        display:inline-block;
+        padding:10px 14px;
+        background:#2563eb;
+        color:#ffffff;
+        text-decoration:none;
+        border-radius:4px;
+        font-size:14px;
+        font-weight:600;
+    "
+>
+    Claim Profile
+</a>
+
+{% if expires_at %}
+<p
+    style="
+        margin-top:16px;
+        color:#92400e;
+        font-size:13px;
+    "
+>
+    This invitation expires on {{ expires_at }}.
+</p>
+{% endif %}
+
+<p
+    style="
+        margin-top:20px;
+        color:#6b7280;
+        font-size:13px;
+    "
+>
+    If you believe this invitation was sent to you by mistake,
+    you can safely ignore this email.
+</p>
