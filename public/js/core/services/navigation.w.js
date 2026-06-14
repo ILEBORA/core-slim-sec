@@ -318,7 +318,7 @@ __BORA_REGISTER_SERVICE__(
             
                     alertBora.notifyRich({
                         type: 'error',
-                        title: 'Permission Error',
+                        title: 'Permission Errord',
                         body: json.message,
                         delay: 4,
                         sound: true,
