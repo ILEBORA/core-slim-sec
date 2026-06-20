@@ -25,7 +25,7 @@
         <a class="person-card" href="portal/people/person/{{ person.id }}/view">
 
             <div class="avatar">
-                <img src="{{ person.avatar ?: 'assets/images/icons/noavatar.png' }}">
+                <img class="personAvatar{{ person.id }}" src="{{ person.avatar_url ?: 'assets/images/icons/noavatar.png' }}">
             </div>
 
             <div class="person-name">

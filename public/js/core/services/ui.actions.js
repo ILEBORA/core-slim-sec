@@ -167,12 +167,14 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
                 /* =========================
                 SAME PAGE
                 ========================= */
-                
-                if(
-                    normalizeRoute(targetRoute) ===
-                    normalizeRoute(currentRoute)
+            
+                const target = normalizeRoute(targetRoute);
+                const current = normalizeRoute(currentRoute);
+
+                if (
+                    target.path === current.path &&
+                    target.query === current.query
                 ){
-                    // alert('same route');
                     scope.emit?.(
                         'page.sameRoute',
                         {
@@ -181,8 +183,6 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
                         }
                     );
 
-                    // injectRefreshUI(navEl);
-
                     return;
                 }
 
@@ -190,17 +190,6 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
 
                 return;
             }
-            // if (navEl){
-
-            //     e.preventDefault();
-
-            //     const navigation = await app?.service?.('navigation');
-            //     if (!navigation) return;
-
-            //     navigation.go(navEl.dataset.nav);
-
-            //     return;
-            // }
 
             /* ---------- MENU REFRESH ---------- */
 
@@ -257,6 +246,21 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
     }
 
     function normalizeRoute(route){
+
+        const url = new URL(
+            route,
+            window.location.origin
+        );
+
+        return {
+            path: url.pathname
+                .replace(/\/+$/, ''),
+
+            query: url.search
+        };
+    }
+
+    function normalizeRouteO(route){
 
         if(!route){
             return '';

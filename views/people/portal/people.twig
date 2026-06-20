@@ -23,7 +23,7 @@
         <a class="person-card" href="portal/person/{{ person.id }}" data-person="{{ person.id }} data.>
 
             <div class="avatar">
-                <img src="{{ person.avatar ?: 'assets/images/icons/noavatar.png' }}">
+                <img class="personAvatar{{ person.id }}" src="{{ person.avatar_url ?: 'assets/images/icons/noavatar.png' }}">
             </div>
 
             <div class="person-name">

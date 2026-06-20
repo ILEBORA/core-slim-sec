@@ -125,7 +125,17 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
             ()=>{
 
-                window.location.reload();
+                // window.location.reload();
+
+                appUI.content.loadPage(
+                    getCleanUrl({
+                        keep: [
+                            'page',
+                            'search',
+                            'sort'
+                        ]
+                    })
+                );
 
             }
         );
@@ -209,6 +219,41 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
         }, 7000);
 
+    }
+
+    function getCleanUrl(options = {}){
+
+        const {
+            keep = [],
+            remove = []
+        } = options;
+
+        const url =
+            new URL(window.location);
+
+        if(remove.length){
+
+            remove.forEach(
+                p => url.searchParams.delete(p)
+            );
+
+        } else if(keep.length){
+
+            [...url.searchParams.keys()]
+                .forEach(key => {
+
+                    if(!keep.includes(key)){
+                        url.searchParams.delete(key);
+                    }
+
+                });
+
+        }
+
+        return (
+            url.pathname +
+            url.search
+        );
     }
 
     return {

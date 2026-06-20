@@ -1006,6 +1006,12 @@ if (!function_exists('sql')) {
     }
 }
 
+if (!function_exists('SqlHydrator')){
+    function SqlHydrator(){
+        return new \BoraSlim\Core\Support\SqlHydrator();
+    }
+}
+
 if (!function_exists('Grid')) {
     function Grid(string $type = 'table') {
         return ModManage()->grids->$type;
@@ -2282,6 +2288,93 @@ if (!function_exists('presence')) {
 
         return $ctx->resolve(
             \BoraSlim\Core\Modules\Realtime\Services\RealtimePresenceService::class
+        );
+    }
+}
+
+if(!function_exists('simpleDate')){
+    function simpleDate($date,$format='d-m-Y'){
+        if(is_array($date)){
+            return simpleDate($date[0],$date[1]);
+        }
+        // return strtotime($date);
+        if(!$date || strtotime($date) < 1) {return '';}
+        return date($format, strtotime($date));
+    }
+}
+
+if(!function_exists('formatMoney')){
+    function formatMoney($params) { 
+        $amount = (isset($params['amount'])) ? $params['amount'] : '0';
+        $currency = (isset($params['currency'])) ? $params['currency'].' ' : '';
+        $format = (isset($params['decimal'])) ? $params['decimal'] : '0';
+        //
+        $amount = sprintf('%.'.$format.'f', $amount); 
+        
+        while (true) { 
+            $replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $amount); 
+            if ($replaced != $amount) { 
+                $amount = $replaced; 
+            } else { 
+                break; 
+            } 
+        } 
+        return $currency.$amount; 
+    }
+
+    function formatMoneySpan($params) { 
+        $amount = (isset($params['amount'])) ? $params['amount'] : '0';
+        $currency = (isset($params['currency'])) ? $params['currency'].' ' : '';
+        $format = (isset($params['decimal'])) ? $params['decimal'] : '0';
+        $suffix = (isset($params['suffix'])) ? $params['suffix'] : '';
+        $attrs = (isset($params['attrs'])) ? $params['attrs'] : '';
+        //
+        $amount = sprintf('%.'.$format.'f', $amount); 
+        
+        while (true) { 
+            $replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $amount); 
+            if ($replaced != $amount) { 
+                $amount = $replaced; 
+            } else { 
+                break; 
+            } 
+        } 
+        return '<span class="currency">'.$currency.'</span><span '.$attrs.' class="monies">'.$amount.'</span><span class="sufffix">'.$suffix.'</span>'; 
+    }
+
+    function money($float, $attrs = ''){
+        return formatMoneySpan([
+            'amount'    =>  $float,
+            'currency'  =>  '',
+            'suffix'    =>  '/=',
+            'decimal'   => 2,
+            'attrs' => $attrs
+        ]);
+    }
+
+    function moneyFormat($amount = 0){
+        return formatMoney(array('amount'=>$amount));
+    }
+}
+
+if (!function_exists('')){
+    function mediaUploader(){
+        $ctx = ctx();
+
+        if (
+            !$ctx->registered(
+                \BoraSlim\Core\Modules\App\Utils\MediaUploader::class
+            )
+        ) {
+
+            $ctx->singleton(
+                \BoraSlim\Core\Modules\App\Utils\MediaUploader::class,
+                fn() => new \BoraSlim\Core\Modules\App\Utils\MediaUploader()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Modules\App\Utils\MediaUploader::class
         );
     }
 }

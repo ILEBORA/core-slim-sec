@@ -18,7 +18,7 @@ class PeopleComposer {
                  data-person="${person.id}">
 
                 <div class="avatar">
-                    <img src="${avatar}" alt="${name}" />
+                    <img class="personAvatar{{ person.id }}" src="${avatar}" alt="${name}" />
 
                     <span class="status-dot ${person.presence?.status || 'offline'}"></span>
                 </div>

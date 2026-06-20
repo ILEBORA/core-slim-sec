@@ -520,7 +520,7 @@
         async function evaluatePluginActivation(route){
             // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
             const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
-            console.warn('[MANIFEST]', manifest);
+            // console.warn('[MANIFEST]', manifest);
 
             global.__BORA_FACE__ = resolveFace(route);
             await syncFace(global.__BORA_FACE__);
@@ -758,6 +758,43 @@
             return fullUrl || '';
         }
 
+        function normalizeRoute(fullUrl, options = {}){
+
+            const {
+                includeQuery = false
+            } = options;
+
+            const base =
+                window.__APP_BASE_PATH__ || '';
+
+            if(!fullUrl){
+                return '/';
+            }
+
+            fullUrl = String(fullUrl);
+
+            if(base && fullUrl.startsWith(base)){
+                fullUrl = fullUrl.slice(base.length);
+            }
+
+            const url =
+                new URL(fullUrl, window.location.origin);
+
+            let path = url.pathname;
+
+            if(base && path.startsWith(base)){
+                path = path.slice(base.length);
+            }
+
+            path = path.replace(/^\/+/, '');
+
+            if(includeQuery){
+                return path + url.search;
+            }
+
+            return path;
+        }
+
         /* =========================
            SANITY CHECK
         ========================= */
@@ -877,7 +914,11 @@
         }
 
         function currentRoute(){
-            return normalizeUrl(window.location);
+            return normalizeRoute(window.location,
+                {
+                    includeQuery: true
+                }
+            );
         }
 
         /* ==================================================
@@ -919,8 +960,12 @@
             evaluatePluginActivation,
             _registrationWaiters: registrationWaiters,
             face: getFace,
-            currentRoute: () => normalizeUrl(window.location),
-        };
+            currentRoute: () => normalizeRoute(window.location,
+                                    {
+                                        includeQuery: true
+                                    },
+                                 ),
+        }
 
         return Object.freeze(publicAPI);
     }

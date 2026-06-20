@@ -320,7 +320,7 @@ async function (scope) {
 
                 const nav = await scope.getService('navigation');
 
-                nav.go(`portal/tree/show/${treeId}`);
+                nav.go(`portal/trees/show/${treeId}`);
 
             });
 

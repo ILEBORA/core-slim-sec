@@ -318,7 +318,181 @@ appUI.dropDown.init();
 
         xhr.send(fd);
     };
+
+    mPGs.appMedia = mPGs.appMedia || {};
+
+    mPGs.appMedia.change = function (obj) {
+        mPGs.appMedia.uploaded = null;
+
+        const $el = $(obj);
+
+        const module = $el.data('module');
+        const entity = $el.data('entity');
+        const entityId = $el.data('entity-id');
+        const collection = $el.data('collection');
+
+        const preview = $el.data('preview');
+        const uploadId = $el.data('upload-id');
+
+        const accept = $el.data('accept') || 'image/*';
+
+        alertBora.prompt(
+            '<h2>Change Image</h2>',
+            {
+                html: true,
+                prompt: `
+                    <input
+                        type="file"
+                        class="alertable-input"
+                        accept="${accept}"
+                        onchange="mPGs.appMedia.upload(this)"
+                        data-module="${module}"
+                        data-entity="${entity}"
+                        data-entity-id="${entityId}"
+                        data-collection="${collection}"
+                    >
+
+                    <div align="center">
+                        <span id="artUpload"></span>
+
+                        <img
+                            id="artHolder"
+                            src="${preview}"
+                            width="250"
+                        >
+
+                        <input
+                            type="hidden"
+                            id="uploadId"
+                            value="${uploadId}"
+                        >
+                    </div>
+                `
+            }
+        ).then(() => {
+            const upload = mPGs.appMedia.uploaded;
+            if (!upload) {
+                alertBora.notify(resp.message || 'Nothing uploaded.', 'error');
+                return;
+            }
+
+            if (upload.id == uploadId) {
+                alertBora.notify(resp.message || 'Nothing to update.', 'error');
+                return;
+            }
+
+            mPGs.appMedia.attach(
+                module,
+                entity,
+                entityId,
+                collection,
+                upload.id
+            );
+        });
+    };
+
     
+    mPGs.appMedia.upload = function (obj) {
+        const file = obj.files[0];
+
+        const module = $(obj).data('module');
+        const entity = $(obj).data('entity');
+        const entityId = $(obj).data('entity-id');
+        const collection = $(obj).data('collection');
+
+        const fd = new FormData();
+
+        fd.append('module', module);
+        fd.append('entity', entity);
+        fd.append('entity_id', entityId || 0);
+        fd.append('collection', collection);
+
+        fd.append('newimage', file);
+
+        $.ajax({
+            url: 'api/modules/system/uploads/upload',
+            method: 'POST',
+            data: fd,
+            processData: false,
+            contentType: false,
+
+            success(resp) {
+                if(!resp.success){
+                    alertBora.notify(resp.message || 'Upload error.', 'error');
+                    return;
+                }
+
+                alertBora.notify(resp.message || 'Uploaded.', 'success');
+                $('#uploadId').val(resp.data.id);
+                $('#artHolder').attr(
+                    'src',
+                    resp.data.preview
+                );
+
+                mPGs.appMedia.uploaded = resp.data;
+            }
+        });
+    };
+
+    mPGs.appMedia.attach = function (
+        module,
+        entity,
+        entityId,
+        collection,
+        uploadId
+    ) {
+        new CallBora(
+            'api/modules/system/uploads/attach'
+        )
+            .setMethod('POST')
+            .setParams({
+                module,
+                entity,
+                entity_id: entityId,
+                collection,
+                upload_id: uploadId
+            })
+            .setCallback((data) => {
+
+                if (!data.success) {
+                    return;
+                }
+
+                const upload = mPGs.appMedia.uploaded;
+                if (!upload) {
+                    return;
+                }
+
+                const target = mPGs.appMedia.getTargetClass(
+                                    entity,
+                                    collection,
+                                    entityId
+                                );
+                // alert(target);
+                if ($(target).length) {
+                    $(target).attr(
+                        'src',
+                        upload.preview +
+                        '?t=' +
+                        Date.now()
+                    );
+
+                    alertBora.notify(resp.message || 'Image updated.', 'success');
+                }
+            })
+            .build();
+    };
+    
+    mPGs.appMedia.getTargetClass = function (
+        entity,
+        collection,
+        entityId
+    ) {
+        return '.' +
+            entity +
+            ucfirst(collection) +
+            entityId;
+    };
     
     }( window.mPGs = window.mPGs || {}, jQuery ));
     
@@ -669,3 +843,5 @@ function evaluateDependenciesO($form, debug = false) {
 }
 
 // alert('Here UI...');
+
+

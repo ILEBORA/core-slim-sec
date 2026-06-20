@@ -106,7 +106,7 @@
 
     box-shadow:var(--events-shadow);
 
-    overflow:hidden;
+    /* overflow:hidden; */
 }
 
 .card-header{
