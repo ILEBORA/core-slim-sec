@@ -546,6 +546,107 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
         }
     );
 
+    $.fn.dictionarySelect =
+    async function(
+        resource,
+        options = {}
+    ){
+
+        const placeholder =
+            options.placeholder
+            ?? `Select ${resource}...`;
+
+        const resources =
+            await scope.getService(
+                'resources'
+            );
+
+        const data =
+            await resources.get(
+                resource
+            );
+
+        return this.each(
+            function(){
+
+                $(this)
+                    .append(
+                        new Option(
+                            '',
+                            '',
+                            false,
+                            false
+                        )
+                    )
+                    .select2({
+                        width:
+                            '100%',
+                        placeholder,
+                        allowClear:
+                            true,
+                        data
+                    });
+            }
+        );
+    };
+
+    $.fn.peopleSelect = async function(options = {}) {
+
+        const resources =
+            await scope.getService(
+                'resources'
+            );
+
+        const people =
+            await resources.get(
+                'people'
+            );
+
+        const placeholder =
+            options.placeholder
+                ?? 'Select person...';
+
+        const entity =
+            options.entity ?? 'person';
+
+        return this.each(function () {
+
+            const data = [
+                {
+                    id: '',
+                    text: `Select ${entity}...`
+                },
+                ...people
+            ];
+
+            $(this).select2({
+                width: '100%',
+                placeholder: `Select ${entity}...`,
+                allowClear: true,
+                data
+            });
+        });
+    };
+    $.fn.peopleSelectO = async function(){
+
+        const resources =
+            await scope.getService(
+                'resources'
+            );
+
+        const people =
+            await resources.get(
+                'people'
+            );
+
+        return this.select2({
+            width: '100%',
+            placeholder:
+                'Search person...',
+            data: people
+        });
+    };
+
     
     /*
     |--------------------------------------------------------------------------

@@ -19,19 +19,22 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
     };
 
     function mount(){
-        if(state.mounted) return;
+        alert('event actions');
+        if (state.mounted) return;
         state.mounted = true;
-
+        
         init();
     }
+    
+    init();
 
     function unmount(){
-        if(!state.mounted) return;
+        if (!state.mounted) return;
         state.mounted = false;
+        state.initialized = false;
     }
-    init();
+    
     function init(){
-
         if(state.initialized) return;
         state.initialized = true;
 
@@ -883,4 +886,7 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
         unmount
     };
 
+},
+{
+    faces:['client']
 });

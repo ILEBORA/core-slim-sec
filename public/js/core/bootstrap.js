@@ -18,7 +18,7 @@
     ================================================== */
 
     const CONFIG = global.__BORA_CONFIG__ || {
-        dev: false, //rd('devMode', false), //false,
+        dev: true, //rd('devMode', false), //false,
         // securityMode: 'strict'
     };
 
@@ -58,7 +58,7 @@
            2. Start Runtime (sync core)
         --------------------------- */
 
-        app.start();
+        await app.start();
         
 
         if(CONFIG.dev){

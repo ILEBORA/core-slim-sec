@@ -19,11 +19,14 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
+
+        init();
     }
 
     function unmount(){
         if (!state.mounted) return;
         state.mounted = false;
+        state.initialized = false;
     }
 
 
@@ -70,10 +73,60 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         uiActions.register('act-remove-media', activityComposer.handleRemoveMedia);
         uiActions.register('act-rotate-media', activityComposer.handleRotateMedia);
 
-    }
+        //Share
+        uiActions.register('activity.share.whatsapp', (el)=>{
+            const url = $(el).data('url');
+            window.open(`https:\/\/wa.me\/?text=${encodeURIComponent(url)}`,
+                '_blank'
+            );
+        });
 
-    //Attach
-    init();
+        uiActions.register('activity.share.telegram', (el)=>{
+            const url = $(el).data('url');
+            window.open(`https:\/\/t.me\/share\/url?url=${encodeURIComponent(url)}`,
+                '_blank'
+            );
+        });
+
+        uiActions.register('activity.share.copylink', (el)=>{
+            const url = $(el).data('url');
+
+            navigator.clipboard
+                .writeText(url)
+                .then(()=>{
+
+                    alertBora.success('Link copied');
+
+                });
+        });
+
+        uiActions.register('activity.share.native', async (el)=>{
+            const url = $(el).data('url');
+
+            if(navigator.share){
+                await navigator.share({
+                    title: 'Shared Post',
+                    url
+                });
+
+                return;
+            }
+
+            copyShareLink(url);
+
+        });
+
+        uiActions.register('activity.share.timeline', (el)=>{
+            const id = $(el).data('id');
+            
+            bNavigator.go({
+                route: 'activity.share.timeline',
+                params: { id },
+                surface: 'popup'
+            });
+        });
+
+    }
 
     async function showReactions(el){
         const id = $(el)
@@ -509,48 +562,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
     }
 
-    //Share
-    uiActions.register('activity.share.whatsapp', (el)=>{
-        const url = $(el).data('url');
-        window.open(`https:\/\/wa.me\/?text=${encodeURIComponent(url)}`,
-            '_blank'
-        );
-    });
-
-    uiActions.register('activity.share.telegram', (el)=>{
-        const url = $(el).data('url');
-         window.open(`https:\/\/t.me\/share\/url?url=${encodeURIComponent(url)}`,
-            '_blank'
-        );
-    });
-
-    uiActions.register('activity.share.copylink', (el)=>{
-        const url = $(el).data('url');
-
-        navigator.clipboard
-            .writeText(url)
-            .then(()=>{
-
-                alertBora.success('Link copied');
-
-            });
-    });
-
-     uiActions.register('activity.share.native', async (el)=>{
-        const url = $(el).data('url');
-
-        if(navigator.share){
-            await navigator.share({
-                title: 'Shared Post',
-                url
-            });
-
-            return;
-        }
-
-        copyShareLink(url);
-
-    });
+    
 
     function copyShareLink(url){
         navigator.clipboard
@@ -560,15 +572,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             });
     }
 
-    uiActions.register('activity.share.timeline', (el)=>{
-        const id = $(el).data('id');
-        
-        bNavigator.go({
-            route: 'activity.share.timeline',
-            params: { id },
-            surface: 'popup'
-        });
-    });
+    
 
 
     

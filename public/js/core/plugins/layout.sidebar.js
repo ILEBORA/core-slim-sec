@@ -106,12 +106,12 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
 
         document.addEventListener('change', async function(e){
             if (!e.target.matches('#changemenu')) return;
-
+            // alert('here');
             const face = e.target.value;
 
             context.set(face);
             window.APP_CURRENT_ROLE = face;
-            $('[data-refresh-menu]').data('role', face);
+            // $('[data-refresh-menu]').data('role', face);
 
             // const menu = await __BORA_APP__.service('menu'); // ✅ FIX
             // await menu.refresh(face);
@@ -123,29 +123,29 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
             
         });
 
-        document.addEventListener('click', async function(e){
+        // document.addEventListener('click', async function(e){
 
-            const btn = e.target.closest('[data-refresh-menu]');
-            if (!btn) return;
+        //     const btn = e.target.closest('[data-refresh-menu]');
+        //     if (!btn) return;
 
-            e.preventDefault();
+        //     e.preventDefault();
 
-            const role = btn.dataset.role || window.APP_CURRENT_ROLE;
+        //     const role = btn.dataset.role || window.APP_CURRENT_ROLE;
 
-            const menu = await __BORA_APP__.service('menu'); // ✅ FIX
-            await menu.refresh(role);
-        });
+        //     const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+        //     await menu.refresh(role);
+        // });
 
         // React to changes
         __BORA_APP__.on('face.changed', applyFace);
 
         // Apply initial state
         // applyFace(context.get());
-        applyFace(scope.face || context.get());
+        await applyFace(scope.face || context.get());
 
         // alert('Sidebar initialized with face: ' + (scope.face || context.get()));
-        const menu = await __BORA_APP__.service('menu'); // ✅ FIX
-        // await menu.refresh(scope.face || context.get());
+        // const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+        // // await menu.refresh(scope.face || context.get());
 
         //
         // scope.on('esc', onEscKeyPress);
@@ -243,7 +243,7 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
         });
     }
 
-    function applyFace(face){
+    async function applyFace(face){
         document.body.classList.remove(
             'face-Client',
             'face-Administrator',
@@ -255,6 +255,9 @@ __BORA_REGISTER_PLUGIN__('layout.sidebar', async function(scope){
         .forEach(el => {
             el.setAttribute('data-role', face);
         });
+
+        const menu = await __BORA_APP__.service('menu'); // ✅ FIX
+        await menu.refresh(scope.face || context.get());
 
     }
 

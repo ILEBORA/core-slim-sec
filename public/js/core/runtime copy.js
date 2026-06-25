@@ -464,8 +464,7 @@
                     // 🔥 CRITICAL: trigger activation only if new plugins arrived
                     if(newPlugins){
                         console.log('NEW PLUGINS:: ', newPlugins);
-                        emit('plugins:registered');
-                        // await evaluatePluginActivation(normalizeUrl(window.location));
+                        await evaluatePluginActivation(normalizeUrl(window.location));
                     }
 
                     
@@ -519,161 +518,137 @@
         ================================================== */
         let cn = 0;
 
-        let activating = false; 
-        let activateAgain = false;
+        
         async function evaluatePluginActivation(route){
-            if (activating) {
-                activateAgain = true;
-                return;
+            // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
+            const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
+            // console.warn('[MANIFEST]', manifest);
+
+            global.__BORA_FACE__ = resolveFace(route);
+            await syncFace(global.__BORA_FACE__);
+           
+            if(config.dev){
+                console.log(`[Runtime] evaluatePluginActivation for face: ${global.__BORA_FACE__}`);
             }
 
-            activating = true;
+            // alert(global.__BORA_FACE__ + ' route: ' + route);
+        
+            const context = {
+                route,
+                face: global.__BORA_FACE__ || 'guest', // default to guest if face service or resolution fails
+                appcore: plugins.get('app.core'),
+                plugins
+            };
 
-            try {
-                do {
-                    activateAgain = false;
-                    // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
-                    const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
-                    // console.warn('[MANIFEST]', manifest);
+            /* ---------------------------
+            SORT (priority-aware)
+            --------------------------- */
 
-                    global.__BORA_FACE__ = resolveFace(route);
-                    await syncFace(global.__BORA_FACE__);
+            const pluginNames = Object.keys(manifest)
+                .filter(name => manifest[name].type === 'plugin')
+                .sort((a, b) => {
+                    const pa = manifest[a]?.priority || 0;
+                    const pb = manifest[b]?.priority || 0;
+                    return pb - pa; // higher first
+                });
+
+
+            if(config.dev){
+                console.warn('[Sorted plugins]', pluginNames);
+            }
+
+            /* ---------------------------
+            LOOP
+            --------------------------- */
+            let cnt = 0;
+            for(const name of pluginNames){
+                // alert('Load name:: '+name);
+                const meta = manifest[name];
+
+                // 🧠 Phase 1: should load?
+                if(!shouldLoad(meta, context)){
+                    continue;
+                }
+
+                // console.warn(`[Loader-success] Loading plugin: ${name}`);
+                // ensure code is loaded
+                await global.__BORA_LOADER__.ensure(name, {
+                    activate:false
+                });
+
+                const plugin = plugins.get(name);
+                // console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
+                // Plugin not loaded yet (loader should have loaded it by now, but just in case)
+                if(!plugin){
+                    // console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
+                    // console.log(pluginMeta.get(name));
+                    continue;
+                }
+
+                const pMeta = pluginMeta.get(name);
+
+                const shouldActivate = evaluateMeta(name, pMeta, context);
                 
-                    if(config.dev){
-                        console.log(`[Runtime] evaluatePluginActivation for face: ${global.__BORA_FACE__}`);
-                    }
+                /* ---------------------------
+                DEBUG (optional but useful)
+                --------------------------- */
 
-                    // alert(global.__BORA_FACE__ + ' route: ' + route);
-                
-                    const context = {
+                if(config.dev){
+                    console.log(`[Activation] ${name}`, {
                         route,
-                        face: global.__BORA_FACE__ || 'guest', // default to guest if face service or resolution fails
-                        appcore: plugins.get('app.core'),
-                        plugins
-                    };
+                        active: shouldActivate
+                    });
+                }
 
-                    /* ---------------------------
-                    SORT (priority-aware)
-                    --------------------------- */
+                /* ---------------------------
+                MOUNT
+                --------------------------- */
 
-                    const pluginNames = Object.keys(manifest)
-                        .filter(name => manifest[name].type === 'plugin')
-                        .sort((a, b) => {
-                            const pa = manifest[a]?.priority || 0;
-                            const pb = manifest[b]?.priority || 0;
-                            return pb - pa; // higher first
-                        });
+                if(shouldActivate){
+                    // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
+                    if(!plugin.__active){
 
+                        try{
+                            const start = performance.now();
 
-                    if(config.dev){
-                        console.warn('[Sorted plugins]', pluginNames);
-                    }
+                            await plugin.mount?.();
+                            plugin.__active = true;
 
-                    /* ---------------------------
-                    LOOP
-                    --------------------------- */
-                    let cnt = 0;
-                    for(const name of pluginNames){
-                        // alert('Load name:: '+name);
-                        const meta = manifest[name];
+                            // console.log(
+                            //     `%c ${name} Plugin active`,
+                            //     'color:#22c55e;font-weight:bold;'
+                            // );
 
-                        // 🧠 Phase 1: should load?
-                        if(!shouldLoad(meta, context)){
-                            continue;
-                        }
+                            /* timing (optional keep your existing logic) */
 
-                        // console.warn(`[Loader-success] Loading plugin: ${name}`);
-                        // ensure code is loaded
-                        await global.__BORA_LOADER__.ensure(name, {
-                            activate:false
-                        });
-
-                        const plugin = plugins.get(name);
-                        // console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
-                        // Plugin not loaded yet (loader should have loaded it by now, but just in case)
-                        if(!plugin){
-                            // console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
-                            // console.log(pluginMeta.get(name));
-                            continue;
-                        }
-
-                        const pMeta = pluginMeta.get(name);
-
-                        const shouldActivate = evaluateMeta(name, pMeta, context);
-                        
-                        /* ---------------------------
-                        DEBUG (optional but useful)
-                        --------------------------- */
-
-                        if(config.dev){
-                            console.log(`[Activation] ${name}`, {
-                                route,
-                                active: shouldActivate
-                            });
-                        }
-
-                        /* ---------------------------
-                        MOUNT
-                        --------------------------- */
-
-                        if(shouldActivate){
-                            // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
-                            if (plugin.__activating) {
-                                return;
-                            }
-
-                            plugin.__activating = true;
-
-                            if(!plugin.__active){
-
-                                try{
-                                    const start = performance.now();
-
-                                    await plugin.mount?.();
-                                    plugin.__active = true;
-
-                                    // console.log(
-                                    //     `%c ${name} Plugin active`,
-                                    //     'color:#22c55e;font-weight:bold;'
-                                    // );
-
-                                    /* timing (optional keep your existing logic) */
-
-                                }catch(err){
-                                    errors.set(name, err);
-                                    emit('plugin:error', { name, error: err });
-                                    plugin.__activating = false;
-                                }
-                            }
-
-                        }else{
-
-                            /* ---------------------------
-                            UNMOUNT
-                            --------------------------- */
-
-                            if(plugin.__active){
-
-                                try{
-                                    await plugin.unmount?.();
-                                    plugin.__active = false;
-
-                                    console.log(
-                                        `%c ${name} Plugin unmounted`,
-                                        'color:red;font-weight:bold;'
-                                    );
-
-                                }catch(err){
-                                    console.error(`[Plugin] Unmount failed: ${name}`, err);
-                                }
-                            }
+                        }catch(err){
+                            errors.set(name, err);
+                            emit('plugin:error', { name, error: err });
                         }
                     }
-                //End
-                } while (activateAgain);
 
-            } finally {
-                activating = false;
+                }else{
+
+                    /* ---------------------------
+                    UNMOUNT
+                    --------------------------- */
+
+                    if(plugin.__active){
+
+                        try{
+                            await plugin.unmount?.();
+                            plugin.__active = false;
+
+                            console.log(
+                                `%c ${name} Plugin unmounted`,
+                                'color:red;font-weight:bold;'
+                            );
+
+                        }catch(err){
+                            console.error(`[Plugin] Unmount failed: ${name}`, err);
+                        }
+                    }
+                }
             }
         }
 

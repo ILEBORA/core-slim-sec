@@ -307,6 +307,8 @@ async function(scope){
 
         state.mounted = true;
 
+        init();
+
     }
 
     function unmount(){
@@ -318,8 +320,6 @@ async function(scope){
         state.mounted = false;
 
     }
-
-    init();
 
     return {
         mount,

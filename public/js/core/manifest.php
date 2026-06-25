@@ -155,6 +155,7 @@ return [
     'face' => ['file' => 'services/face.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 32, 'requires' => ['runtime']],
     'menu' => ['file' => 'services/menu.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 33, 'requires' => ['runtime']],
     'context' => ['file' => 'services/context.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 34, 'requires' => ['runtime']],
+    'resources' => ['file' => 'services/resources.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 35, 'requires' => ['runtime']],
     
     'capability' => ['file' => 'services/capability.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 36, 'requires' => ['runtime']],
     'ui.actions' => ['file' => 'services/ui.actions.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 37, 'requires' => ['runtime']],

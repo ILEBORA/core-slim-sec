@@ -202,6 +202,7 @@ __BORA_REGISTER_SERVICE__('ui.actions', function(scope){
                 if (!menu) return;
 
                 const role = refreshEl.dataset.role;
+                
                 menu.refresh(role);
 
                 return;

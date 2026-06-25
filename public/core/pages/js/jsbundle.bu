@@ -17,6 +17,16 @@ $pipeline->register('page.actions', [
     'priority' => 100,
     'preload'  => true,
     'requires' => ['hooks'],
+    'preload' => true
+]);
+
+$pipeline->register('menu.resources', [
+    'file'     => 'plugins/menu.resources.js',
+    'type'     => 'plugin',
+    'priority' => 100,
+    'preload'  => true,
+    'requires' => ['hooks'],
+    'preload' => true
 ]);
 
 $pipeline->register('pages.plugin', [

@@ -336,8 +336,38 @@ appUI.dropDown.init();
 
         const accept = $el.data('accept') || 'image/*';
 
+        const title = $el.data('title') || 'Change Image';
+
+        const context = {
+
+            module,
+
+            entity,
+
+            entityId,
+
+            collection,
+
+            uploadId,
+
+            preview,
+
+            title,
+
+            accept,
+
+            target:
+                $el.data('target'),
+
+            event:
+                $el.data('event')
+
+        };
+
+        mPGs.appMedia.context = context;
+
         alertBora.prompt(
-            '<h2>Change Image</h2>',
+             `<h2>${title}</h2>`,
             {
                 html: true,
                 prompt: `
@@ -463,22 +493,35 @@ appUI.dropDown.init();
                     return;
                 }
 
-                const target = mPGs.appMedia.getTargetClass(
-                                    entity,
-                                    collection,
-                                    entityId
-                                );
-                // alert(target);
-                if ($(target).length) {
-                    $(target).attr(
-                        'src',
-                        upload.preview +
-                        '?t=' +
-                        Date.now()
-                    );
+                // const target = mPGs.appMedia.getTargetClass(
+                //                     entity,
+                //                     collection,
+                //                     entityId
+                //                 );
+                // // alert(target);
+                // if ($(target).length) {
+                //     $(target).attr(
+                //         'src',
+                //         upload.preview +
+                //         '?t=' +
+                //         Date.now()
+                //     );
 
-                    alertBora.notify(resp.message || 'Image updated.', 'success');
-                }
+                //     alertBora.notify(resp.message || 'Image updated.', 'success');
+                // }
+
+
+                const ctx = mPGs.appMedia.context;
+
+                $(document).trigger(
+                    'media.attached',
+                    [
+                        ctx,
+                        upload,
+                        data
+                    ]
+                );
+
             })
             .build();
     };
@@ -493,6 +536,41 @@ appUI.dropDown.init();
             ucfirst(collection) +
             entityId;
     };
+
+
+    $(document).on(
+
+        'media.attached',
+
+        function(
+            e,
+            ctx,
+            upload,
+            data
+        ){
+
+            // alert('attacgher here');
+            const target =
+                mPGs.appMedia.getTargetClass(
+                    ctx.entity,
+                    ctx.collection,
+                    ctx.entityId
+                );
+
+            if($(target).length){
+
+                $(target).attr(
+                    'src',
+                    upload.preview +
+                    '?t=' +
+                    Date.now()
+                );
+
+            }
+
+        }
+
+    );
     
     }( window.mPGs = window.mPGs || {}, jQuery ));
     

@@ -12,6 +12,13 @@ $pipeline->register('people.actions', [
     'file'     => 'plugins/people.actions.js',
     'type'     => 'plugin',
     'priority' => 99,
+    'preload' => true
+]);
+
+$pipeline->register('people.resources', [
+    'file'     => 'plugins/people.resources.js',
+    'type'     => 'plugin',
+    'priority' => 99,
 ]);
 
 /* ==================================================

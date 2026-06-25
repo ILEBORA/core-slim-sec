@@ -21,7 +21,7 @@ __BORA_REGISTER_PLUGIN__('activity.feed.ui', async function(scope){
             el = node;
             scopeName = el.dataset.scope || 'home';
             console.log('Proceed...');
-            load();
+            // load();
             bindRealtime();
         });
     }

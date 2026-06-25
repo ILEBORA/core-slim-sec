@@ -10,7 +10,20 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
         initialized:false
     };
 
+    function mount(){
+        if (state.mounted) return;
+        state.mounted = true;
+
+        // init();
+    }
+
     init();
+
+    function unmount(){
+        if (!state.mounted) return;
+        state.mounted = false;
+        state.initialized = false;
+    }
 
     function init(){
 
@@ -115,6 +128,13 @@ __BORA_REGISTER_PLUGIN__('activity.stories.actions', async function(scope){
 
     }
 
-    return {};
+    // function unmount(){
+    //     state.initialized = false;
+    // }
+
+    return {
+        mount,
+        unmount
+    };
 
 });

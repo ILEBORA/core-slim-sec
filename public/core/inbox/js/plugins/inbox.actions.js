@@ -13,30 +13,30 @@ __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
     const bNavigator = await scope.getService('navigator');
 
     // 🔧 Composition root (ONE place)
-    const helpers = new InboxHelpers();
+    // const helpers = new InboxHelpers();
 
-    const ui     = new InboxUI(scope, helpers);
-    const typing = new InboxTyping(scope, callbora, ui);
+    // const ui     = new InboxUI(scope, helpers);
+    // const typing = new InboxTyping(scope, callbora, ui);
 
-    const presence      = new InboxPresence(ui);
-    const notifications = new InboxNotifications(ui, navigation);
+    // const presence      = new InboxPresence(ui);
+    // const notifications = new InboxNotifications(ui, navigation);
 
-    const realtime = new InboxRealtime(
-        scope,
-        ui,
-        typing,
-        presence,
-        notifications
-    );
+    // const realtime = new InboxRealtime(
+    //     scope,
+    //     ui,
+    //     typing,
+    //     presence,
+    //     notifications
+    // );
 
-    const loader = new InboxThreadLoader(scope, callbora, ui, typing, realtime);
+    // const loader = new InboxThreadLoader(scope, callbora, ui, typing, realtime);
 
-    const api = new InboxAPI({
-        ui,
-        realtime,
-        loader,
-        typing
-    });
+    // const api = new InboxAPI({
+    //     ui,
+    //     realtime,
+    //     loader,
+    //     typing
+    // });
 
     const state = {
         mounted: false,
@@ -47,7 +47,9 @@ __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
         if (state.mounted) return;
         state.mounted = true;
 
-        realtime.initUserChannel();
+        // init();
+
+        realtime.initUserChannel();        
     }
 
     function unmount(){

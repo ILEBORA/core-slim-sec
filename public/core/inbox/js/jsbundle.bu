@@ -12,6 +12,7 @@ $pipeline->register('inbox.actions', [
     'file'     => 'plugins/inbox.actions.js',
     'type'     => 'plugin',
     'priority' => 99,
+    'preload' => true
 ]);
 
 /* ==================================================

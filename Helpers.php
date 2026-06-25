@@ -2292,6 +2292,31 @@ if (!function_exists('presence')) {
     }
 }
 
+if (!function_exists('realtime')) {
+
+    function realtime(): \BoraSlim\Core\Realtime\Realtime
+    {
+        $ctx = ctx();
+
+        if (
+            !$ctx->registered(
+                \BoraSlim\Core\Realtime\Realtime::class
+            )
+        ) {
+
+            $ctx->singleton(
+                \BoraSlim\Core\Realtime\Realtime::class,
+                fn() => new \BoraSlim\Core\Realtime\Realtime()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Realtime\Realtime::class
+        );
+    }
+}
+
+
 if(!function_exists('simpleDate')){
     function simpleDate($date,$format='d-m-Y'){
         if(is_array($date)){
