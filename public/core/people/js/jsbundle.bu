@@ -57,6 +57,7 @@ $pipeline->register('people.ui', [
     'file'     => 'controllers/PeopleUI.js',
     'priority' => 120,
     'requires' => ['people.composer'],
+    'type'     => 'lib',
 ]);
 
 /* ==================================================

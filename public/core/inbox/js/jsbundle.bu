@@ -52,6 +52,7 @@ $pipeline->register('inbox.ui', [
     'file'     => 'controllers/InboxUI.js',
     'priority' => 120,
     'requires' => ['inbox.composer'],
+    'type'      => 'lib',
 ]);
 
 /* ==================================================

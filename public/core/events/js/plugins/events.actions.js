@@ -19,7 +19,7 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
     };
 
     function mount(){
-        alert('event actions');
+        // alert('event actions');
         if (state.mounted) return;
         state.mounted = true;
         

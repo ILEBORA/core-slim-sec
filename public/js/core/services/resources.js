@@ -70,42 +70,56 @@ __BORA_REGISTER_SERVICE__(
             id = null,
             meta = {}
         ){
+             scope.emit(`${type}.loading`, {
+                type,
+                id
+            });
 
-            const k =
-                key(type, id);
+            try{
 
-            const cache =
-                state.get(k);
+                const k =
+                    key(type, id);
 
-            if (cache) {
-                return cache.data;
-            }
+                const cache =
+                    state.get(k);
 
-            const loader =
-                loaders[type];
+                if (cache) {
+                    return cache.data;
+                }
 
-            if (!loader) {
-                throw new Error(
-                    `Resource loader not registered: ${type}`
+                const loader =
+                    loaders[type];
+
+                if (!loader) {
+                    throw new Error(
+                        `Resource loader not registered: ${type}`
+                    );
+                }
+
+                const data =
+                    await loader(id);
+
+                state.set(
+                    k,
+                    makePayload(
+                        data,
+                        {
+                            source:
+                                'initial',
+                            ...meta
+                        }
+                    )
                 );
+
+                return data;
+            }finally{
+
+                scope.emit(`${type}.loaded`, {
+                    type,
+                    id
+                });
+
             }
-
-            const data =
-                await loader(id);
-
-            state.set(
-                k,
-                makePayload(
-                    data,
-                    {
-                        source:
-                            'initial',
-                        ...meta
-                    }
-                )
-            );
-
-            return data;
         }
 
         async function refresh(

@@ -522,6 +522,16 @@
         let activating = false; 
         let activateAgain = false;
         async function evaluatePluginActivation(route){
+            const activationId = crypto.randomUUID().slice(0,8);
+            console.group(
+                `[Activation ${activationId}] START`
+            );
+
+            console.log(
+                "Route:",
+                route
+            );
+
             if (activating) {
                 activateAgain = true;
                 return;
@@ -531,6 +541,10 @@
 
             try {
                 do {
+                    console.log(
+                        activationId,
+                        name
+                    );
                     activateAgain = false;
                     // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
                     const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
@@ -563,6 +577,12 @@
                             const pb = manifest[b]?.priority || 0;
                             return pb - pa; // higher first
                         });
+                    
+                    console.log(pluginNames);
+                    console.log(pluginNames.length);
+                    console.log(
+                        pluginNames.includes('tree.workspace')
+                    );
 
 
                     if(config.dev){
@@ -578,9 +598,47 @@
                         const meta = manifest[name];
 
                         // 🧠 Phase 1: should load?
-                        if(!shouldLoad(meta, context)){
+                        // if(!shouldLoad(meta, context, name)){
+                        //     continue;
+                        // }
+
+                        const ok = shouldLoad(meta, context, name);
+
+                        console.log(
+                            "[Should Load RESULT]",
+                            name,
+                            ok
+                        );
+
+                        if (!ok) {
+                            console.warn(
+                                "[Rejected]",
+                                name,
+                                meta
+                            );
+                            let p = plugins.get(name);
+                            if (p?.__active) {
+
+                                try {
+                                    await p.unmount?.();
+                                    p.__active = false;
+                                    p.__activating = false;
+
+                                    console.log(`${name} unmounted`);
+                                }
+                                catch (err) {
+                                    console.error(err);
+                                } finally {
+
+                                    p.__activating = false;
+
+                                }
+                            }
+
                             continue;
                         }
+
+                        console.log('[Should Load] yes =', name);
 
                         // console.warn(`[Loader-success] Loading plugin: ${name}`);
                         // ensure code is loaded
@@ -619,7 +677,7 @@
                         if(shouldActivate){
                             // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
                             if (plugin.__activating) {
-                                return;
+                                continue;  //return;
                             }
 
                             plugin.__activating = true;
@@ -638,7 +696,7 @@
                                     // );
 
                                     /* timing (optional keep your existing logic) */
-
+                                    plugin.__activating = false;
                                 }catch(err){
                                     errors.set(name, err);
                                     emit('plugin:error', { name, error: err });
@@ -669,6 +727,15 @@
                             }
                         }
                     }
+
+                    // console.log(
+                    //     "[Activation END]",
+                    //     activationId
+                    // );
+
+                    console.log("DONE");
+
+                    console.groupEnd();
                 //End
                 } while (activateAgain);
 
@@ -677,8 +744,31 @@
             }
         }
 
-        function shouldLoad(meta, context){
-            // console.log('[Should Load?]', meta, context);
+        function shouldLoad(meta, context, name){
+            console.log('[Should Load?]', name, meta, context);
+            console.log(
+                typeof meta.activateOn,
+                meta.activateOn
+            );
+            if(meta.faces && !meta.faces.includes(context.face)){
+                return false;
+            }
+
+            if(meta.activateOn){
+
+                const patterns = [].concat(meta.activateOn);
+
+                if(!patterns.some(r => new RegExp(r).test(context.route))){
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        function shouldLoadO(meta, context, name){
+            console.log('[Should Load?]', name, meta, context);
 
             if(!meta) return true;
 
