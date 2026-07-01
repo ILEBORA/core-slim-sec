@@ -3,16 +3,44 @@ __BORA_REGISTER_PLUGIN__('ui.anchor.positioner', async function(scope){
     function position(trigger, panel, options = {}){
 
         const settings = {
-            align: 'right',        // 'left' | 'right' | 'center'
-            offsetY: 0,
+
+            align: 'right',      // left | center | right
             offsetX: 0,
+            offsetY: 0,
             margin: 10,
             arrow: true,
             flip: true,
+            context: $('body'),
+
             ...options
+
         };
 
-        const pos = trigger.offset();
+        const container = settings.context;
+
+        // ---------------------------------------
+        // Convert trigger coordinates into
+        // coordinates relative to the container.
+        // ---------------------------------------
+
+        const triggerOffset = trigger.offset();
+
+        const containerOffset =
+            container[0] === document.body
+                ? { left: 0, top: 0 }
+                : container.offset();
+
+        const pos = {
+
+            left:
+                triggerOffset.left -
+                containerOffset.left,
+
+            top:
+                triggerOffset.top -
+                containerOffset.top
+
+        };
 
         const triggerWidth  = trigger.outerWidth();
         const triggerHeight = trigger.outerHeight();
@@ -20,96 +48,165 @@ __BORA_REGISTER_PLUGIN__('ui.anchor.positioner', async function(scope){
         const panelWidth  = panel.outerWidth();
         const panelHeight = panel.outerHeight();
 
-        const viewportWidth  = $(window).width();
-        const viewportHeight = $(window).height();
+        const boundaryWidth  =
+            container.innerWidth();
 
-        /* -------------------------
-           Horizontal alignment
-        --------------------------*/
+        const boundaryHeight =
+            container.innerHeight();
+
+        // ---------------------------------------
+        // Horizontal alignment
+        // ---------------------------------------
 
         let left;
 
-        if(settings.align === 'left'){
-            left = pos.left;
-        }
+        switch(settings.align){
 
-        else if(settings.align === 'center'){
-            left = pos.left + (triggerWidth / 2) - (panelWidth / 2);
-        }
+            case 'left':
 
-        else{
-            // right align (default)
-            left = pos.left + triggerWidth - panelWidth;
+                left = pos.left;
+                break;
+
+            case 'center':
+
+                left =
+                    pos.left +
+                    (triggerWidth / 2) -
+                    (panelWidth / 2);
+
+                break;
+
+            default:
+
+                left =
+                    pos.left +
+                    triggerWidth -
+                    panelWidth;
+
         }
 
         left += settings.offsetX;
 
-        /* -------------------------
-           Vertical positioning
-        --------------------------*/
+        // ---------------------------------------
+        // Vertical alignment
+        // ---------------------------------------
 
-        let top = pos.top + triggerHeight + settings.offsetY;
+        let top =
+            pos.top +
+            triggerHeight +
+            settings.offsetY;
 
-        let isFlipped = false;
+        let flipped = false;
 
-        const spaceBottom = viewportHeight - (pos.top + triggerHeight);
+        const spaceBelow =
+            boundaryHeight -
+            (top + panelHeight);
 
-        if(settings.flip && spaceBottom < panelHeight){
-            top = pos.top - panelHeight - settings.offsetY;
-            isFlipped = true;
+        if(
+            settings.flip &&
+            spaceBelow < 0
+        ){
+
+            top =
+                pos.top -
+                panelHeight -
+                settings.offsetY;
+
+            flipped = true;
+
         }
 
-        /* -------------------------
-           Clamp to viewport
-        --------------------------*/
+        // ---------------------------------------
+        // Clamp horizontally
+        // ---------------------------------------
 
         if(left < settings.margin){
+
             left = settings.margin;
+
         }
 
-        if(left + panelWidth > viewportWidth - settings.margin){
-            left = viewportWidth - panelWidth - settings.margin;
+        if(
+            left + panelWidth >
+            boundaryWidth - settings.margin
+        ){
+
+            left =
+                boundaryWidth -
+                panelWidth -
+                settings.margin;
+
         }
+
+        // ---------------------------------------
+        // Clamp vertically
+        // ---------------------------------------
 
         if(top < settings.margin){
+
             top = settings.margin;
+
         }
 
-        /* -------------------------
-           Apply position
-        --------------------------*/
+        // ---------------------------------------
+        // Apply
+        // ---------------------------------------
 
         panel.css({
+
             position: 'absolute',
-            top: top,
-            left: left
+
+            left,
+
+            top
+
         });
 
-        /* =========================
-           Arrow handling
-        ==========================*/
+        // ---------------------------------------
+        // Arrow
+        // ---------------------------------------
 
         if(settings.arrow){
 
-            const triggerCenter = pos.left + (triggerWidth / 2);
+            let arrowLeft =
+                pos.left +
+                (triggerWidth / 2) -
+                left;
 
-            let arrowLeft = triggerCenter - left;
+            arrowLeft = Math.max(
+                12,
+                Math.min(
+                    panelWidth - 12,
+                    arrowLeft
+                )
+            );
 
-            // clamp arrow inside panel
-            arrowLeft = Math.max(12, Math.min(panelWidth - 12, arrowLeft));
+            panel.css(
+                '--arrow-left',
+                arrowLeft + 'px'
+            );
 
-            panel.css('--arrow-left', arrowLeft + 'px');
-            panel.toggleClass('flipped', isFlipped);
+            panel.toggleClass(
+                'flipped',
+                flipped
+            );
 
         }
 
         return {
-            top,
+
             left,
-            flipped: isFlipped
+            top,
+            flipped
+
         };
+
     }
 
-    return { position };
+    return {
+
+        position
+
+    };
 
 });

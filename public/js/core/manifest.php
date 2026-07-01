@@ -54,6 +54,14 @@ return [
         'preload'  => true,
     ],
 
+    'swiper' => [
+        'file'     => 'vendor/swiper.js',
+        'version'  => '1.0.0',
+        'priority' => 4,
+        'bypass'  => true,
+        'preload'  => true,
+    ],
+
     /* ==================================================
        core engine
     ================================================== */
