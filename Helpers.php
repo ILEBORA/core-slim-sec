@@ -1093,7 +1093,7 @@ if(!function_exists('autoIncludeCoreJs')){
                 }
 
                 // $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
-                if(isset($manifest[$name]['bypass'])){
+                if(getIfSet($manifest[$name]['bypass'],false)){
                     $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
                 }else{
                     $compiled = \BoraSlim\Core\Assets\JsAssetCompiler::compile($name, $filePath);
@@ -1160,7 +1160,7 @@ function prepareCoreManifest(array $manifest): array
                 continue;
             }
 
-            if (isset($meta['bypass'])) {
+            if (getIfSet($meta['bypass'],false)) {
                 $meta['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/' . $file;
             } else {
                 $compiled = \BoraSlim\Core\Assets\JsAssetCompiler::compile($name, $filePath);

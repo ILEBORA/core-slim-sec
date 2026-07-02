@@ -10,7 +10,7 @@ return [
         'file'     => 'vendor/jquery.js',
         'version'  => '3.7.1',
         'priority' => 1,
-        // 'bypass'  => true,
+        // //'bypass'  => true,
         // 'preload'  => true,
     ],
 
@@ -18,7 +18,7 @@ return [
         'file'     => 'vendor/jquery_global.js',
         'version'  => '1.0.0',
         'priority' => 2,
-        // 'bypass'  => true,
+        // //'bypass'  => true,
         // 'preload'  => true,
     ],
 
@@ -26,7 +26,7 @@ return [
         'file'     => 'vendor/select2.js',
         'version'  => '4.1.0',
         'priority' => 3,
-        'bypass'  => true,
+        //'bypass'  => true,
         'preload'  => true,
     ],
 
@@ -34,7 +34,7 @@ return [
         'file'     => 'vendor/colorpicker.js',
         'version'  => '1.0.0',
         'priority' => 4,
-        'bypass'  => true,
+        //'bypass'  => true,
         'preload'  => true,
     ],
 
@@ -42,7 +42,7 @@ return [
         'file'     => 'vendor/draggable.js',
         'version'  => '1.0.0',
         'priority' => 5,
-        'bypass'  => true,
+        //'bypass'  => true,
         'preload'  => true,
     ],
 
@@ -50,7 +50,7 @@ return [
         'file'     => 'vendor/lib.cropper.js',
         'version'  => '1.0.0',
         'priority' => 5,
-        'bypass'  => true,
+        //'bypass'  => true,
         'preload'  => true,
     ],
 
@@ -58,7 +58,7 @@ return [
         'file'     => 'vendor/swiper.js',
         'version'  => '1.0.0',
         'priority' => 4,
-        'bypass'  => true,
+        //'bypass'  => true,
         'preload'  => true,
     ],
 

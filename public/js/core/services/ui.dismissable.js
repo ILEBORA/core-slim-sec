@@ -18,6 +18,10 @@ __BORA_REGISTER_SERVICE__('ui.dismissable', async function(scope){
         return instance;
     }
 
-    return { create };
+    function destroy(){
+        uiStack.unregister(instance);
+    }
+
+    return { create, destroy };
 
 });

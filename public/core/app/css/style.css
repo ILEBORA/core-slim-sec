@@ -25,34 +25,3 @@
     }
 
 }
-
-@media print {
-
-    /* Hide UI */
-    header,
-    nav,
-    aside,
-    .toolbar,
-    .breadcrumbs,
-    .sidebar,
-    .tree-controls,
-    .btn,
-    .modal,
-    .no-print {
-        display: none !important;
-    }
-
-    /* Show only chart */
-    body {
-        margin: 0;
-        overflow: visible;
-    }
-
-    #FamilyChart {
-        width: auto;
-        height: auto;
-        overflow: visible;
-        transform: none !important;
-    }
-
-}

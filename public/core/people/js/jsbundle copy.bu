@@ -1,0 +1,232 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipelineJs;
+
+$pipeline = new AssetPipelineJs('people', __DIR__);
+
+/* GLOBAL */
+$pipeline->register('people.actions', [
+    'file'     => 'plugins/people.actions.js',
+    'type'     => 'plugin',
+    'priority' => 99,
+    'preload' => true
+]);
+
+$pipeline->register('people.resources', [
+    'file'     => 'plugins/people.resources.js',
+    'type'     => 'plugin',
+    'priority' => 99,
+]);
+
+/* ==================================================
+   HELPERS
+================================================== */
+
+$pipeline->register('people.helpers', [
+    'file'     => 'utils/PeopleHelpers.js',
+    'type'     => 'lib',
+    'priority' => 100,
+]);
+
+//$pipeline->register('people.tests', [
+//    'file'     => 'utils/PeopleTests.js',
+//    'type'     => 'lib',
+//    'priority' => 101,
+//    'requires' => ['people.helpers'],
+//]);
+
+/* ==================================================
+   COMPOSER (PROFILE / CARD BUILDER)
+================================================== */
+
+$pipeline->register('people.composer', [
+    'file'     => 'composer/people.composer.js',
+    'type'     => 'lib',
+    'priority' => 110,
+    'requires' => ['people.helpers'],
+]);
+
+/* ==================================================
+   UI LAYER
+================================================== */
+
+$pipeline->register('people.ui', [
+    'file'     => 'controllers/PeopleUI.js',
+    'priority' => 120,
+    'requires' => ['people.composer'],
+    'type'     => 'lib',
+]);
+
+/* ==================================================
+   CONTROLLERS
+================================================== */
+
+/**
+ * Handles profile loading (single person / batch)
+ */
+$pipeline->register('people.loader', [
+    'file'     => 'controllers/PeopleLoader.js',
+    'type'     => 'lib',
+    'priority' => 130,
+    'requires' => ['people.ui'],
+]);
+
+/**
+ * Handles follow/unfollow logic
+ */
+$pipeline->register('people.follow', [
+    'file'     => 'controllers/PeopleFollow.js',
+    'type'     => 'lib',
+    'priority' => 131,
+    'requires' => ['people.ui'],
+]);
+
+/**
+ * Handles relationship tree (parents, children, lineage)
+ */
+$pipeline->register('people.tree', [
+    'file'     => 'controllers/PeopleTree.js',
+    'type'     => 'lib',
+    'priority' => 132,
+    'requires' => ['people.loader'],
+]);
+
+/**
+ * Presence (only applies if linked to a user_id)
+ */
+$pipeline->register('people.presence', [
+    'file'     => 'controllers/PeoplePresence.js',
+    'type'     => 'lib',
+    'priority' => 133,
+    'requires' => ['people.ui'],
+]);
+
+/**
+ * Notifications (follow events, updates)
+ */
+$pipeline->register('people.notifications', [
+    'file'     => 'controllers/PeopleNotifications.js',
+    'type'     => 'lib',
+    'priority' => 134,
+    'requires' => ['people.ui'],
+]);
+
+/**
+ * Realtime updates (profile edits, follow status sync)
+ */
+$pipeline->register('people.realtime', [
+    'file'     => 'controllers/PeopleRealtime.js',
+    'type'     => 'lib',
+    'priority' => 135,
+    'requires' => ['people.ui'],
+]);
+
+/**
+ * People tabs (info, activity, events...)
+ */
+$pipeline->register('people.tabs', [
+    'file'     => 'controllers/PeopleTabs.js',
+    'type'     => 'lib',
+    'priority' => 136,
+    'requires' => ['people.ui'],
+]);
+
+/* ==================================================
+   API
+================================================== */
+
+$pipeline->register('people.api', [
+    'file'     => 'controllers/PeopleAPI.js',
+    'type'     => 'lib',
+    'priority' => 140,
+    'requires' => [
+        'people.helpers',
+        'people.loader',
+        'people.tree',
+    ],
+]);
+
+/* ==================================================
+   UI INTERACTIONS (DOM bindings)
+================================================== */
+
+$pipeline->register('people.ui.interactions', [
+    'file'     => 'plugins/people.ui.interactions.js',
+    'type'     => 'plugin',
+    'priority' => 141,
+]);
+
+$pipeline->register('people.breadcrumbs', [
+    'file'     => 'plugins/people.breadcrumbs.js',
+    'type'     => 'plugin',
+    'priority' => 142,
+    // 'requires' => [
+    //                 'hooks'
+    //             ]
+]);
+
+/* ==================================================
+   GLOBAL CONTROLLER
+================================================== */
+
+$pipeline->register('people.controller', [
+    'file'     => 'controllers/people.controller.js',
+    'type'     => 'plugin',
+    'priority' => 150,
+
+    'requires' => [
+        'people.helpers',
+        'people.ui',
+
+        'people.loader',
+        'people.follow',
+
+        'people.api'
+    ],
+
+    'preload' => false,
+
+    // global capability
+    'faces' => ['client']
+]);
+
+/* ==================================================
+   PLUGIN BOOTSTRAP (ENTRY POINT)
+================================================== */
+
+$pipeline->register('people.plugin', [
+    'file'     => 'plugins/people.plugin.js',
+    'type'     => 'plugin',
+    'priority' => 200,
+    'requires' => [
+        'people.controller',
+
+        'people.helpers',
+        'people.composer',
+        'people.ui',
+
+        'people.tabs',
+
+        'people.loader',
+        'people.tree',
+
+        'people.follow',
+
+        'people.notifications',
+        'people.realtime',
+
+        'people.presence',
+
+        'people.api'
+    ],
+    'preload' => true
+]);
+
+/* ==================================================
+   COMPILE → manifest
+================================================== */
+
+$pipeline->compile();

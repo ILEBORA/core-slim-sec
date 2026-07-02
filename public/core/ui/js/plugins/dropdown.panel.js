@@ -7,7 +7,6 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
     let panel = null;
     let dismissInstance = null;
     let openedMenu = null;
-    let activeTrigger = null;
 
     const state = {
         mounted: false
@@ -39,37 +38,13 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
         e.stopPropagation();
 
         const trigger = $(this);
-
-        // $('[data-dropdown].opened').removeClass('opened');
-
         const type    = trigger.data('dropdown');
-
-        if(
-            activeTrigger &&
-            activeTrigger[0] === trigger[0]
-        ){
-
-            closePanel();
-
-            return;
-
-        }
 
         closePanel();
 
-        activeTrigger = trigger;
-        activeTrigger.addClass('opened');
-
-        
-
         showLoading(trigger);
 
-        // const data = await loadPanel(type);
-        const payload = trigger.data();
-        const data = await loadPanel(
-            type,
-            payload
-        );
+        const data = await loadPanel(type);
 
         renderPanel(trigger, data);
 
@@ -77,13 +52,11 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
     function showLoading(trigger){
 
-        const context = getContext(trigger);
-        console.log('[CONTEXT]',context);
         panel = $(`
             <div class="dropdown-panel loading">
                 <img src="assets/images/icons/ajax.gif">
             </div>
-        `).appendTo(context);
+        `).appendTo('body');
 
         requestAnimationFrame(() => {
             position(trigger, panel);
@@ -93,27 +66,19 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
     }
 
-    async function loadPanel(type, payload){
+    async function loadPanel(type){
 
         return $.get('api/modules/ui/dropdown',{
-            type,
-            ...payload
+            type:type
         });
 
     }
 
     function renderPanel(trigger, data){
 
-        if(panel){
-            panel.remove();
-            panel = null;
-        }
+        closePanel();
 
-        // closePanel();
-
-        const context = getContext(trigger);
-
-        panel = $(data.html).appendTo(context);
+        panel = $(data.html).appendTo('body');
 
         requestAnimationFrame(() => {
             position(trigger, panel);
@@ -124,22 +89,6 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
         });
 
         openedMenu = panel;
-
-    }
-
-    function getContext(trigger){
-
-        const selector = trigger.data('dropdown-context');
-
-        if(!selector){
-            return $('body');
-        }
-
-        const context = $(selector);
-
-        return context.length
-            ? context
-            : $('body');
 
     }
 
@@ -160,30 +109,13 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
         if(dismissInstance){
             dismissInstance = null;
         }
-
-        if(activeTrigger){
-
-            activeTrigger.removeClass('opened');
-
-            activeTrigger = null;
-
-        }
     }
 
     function position(trigger, panel){
-        const contextSelector =
-            trigger.data('dropdown-context');
-
-        const context =
-            contextSelector
-                ? $(contextSelector)
-                : $('body');
-                
         let options = {
                             align: 'right',
                             offsetY: 4,
-                            arrow: true,
-                            context
+                            arrow: true
                         };
         anchor.position(trigger, panel, options);
 
@@ -202,31 +134,12 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
             });
     }
 
-    function isOpen(trigger){
-        return activeTrigger &&
-            activeTrigger[0] === trigger[0];
-
-    }
-
-    function getTrigger(){
-        return activeTrigger;
-
-    }
-
     function unmount(){
         if (!state.mounted) return; 
         state.mounted = false;  
 
     }
 
-    return { 
-        mount, 
-        unmount, 
-        open, 
-        closePanel, 
-        
-        isOpen,
-        getTrigger
-    };
+    return { mount, unmount, closePanel};
 
 });

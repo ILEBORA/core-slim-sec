@@ -5,6 +5,10 @@ __BORA_REGISTER_PLUGIN__('alerts', async function(scope){
   const events = await scope.getService('events');
   const sound = await scope.getService('sound');
 
+  const dismissService = await scope.getService('ui.dismissable');
+
+  let dismissInstance = null;
+
   let __domReady = false;
   let __notifyQueue = [];
 
@@ -247,6 +251,22 @@ __BORA_REGISTER_PLUGIN__('alerts', async function(scope){
 
     $(settings.container).append(overlay).append(modal);
     settings.showModal.call({modal,overlay});
+    if (settings.dismissable) {
+
+        dismissInstance = dismissService.create(() => {
+    
+            if (__loading) return;
+    
+            defer.reject({
+                reason: "escape"
+            });
+            
+            hide();
+    
+        });
+    
+    }
+
 
     modal.on('submit.alerts', function(e){
       e.preventDefault();
@@ -292,7 +312,12 @@ __BORA_REGISTER_PLUGIN__('alerts', async function(scope){
     $(document).off('.alerts');
     modal.remove();
     overlay.remove();
-    modal=null; overlay=null;
+    modal=null; 
+    overlay=null;
+
+    // dismissInstance?.destroy();
+    dismissInstance = null;
+
     if(__autoTimer){ clearInterval(__autoTimer); __autoTimer=null; }
     if(activeElement) activeElement.focus();
   }

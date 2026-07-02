@@ -523,14 +523,14 @@
         let activateAgain = false;
         async function evaluatePluginActivation(route){
             const activationId = crypto.randomUUID().slice(0,8);
-            console.group(
-                `[Activation ${activationId}] START`
-            );
+            // console.group(
+            //     `[Activation ${activationId}] START`
+            // );
 
-            console.log(
-                "Route:",
-                route
-            );
+            // console.log(
+            //     "Route:",
+            //     route
+            // );
 
             if (activating) {
                 activateAgain = true;
@@ -541,10 +541,10 @@
 
             try {
                 do {
-                    console.log(
-                        activationId,
-                        name
-                    );
+                    // console.log(
+                    //     activationId,
+                    //     name
+                    // );
                     activateAgain = false;
                     // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
                     const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
@@ -578,11 +578,11 @@
                             return pb - pa; // higher first
                         });
                     
-                    console.log(pluginNames);
-                    console.log(pluginNames.length);
-                    console.log(
-                        pluginNames.includes('tree.workspace')
-                    );
+                    // console.log(pluginNames);
+                    // console.log(pluginNames.length);
+                    // console.log(
+                    //     pluginNames.includes('tree.workspace')
+                    // );
 
 
                     if(config.dev){
@@ -604,11 +604,11 @@
 
                         const ok = shouldLoad(meta, context, name);
 
-                        console.log(
-                            "[Should Load RESULT]",
-                            name,
-                            ok
-                        );
+                        // console.log(
+                        //     "[Should Load RESULT]",
+                        //     name,
+                        //     ok
+                        // );
 
                         if (!ok) {
                             console.warn(
@@ -638,7 +638,7 @@
                             continue;
                         }
 
-                        console.log('[Should Load] yes =', name);
+                        // console.log('[Should Load] yes =', name);
 
                         // console.warn(`[Loader-success] Loading plugin: ${name}`);
                         // ensure code is loaded
@@ -733,9 +733,9 @@
                     //     activationId
                     // );
 
-                    console.log("DONE");
+                    // console.log("DONE");
 
-                    console.groupEnd();
+                    // console.groupEnd();
                 //End
                 } while (activateAgain);
 
@@ -745,11 +745,11 @@
         }
 
         function shouldLoad(meta, context, name){
-            console.log('[Should Load?]', name, meta, context);
-            console.log(
-                typeof meta.activateOn,
-                meta.activateOn
-            );
+            // console.log('[Should Load?]', name, meta, context);
+            // console.log(
+            //     typeof meta.activateOn,
+            //     meta.activateOn
+            // );
             if(meta.faces && !meta.faces.includes(context.face)){
                 return false;
             }
