@@ -20,6 +20,7 @@ $pipeline->register('people.actions', [
     'file'      => 'plugins/people.actions.js',
     'type'      => 'plugin',
     'priority'  => 10,
+    'faces'     => ['client'],
     'preload'   => true
 ]);
 
@@ -164,11 +165,19 @@ $pipeline->register('people.controller', [
 $pipeline->register('people.ui.interactions', [
     'file' => 'plugins/people.ui.interactions.js',
     'type' => 'plugin',
+    'routes' => [
+        'portal/people',
+        'portal/people/{id}'
+    ],
 ]);
 
 $pipeline->register('people.breadcrumbs', [
     'file' => 'plugins/people.breadcrumbs.js',
     'type' => 'plugin',
+    'routes' => [
+        'portal/people',
+        'portal/people/{id}'
+    ],
 ]);
 
 /* ---------- Workspace ---------- */
@@ -208,4 +217,6 @@ $pipeline->register('people.workspace', [
     ]
 ]);
 
-$pipeline->compile();
+$pipeline
+    // ->setDebug(true)
+    ->compile();

@@ -142,8 +142,8 @@ $pipeline->register('inbox.breadcrumbs', [
    PLUGIN BOOTSTRAP (ENTRY POINT)
 ================================================== */
 
-$pipeline->register('inbox.plugin', [
-    'file'     => 'plugins/inbox.plugin.js',
+$pipeline->register('inbox.workspace', [
+    'file'     => 'plugins/inbox.workspace.js',
     'type'     => 'plugin',
     'priority' => 200,
     'requires' => [

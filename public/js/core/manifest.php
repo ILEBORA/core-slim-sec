@@ -224,7 +224,7 @@ return [
     'state.reactive' => ['file' => 'plugins/state.reactive.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 67, 'requires' => ['runtime']],
     'component.mounter' => ['file' => 'plugins/component-mounter.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 68, 'requires' => ['runtime']],
     'key.handlers' => ['file' => 'plugins/key.handlers.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 69, 'requires' => ['runtime']],
-    'ui.tabs' => ['file' => 'plugins/ui.tabs.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 70, 'requires' => ['runtime']],
+    'ui.tabs' => ['file' => 'plugins/ui.tabs.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 70, 'preload' => true, 'requires' => ['runtime']],
     'entity.lifecycle' => ['file' => 'plugins/entity.lifecycle.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 71, 'requires' => ['runtime']],
 
 

@@ -136,23 +136,6 @@ $pipeline->register('inbox.breadcrumbs', [
     'type' => 'plugin',
 ]);
 
-$pipeline->register('inbox.plugin', [
-    'file' => 'plugins/inbox.plugin.js',
-    'type' => 'plugin',
-
-    'requires' => [
-        'inbox.helpers',
-        'inbox.ui',
-
-        'inbox.typing',
-        'inbox.threadloader',
-
-        'inbox.notifications',
-        'inbox.realtime',
-
-        'inbox.api'
-    ]
-]);
 
 /* ---------- Workspace ---------- */
 
@@ -166,10 +149,25 @@ $pipeline->register('inbox.workspace', [
 
     'priority'  => 200,
 
+    'requires' => [
+        'inbox.helpers',
+        'inbox.ui',
+
+        'inbox.typing',
+        'inbox.threadloader',
+
+        'inbox.notifications',
+        'inbox.realtime',
+
+        'inbox.api'
+    ],
+
     'routes' => [
         'portal/inbox',
-        'portal/inbox/{thread}'
+        'portal/inbox/thread/{thread}'
     ]
 ]);
 
-$pipeline->compile();
+$pipeline
+    ->setDebug(true)
+    ->compile();

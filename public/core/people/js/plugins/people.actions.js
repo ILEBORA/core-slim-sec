@@ -304,7 +304,7 @@ async function(scope){
         if(state.mounted){
             return;
         }
-
+        // alert('People ACtions mounted');
         state.mounted = true;
 
         init();
@@ -316,7 +316,7 @@ async function(scope){
         if(!state.mounted){
             return;
         }
-
+        // alert('People ACtions unmounted');
         state.mounted = false;
 
     }
@@ -329,4 +329,5 @@ async function(scope){
 
 },{
     faces:['client']
-});
+}
+);

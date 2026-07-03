@@ -1,7 +1,7 @@
 __BORA_REGISTER_PLUGIN__('people.actions', async function(scope){
 
     const callbora = await scope.getService('callbora');
-    const feedUI  = await scope.getPlugin('activity.feed.ui');
+    // const feedUI  = await scope.getPlugin('activity.workspace');
     const activityComposer  = await scope.getPlugin('activity.composer');
     const uiStack = await __BORA_APP__.service('uiStack');
     const uiActions = await scope.getService('ui.actions');

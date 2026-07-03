@@ -11,10 +11,9 @@ __BORA_REGISTER_PLUGIN__('ui.tabs', function(scope) {
     };
 
     function mount(root = document) {
-
         root.querySelectorAll('[data-tabs]')
             .forEach(container => {
-
+                alert('clicked');
                 if (mounted.has(container)) {
                     return;
                 }

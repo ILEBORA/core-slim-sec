@@ -1,31 +1,30 @@
 <?php
+
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
 
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+EnvLoader::load(
+    __DIR__ . '/../../../../../../../',
+    'wahenga'
+);
 
 use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$pipeline = new AssetPipelineJs('app', __DIR__, 'core');
+$pipeline = new AssetPipelineJs(
+    'app',
+    __DIR__,
+    'core'
+);
 
-/* ==================================================
-   SERVICES
-================================================== */
-
-
-/* ==================================================
-   PLUGINS
-================================================== */
-
+/* ---------- Global ---------- */
 $pipeline->register('app.actions', [
-    'file'     => 'plugins/app.actions.js',
-    'type'     => 'plugin',
-    'priority' => 220,
-    'requires' => ['runtime'],
+    'file' => 'plugins/app.actions.js',
+    'type' => 'plugin',
+    'priority'  => 10,
+    // 'requires' => [
+        
+    // ]
 ]);
 
-
-/* ==================================================
-   COMPILE
-================================================== */
-
-$pipeline->compile();
+$pipeline
+    ->setDebug(true)
+    ->compile();

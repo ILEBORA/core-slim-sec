@@ -1,5 +1,5 @@
 __BORA_REGISTER_PLUGIN__(
-'people.plugin',
+'people.workspace',
 
 async function(scope){
 
@@ -84,7 +84,7 @@ async function(scope){
         if(state.mounted){
             return;
         }
-
+        // alert('People Mounted');
         state.mounted = true;
         
         ui.bind();
@@ -104,7 +104,7 @@ async function(scope){
         if(!state.mounted){
             return;
         }
-
+        // alert('People unMounted');
         state.mounted = false;
 
         ui.unbind();
@@ -132,14 +132,5 @@ async function(scope){
         unmount
     };
 
-},
-
-{
-    requires:[
-        'callbora',
-        'permissions',
-        'navigation'
-    ],
-
-    activateOn: (route) => route.startsWith('portal/people'),
-});
+}
+);

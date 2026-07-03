@@ -24,5 +24,118 @@ __BORA_REGISTER_PLUGIN__(
                 return res.data;
             }
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Person Added
+        |--------------------------------------------------------------------------
+        */
+
+        scope.on(
+            'people.added',
+
+            ({
+                person
+            }) => {
+
+                resources.patch(
+                    'people',
+                    null,
+
+                    people => {
+
+                        people.push({
+                            id: person.id,
+                            text: person.full_name
+                        });
+
+                        people.sort(
+                            (a,b)=>
+                                a.text.localeCompare(
+                                    b.text
+                                )
+                        );
+
+                        return {
+                            data: people
+                        };
+                    }
+                );
+
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Person Updated
+        |--------------------------------------------------------------------------
+        */
+
+        scope.on(
+            'people.updated',
+
+            ({
+                person
+            }) => {
+
+                resources.patch(
+                    'people',
+                    null,
+
+                    people => {
+
+                        const p =
+                            people.find(
+                                x =>
+                                    x.id ==
+                                    person.id
+                            );
+
+                        if(p){
+                            p.text =
+                                person.full_name;
+                        }
+
+                        return {
+                            data: people
+                        };
+                    }
+                );
+
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Person Deleted
+        |--------------------------------------------------------------------------
+        */
+
+        scope.on(
+            'people.deleted',
+
+            ({
+                personId
+            }) => {
+
+                resources.patch(
+                    'people',
+                    null,
+
+                    people => {
+
+                        return {
+                            data:
+                                people.filter(
+                                    p =>
+                                        p.id !=
+                                        personId
+                                )
+                        };
+                    }
+                );
+
+            }
+        );
     }
 );

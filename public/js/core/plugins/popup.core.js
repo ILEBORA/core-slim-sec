@@ -218,11 +218,46 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             }
         }
 
-        bindTabs(){
+        bindTabs() {
+
+            this.$tabs.off(`click.${this._id}`);
+        
+            this.$tabs.on(
+                `click.${this._id}`,
+                'a',
+                (e) => {
+        
+                    e.preventDefault();
+        
+                    const tabId =
+                        $(e.currentTarget).data('tab');
+        
+                    this.goToTab(tabId);
+        
+                }
+            );
+        
+            const $links = this.$tabs.find('a');
+        
+            if (!$links.length){
+                return;
+            }
+        
+            if (this.options.activeTab){
+                this.goToTab(this.options.activeTab);
+            }
+            else{
+                this.goToTab(
+                    $links.first().data('tab')
+                );
+            }
+        }
+
+        bindTabsO2(){
             /*
             | Initial tab
             */
-
+            
             const $links =
                 this.$tabs.find('a');
 
@@ -246,6 +281,9 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 );
 
             }
+
+
+            
         }
 
         bindTabsO(){
@@ -508,7 +546,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             // if (options.tabs){
             //     instance.setTabs(options.tabs, options.activeTab);
             // }
-            // API.activePopup = instance;
+            API.activePopup = instance;
             return instance;
         },
 

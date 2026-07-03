@@ -152,6 +152,8 @@ async function (scope) {
                 return;
             }
 
+            // alert('People UI Intractions mounted');
+
             initialized = true;
 
             const grid =
@@ -394,8 +396,11 @@ async function (scope) {
 
     };
 
-},{
-    requires:['realtime'],
-    activateOn: (route) =>
-        route.startsWith('portal/people')
-});
+}
+// ,{
+//     requires:['realtime'],
+//     activateOn: (route) =>
+//         route.startsWith('portal/people')
+// }
+
+);

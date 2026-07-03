@@ -79,13 +79,6 @@
         3. SAFE GLOBAL FACADE (Minimal Public API)
         ========================================================== */
 
-        // global.Bora = Object.freeze({
-        //     navigate: navigation?.go,
-        //     reload:   navigation?.reload,
-        //     back:     navigation?.back,
-        //     logout:   () => app.plugin('app.core')?.logout()
-        // });
-
         global.Bora = Object.freeze({
 
             async navigate(...args){
@@ -170,14 +163,9 @@
         try{
 
             const route = normalizeUrl(window.location);
-            
+
             // trigger plugin activation cycle
             await app.emit('route:init', route);
-
-            // also force evaluation directly (safety)
-            // if(typeof app.evaluatePluginActivation === 'function'){
-            //     await app.evaluatePluginActivation(route);
-            // } 
 
         }catch(err){
             console.error('[Bootstrap] Route init failed', err);
@@ -251,56 +239,10 @@
                 };
             }
         );
-        // if (hooksService) {
-
-        //     let warned = false;
-
-        //     global.appHooks = Object.freeze({
-
-        //         addHook(name, fn, priority){
-        //             if(CONFIG.dev && deprecations && !warned){
-        //                 warned = true;
-        //                 deprecations.warn(
-        //                     'appHooks',
-        //                     'appHooks is deprecated. Use scope.getService("hooks") instead.'
-        //                 );
-        //             }
-        //             return hooksService.add(name, fn, priority);
-        //         },
-
-        //         removeHook(name, fn){
-        //             return hooksService.remove(name, fn);
-        //         },
-
-        //         callHook(name, ...params){
-        //             return hooksService.call(name, ...params);
-        //         },
-
-        //         callHookAsync(name, ...params){
-        //             return hooksService.callAsync(name, ...params);
-        //         },
-
-        //         hasHook(name){
-        //             return hooksService.has(name);
-        //         },
-
-        //         getHooks(name){
-        //             return hooksService.get(name);
-        //         },
-
-        //         clearHook(name){
-        //             return hooksService.clear(name);
-        //         }
-        //     });
-        // }
 
         /* =========================================================
         6. LEGACY PLUGIN ALIASES
         ========================================================== */
-
-        // const alerts = await app.plugin('alerts');
-        // exposeLegacy('alertBora', alerts);
-        // exposeLegacy('alertBoraV2', alerts);
         exposeLegacy(
             'alertBora',
             null,
@@ -315,12 +257,6 @@
                 return plugin?.create ? plugin.create.bind(plugin) : null;
             }
         );
-
-        // console.log(app.plugins);
-        // console.log(app.plugin('alerts'));
-        // const eventsPlugin = await app.plugin('events');
-        // exposeLegacy('BoraEvents', eventsPlugin);
-        // eventsPlugin.init();
 
         exposeLegacy(
             'BoraEvents',
@@ -348,19 +284,11 @@
             });
         });
 
-
-        // const overlayLoader = await app.plugin('overlay');
         exposeLegacy(
             'overlayLoader',
             null,
             () => __BORA_APP__?.plugin('overlay')
         );
-        // if(overlayLoader){
-            // overlayLoader.show('Saving data...');
-            // overlayLoader.setProgress(60);
-            // overlay.hide();
-        // }
-
 
         /* =========================================================
         7. SERVICE BOOTSTRAP
@@ -420,14 +348,6 @@
             }
         };
 
-        // Debug force app.actions exposure
-        // await __BORA_LOADER__.ensure(
-        //     'app.actions'
-        // );
-        /*
-        
-        */
-
         const originalPush = history.pushState;
         const originalReplace = history.replaceState;
 
@@ -483,48 +403,6 @@
 
             restoringPopup = false;
         });
-        // app.on('route:init', async () => {
-        //     if (restoring) return;
-        //     restoring = true;
-        //     const navigator = await app.service('navigator');
-
-        //     const url = new URL(window.location);
-
-        //     const route   = url.searchParams.get('route');
-        //     const surface = url.searchParams.get('surface');
-
-        //     if (!route) return;
-
-        //     const params = Object.fromEntries(url.searchParams.entries());
-
-        //     navigator.go({
-        //         route,
-        //         params,
-        //         surface: surface || 'page'
-        //     });
-
-        //     restoring = false;
-        // });
-
-        // app.on('route:changed', async () => {
-
-        //     const navigator = await app.service('navigator');
-
-        //     const url = new URL(window.location);
-
-        //     const route   = url.searchParams.get('route');
-        //     const surface = url.searchParams.get('surface');
-
-        //     if (!route) return;
-
-        //     const params = Object.fromEntries(url.searchParams.entries());
-
-        //     navigator.go({
-        //         route,
-        //         params,
-        //         surface: surface || 'page'
-        //     });
-        // });
 
         const total = performance.now() - startTime;
 

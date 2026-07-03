@@ -1,7 +1,7 @@
 __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
     const callbora = await scope.getService('callbora');
-    const feedUI  = await scope.getPlugin('activity.feed.ui');
+    const feedUI  = await scope.getPlugin('activity.workspace');
     const activityComposer  = await scope.getPlugin('activity.composer');
     const uiStack = await __BORA_APP__.service('uiStack');
     const uiActions = await scope.getService('ui.actions');
@@ -19,7 +19,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
-
+        // alert('Activity Actions Mounted');
         init();
     }
 
@@ -578,6 +578,8 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     
     return { mount, unmount };
 
-},{
-    // activateOn: (route) => route.startsWith('portal/activity')
-});
+},
+// {
+//     // activateOn: (route) => route.startsWith('portal/activity')
+// }
+);

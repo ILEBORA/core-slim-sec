@@ -1,0 +1,109 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipelineJs;
+
+$pipeline = new AssetPipelineJs('activity', __DIR__, 'core');
+
+/* ==================================================
+   SERVICES
+================================================== */
+
+$pipeline->register('activity.utils', [
+    'file'     => 'services/activity.utils.js',
+    'type'     => 'service',
+    'priority' => 100,
+]);
+
+$pipeline->register('activity.feed.service', [
+    'file'     => 'services/activity.feed.js',
+    'type'     => 'service',
+    'priority' => 120,
+    'requires' => ['runtime'],
+]);
+
+/* ==================================================
+   PLUGINS
+================================================== */
+
+$pipeline->register('activity.composer', [
+    'file'     => 'plugins/activity.composer.js',
+    'type'     => 'plugin',
+    'priority' => 200,
+    'requires' => ['runtime', 'activity.utils'],
+]);
+
+$pipeline->register('activity.feed.ui', [
+    'file'     => 'plugins/activity.feed.ui.js',
+    'type'     => 'plugin',
+    'priority' => 210,
+    'requires' => ['runtime', 'activity.feed.service'],
+]);
+
+$pipeline->register('activity.actions', [
+    'file'     => 'plugins/activity.actions.js',
+    'type'     => 'plugin',
+    'priority' => 220,
+    'requires' => ['runtime', 'activity.feed.ui'],
+]);
+
+$pipeline->register('activity.thread', [
+    'file'     => 'plugins/activity.thread.js',
+    'type'     => 'plugin',
+    'priority' => 230,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.breadcrumbs', [
+    'file'     => 'plugins/activity.breadcrumbs.js',
+    'type'     => 'plugin',
+    'priority' => 231,
+    'requires' => ['runtime'],
+]);
+
+/* ==================================================
+   STORIES
+================================================== */
+
+$pipeline->register('activity.stories.feed', [
+    'file'     => 'plugins/stories/feed.js',
+    'type'     => 'plugin',
+    'priority' => 240,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.stories.actions', [
+    'file'     => 'plugins/stories/actions.js',
+    'type'     => 'plugin',
+    'priority' => 242,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.stories.viewer', [
+    'file'     => 'plugins/stories/viewer.js',
+    'type'     => 'plugin',
+    'priority' => 241,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.stories.composer', [
+    'file'     => 'plugins/stories/composer.js',
+    'type'     => 'plugin',
+    'priority' => 243,
+    'requires' => ['runtime'],
+]);
+
+$pipeline->register('activity.stories.state', [
+    'file'     => 'plugins/stories/state.js',
+    'type'     => 'plugin',
+    'priority' => 244,
+    'requires' => ['runtime'],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();
