@@ -213,7 +213,8 @@ $pipeline->register('people.workspace', [
 
         'people.presence',
 
-        'people.api'
+        'people.api',
+        'people.actions'
     ]
 ]);
 

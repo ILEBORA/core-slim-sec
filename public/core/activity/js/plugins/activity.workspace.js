@@ -44,7 +44,7 @@ __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
     function unmount(){
         if (!state.mounted) return; // ⚠️ FIXED (was wrong)
         state.mounted = false;
-        alert('Activity Feed unMounted');
+        // alert('Activity Feed unMounted');
 
         sse?.off?.('feed.activity.updated', handleUpdated);
         sse?.off?.('feed.activity.deleted', handleDeleted);

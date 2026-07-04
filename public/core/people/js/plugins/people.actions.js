@@ -285,6 +285,111 @@ async function(scope){
             }
         );
 
+        uiActions.register('person.delete', (el)=>{
+            let personId = $(el).data('id');
+
+            alertBora.prompt(
+                '<h3>Confirm Action</h3>Enter your password to continue',
+                {
+                    html: true,
+                    prompt: '<input type="password" name="password" placeholder="Password">'
+                }
+            ).then(function(det){
+
+                let password = btoa(det.password);
+
+                callbora.post(`api/modules/people/person/${personId}/delete`, {
+                    password: password
+                }).then(function(response){
+                    if(response.success){
+                        alertBora.success('Person soft deleted');
+
+                        //remove item
+                        $('.person-card[data-person="'+personId+'"]').addClass('deleted');
+                        
+                        scope.emit('people.back');
+
+                    } else {
+                        alertBora.error(response.message || 'Failed');
+                    }
+
+                });
+
+            }); 
+
+        });
+
+        uiActions.register('person.restore', (el)=>{
+            let personId = $(el).data('id');
+
+            alertBora.prompt(
+                '<h3>Confirm Action</h3>Enter your password to continue',
+                {
+                    html: true,
+                    prompt: '<input type="password" name="password" placeholder="Password">'
+                }
+            ).then(function(det){
+
+                let password = btoa(det.password);
+
+                callbora.post(`api/modules/people/person/${personId}/restore`, {
+                    password: password
+                }).then(function(response){
+
+                    if(response.success){
+                        alertBora.success('Person eestore');
+
+                        //Restore item
+                        $('.person-card[data-person="'+personId+'"]').removeClass('deleted');
+
+                        if(response.redirect){
+                           navigation.go(response.redirect);
+                        }
+                        
+                    } else {
+                        alertBora.error(response.message || 'Failed');
+                    }
+
+                });
+
+            }); 
+
+        });
+
+        uiActions.register('person.force-delete', (el)=>{
+            let personId = $(el).data('id');
+
+            alertBora.prompt(
+                '<h3>Confirm Action</h3>Enter your password to continue',
+                {
+                    html: true,
+                    prompt: '<input type="password" name="password" placeholder="Password">'
+                }
+            ).then(function(det){
+
+                let password = btoa(det.password);
+
+                callbora.post(`api/modules/people/person/${personId}/forcedelete`, {
+                    password: password
+                }).then(function(response){
+
+                    if(response.success){
+                        alertBora.success('Person deleted');
+
+                        //remove item
+                        $('.person-card[data-person="'+personId+'"]').remove();
+
+                        scope.emit('people.back');
+                    } else {
+                        alertBora.error(response.message || 'Failed');
+                    }
+
+                });
+
+            }); 
+
+        });
+
     }
 
     function init(){
