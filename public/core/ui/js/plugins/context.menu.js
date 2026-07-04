@@ -79,7 +79,12 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
             </div>
         `;
 
-        const menu = $(html).appendTo('body');
+        const contextSelector = trigger.data('dropdown-context');
+        const context = contextSelector
+                ? $(contextSelector)
+                : $('body');
+
+        const menu = $(html).appendTo(context);
 
         positionMenu(trigger, menu);
 
@@ -93,7 +98,12 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
         closeMenu();
 
-        const menu = $(html).appendTo('body');
+        const contextSelector = trigger.data('dropdown-context');
+        const context = contextSelector
+                ? $(contextSelector)
+                : $('body');
+
+        const menu = $(html).appendTo(context);
 
         // const pos = trigger.offset();
 

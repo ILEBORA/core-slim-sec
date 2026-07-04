@@ -52,11 +52,16 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
     function showLoading(trigger){
 
+        const contextSelector = trigger.data('dropdown-context');
+        const context = contextSelector
+                ? $(contextSelector)
+                : $('body');
+
         panel = $(`
             <div class="dropdown-panel loading">
                 <img src="assets/images/icons/ajax.gif">
             </div>
-        `).appendTo('body');
+        `).appendTo(context);
 
         requestAnimationFrame(() => {
             position(trigger, panel);
@@ -78,7 +83,12 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
         closePanel();
 
-        panel = $(data.html).appendTo('body');
+        const contextSelector = trigger.data('dropdown-context');
+        const context = contextSelector
+                ? $(contextSelector)
+                : $('body');
+
+        panel = $(data.html).appendTo(context);
 
         requestAnimationFrame(() => {
             position(trigger, panel);
