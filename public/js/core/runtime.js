@@ -530,7 +530,7 @@
         let activating = false; 
         let activateAgain = false;
         async function evaluatePluginActivation(route){
-            const activationId = crypto.randomUUID().slice(0,8);
+            // const activationId = crypto.randomUUID().slice(0,8);
             // console.group(
             //     `[Activation ${activationId}] START`
             // );
