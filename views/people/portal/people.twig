@@ -1,7 +1,28 @@
 <div class="container people-page">
 
-    <h1>People</h1>
+    <h1>Peoplex</h1>
+    <div
+        class=""
+        data-bind-object="demo.person">
 
+        <h5 data-field="first_name">d</h5>
+
+        <div>
+            Last:
+            <span data-field="last_name">d</span>
+        </div>
+
+        <div>
+            Age:
+            <span data-field="age">d</span>
+        </div>
+
+        <div>
+            Gender:
+            <span data-field="gender">d</span>
+        </div>
+
+    </div>
     <form class="people-search" method="get" action="portal/people/search">
         <input type="text" name="q" placeholder="Search people..." />
         <button type="submit">Search</button>

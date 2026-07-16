@@ -4,24 +4,134 @@ __BORA_REGISTER_SERVICE__(
     async function(scope){
 
         const loaders = {};
+        const projectors = {};
 
-        const appState =
-            await scope.getService(
-                'state'
+        const appState = await scope.getService('state');
+        const state = appState.bucket('resource');
+        
+        function project(type, projector){
+
+            projectors[type] ??= [];
+        
+            projectors[type].push(
+                projector
             );
+        
+        }
 
-        const state =
-            appState.bucket(
-                'resource'
-            );
-
-        function key(
+        function applyProjectors(
             type,
-            id = null
+            data
         ){
-            return id == null
-                ? type
-                : `${type}:${id}`;
+        
+            const list =
+                projectors[type];
+        
+            if(!list){
+                return;
+            }
+        
+            list.forEach(projector => {
+        
+                projector(data);
+        
+            });
+        
+        }
+
+        function merge(
+            type,
+            id,
+            patch,
+            meta = {}
+        ){
+        
+            const k = key(type, id);
+        
+            const current = state.get(k);
+        
+            if(!current){
+        
+                console.warn(
+                    `${type}.${id} wasn't loaded.`
+                );
+        
+                return null;
+            }
+        
+            const data = structuredClone(
+                current.data
+            );
+        
+            deepMerge(
+                data,
+                patch
+            );
+        
+            const payload = makePayload(
+                data,
+                {
+                    ...current.meta,
+                    ...meta
+                },
+                {
+                    type: 'merge'
+                }
+            );
+        
+            state.set(
+                k,
+                payload
+            );
+        
+            return data;
+        }
+        
+        function deepMerge(target, source){
+        
+            if(!source){
+                return target;
+            }
+        
+            Object.entries(source).forEach(([key, value]) => {
+        
+                if(
+                    value &&
+                    typeof value === 'object' &&
+                    !Array.isArray(value)
+                ){
+        
+                    target[key] ??= {};
+        
+                    deepMerge(
+                        target[key],
+                        value
+                    );
+        
+                }else{
+        
+                    target[key] = value;
+        
+                }
+        
+            });
+        
+            return target;
+        }
+
+        function key(type, id = null){
+
+            if (id == null) {
+                return type;
+            }
+        
+            if (typeof id === 'object') {
+        
+                return `${type}:${JSON.stringify(id)}`;
+        
+            }
+        
+            return `${type}:${id}`;
         }
 
         function makePayload(
@@ -111,6 +221,11 @@ __BORA_REGISTER_SERVICE__(
                     )
                 );
 
+                applyProjectors(
+                    type,
+                    data
+                );
+
                 return data;
             }finally{
 
@@ -159,6 +274,11 @@ __BORA_REGISTER_SERVICE__(
             state.set(
                 k,
                 payload
+            );
+
+            applyProjectors(
+                type,
+                data
             );
 
             scope.emit(
@@ -236,15 +356,25 @@ __BORA_REGISTER_SERVICE__(
             updater,
             meta = {}
         ){
-
+            
             const k =
                 key(type, id);
 
             const current =
                 state.get(k);
 
+            console.log(
+                '[PATCH]',
+                k,
+                current
+            );
+
             if (!current) {
-                return null;
+                console.warn(
+                    `${type} wasn't loaded. Refreshing.`
+                );
+            
+                return refresh(type, id);
             }
 
             const result =
@@ -301,6 +431,24 @@ __BORA_REGISTER_SERVICE__(
                 k,
                 payload
             );
+
+            const operation =
+                result.operation ?? {
+
+                    action: 'refreshed',
+
+                    items: data
+
+                };
+
+            applyProjectors(
+        
+                type,
+        
+                operation
+        
+            );
+            
 
             return data;
         }
@@ -377,6 +525,7 @@ __BORA_REGISTER_SERVICE__(
 
             set,
             patch,
+            merge,
 
             watch,
 
@@ -384,7 +533,9 @@ __BORA_REGISTER_SERVICE__(
             has,
 
             invalidate,
-            remove
+            remove,
+
+            project
         };
     }
 );

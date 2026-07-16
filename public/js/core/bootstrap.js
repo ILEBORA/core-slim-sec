@@ -36,10 +36,10 @@
 
     async function boot(){
 
-        if(global.__BORA_APP__){
-            console.warn('[Bootstrap] App already initialized');
-            return;
-        }
+        // if(global.__BORA_APP__){
+        //     console.warn('[Bootstrap] App already initialized');
+        //     return;
+        // }
 
         const startTime = performance.now();
 
@@ -47,8 +47,9 @@
            1. Create Runtime
         --------------------------- */
 
-        const app = new global.BoraRuntime(CONFIG);
-        global.__BORA_APP__ = app;
+        // const app = new global.BoraRuntime(CONFIG);
+        // global.__BORA_APP__ = app;
+        const app = global.__BORA_APP__;
 
         if(CONFIG.dev){
             console.log('[Bootstrap] Runtime created');
@@ -243,11 +244,11 @@
         /* =========================================================
         6. LEGACY PLUGIN ALIASES
         ========================================================== */
-        exposeLegacy(
-            'alertBora',
-            null,
-            () => __BORA_APP__?.plugin('alerts')
-        );
+        // exposeLegacy(
+        //     'alertBora',
+        //     null,
+        //     () => __BORA_APP__?.plugin('alerts')
+        // );
 
         exposeLegacy(
             'BoraPopup',

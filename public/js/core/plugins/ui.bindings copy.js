@@ -1,9 +1,16 @@
-__BORA_REGISTER_PLUGIN__('dom.reactivity', async function(scope){
+__BORA_REGISTER_PLUGIN__('ui.bindings', async function(scope){
 
     const $ = await scope.getService('jquery');
     const state = await scope.getService('state');
 
+    const DEBUG = rd('debugBindings') === true;
+
     function bindElement($el){
+
+        if(DEBUG){
+            el.classList.add('ui-bound');
+        }
+        
         const key   = $el.data('bind');
         const attr  = $el.data('bind-attr');
         const isHtml = $el.data('bind-html');

@@ -1,10 +1,16 @@
 <?php
 return array (
   'asset_api' => 4,
-  'generated_at' => '2026-07-04T16:05:39+03:00',
+  'generated_at' => '2026-07-16T03:29:05+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (
+    'Access' => 
+    array (
+      'js' => false,
+      'css' => false,
+      'img' => false,
+    ),
     'Activity' => 
     array (
       'js' => true,

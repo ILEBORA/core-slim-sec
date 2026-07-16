@@ -1,7 +1,30 @@
 <div class="container people-page">
 
-    <h1>People</h1>
+    
 
+    <h1>Peoplex</h1>
+    <div
+        class="hidden"
+        data-bind-object="demo.person">
+
+        <h5 data-field="first_name">d</h5>
+
+        <div>
+            Last:
+            <span data-field="last_name">d</span>
+        </div>
+
+        <div>
+            Age:
+            <span data-field="age">d</span>
+        </div>
+
+        <div>
+            Gender:
+            <span data-field="gender">d</span>
+        </div>
+
+    </div>
     <form class="people-search" method="get" action="portal/people/search">
         <input type="text" name="q" placeholder="Search people..." />
         <button type="submit">Search</button>
@@ -22,13 +45,13 @@
     <div class="people-grid">
 
     {% for person in people %}
-        <a class="person-card" href="portal/people/person/{{ person.id }}/view">
+        <a class="person-card" data-bind-object="person.{{ person.id }}" href="portal/people/person/{{ person.id }}/view">
 
             <div class="avatar">
                 <img class="personAvatar{{ person.id }}" src="{{ person.avatar_url ?: 'assets/images/icons/noavatar.png' }}">
             </div>
 
-            <div class="person-name">
+            <div class="person-name" data-field="full_name">
                 {{ person.first_name }} {{ person.last_name }}
             </div>
 
@@ -47,6 +70,8 @@
                     {{ person.is_following ? 'Following' : '' }}
                 </span>
             {% endif %}
+
+            <span data-field="id">{{person.id}}</div>
 
         </a>
     {% endfor %}

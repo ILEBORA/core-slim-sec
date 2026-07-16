@@ -386,5 +386,7 @@ __BORA_REGISTER_PLUGIN__('alerts', async function(scope){
     }
   };
 
+  window.alertBora = API;
+  
   return API;
 }, { requires: ['jquery','events','sound'] });

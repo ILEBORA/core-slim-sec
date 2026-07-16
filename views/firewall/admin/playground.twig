@@ -1,0 +1,568 @@
+<h2>Firewall Playground</h2>
+
+<div class="row">
+
+    <!-- ========================= -->
+    <!-- Request Builder           -->
+    <!-- ========================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div>
+
+            <button class="btn btn-primary">
+                Test Request
+            </button>
+
+            <button class="btn btn-secondary">
+                Load Current Request
+            </button>
+
+            <button class="btn btn-outline-secondary">
+                Export JSON
+            </button>
+
+        </div>
+
+        <div>
+
+            <span class="badge bg-success">
+                Firewall Enabled
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-5">
+
+        <div class="card">
+
+            <div class="card-header">
+                <strong>Request</strong>
+            </div>
+
+            <div class="card-body">
+
+                <form id="firewall-playground">
+
+                    <div class="mb-3">
+                        <label>IP Address</label>
+                        <input
+                            class="form-control"
+                            name="ip"
+                            value="127.0.0.1">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Method</label>
+
+                        <select
+                            class="form-select"
+                            name="method">
+
+                            <option>GET</option>
+                            <option>POST</option>
+                            <option>PUT</option>
+                            <option>PATCH</option>
+                            <option>DELETE</option>
+                            <option>OPTIONS</option>
+                            <option>TRACE</option>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Path</label>
+
+                        <input
+                            class="form-control"
+                            name="path"
+                            placeholder="/admin">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>User-Agent</label>
+
+                        <input
+                            class="form-control"
+                            name="user_agent"
+                            placeholder="Mozilla/5.0">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Country</label>
+
+                        <input
+                            class="form-control"
+                            name="country"
+                            placeholder="KE">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Headers (JSON)</label>
+
+                        <textarea
+                            class="form-control"
+                            rows="5"
+                            name="headers">{}</textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Query Parameters (JSON)</label>
+
+                        <textarea
+                            class="form-control"
+                            rows="3"
+                            name="query">{}</textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>POST Body (JSON)</label>
+
+                        <textarea
+                            class="form-control"
+                            rows="3"
+                            name="post">{}</textarea>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button
+                            class="btn btn-primary"
+                            type="button">
+
+                            Test Request
+
+                        </button>
+
+                        <button
+                            class="btn btn-secondary"
+                            type="reset">
+
+                            Clear
+
+                        </button>
+
+                        <button
+                            class="btn btn-outline-secondary"
+                            type="button">
+
+                            Load Current Request
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="card mt-3">
+
+            <div class="card-header">
+                Common Test Cases
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-grid gap-2">
+
+                    <button data-preset="sqlmap" class="fw-preset btn btn-light">
+                        SQLMap Scanner
+                    </button>
+
+                    <button data-preset="nikto" class="fw-preset btn btn-light">
+                        Nikto Scanner
+                    </button>
+
+                    <button data-preset="traversal" class="fw-preset btn btn-light">
+                        Path Traversal
+                    </button>
+
+                    <button data-preset="xss" class="fw-preset btn btn-light">
+                        XSS Payload
+                    </button>
+
+                    <button data-preset="trace" class="fw-preset btn btn-light">
+                        TRACE Request
+                    </button>
+
+                    <button data-preset="admin" class="fw-preset btn btn-light">
+                        Admin Access
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Decision                  -->
+    <!-- ========================= -->
+
+    <div class="col-md-7">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <strong>Firewall Decision</strong>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-sm">
+
+                    <tr>
+                        <th>Status</th>
+                        <td id="fw-status">-</td>
+                    </tr>
+
+                    <tr>
+                        <th>HTTP Code</th>
+                        <td id="fw-code">-</td>
+                    </tr>
+
+                    <tr>
+                        <th>Message</th>
+                        <td id="fw-message">-</td>
+                    </tr>
+
+                    <tr>
+                        <th>Matched Rule</th>
+                        <td id="fw-rule">-</td>
+                    </tr>
+
+                    <tr>
+                        <th>Action</th>
+                        <td id="fw-action">-</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="card mt-3">
+
+            <div class="card-header">
+
+                Instructions
+
+            </div>
+
+            <div class="card-body">
+
+<pre id="fw-instructions">
+No instructions executed.
+</pre>
+
+            </div>
+
+        </div>
+
+        <div class="card mt-3">
+
+            <div class="card-header">
+
+                Execution Trace
+
+            </div>
+
+            <div class="card-body">
+
+<pre id="fw-trace">
+Waiting for request...
+</pre>
+
+            </div>
+
+        </div>
+
+        <div class="card mt-3">
+
+            <div class="card-header">
+
+                Raw Decision JSON
+
+            </div>
+
+            <div class="card-body">
+
+<pre id="fw-json">
+{}
+</pre>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+$(function () {
+
+    $('#firewall-playground').on('submit', function (e) {
+
+        e.preventDefault();
+
+        const payload = {
+
+            ip: $('input[name=ip]').val(),
+
+            method: $('select[name=method]').val(),
+
+            path: $('input[name=path]').val(),
+
+            userAgent: $('input[name=user_agent]').val(),
+
+            country: $('input[name=country]').val(),
+
+            headers: parseJson(
+                $('textarea[name=headers]').val()
+            ),
+
+            queryParams: parseJson(
+                $('textarea[name=query]').val()
+            ),
+
+            post: parseJson(
+                $('textarea[name=post]').val()
+            )
+
+        };
+
+        $.ajax({
+
+            url: 'api/modules/firewall/v1/playground',
+
+            method: 'POST',
+
+            contentType: 'application/json',
+
+            data: JSON.stringify(payload),
+
+            success: renderDecision,
+
+            error(xhr) {
+
+                alert(xhr.responseText);
+
+            }
+
+        });
+
+    });
+
+});
+
+function parseJson(text) {
+
+    if (!text.trim()) {
+        return {};
+    }
+
+    try {
+
+        return JSON.parse(text);
+
+    }
+    catch (e) {
+
+        alert('Invalid JSON');
+
+        throw e;
+
+    }
+
+}
+
+function renderDecision(decision) {
+
+    $('#fw-json')
+        .text(
+            JSON.stringify(
+                decision,
+                null,
+                4
+            )
+        );
+
+    $('#fw-status')
+        .text(
+            decision.allowed
+                ? 'Allowed'
+                : 'Blocked'
+        );
+
+    $('#fw-code')
+        .text(
+            decision.statusCode
+        );
+
+    $('#fw-message')
+        .text(
+            decision.message
+        );
+
+    if (decision.rule) {
+
+        $('#fw-rule').text(
+            '#' + decision.rule.id +
+            ' (' + decision.rule.condition_type + ')'
+        );
+
+        $('#fw-action').text(
+            decision.rule.action
+        );
+
+    }
+    else {
+
+        $('#fw-rule').text('-');
+
+        $('#fw-action').text('-');
+
+    }
+
+    renderInstructions(decision);
+
+    renderTrace(decision);
+
+}
+
+function renderInstructions(decision) {
+
+    const output = [];
+
+    if (decision.instructions) {
+
+        $.each(
+            decision.instructions,
+            function (name, value) {
+
+                output.push(
+                    name + ': ' +
+                    JSON.stringify(value)
+                );
+
+            }
+        );
+
+    }
+
+    $('#fw-instructions').text(
+        output.length
+            ? output.join('\n')
+            : 'None'
+    );
+
+}
+
+function renderTrace(decision) {
+
+    if (!decision.trace) {
+
+        $('#fw-trace')
+            .text('No trace.');
+
+        return;
+
+    }
+
+    let output = '';
+
+    $.each(decision.trace, function (_, item) {
+
+        output +=
+            item.step +
+            '\n';
+
+    });
+
+    $('#fw-trace')
+        .text(output);
+
+}
+
+const presets = {
+
+    sqlmap: {
+
+        userAgent: 'sqlmap',
+
+        path: '/admin'
+
+    },
+
+    nikto: {
+
+        userAgent: 'Nikto'
+
+    },
+
+    traversal: {
+
+        path: '/../../etc/passwd'
+
+    },
+
+    trace: {
+
+        method: 'TRACE'
+
+    },
+
+    admin: {
+
+        path: '/admin'
+
+    }
+
+};
+
+$(document).on('click', '.fw-preset', function () {
+
+    const preset = presets[
+        $(this).data('preset')
+    ];
+
+    if (preset.path)
+        $('input[name=path]')
+            .val(preset.path);
+
+    if (preset.method)
+        $('select[name=method]')
+            .val(preset.method);
+
+    if (preset.userAgent)
+        $('input[name=user_agent]')
+            .val(preset.userAgent);
+
+    $('#firewall-playground')
+        .trigger('submit');
+
+});
+</script>

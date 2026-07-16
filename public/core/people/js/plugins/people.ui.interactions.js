@@ -11,54 +11,92 @@ async function (scope) {
     let initialized = false;
     let originalHTML = '';
     let currentIndex = -1;
+
+    const ui = {
+
+        grid() {
+            return $('.people-grid');
+        },
     
+        search() {
+            return $('[data-people-search]');
+        },
+    
+        filters() {
+            return $('.people-filters');
+        }
+    
+    };
+
     function applyPeopleFilters() {
 
-        const query  = $('[data-people-search]')
-            .val()
-            .toLowerCase();
-
         const filter =
-            $('.people-filters .active')
-                .data('type');
-
+            $('.people-filters .active').data('type');
+    
         $('.person-card').each(function () {
-
-            const name =
-                $(this)
-                    .find('.name')
-                    .text()
-                    .toLowerCase();
-
-            const type =
-                $(this).attr('data-type');
-
-            const fav =
-                $(this).attr('data-favorite');
-
-            if (!type && filter !== 'all') {
-                $(this).show();
-                return;
-            }
-
-            const matchSearch =
-                name.includes(query);
-
+    
+            const type = $(this).data('type');
+            const fav  = $(this).data('favorite');
+    
             const matchFilter =
                 filter === 'all' ||
-                (filter === 'members' &&
-                    type === 'members') ||
-                (filter === 'non-users' &&
-                    type === 'non-users') ||
-                (filter === 'favorites' &&
-                    fav == 1);
-
-            $(this).toggle(
-                matchSearch && matchFilter
-            );
-
+                (filter === 'members' && type === 'members') ||
+                (filter === 'non-users' && type === 'non-users') ||
+                (filter === 'favorites' && fav == 1);
+    
+            $(this).toggle(matchFilter);
+    
         });
+    
     }
+    
+    // function applyPeopleFiltersO() {
+
+    //     const query  = $('[data-people-search]')
+    //         .val()
+    //         .toLowerCase();
+
+    //     const filter =
+    //         $('.people-filters .active')
+    //             .data('type');
+
+    //     $('.person-card').each(function () {
+
+    //         const name =
+    //             $(this)
+    //                 .find('.name')
+    //                 .text()
+    //                 .toLowerCase();
+
+    //         const type =
+    //             $(this).attr('data-type');
+
+    //         const fav =
+    //             $(this).attr('data-favorite');
+
+    //         if (!type && filter !== 'all') {
+    //             $(this).show();
+    //             return;
+    //         }
+
+    //         const matchSearch =
+    //             name.includes(query);
+
+    //         const matchFilter =
+    //             filter === 'all' ||
+    //             (filter === 'members' &&
+    //                 type === 'members') ||
+    //             (filter === 'non-users' &&
+    //                 type === 'non-users') ||
+    //             (filter === 'favorites' &&
+    //                 fav == 1);
+
+    //         $(this).toggle(
+    //             matchSearch && matchFilter
+    //         );
+
+    //     });
+    // }
 
     function debounce(fn, delay = 300) {
 
@@ -78,21 +116,14 @@ async function (scope) {
     const debouncedSearch = debounce(
         async function () {
 
-            const query =
-                $('[data-people-search]')
-                    .val()
-                    .trim();
+            const query = ($('[data-people-search]').val() || '').trim();
+
+            const $container = $('.people-grid');
 
             if (!query.length) {
 
-                const container =
-                    document.querySelector(
-                        '.people-grid'
-                    );
-
-                if (container && originalHTML) {
-                    container.innerHTML =
-                        originalHTML;
+                if ($container.length && originalHTML) {
+                    $container.html(originalHTML);
                 }
 
                 currentIndex = -1;
@@ -109,16 +140,15 @@ async function (scope) {
                 `api/modules/people/search?q=${encodeURIComponent(query)}`
             );
 
-            const container =
-                document.querySelector(
-                    '.people-grid'
-                );
+            console.log('[HTML]',html);
+            console.log(typeof html);
 
-            if (container) {
-
-                container.innerHTML = html;
-
-                applyPeopleFilters();
+            // const container = $('#page_content').find('.people-grid');
+            
+            if ($container.length) {
+                $container.html(html);
+                console.log('[container]',$container);
+                // applyPeopleFilters();
 
             }
 
@@ -132,14 +162,14 @@ async function (scope) {
 
         if (currentIndex >= 0) {
 
-            const el =
-                items.eq(currentIndex);
+            const $item = items.eq(currentIndex);
 
-            el.addClass('active');
-
-            el[0].scrollIntoView({
-                block: 'nearest'
-            });
+            $item
+                .addClass('active')
+                .get(0)
+                ?.scrollIntoView({
+                    block: 'nearest'
+                });
 
         }
     }
@@ -156,13 +186,10 @@ async function (scope) {
 
             initialized = true;
 
-            const grid =
-                document.querySelector(
-                    '.people-grid'
-                );
+            const $grid = $('.people-grid');
 
-            if (grid && !originalHTML) {
-                originalHTML = grid.innerHTML;
+            if ($grid.length && !originalHTML) {
+                originalHTML = $grid.html();
             }
 
             /* =====================================
@@ -243,28 +270,39 @@ async function (scope) {
             );
 
             // FILTERS
+            // $(document).on(
+            //     'click.people',
+            //     '.people-filters button',
+            //     function () {
+
+            //         $(this)
+            //             .addClass('active')
+            //             .siblings()
+            //             .removeClass('active');
+
+            //         const $container = $('.people-grid');
+
+            //         if ($container.length && originalHTML) {
+            //             $container.html(originalHTML);
+            //         }
+
+            //         applyPeopleFilters();
+
+            //     }
+            // );
+
             $(document).on(
                 'click.people',
                 '.people-filters button',
                 function () {
-
+            
                     $(this)
                         .addClass('active')
                         .siblings()
                         .removeClass('active');
-
-                    const container =
-                        document.querySelector(
-                            '.people-grid'
-                        );
-
-                    if (container && originalHTML) {
-                        container.innerHTML =
-                            originalHTML;
-                    }
-
+            
                     applyPeopleFilters();
-
+            
                 }
             );
 

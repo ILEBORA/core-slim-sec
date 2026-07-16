@@ -39,7 +39,7 @@ class PeopleAPI {
 
             breadcrumbs.set([
                 { label: 'People', href: 'portal/people' },
-                { label: name, current: true }
+                { label: `<i data-bind="person.${personId}.full_name">${name}</i>`, current: true }
             ]);
         }
         

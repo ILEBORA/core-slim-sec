@@ -585,6 +585,14 @@ section{
     font-size: 24px;
     font-weight: 500;
 }
+
+.ui-bound{
+    outline:1px dashed #00d9ff;
+}
+
+.ui-bound:hover{
+    outline:2px solid lime;
+}
 <?php
 $corePath = __DIR__.'/../partials';
 

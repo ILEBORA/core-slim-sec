@@ -4,7 +4,7 @@
 
 {% set view_composer = (data_view == 'list' or error) ? 'hidden' : '' %}
 
-<div class="thread-view person-view" data-person="{{ person.id }}">
+<div class="thread-view person-view" data-person="{{ person.id }}"  data-bind-object="person.{{ person.id }}">
     {% include "people/person/header.twig" with {
         person: person
     } %}

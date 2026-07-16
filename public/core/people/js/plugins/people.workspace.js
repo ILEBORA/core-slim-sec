@@ -20,8 +20,8 @@ async function(scope){
             callbora
         );
 
-    const presence =
-        new PeoplePresence(ui);
+    // const presence =
+    //     new PeoplePresence(ui);
 
     const tabs =
         new PeopleTabs(scope);
@@ -32,22 +32,22 @@ async function(scope){
             navigation
         );
 
-    const follow =
-        new PeopleFollow(
-            callbora,
-            ui,
-            loader
-        );
+    // const follow =
+    //     new PeopleFollow(
+    //         callbora,
+    //         ui,
+    //         loader
+    //     );
 
-    const realtime =
-        new PeopleRealtime(
-            scope,
-            ui,
-            presence,
-            notifications,
-            follow,
-            loader
-        );
+    // const realtime =
+    //     new PeopleRealtime(
+    //         scope,
+    //         ui,
+    //         presence,
+    //         notifications,
+    //         follow,
+    //         loader
+    //     );
 
     const state = {
         mounted:false
@@ -89,7 +89,7 @@ async function(scope){
         
         ui.bind();
 
-        realtime.initUserChannel();
+        // realtime.initUserChannel();
 
         bindRouteEvents();
 
@@ -109,7 +109,7 @@ async function(scope){
 
         ui.unbind();
 
-        realtime.destroy();
+        // realtime.destroy();
 
         scope.off('page.loaded');
         scope.off('people.tab.ui');

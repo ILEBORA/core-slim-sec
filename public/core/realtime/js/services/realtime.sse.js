@@ -38,6 +38,8 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
 
         // tab visibility stays as-is (DOM event, not runtime event)
         document.addEventListener('visibilitychange', handleVisibility);
+
+
     }
 
     function handleVisibility(){
@@ -56,6 +58,8 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
         // offError?.();
         document.removeEventListener('visibilitychange', handleVisibility);
     }
+
+
 
     const appCompat = {
         safeParse: (str, fallback) => {
@@ -270,6 +274,22 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
             self.closeConnecton(); 
         });
 
+        const realtimeChannel = new BroadcastChannel(
+                'realtime_' + rd('prjName') + rd('prjVersion')
+            );
+        realtimeChannel.onmessage = function(e){
+            // alert('received messge');
+            const {cmd, fact} = e.data || {};
+        
+            if(cmd !== 'fact') return;
+        
+            scope.emit(
+                'realtime:' + fact.channel,
+                fact
+            );
+        
+        };
+
         //  window.addEventListener('pagehide', function () {
         //     self.closeConnection();
         // });
@@ -281,6 +301,12 @@ __BORA_REGISTER_SERVICE__('realtime.sse', async function(scope){
                 'realtime:' + msg.channel, 
                 msg
             );
+
+            // send to followers
+            realtimeChannel.postMessage({
+                cmd: 'fact',
+                fact: msg
+            });
         };
 
         this.queueFact =  function(msg) {

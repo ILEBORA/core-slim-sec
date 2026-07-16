@@ -9,6 +9,11 @@ async function(scope){
     const navigation = await scope.getService('navigation');
     const bNavigator = await scope.getService('navigator');
 
+    const uiBindings = await  scope.getPlugin('ui.bindings');
+    const appState = await scope.getService('state');
+    const resources = await scope.getService('resources');
+    
+
     const state = {
         initialized:false,
         mounted:false
@@ -390,6 +395,41 @@ async function(scope){
 
         });
 
+        scope.on(
+            'realtime:people:person.updated',
+        
+            ({ payload }) => {
+                // alert('Person editted');
+                scope.emit(
+                    'people.updated',
+                    {
+                        person: payload
+                    }
+                );
+
+            }
+        );
+
+        scope.on(
+            'realtime:people:person.presence',
+        
+            async ({ payload }) => {
+                // alert('Person presence');
+                // await resources.get('people');
+                // await resources.get('presence');
+
+                scope.emit(
+                    'person.presence',
+                    {
+                        event: payload
+                    }
+                );
+
+            }
+        );
+
+        uiBindings.bind();
+
     }
 
     function init(){
@@ -425,6 +465,233 @@ async function(scope){
         state.mounted = false;
 
     }
+
+    (async function(){
+        // alert('here binder');
+        //-------------------------------------------------
+        // Initial State
+        //-------------------------------------------------
+    
+        appState.set(
+            'demo.name',
+            'John'
+        );
+    
+        appState.set(
+            'demo.counter',
+            0
+        );
+    
+        appState.set(
+            'demo.active',
+            false
+        );
+    
+        appState.set(
+            'demo.visible',
+            true
+        );
+    
+        appState.set(
+            'demo.disabled',
+            false
+        );
+    
+        appState.set(
+            'demo.avatar',
+            'https://picsum.photos/150?random=1'
+        );
+    
+        appState.set(
+            'demo.html',
+            '<strong>Hello World</strong>'
+        );
+    
+        appState.set(
+            'demo.person',
+            {
+    
+                first_name:'John',
+    
+                last_name:'Doe',
+    
+                age:25,
+    
+                gender:'Male'
+    
+            }
+        );
+    
+        //-------------------------------------------------
+        // Test Data
+        //-------------------------------------------------
+    
+        const firstNames = [
+    
+            'John',
+    
+            'Mary',
+    
+            'Peter',
+    
+            'Alice',
+    
+            'James',
+    
+            'Jane'
+    
+        ];
+    
+        const lastNames = [
+    
+            'Doe',
+    
+            'Smith',
+    
+            'Brown',
+    
+            'Jones',
+    
+            'Taylor'
+    
+        ];
+    
+        const genders = [
+    
+            'Male',
+    
+            'Female'
+    
+        ];
+    
+        let counter = 0;
+    
+        //-------------------------------------------------
+        // Random Updates
+        //-------------------------------------------------
+    
+        setInterval(()=>{
+            // console.log('Test Realtime...');
+            counter++;
+            
+            const first =
+    
+                firstNames[
+                    Math.floor(
+                        Math.random()*
+                        firstNames.length
+                    )
+                ];
+    
+            const last =
+    
+                lastNames[
+                    Math.floor(
+                        Math.random()*
+                        lastNames.length
+                    )
+                ];
+    
+            const gender =
+    
+                genders[
+                    Math.floor(
+                        Math.random()*2
+                    )
+                ];
+    
+            const active =
+                Math.random()>.5;
+    
+            const visible =
+                Math.random()>.5;
+    
+            const disabled =
+                Math.random()>.5;
+    
+            //-------------------------------------------------
+            // Scalar
+            //-------------------------------------------------
+    
+            appState.set(
+                'demo.counter',
+                counter
+            );
+    
+            appState.set(
+                'demo.name',
+                first
+            );
+    
+            appState.set(
+                'demo.active',
+                active
+            );
+    
+            appState.set(
+                'demo.visible',
+                visible
+            );
+    
+            appState.set(
+                'demo.disabled',
+                disabled
+            );
+    
+            appState.set(
+                'demo.avatar',
+    
+                'https://picsum.photos/150?random='+
+    
+                Math.floor(
+                    Math.random()*1000
+                )
+    
+            );
+    
+            appState.set(
+    
+                'demo.html',
+    
+                '<h3>'+first+'</h3>'+
+    
+                '<small>'+new Date().toLocaleTimeString()+'</small>'
+    
+            );
+    
+            //-------------------------------------------------
+            // Object
+            //-------------------------------------------------
+    
+            appState.set(
+    
+                'demo.person',
+    
+                {
+    
+                    first_name:first,
+    
+                    last_name:last,
+    
+                    age:
+    
+                        Math.floor(
+    
+                            20+
+    
+                            Math.random()*40
+    
+                        ),
+    
+                    gender:gender
+    
+                }
+    
+            );
+    
+        },1000);
+    
+    })();
 
     return {
         mount,

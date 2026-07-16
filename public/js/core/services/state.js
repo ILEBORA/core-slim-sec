@@ -14,14 +14,109 @@ __BORA_REGISTER_SERVICE__('state', function(scope){
 
         store[key] = value;
 
-        if(listeners[key]){
-            listeners[key].forEach(fn => {
-                try { fn(value); }
-                catch(e){ console.error('State listener failed', e); }
-            });
+        notify(key, value);
+
+        // if(listeners[key]){
+        //     listeners[key].forEach(fn => {
+        //         try { fn(value); }
+        //         catch(e){ console.error('State listener failed', e); }
+        //     });
+        // }
+
+        if(
+            value &&
+            typeof value === 'object'
+        ){
+            bubble(key, value);
         }
 
+        // scope.emit('state:' + key, value);
+    }
+
+    function notify(key, value){
+
+        listeners[key]?.forEach(fn => {
+            try{
+                fn(value);
+            }catch(e){
+                console.error('State listener failed', e);
+            }
+        });
+    
         scope.emit('state:' + key, value);
+    }
+
+    function bubble(base, obj){
+
+        Object.entries(obj).forEach(([key, value]) => {
+    
+            const path = `${base}.${key}`;
+    
+            if(listeners[path]){
+                notify(path, value);
+            }
+    
+            if(
+                value &&
+                typeof value === 'object'
+            ){
+                bubble(path, value);
+            }
+    
+        });
+    
+    }
+
+    function merge(key, patch){
+
+        const current =
+            structuredClone(
+                store[key] ?? {}
+            );
+    
+        deepMerge(
+            current,
+            patch
+        );
+    
+        set(
+            key,
+            current
+        );
+    
+        return current;
+    }
+    
+    function deepMerge(target, source){
+    
+        if(!source){
+            return target;
+        }
+    
+        Object.entries(source).forEach(([key, value])=>{
+    
+            if(
+                value &&
+                typeof value === 'object' &&
+                !Array.isArray(value)
+            ){
+    
+                target[key] ??= {};
+    
+                deepMerge(
+                    target[key],
+                    value
+                );
+    
+            }else{
+    
+                target[key] = value;
+    
+            }
+    
+        });
+    
+        return target;
     }
 
     function subscribe(key, fn){
@@ -98,72 +193,12 @@ __BORA_REGISTER_SERVICE__('state', function(scope){
         };
     }
 
-    // function bucket(name){
-
-    //     stores[name] ??= {};
-    //     listeners[name] ??= {};
-
-    //     return {
-
-    //         get(key){
-    //             return stores[name][key];
-    //         },
-
-    //         set(key, value){
-
-    //             stores[name][key] = value;
-
-    //             listeners[name][key]?.forEach(fn => {
-    //                 try {
-    //                     fn(value);
-    //                 } catch (e) {
-    //                     console.error(
-    //                         `State listener failed: ${name}.${key}`,
-    //                         e
-    //                     );
-    //                 }
-    //             });
-
-    //             scope.emit(
-    //                 `state:${name}:${key}`,
-    //                 value
-    //             );
-
-    //             return value;
-    //         },
-
-    //         has(key){
-    //             return key in stores[name];
-    //         },
-
-    //         remove(key){
-    //             delete stores[name][key];
-    //         },
-
-    //         clear(){
-    //             stores[name] = {};
-    //         },
-
-    //         update(key, updater){
-    //             return this.set(
-    //                 key,
-    //                 updater(
-    //                     this.get(key)
-    //                 )
-    //             );
-    //         },
-
-    //         subscribe(key, fn){
-    //             listeners[name][key] ??= [];
-    //             listeners[name][key].push(fn);
-    //         }
-    //     };
-    // }
 
     return {
         get,
         set,
         update,
+        merge,
         subscribe,
         bucket,
         scope: bucket

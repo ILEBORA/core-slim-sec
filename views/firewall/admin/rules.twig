@@ -1,0 +1,42 @@
+<h2>Firewall Rules</h2>
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Condition</th>
+            <th>Value</th>
+            <th>Action</th>
+            <th>Priority</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for rule in rules %}
+
+        <tr>
+
+            <td>{{ rule.id }}</td>
+
+            <td>{{ rule.condition_type }}</td>
+
+            <td>{{ rule.condition_value }}</td>
+
+            <td>{{ rule.action }}</td>
+
+            <td>{{ rule.priority }}</td>
+
+            <td>
+                {{ rule.active ? 'Active' : 'Disabled' }}
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>

@@ -732,20 +732,101 @@ if (!function_exists('hasPermission')) {
      * @param bool $autoRegister Create permission if missing
      * @param bool $throw Throw exception if denied
      */
-
-    function hasPermission(string $module, string $action, bool $autoRegister = false, bool $throw = false): bool {
+    function hasPermission(
+        string $module,
+        string $category,
+        mixed $operationOrAutoRegister = null,
+        bool $autoRegister = false,
+        bool $throw = false
+    ): bool {
+    
         $permManager = myApp()->getFeature('permissions');
+    
         $module = strtolower($module);
-        $action = strtolower($action);
-        
-        $has = $permManager->hasPermission($module, $action, $autoRegister);
-        
-        if (!$has && $throw) {
-            // throw new \Exception("Access denied: {$module}.{$action}");
+        $category = strtolower($category);
+    
+        /*
+        |--------------------------------------------------------------------------
+        | Legacy API
+        |--------------------------------------------------------------------------
+        |
+        | hasPermission('person', 'edit');
+        | hasPermission('person', 'edit', true);
+        | hasPermission('person', 'edit', true, true);
+        |
+        */
+    
+        if (
+            $operationOrAutoRegister === null ||
+            is_bool($operationOrAutoRegister)
+        ) {
+    
+            if (is_bool($operationOrAutoRegister)) {
+                $throw = $autoRegister;
+                $autoRegister = $operationOrAutoRegister;
+            }
+    
+            $has = $permManager->hasPermission(
+                $module,
+                $category,
+                $autoRegister
+            );
+    
+        } else {
+    
+            /*
+            |--------------------------------------------------------------------------
+            | New API
+            |--------------------------------------------------------------------------
+            |
+            | hasPermission(
+            |     'firewall',
+            |     'playground',
+            |     'simulate'
+            | );
+            |
+            */
+    
+            $operation = strtolower($operationOrAutoRegister);
+    
+            $has = $permManager->hasPermission(
+                $module,
+                permissionKey($category, $operation),
+                $autoRegister
+            );
         }
-
+    
+        if (!$has && $throw) {
+            // throw new UnauthorizedException(...);
+        }
+    
         return $has;
     }
+
+    function permissionKey(
+        ?string $category,
+        ?string $operation = null
+    ): string
+    {
+        if ($operation === null) {
+            return strtolower($category ?? '');
+        }
+    
+        return strtolower($category . '.' . $operation);
+    }
+    // function hasPermission(string $module, string $action, bool $autoRegister = false, bool $throw = false): bool {
+    //     $permManager = myApp()->getFeature('permissions');
+    //     $module = strtolower($module);
+    //     $action = strtolower($action);
+        
+    //     $has = $permManager->hasPermission($module, $action, $autoRegister);
+        
+    //     if (!$has && $throw) {
+    //         // throw new \Exception("Access denied: {$module}.{$action}");
+    //     }
+
+    //     return $has;
+    // }
 }
 
 // if (!function_exists('hasPermissionO')) {
@@ -2382,7 +2463,7 @@ if(!function_exists('formatMoney')){
     }
 }
 
-if (!function_exists('')){
+if (!function_exists('mediaUploader')){
     function mediaUploader(){
         $ctx = ctx();
 
@@ -2400,6 +2481,28 @@ if (!function_exists('')){
 
         return $ctx->resolve(
             \BoraSlim\Core\Modules\App\Utils\MediaUploader::class
+        );
+    }
+}
+
+if (!function_exists('identity()')){
+    function identity(){
+        $ctx = ctx();
+
+        if (
+            !$ctx->registered(
+                \BoraSlim\Core\Domain\Identity\Identity::class
+            )
+        ) {
+
+            $ctx->singleton(
+                \BoraSlim\Core\Domain\Identity\Identity::class,
+                fn() => new \BoraSlim\Core\Domain\Identity\Identity()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Domain\Identity\Identity::class
         );
     }
 }

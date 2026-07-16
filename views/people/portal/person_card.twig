@@ -1,11 +1,13 @@
 <a class="person-card {{ not person.user_id or person.is_deceased ? 'muted' }}" 
-   href="portal/people/person/{{ person.id }}/view">
+   href="portal/people/person/{{ person.id }}/view"
+   
+   >
 
     <div class="avatar">
         <img src="{{ person.avatar_url }}">
     </div>
 
-    <div class="person-name">
+    <div class="person-name" >
         {{ person.full_name }}
     </div>
 

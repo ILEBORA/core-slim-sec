@@ -1,0 +1,139 @@
+<div class="container py-4">
+
+    <h2>UI Bindings Playground</h2>
+
+    <hr>
+
+    <h4>Text Binding</h4>
+
+    <p>
+        Name:
+        <strong data-bind="demo.name"></strong>
+    </p>
+
+    <p>
+        Counter:
+        <strong data-bind="demo.counter"></strong>
+    </p>
+
+    <hr>
+
+    <h4>HTML Binding</h4>
+
+    <div
+        class="border p-3"
+        data-bind="api/modules/people/test"
+        data-bind-html>
+        demo.html
+    </div>
+
+    <hr>
+
+    <h4>Attribute Binding</h4>
+
+    <img
+        width="150"
+        height="150"
+        data-bind="demo.avatar"
+        data-bind-attr="src">
+
+    <hr>
+
+    <h4>Class Binding</h4>
+
+    <div
+        class="status-box"
+        data-bind="demo.active"
+        data-bind-class="active">
+
+        Active Class
+
+    </div>
+
+    <hr>
+
+    <h4>Show / Hide</h4>
+
+    <div
+        class="alert alert-success"
+        data-bind="demo.visible"
+        data-bind-show>
+
+        Visible
+
+    </div>
+
+    <div
+        class="alert alert-danger"
+        data-bind="demo.visible"
+        data-bind-hide>
+
+        Hidden (inverse)
+
+    </div>
+
+    <hr>
+
+    <h4>Disabled Binding</h4>
+
+    <button
+        class="btn btn-primary"
+        data-bind="demo.disabled"
+        data-bind-disabled>
+
+        Random Disabled
+
+    </button>
+
+    <hr>
+
+    <h4>Object Binding</h4>
+
+    <div
+        class="card p-3"
+        data-bind-object="demo.person">
+
+        <h5 data-field="first_name"></h5>
+
+        <div>
+            Last:
+            <span data-field="last_name"></span>
+        </div>
+
+        <div>
+            Age:
+            <span data-field="age"></span>
+        </div>
+
+        <div>
+            Gender:
+            <span data-field="gender"></span>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.status-box{
+
+    display:inline-block;
+
+    padding:10px 20px;
+
+    border:1px solid #ccc;
+
+    transition:.25s;
+
+}
+
+.status-box.active{
+
+    background:#28a745;
+
+    color:#fff;
+
+}
+
+</style>

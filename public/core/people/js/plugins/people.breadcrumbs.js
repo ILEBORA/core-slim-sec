@@ -22,7 +22,7 @@ async function(scope){
             // alert('person found');
             breadcrumbs.set([
                 { label: 'People', href: 'portal/people' },
-                { label: person.full_name, current: true }
+                { label: `<i data-bind="person.${person.id}.full_name">${person.full_name}</i>`, current: true }
             ]);
         });
     }

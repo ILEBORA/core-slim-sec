@@ -1,11 +1,28 @@
-<header class="person-header">
+<header
+    class="person-header"
+    data-bind-object="person.{{ person.id }}">
 
-    <button class="back-btn" data-action="people.back">←</button>
+    <button
+        class="back-btn"
+        data-action="people.back">
+
+        ←
+
+    </button>
 
     <div class="person-info">
-        <h4>{{ person.full_name }}</h4>
 
-        <div class="last-seen">
+        <h4
+            data-field="full_name">
+
+            {{ person.full_name }}
+
+        </h4>
+
+        <div
+            data-field="presence"
+            data-renderer="presence-text">
+
             {% if person.presence %}
                 {% if person.presence.status == 'online' %}
                     Online
@@ -15,13 +32,9 @@
                     Offline
                 {% endif %}
             {% endif %}
-        </div>
-    </div>
 
-    <div class="actions">
-        {% if person.user_id %}
-            
-        {% endif %}
+        </div>
+
     </div>
 
     {# ⚙️ ACTIONS #}

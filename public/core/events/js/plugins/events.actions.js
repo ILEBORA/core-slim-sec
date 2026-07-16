@@ -488,7 +488,7 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
 
         const response = await callbora.post(
 
-            'api/modules/events/eventfavourites/toggle',
+            'api/modules/events/favourites/toggle',
 
             {
                 entity_type:'event',

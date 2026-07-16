@@ -1,4 +1,4 @@
-__BORA_REGISTER_PLUGIN__('dom.reactivity', async function(scope){
+__BORA_REGISTER_PLUGIN__('ui.bindings', async function(scope){
 
     const $ = await scope.getService('jquery');
     const state = await scope.getService('state');

@@ -1,0 +1,25 @@
+<h2>Firewall Dashboard</h2>
+
+<p>Firewall overview will appear here.</p>
+
+<div class="grid">
+    <div class="card">
+        <h3>Rules</h3>
+        <p>{{ stats.rules ?? 0 }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Blocked Today</h3>
+        <p>{{ stats.blocked ?? 0 }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Allowed Today</h3>
+        <p>{{ stats.allowed ?? 0 }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Quarantined</h3>
+        <p>{{ stats.quarantined ?? 0 }}</p>
+    </div>
+</div>

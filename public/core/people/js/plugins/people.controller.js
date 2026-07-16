@@ -7,6 +7,8 @@ async function(scope){
     const navigation  = await scope.getService('navigation');
     const breadcrumbs = await scope.getService('breadcrumbs');
 
+    
+
     const ui     = new PeopleUI(scope);
     const loader = new PeopleLoader(scope, callbora);
 
@@ -73,31 +75,36 @@ async function(scope){
         );
 
         scope.on(
-    'people.tab.changed',
+        'people.tab.changed',
 
-    async ({tab, personId, root})=>{
+        async ({tab, personId, root})=>{
 
-            // optional immediate ui feedback
-            scope.emit(
-                'people.tab.ui',
-                {
-                    tab,
+                // optional immediate ui feedback
+                scope.emit(
+                    'people.tab.ui',
+                    {
+                        tab,
+                        personId,
+                        root
+                    }
+                );
+
+                await api.loadTab(
                     personId,
-                    root
-                }
-            );
+                    tab
+                );
 
-            await api.loadTab(
-                personId,
-                tab
-            );
+            }
+        );
 
-        }
-    );
+        
 
+        
     }
 
     init();
+
+    
 
     return {
         init

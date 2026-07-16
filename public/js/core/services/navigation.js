@@ -314,16 +314,7 @@ __BORA_REGISTER_SERVICE__(
                 const isValid = json?.ok === true || json?.success === true;
                 if (!isValid){
             
-                    alertBora.notifyRich({
-                        type: 'error',
-                        title: 'Permission Error'+json,
-                        body: json.message,
-                        delay: 4,
-                        sound: true,
-                        onClick: () => {
-                            this.navigation.go(``);
-                        }
-                    });
+                    alertBora
 
                     uiStack.closeTop();
 

@@ -1,0 +1,30 @@
+<div class="card">
+
+    <h3>Scalar Binding</h3>
+
+    <p>
+        Name:
+        <strong data-bind="demo.name"></strong>
+    </p>
+
+    <p>
+        Counter:
+        <strong data-bind="demo.counter"></strong>
+    </p>
+
+    <p>
+        Status:
+        <span
+            data-bind="demo.status"
+            data-bind-class="active">
+        </span>
+    </p>
+
+</div>
+
+<style>
+.active{
+    color:green;
+    font-weight:bold;
+}
+</style>

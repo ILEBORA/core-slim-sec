@@ -90,6 +90,45 @@ __BORA_REGISTER_SERVICE__('realtime.leader', function(scope){
         return false;
     }
 
+    function resignLeadership(){
+
+        const lock = readLock();
+    
+        if(lock.tabId === TAB_ID){
+    
+            localStorage.removeItem(LOCK_KEY);
+    
+            leaderChannel.postMessage({
+                type:'leader-resigned',
+                tabId:TAB_ID
+            });
+    
+        }
+    
+    }
+
+    // document.addEventListener('visibilitychange', () => {
+
+    //     if (document.hidden && isLeader) {
+    
+    //         resignLeadership();
+    
+    //         // pauseSSE();
+
+    //         scope.emit('realtime:leader-pause', {
+    //             isLeader,
+    //             tabId: TAB_ID,
+    //             epoch: currentEpoch
+    //         });
+    
+    //     } else {
+    
+    //         tryBecomeLeader();
+    
+    //     }
+    
+    // });
+
     leaderChannel.onmessage = (e)=>{
         const msg = e.data;
         if(!msg || msg.type !== 'leader-claim') return;

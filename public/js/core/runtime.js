@@ -10,6 +10,14 @@
     const pendingServices = new Map();
     const registrationWaiters = new Map();
 
+    let readyResolver;
+
+    const readyPromise = new Promise(resolve => {
+        readyResolver = resolve;
+    });
+
+    let ready = false;
+
     function notifyRegisteredO(name){
 
         name = name.toLowerCase();
@@ -1001,6 +1009,9 @@
                 url: window.location
             });
 
+            ready = true;
+            readyResolver();
+
             Object.freeze(services);
             Object.freeze(plugins);
 
@@ -1028,6 +1039,7 @@
                     })) 
                 );
             }
+
         }
 
         function currentRoute(){
@@ -1038,12 +1050,25 @@
             );
         }
 
+        const readyPromise = new Promise(resolve => {
+
+            readyResolver = resolve;
+        
+        });
+
         /* ==================================================
            PUBLIC API
         ================================================== */
 
         const publicAPI = {
             start,
+
+            ready: () =>
+                        ready
+                            ? Promise.resolve()
+                            : readyPromise,
+
+            isReady: () => ready,
 
             plugin: getPlugin,
             service: getService,
@@ -1084,6 +1109,8 @@
                                  ),
         }
 
+        publicAPI.ready = () => readyPromise;
+
         return Object.freeze(publicAPI);
     }
 
@@ -1092,7 +1119,18 @@
     ================================================== */
 
     global.BoraRuntime = BoraRuntime;
+
+    // Create the runtime immediately.
+    if (!global.__BORA_APP__) {
+
+        global.__BORA_APP__ = new BoraRuntime(
+            global.__BORA_CONFIG__ || {}
+        );
+
+    }
     global.__BORA_REGISTER_PLUGIN__  = registerPluginDuringBuild;
     global.__BORA_REGISTER_SERVICE__ = registerServiceDuringBuild;
+
+
 
 })(window);
