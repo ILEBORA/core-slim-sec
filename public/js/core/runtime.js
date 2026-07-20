@@ -1128,6 +1128,7 @@
         );
 
     }
+
     global.__BORA_REGISTER_PLUGIN__  = registerPluginDuringBuild;
     global.__BORA_REGISTER_SERVICE__ = registerServiceDuringBuild;
 

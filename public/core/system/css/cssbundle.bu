@@ -8,4 +8,6 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
     ->add('style.css')
+    ->add('developer/logs.css')
+
     ->send();

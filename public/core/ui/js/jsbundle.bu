@@ -70,7 +70,7 @@ $pipeline->register('ui.dropdown.panel', [
 $pipeline->register('ui.plugin', [
     'file'     => 'plugins/ui.plugin.js',
     'type'     => 'plugin',
-    'priority' => 131,
+    'priority' => 1,
     'preload'  => true,
     'requires' => [
         'runtime',

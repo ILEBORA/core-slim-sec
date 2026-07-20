@@ -33,8 +33,6 @@
         active: false
     };
 
-   
-
     function emitProgress(type, extra = {}){
 
         const app = global.__BORA_APP__;

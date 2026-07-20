@@ -1061,14 +1061,16 @@ if(!function_exists('handleCoreDownload')){
 }
 
 if (!function_exists('Event')) {
-    function Event(): \BoraSlim\Core\Support\Event {
-        static $event = null;
-        if ($event === null) {
-            $event = new \BoraSlim\Core\Support\Event();
+    function Event(): \BoraSlim\Core\Managers\EventManager
+    {
+        $ctx = ctx();
+        if (!$ctx->registered(\BoraSlim\Core\Managers\EventManager::class)) {
+            $ctx->singleton(\BoraSlim\Core\Managers\EventManager::class, fn() => new \BoraSlim\Core\Managers\EventManager());
         }
-        return $event;
+        return $ctx->resolve(\BoraSlim\Core\Managers\EventManager::class);
     }
 }
+
 
 if (!function_exists('Logger')) {
     function Logger(): \BoraSlim\Core\Support\Logger {
@@ -2043,6 +2045,8 @@ if(!function_exists('menuCtx')){
         return ctx()->resolve(\BoraSlim\Core\Ui\Menus\MenuContext::class);
     }
 }
+
+
 
 
 // Dropdown

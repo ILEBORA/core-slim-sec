@@ -1,0 +1,15 @@
+.log-viewer{
+    background:#1e1e1e;
+    color:#ddd;
+    padding:20px;
+    border-radius:6px;
+
+    white-space:pre-wrap;
+    word-break:break-word;
+
+    font-family:Consolas, monospace;
+    font-size:13px;
+
+    height:75vh;
+    overflow:auto;
+}

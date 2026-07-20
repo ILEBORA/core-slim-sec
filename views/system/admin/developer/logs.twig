@@ -1,0 +1,22 @@
+<h2>Error Logs</h2>
+
+<form method="get">
+
+    <select name="date" onchange="this.form.submit()">
+
+        {% for file in files %}
+
+            {% set name = file|split('/')|last|replace({'errors-':'','.log':''}) %}
+
+            <option value="{{ name }}"
+                {{ name == date ? 'selected' : '' }}>
+                {{ name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+</form>
+
+<pre class="log-viewer">{{ content }}</pre>

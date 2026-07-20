@@ -66,6 +66,8 @@
             console.log('[Bootstrap] Runtime started');
         }
 
+        
+
         /* =========================================================
         2. CORE SERVICES
         ========================================================== */
@@ -114,6 +116,16 @@
             }
         });
 
+        $(document).ready(function(){
+            //Loader
+            // alert('here');
+            const loaderBar = $('.loader-bar');
+
+            app.on('loader:progress', ({ percent }) => {
+                loaderBar.css('width', `${percent}%`);
+            });
+
+        });
 
         /* ---------------------------
            3. Preload Core (optional)
