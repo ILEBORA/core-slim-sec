@@ -1,22 +1,79 @@
 <h2>Error Logs</h2>
 
-<form method="get">
+<form id="logForm" method="get">
 
-    <select name="date" onchange="this.form.submit()">
+    <div class="log-toolbar">
 
-        {% for file in files %}
+        <select name="date" onchange="this.form.submit()">
 
-            {% set name = file|split('/')|last|replace({'errors-':'','.log':''}) %}
+            {% for file in files %}
 
-            <option value="{{ name }}"
-                {{ name == date ? 'selected' : '' }}>
-                {{ name }}
-            </option>
+                {% set name = file|split('/')|last|replace({'errors-':'','.log':''}) %}
 
-        {% endfor %}
+                <option value="{{ name }}"
+                    {{ name == date ? 'selected' : '' }}>
+                    {{ name }}
+                </option>
 
-    </select>
+            {% endfor %}
+
+        </select>
+
+        <button type="button" id="refreshLogs">
+            🔄 Refresh
+        </button>
+
+        <button type="button" id="clearLogs">
+            🗑 Clear
+        </button>
+
+        <label>
+            <input type="checkbox" id="autoRefresh">
+            Auto Sync
+        </label>
+
+    </div>
 
 </form>
 
-<pre class="log-viewer">{{ content }}</pre>
+<pre class="log-viewer">{{ content|raw }}</pre>
+
+<script>
+let timer = null;
+
+$('#refreshLogs').on('click', function () {
+    location.reload();
+});
+
+$('#autoRefresh').on('change', function () {
+
+    if (this.checked) {
+
+        timer = setInterval(() => {
+            location.reload();
+        }, 3000);
+
+    } else {
+
+        clearInterval(timer);
+
+    }
+
+});
+
+$('#clearLogs').on('click', function () {
+
+    if (!confirm('Clear current log file?')) {
+        return;
+    }
+
+    $.post('api/modules/system/developer/logsclear', {
+        date: $('select[name=date]').val()
+    }, function () {
+
+        //location.reload();
+
+    });
+
+});
+</script>
