@@ -2003,6 +2003,31 @@ if (!function_exists('channels')) {
     }
 }
 
+if (!function_exists('notifications')) {
+
+    function notifications(): \BoraSlim\Core\Modules\Notifications\Services\NotificationRegistry
+    {
+        $ctx = ctx();
+
+        if (!$ctx->registered(\BoraSlim\Core\Modules\Notifications\Services\NotificationRegistry::class)) {
+
+            $ctx->singleton(
+
+                \BoraSlim\Core\Modules\Notifications\Services\NotificationRegistry::class,
+
+                fn() => new \BoraSlim\Core\Modules\Notifications\Services\NotificationRegistry()
+
+            );
+
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Modules\Notifications\Services\NotificationRegistry::class
+        );
+    }
+
+}
+
 // Routes
 if (!function_exists('routes')) {
 
