@@ -244,12 +244,12 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
             }
         
             if (this.options.activeTab){
-                this.goToTab(this.options.activeTab);
+                // this.goToTab(this.options.activeTab);
             }
             else{
-                this.goToTab(
-                    $links.first().data('tab')
-                );
+                // this.goToTab(
+                //     $links.first().data('tab')
+                // );
             }
         }
 
@@ -376,7 +376,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
         // }
 
         async tryLoadTabContent($tab) {
-
+            console.log('[Loading]', $tab.data('url'));
             const url = $tab.data('url');
             const target = this.$append.find('#tabContentArea');
             
@@ -457,6 +457,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
         }
 
         goToTab(tabId){
+            console.count('goToTab');
             // alert('gototab '+ tabId);
             // Guard against destroyed popup
             if (!this.$tabs || !this.$append){
@@ -499,7 +500,8 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
                 if (!this._initialTabLoaded){
                     //alert('ts 2');
                     this._initialTabLoaded = true;
-                    this.$tabs.find('a').first().trigger('click');
+                    // this.$tabs.find('a').first().trigger('click');
+                    this.goToTab(this.$tabs.find('a').first().data('tab'));
                 }
             }
             // const $links =
@@ -533,7 +535,11 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
         if (popup && tab) popup.goToTab(tab);
     });
-
+    console.count('openPopupSmart');
+    console.count('open');
+    console.count('setTabs');
+    console.count('goToTab');
+    console.count('tryLoadTabContent');
     /* ==================================================
        PUBLIC API
     ================================================== */

@@ -83,7 +83,53 @@
        UTIL: LOAD SCRIPT ONCE
     ================================================== */
 
-    function loadScriptOnce(src){
+    // Add version as a second parameter with a default fallback
+    function loadScriptOnceN(src, version = '1.0.0') {
+
+        // 1. Check cache with the original or modified src
+        if(scriptCache.has(src)){
+            return scriptCache.get(src);
+        }
+
+        const promise = new Promise((resolve, reject)=>{
+
+            // 2. Append the version parameter to the URL
+            const separator = src.includes('?') ? '&' : '?';
+            const versionedSrc = `${src}${separator}v=${encodeURIComponent(version)}`;
+
+            // 3. Prevent duplicate DOM injection using the original src 
+            // (or use versionedSrc if you want to allow reloading different versions)
+            if(document.querySelector(`script[src="${versionedSrc}"]`)){
+                resolve(versionedSrc);
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src   = versionedSrc; // Use the versioned URL here
+            script.async = true;
+            script.dataset.bora = '1';
+
+            script.onload = () => {
+                resolve(versionedSrc);
+
+                setTimeout(()=>{
+                    script.remove();
+                }, 0);
+            };
+
+            script.onerror = () => {
+                reject(new Error(`[Loader] Failed to load script: ${versionedSrc}`));
+            };
+
+            document.head.appendChild(script);
+        });
+
+        scriptCache.set(src, promise);
+
+        return promise;
+    }
+
+    function loadScriptOnce(src, version = '1.0.0'){
 
         if(scriptCache.has(src)){
             return scriptCache.get(src);
@@ -257,7 +303,6 @@
                 --------------------------- */
 
                 if(entry.file && entry.file !== '__inline__'){
-
                     await loadScriptOnce(entry.file);
 
                 }
@@ -382,6 +427,55 @@
 
     }
 
+    async function script(src, globalName){
+
+        await loadScriptOnce(src);
+
+        if(globalName){
+
+            await waitUntil(
+                () => window[globalName]
+            );
+
+        }
+
+        return window[globalName];
+    
+    }
+
+    function waitUntil(predicate, timeout = 5000, interval = 20) {
+
+        return new Promise((resolve, reject) => {
+    
+            const started = Date.now();
+    
+            const timer = setInterval(() => {
+    
+                if (predicate()) {
+    
+                    clearInterval(timer);
+                    resolve(predicate());
+    
+                    return;
+    
+                }
+    
+                if (Date.now() - started > timeout) {
+    
+                    clearInterval(timer);
+    
+                    reject(
+                        new Error('Timed out waiting.')
+                    );
+    
+                }
+    
+            }, interval);
+    
+        });
+    
+    }
+
     /* ==================================================
        PUBLIC API
     ================================================== */
@@ -391,6 +485,9 @@
         preload,
         prefetch,
         status,
+
+        script,
+        waitUntil,
 
         // internal (debug)
         _manifest: manifest,

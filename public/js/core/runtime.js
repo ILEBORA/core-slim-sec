@@ -250,6 +250,7 @@
 
         function createScope(){
             return Object.freeze({
+                getLoader,
                 getService,
                 getPlugin,
                 hasService: (n)=>services.has(n),
@@ -1056,11 +1057,16 @@
         
         });
 
+        function getLoader(){
+            return global.__BORA_LOADER__;
+        }
+
         /* ==================================================
            PUBLIC API
         ================================================== */
 
         const publicAPI = {
+            getLoader:getLoader,
             start,
 
             ready: () =>
