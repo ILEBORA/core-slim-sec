@@ -229,5 +229,5 @@ $pipeline->register('dashboards.admin.workspace', [
  * ------------------------------------------------- */
 
 $pipeline
-    ->setDebug(true)
+    // ->setDebug(true)
     ->compile();
