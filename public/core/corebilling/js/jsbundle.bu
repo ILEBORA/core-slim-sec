@@ -15,7 +15,13 @@ $pipeline->register('corebilling.plugin', [
     'priority' => 101,
     'requires' => [
         // 'corebilling.actions'
-        ],
+    ],
+    'routes' => [
+        'portal/billing',
+        'portal/billing/*',
+        'bo/billing',
+        'bo/billing/*',
+    ],
 ]);
 
 /* ==================================================

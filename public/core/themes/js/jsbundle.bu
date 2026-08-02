@@ -17,7 +17,14 @@ $pipeline->register('themes.plugin', [
     'file'     => 'plugins/themes.plugin.js',
     'type'     => 'plugin',
     'priority' => 100,
-    'requires' => ['runtime'],
+    'requires' => [],
+    
+    'routes' => [
+          // 'portal/themes',
+          // 'portal/themes/*',
+          'bo/themes',
+          'bo/themes/*',
+    ],
 ]);
 
 
@@ -25,8 +32,8 @@ $pipeline->register('themes.plugin', [
    PLUGINS (UI BEHAVIOUR)
 ================================================== */
 
-// $pipeline->register('system.langmanager.plugin', [
-//     'file'     => 'plugins/system.langmanager.plugin.js',
+// $pipeline->register('', [
+//     'file'     => 'plugins/.js',
 //     'type'     => 'plugin',
 //     'priority' => 130,
 //     'requires' => [

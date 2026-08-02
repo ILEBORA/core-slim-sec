@@ -28,7 +28,13 @@ $pipeline->register('inbox.actions', [
 $pipeline->register('inbox.helpers', [
     'file'             => 'utils/InboxHelpers.js',
     'type'             => 'lib',
-    'workspaceService' => true
+    'workspaceService' => true,
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.tests', [
@@ -38,7 +44,13 @@ $pipeline->register('inbox.tests', [
 
     'requires' => [
         'inbox.helpers'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.composer', [
@@ -48,7 +60,13 @@ $pipeline->register('inbox.composer', [
 
     'requires' => [
         'inbox.helpers'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.ui', [
@@ -58,7 +76,13 @@ $pipeline->register('inbox.ui', [
 
     'requires' => [
         'inbox.composer'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.typing', [
@@ -68,7 +92,13 @@ $pipeline->register('inbox.typing', [
 
     'requires' => [
         'inbox.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.threadloader', [
@@ -79,7 +109,13 @@ $pipeline->register('inbox.threadloader', [
     'requires' => [
         'inbox.ui'
         // 'inbox.typing'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.presence', [
@@ -89,7 +125,13 @@ $pipeline->register('inbox.presence', [
 
     'requires' => [
         'inbox.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.notifications', [
@@ -99,7 +141,13 @@ $pipeline->register('inbox.notifications', [
 
     'requires' => [
         'inbox.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.realtime', [
@@ -109,7 +157,13 @@ $pipeline->register('inbox.realtime', [
 
     'requires' => [
         'inbox.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.api', [
@@ -121,7 +175,13 @@ $pipeline->register('inbox.api', [
         'inbox.helpers',
         'inbox.threadloader',
         'inbox.presence'
-    ]
+    ],
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 /* ---------- Plugins ---------- */
@@ -129,6 +189,12 @@ $pipeline->register('inbox.api', [
 $pipeline->register('inbox.ui.interactions', [
     'file' => 'plugins/inbox.ui.interactions.js',
     'type' => 'plugin',
+    'routes' => [
+        'portal/inbox',
+        'portal/inbox/*',
+        'bo/inbox',
+        'bo/inbox/*',
+    ],
 ]);
 
 $pipeline->register('inbox.breadcrumbs', [
@@ -164,7 +230,9 @@ $pipeline->register('inbox.workspace', [
 
     'routes' => [
         'portal/inbox',
-        'portal/inbox/thread/{thread}'
+        'portal/inbox/thread/{thread}',
+        'bo/inbox',
+        'bo/inbox/*'
     ]
 ]);
 

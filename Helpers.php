@@ -1178,9 +1178,15 @@ if(!function_exists('autoIncludeCoreJs')){
                 // $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
                 if(getIfSet($manifest[$name]['bypass'],false)){
                     $manifest[$name]['file'] = 'vendor/ilebora/core-slim-sec/public/js/core/'. $file ;
+                    // Use an existing hash if supplied, otherwise derive one.
+                    $manifest[$name]['hash'] ??= substr(md5_file($filePath), 0, 8);
                 }else{
                     $compiled = \BoraSlim\Core\Assets\JsAssetCompiler::compile($name, $filePath);
                     $manifest[$name]['file'] = $compiled['url'];
+
+                    $manifest[$name]['file'] = $compiled['url'];
+                    $manifest[$name]['url']  = $compiled['url'];
+                    $manifest[$name]['hash'] = $compiled['hash'];
                 }
                 
                 // dieVal($compiled);

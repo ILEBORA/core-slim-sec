@@ -5,7 +5,7 @@ async function (scope) {
 
     // Resolve services FIRST
     // const callbora   = await scope.getService('callbora');
-    const uiStack = await __BORA_APP__.service('uiStack');
+    const uiStack = await __BORA_APP__.service('ui.stack');
     const navigation = await scope.getService('navigation');
     const uiActions = await scope.getService('ui.actions');
     const pageActions = await scope.getPlugin('page.actions');

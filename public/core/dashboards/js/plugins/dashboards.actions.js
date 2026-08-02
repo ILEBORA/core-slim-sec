@@ -1,41 +1,48 @@
-__BORA_REGISTER_PLUGIN__('dashboards.actions', async function(scope){
+__BORA_REGISTER_PLUGIN__(
 
-    const callbora = await scope.getService('callbora');
-    // const feedUI  = await scope.getPlugin('dashboards.feed.ui');
-    // const dashboardsComposer  = await scope.getPlugin('dashboards.composer');
-    const uiStack = await __BORA_APP__.service('uiStack');
-    const uiActions = await scope.getService('ui.actions');
-    const popup = await scope.getPlugin('popup');
-    const routeRegistry = await scope.getService('route.registry');
+'dashboards.actions',
 
-    const dismissable = await __BORA_APP__.service('ui.dismissable');
-    const bNavigator = await scope.getService('navigator');
+async function(scope){
+
+    const workspace     = await scope.getPlugin('billing.workspace');
+    const uiActions     = await scope.getService('ui.actions');
+    const bNavigator    = await scope.getService('navigator');
+    const navigation    = await scope.getService('navigation');
+    const lifecycle     = await scope.getPlugin('entity.lifecycle');
+    const callbora      = await scope.getService('callbora');
+    const alerts        = await scope.getPlugin('alerts');
 
     const state = {
-        mounted: false,
-        initialized:false
+        initialized:false,
+        mounted:false
     };
+
 
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
-
+        // alert('dashboard.actions');
         init();
     }
 
     function unmount(){
         if (!state.mounted) return;
         state.mounted = false;
+        state.initialized = false;
     }
 
-
     function init(){
-        if (state.initialized) return;
-        state.initialized = true;
+        console.log('[BILLING ACTIONS]','state', state.initialized);
+        if(state.initialized){
+            return;
+        }
 
-        console.log('[dashboards.actions] mounted');
+        registerActions();
 
-        //popups
+    }
+
+    function registerActions(){
+
         uiActions.register('dashboard.toggle-controls',(el)=>{
             console.log('toggle controls');
             el.classList.toggle('opened');
@@ -54,11 +61,36 @@ __BORA_REGISTER_PLUGIN__('dashboards.actions', async function(scope){
                 icon.classList.toggle('fa-times');
             }
         });
+        
 
     }
 
-    return { mount, unmount };
+    async function openPaymentMethods(el){
+        const key = $(el).attr('data-key');
+        
+        const bNavigator    = await scope.getService('navigator');
 
-},{
-    // activateOn: (route) => route.startsWith('portal/dashboards')
+        bNavigator.go({
+
+            route:'billing.payment.methods',
+
+            params:{
+                key:key
+            },
+
+            surface:'popup'
+
+        });
+
+        
+    }
+
+    
+
+    return{
+        mount,
+        unmount,
+
+    };
+
 });

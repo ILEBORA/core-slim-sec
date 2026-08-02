@@ -3,6 +3,6 @@
     <span style="float:right;">
         {{tools|raw}}
     </span>
-    <input type="checkbox" data-role="{{role_id}}" onclick="return cPerm(this,event); return false;" data-perm="{{perm_id}}" id="input{{role_name}}-{{perm_id}}" name="input{{role_name}}-{{perm_id}}" {{checked}} /> 
+    <input type="checkbox" data-role="{{role_id}}" data-action="system.perm.toggle" data-perm="{{perm_id}}" id="input{{role_name}}-{{perm_id}}" name="input{{role_name}}-{{perm_id}}" {{checked}} /> 
     {{permission|raw}}
 </li>

@@ -1,4 +1,4 @@
-__BORA_REGISTER_SERVICE__('uiStack', function(scope){
+__BORA_REGISTER_SERVICE__('ui.stack', async function(scope){
 
     const stack = [];
 
@@ -25,7 +25,7 @@ __BORA_REGISTER_SERVICE__('uiStack', function(scope){
     }
 
     function closeTop(){
-
+        console.trace("uiStack.closeTop");
         const instance = stack.pop();
 
         if(!instance) return;

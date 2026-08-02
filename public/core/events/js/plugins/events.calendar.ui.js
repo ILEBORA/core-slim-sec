@@ -347,6 +347,6 @@ function getYearEnd(date){
         mount
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events/calendar')
 });

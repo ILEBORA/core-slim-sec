@@ -72,33 +72,33 @@ uiStack.unregister(instance)
 ### Open
 
 ```javascript
-$(document).on('click', '.reaction-trigger', async function(e){
+// $(document).on('click', '.reaction-trigger', async function(e){
 
-    e.preventDefault();
+//     e.preventDefault();
 
-    const uiStack = await __BORA_APP__.service('uiStack');
-    const dismissable = await __BORA_APP__.service('ui.dismissable');
+//     const uiStack = await __BORA_APP__.service('ui.stack');
+//     const dismissable = await __BORA_APP__.service('ui.dismissable');
 
-    const $box = $(this).closest('.reaction-box');
+//     const $box = $(this).closest('.reaction-box');
 
-    if($box.hasClass('open')){
-        $box.data('dismissInstance')?.close();
-        return;
-    }
+//     if($box.hasClass('open')){
+//         $box.data('dismissInstance')?.close();
+//         return;
+//     }
 
-    // close other dropdown
-    uiStack.closeTop();
+//     // close other dropdown
+//     uiStack.closeTop();
 
-    $box.addClass('open');
+//     $box.addClass('open');
 
-    const instance = dismissable.create(()=>{
-        $box.removeClass('open');
-        $box.removeData('dismissInstance');
-    });
+//     const instance = dismissable.create(()=>{
+//         $box.removeClass('open');
+//         $box.removeData('dismissInstance');
+//     });
 
-    $box.data('dismissInstance', instance);
+//     $box.data('dismissInstance', instance);
 
-});
+// });
 Close after reaction
 $box.data('dismissInstance')?.close();
 Example 2 — Sidebar

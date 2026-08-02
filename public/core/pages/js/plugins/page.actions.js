@@ -1,9 +1,34 @@
-__BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
+__BORA_REGISTER_PLUGIN__(
+    'page.actions', 
+    async function(scope)
+{
 
     const hooks = await scope.getService('hooks');
     const callbora = await scope.getService('callbora');
 
     const uiActions  = await scope.getService('ui.actions');
+
+    const state = {
+        mounted: false
+    };
+
+    function mount() {
+        if (state.mounted) return;
+
+        state.mounted = true;
+        // alert('Page Actions mounted');
+
+        init();
+        
+    }
+
+    function unmount() {
+        if (!state.mounted) return; // ⚠️ FIXED (was wrong)
+
+        state.mounted = false;
+
+        
+    }
 
     /* ---------------------------------------
        Internal helper
@@ -84,42 +109,10 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
     }
 
-    /* ---------------------------------------
-       Hook Registration (CRITICAL)
-    --------------------------------------- */
-
-    hooks.add('pages.action', function(action, id){
-
-        switch(action){
-
-            case 'edit':
-                return openPageEditor(id);
-
-            case 'settings':
-                return openMotherPageSettings(id);
-
-            case 'add-subpage':
-                return openSubpageModal(id);
-
-            case 'arrange':
-                return openArrangeUI(id);
-
-            case 'toggle-status':
-                return togglePageStatus(id);
-            
-            case 'duplicate':
-                return openDuplicate(id);
-
-            case 'togglestatus':
-                return togglePageStatus(id);
-
-            case 'delete':
-                return confirmDelete(id);
-
-        }
-
-    });
+    
     function init(){
+        
+
         uiActions.register(
             'page.reload',
 
@@ -144,9 +137,45 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
 
             injectRefreshUI();
         })
+
+        /* ---------------------------------------
+        Hook Registration (CRITICAL)
+        --------------------------------------- */
+
+        // hooks?.add('pages.action', function(action, id){
+
+        //     switch(action){
+
+        //         case 'edit':
+        //             return openPageEditor(id);
+
+        //         case 'settings':
+        //             return openMotherPageSettings(id);
+
+        //         case 'add-subpage':
+        //             return openSubpageModal(id);
+
+        //         case 'arrange':
+        //             return openArrangeUI(id);
+
+        //         case 'toggle-status':
+        //             return togglePageStatus(id);
+                
+        //         case 'duplicate':
+        //             return openDuplicate(id);
+
+        //         case 'togglestatus':
+        //             return togglePageStatus(id);
+
+        //         case 'delete':
+        //             return confirmDelete(id);
+
+        //     }
+
+        // });
     }
 
-    init();
+    // init();
 
     let refreshTimeout = null;
 
@@ -257,6 +286,8 @@ __BORA_REGISTER_PLUGIN__('page.actions', async function(scope){
     }
 
     return {
+        mount,
+        unmount,
         openPageEditor,
         openMotherPageSettings,
         openSubpageModal,

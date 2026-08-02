@@ -73,6 +73,7 @@
     }
 
     function registerPluginDuringBuild(name, factory, meta = {}){
+        var name = name+"";
         name = name.toLowerCase();
 
         pendingPlugins.set(name, { factory, meta });
@@ -252,7 +253,9 @@
             return Object.freeze({
                 getLoader,
                 getService,
+                importServices,
                 getPlugin,
+                importPlugins,
                 hasService: (n)=>services.has(n),
                 hasPlugin: (n)=>plugins.has(n),
                 getPluginsByPrefix: async (prefix) => {
@@ -301,13 +304,55 @@
             return services.get(name) || null;
         }
 
+        const serviceCache = new Map();
+
+        async function importServices(map){
+            console.log('[IMPORT SERVICES]', map);
+            const result = {};
+
+            for(const [alias, service] of Object.entries(map)){
+                console.log('[IMPORT SERVICE]', service);
+                if(!serviceCache.has(service)){
+                    serviceCache.set(
+                        service,
+                        await getService(service)
+                    );
+                }
+                
+                result[alias] = await serviceCache.get(service);
+            }
+
+            return result;
+        }
+
         async function getPlugin(name){
             name = name.toLowerCase();
             if(!plugins.has(name)){
                 await global.__BORA_LOADER__?.ensure(name);
+                
             }
 
             return plugins.get(name);
+        }
+
+        const pluginCache = new Map();
+        async function importPlugins(map){
+
+            const result = {};
+
+            for(const [alias, plugin] of Object.entries(map)){
+
+                if(!pluginCache.has(plugin)){
+                    pluginCache.set(
+                        plugin,
+                        await getPlugin(plugin)
+                    );
+                }
+
+                result[alias] = await pluginCache.get(plugin);
+            }
+
+            return result;
         }
 
         /* ==================================================
@@ -354,6 +399,8 @@
 
                 // lazy-safe activation trigger
                 // await evaluatePluginActivation(normalizeUrl(window.location));
+
+                
 
             }
             catch(err){
@@ -654,19 +701,20 @@
                         await global.__BORA_LOADER__.ensure(name, {
                             activate:false
                         });
+                        
 
                         const plugin = plugins.get(name);
-                        // console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
+                        console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
                         // Plugin not loaded yet (loader should have loaded it by now, but just in case)
                         if(!plugin){
-                            // console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
+                            console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
                             // console.log(pluginMeta.get(name));
                             continue;
                         }
 
                         const pMeta = pluginMeta.get(name);
 
-                        const shouldActivate = evaluateMeta(name, pMeta, context);
+                        const shouldActivate = await evaluateMeta(name, pMeta, context);
                         
                         /* ---------------------------
                         DEBUG (optional but useful)
@@ -684,6 +732,7 @@
                         --------------------------- */
 
                         if(shouldActivate){
+                            console.log('Activate plugin ' + name);
                             // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
                             if (plugin.__activating) {
                                 continue;  //return;
@@ -699,10 +748,10 @@
                                     await plugin.mount?.();
                                     plugin.__active = true;
 
-                                    // console.log(
-                                    //     `%c ${name} Plugin active`,
-                                    //     'color:#22c55e;font-weight:bold;'
-                                    // );
+                                    console.log(
+                                        `%c ${name} Plugin active`,
+                                        'color:#22c55e;font-weight:bold;'
+                                    );
 
                                     /* timing (optional keep your existing logic) */
                                     plugin.__activating = false;
@@ -754,7 +803,7 @@
         }
 
         function shouldLoad(meta, context, name){
-            // console.log('[Should Load?]', name, meta, context);
+            console.log('[Should Load?]', name, meta, context);
             // console.log(
             //     typeof meta.activateOn,
             //     meta.activateOn
@@ -766,6 +815,12 @@
             if(meta.activateOn){
 
                 const patterns = [].concat(meta.activateOn);
+                console.log('[ROUTES] ' + name + ' :: ', context.route, patterns);
+                const re = new RegExp(patterns[0]);
+
+                console.log(re);
+                console.log(context.route);
+                console.log(re.test(context.route));
 
                 if(!patterns.some(r => new RegExp(r).test(context.route))){
                     return false;
@@ -800,7 +855,7 @@
             return true;
         }
 
-        function evaluateMeta(name, pMeta, context){
+        async function evaluateMeta(name, pMeta, context){
 
             if(!pMeta) return true;
 
@@ -950,6 +1005,21 @@
         /* ==================================================
            START
         ================================================== */
+        async function preloadManifest(){
+
+            const manifest = rd('manifest');
+        
+            const preloadAssets = Object.entries(manifest)
+                .filter(([_, meta]) => meta.preload === true)
+                .sort((a,b)=>(a[1].priority||0)-(b[1].priority||0));
+        
+            for(const [name] of preloadAssets){
+                await global.__BORA_LOADER__.ensure(name,{
+                    activate:false
+                });
+            }
+        
+        }
 
         async function start(){
 
@@ -959,6 +1029,7 @@
             }
 
             started = true;
+            await preloadManifest();
 
             emit('runtime:beforeStart');
 
@@ -976,34 +1047,36 @@
             }
             
             // register pending services
-            for(const [name, {factory, meta}] of pendingServices){
+            // for(const [name, {factory, meta}] of pendingServices){
 
-                const normalized = name.toLowerCase();
+            //     const normalized = name.toLowerCase();
 
-                if(!services.has(normalized)){
-                    await _registerService(normalized, factory, meta);
-                }
+            //     if(!services.has(normalized)){
+            //         await _registerService(normalized, factory, meta);
+            //     }
 
-            }
+            // }
 
-            emit('runtime:servicesReady');
+            // emit('runtime:servicesReady');
 
-            // register pending plugins (only already loaded ones)
-            for(const [name, {factory, meta}] of pendingPlugins){
+            // // register pending plugins (only already loaded ones)
+            // for(const [name, {factory, meta}] of pendingPlugins){
 
-                const normalized = name.toLowerCase();
+            //     const normalized = name.toLowerCase();
 
-                if(!plugins.has(normalized)){
-                    await _registerPlugin(normalized, factory, meta);
-                }
+            //     if(!plugins.has(normalized)){
+            //         await _registerPlugin(normalized, factory, meta);
+            //     }
 
-            }
+            // }
 
 
             emit('runtime:started');
 
             // initial activation (lazy)
-            await evaluatePluginActivation(normalizeUrl(window.location));
+            await evaluatePluginActivation(
+                normalizeUrl(window.location)
+            );
             
             emit('page.loaded', {
                 source: 'initial',
@@ -1058,7 +1131,8 @@
         });
 
         function getLoader(){
-            return global.__BORA_LOADER__;
+            // return global.__BORA_LOADER__;
+            return BORA;
         }
 
         /* ==================================================
@@ -1081,7 +1155,9 @@
 
             // async access
             getService,
+            importServices,
             getPlugin,
+            importPlugins,
 
             // internal
             integratePending,
@@ -1137,7 +1213,6 @@
 
     global.__BORA_REGISTER_PLUGIN__  = registerPluginDuringBuild;
     global.__BORA_REGISTER_SERVICE__ = registerServiceDuringBuild;
-
 
 
 })(window);

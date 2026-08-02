@@ -127,7 +127,7 @@ __BORA_REGISTER_SERVICE__(
         function handleMutations(
             mutations
         ){
-            console.log('[MUTATIONS] handle...');
+            // console.log('[MUTATIONS] handle...');
             mutations.forEach(mutation => {
 
                 mutation

@@ -1,12 +1,13 @@
 __BORA_REGISTER_SERVICE__('ui.dismissable', async function(scope){
 
-    const uiStack = await scope.getService('uiStack');
+    const uiStack = await scope.getService('ui.stack');
 
     function create(closeFn){
 
         const instance = {
 
             close(){
+                console.trace("dismissable.close");
                 closeFn();
                 uiStack.unregister(instance);
             }

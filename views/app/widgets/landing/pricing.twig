@@ -1,0 +1,204 @@
+<div class="billing-pricing">
+
+    <header class="pricing-header">
+
+        <h1>{{ widget.title|default('Choose Your Plan') }}</h1>
+
+        <p>
+           {{ widget.description|default(
+            'Unlock more family trees, collaboration, storage and advanced genealogy features.'
+        ) }}
+        </p>
+
+    </header>
+
+    {% set current = billing.plan.plan_key %}
+    {% set currentLevel = billing.features['plan.level']|default(0) %}
+
+    <div class="pricing-grid">
+
+        {% for plan in plans %}
+
+            {% set level = plan.feature('plan.level', 0) %}
+
+            {% set isCurrent = plan.plan_key == current %}
+            {% set isUpgrade = level > currentLevel %}
+            {% set isDowngrade = level < currentLevel %}
+            {% set isAlternative = level == currentLevel and not isCurrent %}
+
+            <article class="
+                pricing-card
+                {{ plan.plan_key }}
+                {{ isCurrent ? 'current' }}
+                {{ isUpgrade ? 'upgrade' }}
+                {{ isDowngrade ? 'downgrade' }}
+                {{ isAlternative ? 'alternative' }}
+                {{ plan.is_popular ? 'popular' }}
+            ">
+
+                <div class="pricing-status">
+
+                    {% if isCurrent %}
+                        <span class="pricing-badge current">
+                            Current Plan
+                        </span>
+
+                    {% elseif isUpgrade %}
+                        <span class="pricing-badge upgrade">
+                            Upgrade Available
+                        </span>
+
+                    {% elseif isDowngrade %}
+                        <span class="pricing-badge downgrade">
+                            Lower Tier
+                        </span>
+
+                    {% elseif isAlternative %}
+                        <span class="pricing-badge alternative">
+                            Same Level
+                        </span>
+
+                    {% endif %}
+
+                    {% if plan.is_popular %}
+                        <span class="pricing-badge popular">
+                            Most Popular
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <header class="plan-header">
+                    <div class="plan_header title">
+                        <h2>{{ plan.name }}</h2>
+                    </div>
+
+                    <div class="plan_header price">
+                        <div class="price">
+
+                            {% if plan.price > 0 %}
+
+                                <span class="amount">
+                                    KES {{ plan.price|number_format(2) }}
+                                </span>
+
+                                <small>
+                                    /{{ plan.billing_cycle|capitalize }}
+                                </small>
+
+                            {% else %}
+
+                                <span class="amount free">
+                                    Free
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </header>
+
+                <section class="plan-body">
+                    <div class="plan_body">
+                        {% if plan.description %}
+                            <p class="description">
+                                {{ plan.description }}
+                            </p>
+                        {% endif %}
+
+                        <ul class="features">
+
+                            <ul class="features">
+
+                                {% for feature in plan.visibleFeatures() %}
+                                    {% include 'render/card/pricing-card.twig' with {
+                                        feature: feature,
+                                    } %}
+                                {% endfor %}
+
+                            </ul>
+
+                        </ul>
+                    <div>
+                </section>
+
+                <footer class="plan-footer">
+                    <div class="plan_footer">
+                        {% if not isLoggedIn() %}
+
+                            <button
+                                class="btn primary landing-cta-btn"
+                                data-nav="account/register">
+
+                                Get Started
+
+                            </button>
+
+                        {% elseif isCurrent %}
+
+                            <button
+                                class="btn current"
+                                disabled>
+
+                                Current Plan
+
+                            </button>
+
+                        {% elseif isUpgrade %}
+
+                            <button
+                                class="btn upgrade"
+                                data-key="{{ plan.plan_key }}"
+                                data-action="billing.choose.payment.method">
+
+                                Upgrade
+
+                            </button>
+
+                        {% elseif isDowngrade %}
+
+                            <button
+                                class="btn downgrade"
+                                data-key="{{ plan.plan_key }}"
+                                data-action="billing.downgrade">
+
+                                Downgrade
+
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                class="btn switch"
+                                data-key="{{ plan.plan_key }}"
+                                data-action="billing.switch">
+
+                                Switch Plan
+
+                            </button>
+
+                        {% endif %}
+                    </div>
+
+                </footer>
+
+            </article>
+
+        {% else %}
+
+            <div class="pricing-empty">
+
+                <h3>No plans available</h3>
+
+                <p>
+                    There are currently no subscription plans configured.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>

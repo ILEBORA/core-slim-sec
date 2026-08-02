@@ -16,6 +16,6 @@ __BORA_REGISTER_PLUGIN__('events.tabs', async function(scope){
         resolve
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events')
 });

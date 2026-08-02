@@ -12,8 +12,13 @@ $pipeline->register('comm.plugin', [
     'type'     => 'plugin',
     'priority' => 101,
     'requires' => [
-        // 'runtime'
-        ],
+    ],
+    'routes' => [
+        'portal/comm',
+        'portal/comm/*',
+        'bo/comm',
+        'bo/comm/*',
+    ],
 ]);
 
 /* ==================================================

@@ -7,7 +7,7 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
 
     const popup = await scope.getPlugin('popup');
 
-    const uiStack = await __BORA_APP__.service('uiStack');
+    const uiStack = await __BORA_APP__.service('ui.stack');
     const lifecycle = await scope.getPlugin('entity.lifecycle');
 
     const dismissable = await __BORA_APP__

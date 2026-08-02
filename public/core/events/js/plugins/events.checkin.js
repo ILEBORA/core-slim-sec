@@ -56,6 +56,6 @@ __BORA_REGISTER_PLUGIN__('events.checkin', async function(scope){
         unmount
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events')
 });

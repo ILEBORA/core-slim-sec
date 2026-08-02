@@ -17,14 +17,28 @@ $pipeline->register('notifications.plugin', [
     'file'     => 'plugins/notifications.plugin.js',
     'type'     => 'lib',
     'priority' => 100,
-    'requires' => ['runtime'],
+    'requires' => [],
+    
+    'routes' => [
+        // 'portal/notifications',
+        // 'portal/notifications/*',
+        'bo/notifications',
+        'bo/notifications/*',
+    ],
 ]);
 
 $pipeline->register('notify.plugin', [
     'file'     => 'plugins/notify.plugin.js',
     'type'     => 'lib',
     'priority' => 100,
-    'requires' => ['runtime'],
+    'requires' => [],
+    
+    'routes' => [
+        // 'portal/notifications',
+        // 'portal/notifications/*',
+        'bo/notifications',
+        'bo/notifications/*',
+    ],
 ]);
 
 
@@ -32,8 +46,8 @@ $pipeline->register('notify.plugin', [
    PLUGINS (UI BEHAVIOUR)
 ================================================== */
 
-// $pipeline->register('system.langmanager.plugin', [
-//     'file'     => 'plugins/system.langmanager.plugin.js',
+// $pipeline->register('', [
+//     'file'     => 'plugins/.js',
 //     'type'     => 'plugin',
 //     'priority' => 130,
 //     'requires' => [

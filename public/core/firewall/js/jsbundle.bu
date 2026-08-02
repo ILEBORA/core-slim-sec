@@ -9,13 +9,19 @@ $pipeline = new AssetPipelineJs('firewalll', __DIR__);
 
 
 
-$pipeline->register('firewalll.plugin', [
-    'file'     => 'plugins/firewalll.plugin.js',
+$pipeline->register('firewall.plugin', [
+    'file'     => 'plugins/firewall.plugin.js',
     'type'     => 'plugin',
     'priority' => 101,
     'requires' => [
         // 'firewalll.actions'
-        ],
+    ],
+    'routes' => [
+        // 'portal/firewall',
+        // 'portal/firewall/*',
+        'bo/firewall',
+        'bo/firewall/*',
+    ],
 ]);
 
 /* ==================================================

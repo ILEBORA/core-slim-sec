@@ -31,14 +31,21 @@ $pipeline->register('activity.actions', [
 $pipeline->register('activity.utils', [
     'file'             => 'services/activity.utils.js',
     'type'             => 'lib',
-    'workspaceService' => true
+    'workspaceService' => true,
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
 ]);
 
 $pipeline->register('activity.feed', [
     'file'             => 'services/activity.feed.js',
     'type'             => 'lib',
     'workspaceService' => true,
-
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
     'requires' => [
         'activity.utils'
     ]
@@ -49,16 +56,35 @@ $pipeline->register('activity.feed', [
 $pipeline->register('activity.composer', [
     'file' => 'plugins/activity.composer.js',
     'type' => 'plugin',
-
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
     'requires' => [
         'activity.utils'
+    ]
+]);
+
+$pipeline->register('timeline.controller', [
+    'file' => 'plugins/timeline/controller.js',
+    'type' => 'plugin',
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
+    'requires' => [
+      
     ]
 ]);
 
 
 $pipeline->register('activity.thread', [
     'file' => 'plugins/activity.thread.js',
-    'type' => 'plugin'
+    'type' => 'plugin',
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
 ]);
 
 $pipeline->register('activity.breadcrumbs', [
@@ -75,13 +101,20 @@ $pipeline->register('activity.breadcrumbs', [
 
 $pipeline->register('activity.stories.feed', [
     'file' => 'plugins/stories/feed.js',
-    'type' => 'plugin'
+    'type' => 'plugin',
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
 ]);
 
 $pipeline->register('activity.stories.viewer', [
     'file' => 'plugins/stories/viewer.js',
     'type' => 'plugin',
-
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
     'requires' => [
         'activity.stories.feed'
     ]
@@ -90,7 +123,10 @@ $pipeline->register('activity.stories.viewer', [
 $pipeline->register('activity.stories.actions', [
     'file' => 'plugins/stories/actions.js',
     'type' => 'plugin',
-
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
     'requires' => [
         'activity.stories.viewer'
     ]
@@ -99,7 +135,10 @@ $pipeline->register('activity.stories.actions', [
 $pipeline->register('activity.stories.composer', [
     'file' => 'plugins/stories/composer.js',
     'type' => 'plugin',
-
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
     'requires' => [
         'activity.stories.actions'
     ]
@@ -108,7 +147,10 @@ $pipeline->register('activity.stories.composer', [
 $pipeline->register('activity.stories.state', [
     'file' => 'plugins/stories/state.js',
     'type' => 'plugin',
-
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
     'requires' => [
         'activity.stories.viewer'
     ]

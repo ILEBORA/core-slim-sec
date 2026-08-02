@@ -32,6 +32,12 @@ $pipeline->register('events.utils', [
     'type'     => 'service',
 
     'priority' => 100,
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
+    ],
 ]);
 
 /*
@@ -50,7 +56,13 @@ $pipeline->register('events.feed', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -70,7 +82,13 @@ $pipeline->register('events.calendar', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -90,7 +108,13 @@ $pipeline->register('events.rsvp', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -110,9 +134,15 @@ $pipeline->register('events.realtime', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'realtime.sse'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -136,9 +166,15 @@ $pipeline->register('events.composer', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.utils'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -158,9 +194,15 @@ $pipeline->register('events.feed.ui', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.feed'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -180,10 +222,11 @@ $pipeline->register('events.actions', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.feed.ui'
     ],
+
 ]);
 
 /*
@@ -202,7 +245,13 @@ $pipeline->register('events.breadcrumbs', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -222,9 +271,15 @@ $pipeline->register('events.calendar.ui', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.calendar'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -244,9 +299,15 @@ $pipeline->register('events.attendees', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.rsvp'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -266,9 +327,15 @@ $pipeline->register('events.checkin', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.rsvp'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -288,7 +355,13 @@ $pipeline->register('events.featured', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -308,9 +381,15 @@ $pipeline->register('events.stream', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.realtime'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -330,7 +409,13 @@ $pipeline->register('events.maps', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -350,7 +435,13 @@ $pipeline->register('events.share', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -370,7 +461,13 @@ $pipeline->register('events.tabs', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -390,9 +487,15 @@ $pipeline->register('events.notifications', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.realtime'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -412,9 +515,15 @@ $pipeline->register('events.dashboard', [
 
     'requires' => [
 
-        'runtime',
+        
 
         'events.feed.ui'
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 
@@ -434,7 +543,13 @@ $pipeline->register('events.analytics', [
 
     'requires' => [
 
-        'runtime'
+        
+    ],
+    'routes' => [
+        'portal/events',
+        'portal/events/*',
+        'bo/events',
+        'bo/events/*',
     ],
 ]);
 

@@ -34,7 +34,6 @@ $pipeline->register('realtime.leader', [
     'type'     => 'service',
     'priority' => 120,
     'requires' => [
-        'runtime',
         'realtime.factbus'
     ],
 ]);
@@ -45,7 +44,6 @@ $pipeline->register('realtime.sse', [
     'priority' => 121,
     'preload'  => true,
     'requires' => [
-        'runtime',
         'realtime.factbus'
     ],
 ]);
@@ -69,7 +67,6 @@ $pipeline->register('realtime.core', [
     'type'     => 'plugin',
     'priority' => 150,
     'requires' => [
-        'runtime',
         'hooks',
         'realtime.transport',
         'realtime.elements'

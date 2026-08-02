@@ -1,9 +1,9 @@
 __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
 
     const callbora = await scope.getService('callbora');
-    // const feedUI  = await scope.getPlugin('activity.workspace');
+   ;
     const activityComposer  = await scope.getPlugin('activity.composer');
-    const uiStack = await __BORA_APP__.service('uiStack');
+    const uiStack = await __BORA_APP__.service('ui.stack');
     const uiActions = await scope.getService('ui.actions');
     const navigation = await scope.getService('navigation');
     const popup = await scope.getPlugin('popup');

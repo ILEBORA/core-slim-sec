@@ -14,7 +14,7 @@ $pipeline = new AssetPipelineJs('pages', __DIR__);
 $pipeline->register('page.actions', [
     'file'     => 'plugins/page.actions.js',
     'type'     => 'plugin',
-    'priority' => 100,
+    'priority' => 10,
     'preload'  => true,
     'requires' => ['hooks'],
     'preload' => true
@@ -37,6 +37,14 @@ $pipeline->register('pages.plugin', [
         //'page.actions'
         ],
     'preload'  => true,
+    
+    
+    'routes' => [
+        // 'portal/pages',
+        // 'portal/pages/*',
+        'bo/pages',
+        'bo/pages/*',
+    ],
 ]);
 
 /* ==================================================

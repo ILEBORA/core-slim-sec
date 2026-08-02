@@ -15,7 +15,13 @@ $pipeline->register('audit.plugin', [
     'priority' => 101,
     'requires' => [
         //'audit.actions'
-        ],
+    ],
+    'routes' => [
+        'portal/audit',
+        'portal/audit/*',
+        'bo/audit',
+        'bo/audit/*',
+    ],
 ]);
 
 /* ==================================================

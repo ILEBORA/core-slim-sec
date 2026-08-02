@@ -2,7 +2,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
     const hooks = await scope.getService('hooks');
     const uiActions = await scope.getService('ui.actions');
-    const uiStack = await scope.getService('uiStack');
+    const uiStack = await scope.getService('ui.stack');
 
     scope.on('esc',()=>{
         uiStack.closeTop();

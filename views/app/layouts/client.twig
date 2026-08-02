@@ -1,7 +1,7 @@
 {# client.twig #}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> <!-- app/views/layouts/client -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0">
     <title>{{ title|default(app_name) }}</title>
@@ -35,13 +35,12 @@
 
     <link rel="stylesheet" href="assets/css/main.css?v={{ app_version }}&c={{channel_id}}&p={{perm_version}}"/>
     <link rel="stylesheet" href="assets/client/css/client.bundle.css?v={{ app_version }}">
-    <link rel="stylesheet" href="{{cdn_url}}/assets/libs/font-awesome/v5.7.2/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{cdn_url}}/assets/plugins/unsrtd/bootstrap.min.css">
-    <link class="scc" rel="stylesheet" type="text/css" href="{{cdn_url}}/assets/libs/font-awesome/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="{{cdn_url}}assets/libs/font-awesome/v5.7.2/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{cdn_url}}assets/plugins/unsrtd/bootstrap.min.css">
+    <link class="scc" rel="stylesheet" type="text/css" href="{{cdn_url}}assets/libs/font-awesome/v5.7.2/css/all.css">
     {{ renderStyles()|raw }}
     {{ renderInlineStyles()|raw }}
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <!-- <script src="assets/js/jquery.js"></script> -->
     <script src="assets/js/vendor/crypto-js.min.js"></script>
     <script src="assets/js/app.js?v={{ app_version }}&c={{channel_id}}&p={{perm_version}}"></script>
     <script src="assets/client/js/client.bundle.js?v={{ app_version }}"></script>

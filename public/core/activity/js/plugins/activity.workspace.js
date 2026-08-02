@@ -1,7 +1,7 @@
 __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
 
     const feed = await scope.getService('activity.feed');
-    const sse  = await scope.getService('realtime.sse');
+    // const sse  = await scope.getService('realtime.sse');
 
     let el;
     let scopeName='home';
@@ -11,11 +11,29 @@ __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
         mounted: false
     };
 
-    function mount(){
+    async function init(){
+        ({
+            feed,
+            
+        } = await scope.importServices({
+            feed: 'activity.feed',
+           
+        }));
+    }
+
+    async function mount(){
         if (state.mounted) return;
         state.mounted = true;
+
+        
+
         alert('Activity Workspace Mounted');
+
+        await init();
+
+        
         console.log('[activity.workspacei] mounted');
+        
         
         waitForElement('#activityFeedNew', (node) => {
             el = node;

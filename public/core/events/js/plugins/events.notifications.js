@@ -1,5 +1,5 @@
 __BORA_REGISTER_PLUGIN__('events.notifications', async function(scope){
-
+    console.log('[SCOPE]',scope);
     const realtime = await scope
         .getService('events.realtime');
 
@@ -30,7 +30,5 @@ __BORA_REGISTER_PLUGIN__('events.notifications', async function(scope){
         mount,
         unmount
     };
-},{
-    requires:['realtime'],
-    activateOn: (route) => route.startsWith('portal/events')
-});
+}
+);

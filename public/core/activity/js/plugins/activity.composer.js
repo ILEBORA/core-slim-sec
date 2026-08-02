@@ -334,6 +334,6 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
     return { open, handleRemoveMedia, handleRotateMedia, reset };
 
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/activity')
 });

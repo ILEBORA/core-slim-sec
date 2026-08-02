@@ -1,0 +1,95 @@
+<?php
+require __DIR__ . '/../../../../../../../vendor/autoload.php';
+
+EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+
+use BoraSlim\Core\Assets\AssetPipelineJs;
+
+$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
+
+$pipeline = new AssetPipelineJs('dashboards', __DIR__, $origin);
+
+/* ==================================================
+   CORE DASHBOARD LOGIC
+================================================== */
+
+$pipeline->register('dashboards=', [
+    'file'     => 'services/dashboards.js',
+    'type'     => 'service', // or 'plugin' depending on behavior
+    'priority' => 100,
+    'requires' => [
+    //    'hooks',
+    //    'state'
+    ],
+]);
+
+// /* ==================================================
+//    PERMISSION: DASHBOARDS
+// ================================================== */
+
+// $pipeline->registerPerm('dashboards.edit', [
+//     'file'     => 'perms/dashboards/editdashboards.js',
+//     'group'    => 'dashboards',
+//     'sub'      => 'editdashboards',
+//     'priority' => 200,
+//     'requires' => [
+//         'dashboards.core'
+//     ],
+// ]);
+
+// $pipeline->registerPerm('dashboards.create', [
+//     'file'     => 'perms/dashboards/createdashboards.js',
+//     'group'    => 'dashboards',
+//     'sub'      => 'createdashboards',
+//     'priority' => 201,
+//     'requires' => [
+//         'dashboards.core'
+//     ],
+// ]);
+
+// /* ==================================================
+//    PERMISSION: DASHBOARD PAGE WIDGETS
+// ================================================== */
+
+// $pipeline->registerPerm('dashpagewidgets.edit', [
+//     'file'     => 'perms/dashpagewidgets/editdashpagewidgets.js',
+//     'group'    => 'dashpagewidgets',
+//     'sub'      => 'editdashpagewidgets',
+//     'priority' => 210,
+//     'requires' => [
+//         'dashboards.core'
+//     ],
+// ]);
+
+// $pipeline->registerPerm('dashpagewidgets.add', [
+//     'file'     => 'perms/dashpagewidgets/adddashpagewidgets.js',
+//     'group'    => 'dashpagewidgets',
+//     'sub'      => 'adddashpagewidgets',
+//     'priority' => 211,
+//     'requires' => [
+//         'dashboards.core'
+//     ],
+// ]);
+
+// $pipeline->registerPerm('dashpagewidgets.delete', [
+//     'file'     => 'perms/dashpagewidgets/deletedashpagewidgets.js',
+//     'group'    => 'dashpagewidgets',
+//     'sub'      => 'deletedashpagewidgets',
+//     'priority' => 212,
+//     'requires' => [
+//         'dashboards.core'
+//     ],
+// ]);
+
+$pipeline->register('dashboards.actions', [
+    'file'     => 'plugins/dashboards.actions.js',
+    'type'     => 'plugin',
+    'priority' => 220,
+    'requires' => [],
+]);
+
+/* ==================================================
+   COMPILE
+================================================== */
+
+$pipeline->compile();

@@ -8,8 +8,26 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
     | Internal API exposed to optional features
     |--------------------------------------------------------------------------
     */
-    function mount(){
-        // alert('dash');
+    const state = {
+        mounted: false
+    };
+
+    function mount() {
+        if (state.mounted) return;
+
+        state.mounted = true;
+        alert('Dashboard Actions mounted');
+
+        init();
+        
+    }
+
+    function unmount() {
+        if (!state.mounted) return; // ⚠️ FIXED (was wrong)
+
+        state.mounted = false;
+
+        
     }
 
     const api = {
@@ -170,12 +188,11 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
 
     return {
         api,
-        mount
+        mount,
+        unmount
     };
 
 },
 {
     // requires: ['ui.actions']
 });
-
-alert('there'); 

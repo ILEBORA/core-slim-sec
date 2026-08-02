@@ -1,15 +1,15 @@
 __BORA_REGISTER_PLUGIN__('people.actions', async function(scope){
 
-    const callbora = await scope.getService('callbora');
-    // const feedUI  = await scope.getPlugin('activity.workspace');
-    const activityComposer  = await scope.getPlugin('activity.composer');
-    const uiStack = await scope.service('uiStack');
-    const uiActions = await scope.getService('ui.actions');
-    const popup = await scope.getPlugin('popup');
-    const routeRegistry = await scope.getService('route.registry');
+    // const callbora = await scope.getService('callbora');
+   
+    // const activityComposer  = await scope.getPlugin('activity.composer');
+    // const uiStack = await scope.service('ui.stack');
+    // const uiActions = await scope.getService('ui.actions');
+    // const popup = await scope.getPlugin('popup');
+    // const routeRegistry = await scope.getService('route.registry');
 
-    const dismissable = await scope.service('ui.dismissable');
-    const bNavigator = await scope.getService('navigator');
+    // const dismissable = await scope.service('ui.dismissable');
+    // const bNavigator = await scope.getService('navigator');
 
     const state = {
         mounted: false,

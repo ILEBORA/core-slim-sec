@@ -21,7 +21,7 @@ $pipeline->register('activity.feed.service', [
     'file'     => 'services/activity.feed.js',
     'type'     => 'service',
     'priority' => 120,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 /* ==================================================
@@ -32,35 +32,35 @@ $pipeline->register('activity.composer', [
     'file'     => 'plugins/activity.composer.js',
     'type'     => 'plugin',
     'priority' => 200,
-    'requires' => ['runtime', 'activity.utils'],
+    'requires' => [ 'activity.utils'],
 ]);
 
 $pipeline->register('activity.feed.ui', [
     'file'     => 'plugins/activity.feed.ui.js',
     'type'     => 'plugin',
     'priority' => 210,
-    'requires' => ['runtime', 'activity.feed.service'],
+    'requires' => [ 'activity.feed.service'],
 ]);
 
 $pipeline->register('activity.actions', [
     'file'     => 'plugins/activity.actions.js',
     'type'     => 'plugin',
     'priority' => 220,
-    'requires' => ['runtime', 'activity.feed.ui'],
+    'requires' => [ 'activity.feed.ui'],
 ]);
 
 $pipeline->register('activity.thread', [
     'file'     => 'plugins/activity.thread.js',
     'type'     => 'plugin',
     'priority' => 230,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 $pipeline->register('activity.breadcrumbs', [
     'file'     => 'plugins/activity.breadcrumbs.js',
     'type'     => 'plugin',
     'priority' => 231,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 /* ==================================================
@@ -71,35 +71,35 @@ $pipeline->register('activity.stories.feed', [
     'file'     => 'plugins/stories/feed.js',
     'type'     => 'plugin',
     'priority' => 240,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 $pipeline->register('activity.stories.actions', [
     'file'     => 'plugins/stories/actions.js',
     'type'     => 'plugin',
     'priority' => 242,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 $pipeline->register('activity.stories.viewer', [
     'file'     => 'plugins/stories/viewer.js',
     'type'     => 'plugin',
     'priority' => 241,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 $pipeline->register('activity.stories.composer', [
     'file'     => 'plugins/stories/composer.js',
     'type'     => 'plugin',
     'priority' => 243,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 $pipeline->register('activity.stories.state', [
     'file'     => 'plugins/stories/state.js',
     'type'     => 'plugin',
     'priority' => 244,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 /* ==================================================

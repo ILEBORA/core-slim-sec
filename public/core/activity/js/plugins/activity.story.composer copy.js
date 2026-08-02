@@ -59,6 +59,6 @@ __BORA_REGISTER_PLUGIN__('activity.story.composer', async function(scope){
     return { open };
 
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/activity/stories')
 });

@@ -15,7 +15,13 @@ $pipeline->register('control.plugin', [
     'priority' => 101,
     'requires' => [
         // 'control.actions'
-        ],
+    ],
+    'routes' => [
+        // 'portal/control',
+        // 'portal/control/*',
+        'bo/control',
+        'bo/control/*',
+    ],
 ]);
 
 /* ==================================================

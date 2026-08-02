@@ -3,11 +3,11 @@ __BORA_REGISTER_SERVICE__('callbora', async function(scope){
     const hooks   = await scope.getService('hooks');
     const logger  = await scope.getService('logger');
     const config  = await scope.config || {};
-    const $       = await scope.getService('jquery');
+    // const $       = await scope.getService('jquery');
 
-    if(!$){
-        throw new Error('callbora requires jquery service');
-    }
+    // if(!$){
+    //     throw new Error('callbora requires jquery service');
+    // }
 
     /* ==================================================
        CORE REQUEST ENGINE (Promise-Based)

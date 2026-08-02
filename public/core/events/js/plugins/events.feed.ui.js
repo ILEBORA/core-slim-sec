@@ -400,6 +400,6 @@ async function(scope){
         )
     )
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events')
 });

@@ -3,12 +3,12 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const callbora = await scope.getService('callbora');
     const feedUI  = await scope.getPlugin('activity.workspace');
     const activityComposer  = await scope.getPlugin('activity.composer');
-    const uiStack = await __BORA_APP__.service('uiStack');
+    const uiStack = await scope.getService('ui.stack');
     const uiActions = await scope.getService('ui.actions');
-    const popup = await scope.getPlugin('popup');
-    const routeRegistry = await scope.getService('route.registry');
+    // const popup = await scope.getPlugin('popup');
+    // const routeRegistry = await scope.getService('route.registry');
 
-    const dismissable = await __BORA_APP__.service('ui.dismissable');
+    const dismissable = await scope.getService('ui.dismissable');
     const bNavigator = await scope.getService('navigator');
 
     const state = {
@@ -129,6 +129,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     }
 
     async function showReactions(el){
+        
         const id = $(el)
             .closest('.activity-item')
             .data('id');
@@ -140,22 +141,25 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             return;
         }
 
-
+        console.log($box);
         // close any other dropdown
-        uiStack.closeTop();
+        // uiStack.closeTop();
 
         $box.addClass('open');
 
         const instance = dismissable.create(()=>{
-            $box.removeClass('open');
-            $box.removeData('dismissInstance');
+            // alert('called');
+            // $box.removeClass('open');
+            // $box.removeData('dismissInstance');
         });
 
         $box.data('dismissInstance', instance);
 
     }
 
-    function handleReaction(el){
+    function handleReaction(el, e){
+        console.count("handleReaction");
+        e.preventDefault();
         const $btn = $(el);
         const reaction = $btn.data('reaction');
 
@@ -163,6 +167,8 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
         const id = $item.data('id');
 
         const $box = $item.find('.reaction-box');
+
+        $box.removeClass('open');
         // close dropdown
         $box.data('dismissInstance')?.close();
 
@@ -479,7 +485,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
                     //remove item
                     $('.activity-item[data-id"'+activityId+'"]').addClass('deleted');
                     
-                    scope.emit('people.back');
+                    scope.emit('timeline.back');
 
                 } else {
                     alertBora.error(response.message || 'Failed');

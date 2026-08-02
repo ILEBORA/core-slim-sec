@@ -15,7 +15,14 @@ $pipeline->register('form.plugin', [
     'priority' => 101,
     'requires' => [
         //'form.actions'
-        ],
+    ],
+    // 'routes' => [
+    //     // 'portal/forms',
+    //     // 'portal/forms/*',
+    //     'bo/forms',
+    //     'bo/forms/*',
+    // ],
+    
 ]);
 
 /* ==================================================

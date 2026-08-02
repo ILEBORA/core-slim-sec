@@ -2,7 +2,7 @@ __BORA_REGISTER_PLUGIN__('popup.core', async function(scope){
 
     // const $ = await scope.getService('jquery');
     const events = await scope.getService('events'); // optional
-    const uiStack = await scope.getService('uiStack');
+    const uiStack = await scope.getService('ui.stack');
     const callbora = await scope.getService('callbora');
 
     let activePopup = null;

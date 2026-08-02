@@ -28,7 +28,13 @@ $pipeline->register('people.resources', [
     'file'      => 'plugins/people.resources.js',
     'type'      => 'plugin',
     'priority'  => 20,
-    'preload'   => true
+    'preload'   => true,
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 /* ---------- Core ---------- */
@@ -36,7 +42,13 @@ $pipeline->register('people.resources', [
 $pipeline->register('people.helpers', [
     'file'             => 'utils/PeopleHelpers.js',
     'type'             => 'lib',
-    'workspaceService' => true
+    'workspaceService' => true,
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.composer', [
@@ -46,7 +58,13 @@ $pipeline->register('people.composer', [
 
     'requires' => [
         'people.helpers'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.ui', [
@@ -56,7 +74,13 @@ $pipeline->register('people.ui', [
 
     'requires' => [
         'people.composer'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.loader', [
@@ -66,7 +90,13 @@ $pipeline->register('people.loader', [
 
     'requires' => [
         'people.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.follow', [
@@ -76,7 +106,13 @@ $pipeline->register('people.follow', [
 
     'requires' => [
         'people.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.tree', [
@@ -86,7 +122,13 @@ $pipeline->register('people.tree', [
 
     'requires' => [
         'people.loader'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.presence', [
@@ -96,7 +138,13 @@ $pipeline->register('people.presence', [
 
     'requires' => [
         'people.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.notifications', [
@@ -106,7 +154,13 @@ $pipeline->register('people.notifications', [
 
     'requires' => [
         'people.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.realtime', [
@@ -116,7 +170,13 @@ $pipeline->register('people.realtime', [
 
     'requires' => [
         'people.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.tabs', [
@@ -126,7 +186,13 @@ $pipeline->register('people.tabs', [
 
     'requires' => [
         'people.ui'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.api', [
@@ -138,7 +204,13 @@ $pipeline->register('people.api', [
         'people.helpers',
         'people.loader',
         'people.tree'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 /* ---------- Plugins ---------- */
@@ -159,7 +231,13 @@ $pipeline->register('people.controller', [
         'people.follow',
 
         'people.api'
-    ]
+    ],
+    'routes' => [
+        'portal/people',
+        'portal/people/*',
+        'bo/people',
+        'bo/people/*',
+    ],
 ]);
 
 $pipeline->register('people.ui.interactions', [

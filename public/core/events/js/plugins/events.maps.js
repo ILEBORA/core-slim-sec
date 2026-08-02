@@ -109,6 +109,6 @@ __BORA_REGISTER_PLUGIN__(
 
 }
 ,{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events')
 });

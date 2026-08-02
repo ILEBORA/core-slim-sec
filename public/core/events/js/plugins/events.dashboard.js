@@ -16,6 +16,6 @@ __BORA_REGISTER_PLUGIN__('events.dashboard', async function(){
         unmount
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events')
 });

@@ -55,6 +55,6 @@ __BORA_REGISTER_SERVICE__('events.calendar', async function(scope){
         year
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events/calendar')
 });

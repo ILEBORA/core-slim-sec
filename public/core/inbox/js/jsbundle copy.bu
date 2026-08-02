@@ -147,7 +147,6 @@ $pipeline->register('inbox.workspace', [
     'type'     => 'plugin',
     'priority' => 200,
     'requires' => [
-    //     'runtime',         // core
     //     'state',           // core service
         'inbox.helpers',
         'inbox.ui',

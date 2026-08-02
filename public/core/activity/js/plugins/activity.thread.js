@@ -197,6 +197,6 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
     return { init };
 
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/activity')
 });

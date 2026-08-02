@@ -1,6 +1,6 @@
 __BORA_REGISTER_PLUGIN__('popup', async function(scope){
 
-    const uiStack = await scope.getService('uiStack');
+    const uiStack = await scope.getService('ui.stack');
     const popupCore = await scope.getPlugin('popup.core');
 
     function buildFormUrl({ module, group, tab='add', id=null, meta=null }){

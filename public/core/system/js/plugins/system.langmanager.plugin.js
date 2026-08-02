@@ -14,7 +14,7 @@ async function(scope){
         state.mounted = true;
         // alert('System mounted');
 
-        console.log('[System] mounted');
+        console.log('[System] system.langmanager.plugin mounted');
 
         $(function(){
             uiBind();
@@ -25,7 +25,7 @@ async function(scope){
         if (!state.mounted) return;
         state.mounted = false;  
 
-        console.log('[System] unmounted');
+        console.log('[System] system.langmanager.plugin unmounted');
     }
     //
 

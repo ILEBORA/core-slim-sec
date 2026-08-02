@@ -33,9 +33,13 @@ $pipeline->register('grids.events', [
 
         'service',
 
-    'priority' =>
-
-        100,
+    'priority' => 100,
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
+    ],
 ]);
 
 $pipeline->register('grids.store', [
@@ -54,9 +58,15 @@ $pipeline->register('grids.store', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.events'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -76,9 +86,15 @@ $pipeline->register('grids.subscriptions', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.store'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -97,8 +113,12 @@ $pipeline->register('grids.patchResolver', [
         130,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -117,8 +137,12 @@ $pipeline->register('grids.selection', [
         131,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -137,8 +161,12 @@ $pipeline->register('grids.transport', [
         132,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -157,8 +185,12 @@ $pipeline->register('grids.state', [
         133,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -178,9 +210,15 @@ $pipeline->register('grids.optimistic', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.store'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -200,9 +238,15 @@ $pipeline->register('grids.offline', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.store'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -222,11 +266,17 @@ $pipeline->register('grids.sync', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.store',
 
         'grids.events'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -246,9 +296,15 @@ $pipeline->register('grids.sse', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.subscriptions'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -268,13 +324,19 @@ $pipeline->register('grids.stream', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.sse',
 
         'grids.patchResolver',
 
         'grids.store'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -294,8 +356,6 @@ $pipeline->register('grids.runtime', [
 
     'requires' => [
 
-        'runtime',
-
         'grids.store',
 
         'grids.events',
@@ -305,6 +365,12 @@ $pipeline->register('grids.runtime', [
         'grids.patchResolver',
 
         'grids.stream'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -327,10 +393,13 @@ $pipeline->register('grids.table', [
         200,
 
     'requires' => [
-
-        'runtime',
-
         'grids.runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -350,9 +419,13 @@ $pipeline->register('grids.cards', [
 
     'requires' => [
 
-        'runtime',
-
         'grids.runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -372,9 +445,15 @@ $pipeline->register('grids.pagination', [
 
     'requires' => [
 
-        'runtime',
+        ////
 
         'grids.store'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -394,9 +473,15 @@ $pipeline->register('grids.search', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.store'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -415,8 +500,12 @@ $pipeline->register('grids.export', [
         240,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -435,8 +524,12 @@ $pipeline->register('grids.actions', [
         100,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -455,8 +548,12 @@ $pipeline->register('grids.registry', [
         100,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -476,8 +573,14 @@ $pipeline->register('grids.contextmenu', [
 
     'requires' => [
 
-        'runtime',
+        //
         'grids.actions'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -497,10 +600,16 @@ $pipeline->register('grids.inlineedit', [
 
     'requires' => [
 
-        'runtime',
+        //
 
         'grids.optimistic',
         'grids.actions'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -519,8 +628,12 @@ $pipeline->register('grids.dragscroll', [
         270,
 
     'requires' => [
-
-        'runtime'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -539,10 +652,13 @@ $pipeline->register('grids.realtime', [
         280,
 
     'requires' => [
-
-        'runtime',
-
         'grids.stream'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 
@@ -562,9 +678,13 @@ $pipeline->register('grids.renderers', [
 
     'requires' => [
 
-        'runtime',
-
         'grids.stream'
+    ],
+    'routes' => [
+        'portal/grids',
+        'portal/grids/*',
+        'bo/grids',
+        'bo/grids/*',
     ],
 ]);
 

@@ -25,6 +25,6 @@ __BORA_REGISTER_PLUGIN__('events.calendar.ui', async function(scope){
         unmount
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events/calendar')
 });

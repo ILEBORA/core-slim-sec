@@ -33,6 +33,6 @@ async function(scope){
 
     return { mount, unmount };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/people')
 });

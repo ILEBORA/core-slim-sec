@@ -4,7 +4,7 @@ __BORA_REGISTER_PLUGIN__(
 async function (scope) {
 
     const popup = await scope.getPlugin('popup');
-    const uiStack = await scope.getService('uiStack');
+    const uiStack = await scope.getService('ui.stack');
     const callbora = await scope.getService('callbora');
     const navigation = await scope.getService('navigation');
 
@@ -568,6 +568,6 @@ async function (scope) {
         }
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/people')
 });

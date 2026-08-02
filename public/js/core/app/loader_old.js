@@ -129,8 +129,8 @@
         return promise;
     }
 
-    function loadScriptOnce(src, version = '1.0.0'){
-
+    async function loadScriptOnce(src, version = '1.0.0'){
+        console.log('[LOADER] loadScriptOnce',loadScriptOnce);
         if(scriptCache.has(src)){
             return scriptCache.get(src);
         }
@@ -226,7 +226,7 @@
         }
         //end new
 
-        // console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
+        console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
 
         if(stack.includes(name)){
             const cycle = [...stack, name].join(' → ');

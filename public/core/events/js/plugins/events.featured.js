@@ -33,6 +33,6 @@ __BORA_REGISTER_PLUGIN__('events.featured', async function(){
         unmount
     };
 },{
-    requires:['realtime'],
+    //requires:['realtime'],
     activateOn: (route) => route.startsWith('portal/events/featured')
 });

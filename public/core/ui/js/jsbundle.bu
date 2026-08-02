@@ -17,7 +17,7 @@ $pipeline->register('ui.core', [
     'file'     => 'script.js',
     'type'     => 'lib',
     'priority' => 100,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 /* ==================================================
@@ -28,7 +28,7 @@ $pipeline->register('ui.hooks', [
     'file'     => 'hooks.js',
     'type'     => 'lib',
     'priority' => 110,
-    'requires' => ['runtime'],
+    'requires' => [],
 ]);
 
 /* ==================================================
@@ -40,7 +40,7 @@ $pipeline->register('ui.anchor.positioner', [
     'type'     => 'plugin',
     'priority' => 130,
     'requires' => [
-        'runtime'
+        
     ],
 ]);
 
@@ -49,7 +49,7 @@ $pipeline->register('ui.context.menu', [
     'type'     => 'plugin',
     'priority' => 130,
     'requires' => [
-        'runtime',
+        
         'ui.core',
         'ui.hooks'
     ],
@@ -61,7 +61,7 @@ $pipeline->register('ui.dropdown.panel', [
     'priority' => 131,
     'preload'  => true,
     'requires' => [
-        'runtime',
+        
         'ui.core',
         'ui.hooks',
         'ui.anchor.positioner'
@@ -73,7 +73,7 @@ $pipeline->register('ui.plugin', [
     'priority' => 1,
     'preload'  => true,
     'requires' => [
-        'runtime',
+        
     ],
 ]);
 

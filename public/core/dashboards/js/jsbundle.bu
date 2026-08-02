@@ -1,96 +1,233 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
-
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
 use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
+$pipeline = new AssetPipelineJs(
+    'dashboards',
+    __DIR__
+);
 
-$pipeline = new AssetPipelineJs('dashboards', __DIR__, $origin);
+/* --------------------------------------------------
+ | Resources
+ * ------------------------------------------------- */
 
-/* ==================================================
-   CORE DASHBOARD LOGIC
-================================================== */
-
-$pipeline->register('dashboards=', [
-    'file'     => 'services/dashboards.js',
-    'type'     => 'service', // or 'plugin' depending on behavior
-    'priority' => 100,
-    'requires' => [
-    //    'runtime',
-    //    'hooks',
-    //    'state'
+$pipeline->register('dashboards.resources', [
+    'file'      => 'plugins/dashboards.resources.js',
+    'type'      => 'plugin',
+    'priority'  => 10,
+    'preload'   => true,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
     ],
 ]);
 
-// /* ==================================================
-//    PERMISSION: DASHBOARDS
-// ================================================== */
+/* --------------------------------------------------
+ | Vendors
+ * ------------------------------------------------- */
 
-// $pipeline->registerPerm('dashboards.edit', [
-//     'file'     => 'perms/dashboards/editdashboards.js',
-//     'group'    => 'dashboards',
-//     'sub'      => 'editdashboards',
-//     'priority' => 200,
-//     'requires' => [
-//         'dashboards.core'
-//     ],
-// ]);
-
-// $pipeline->registerPerm('dashboards.create', [
-//     'file'     => 'perms/dashboards/createdashboards.js',
-//     'group'    => 'dashboards',
-//     'sub'      => 'createdashboards',
-//     'priority' => 201,
-//     'requires' => [
-//         'dashboards.core'
-//     ],
-// ]);
-
-// /* ==================================================
-//    PERMISSION: DASHBOARD PAGE WIDGETS
-// ================================================== */
-
-// $pipeline->registerPerm('dashpagewidgets.edit', [
-//     'file'     => 'perms/dashpagewidgets/editdashpagewidgets.js',
-//     'group'    => 'dashpagewidgets',
-//     'sub'      => 'editdashpagewidgets',
-//     'priority' => 210,
-//     'requires' => [
-//         'dashboards.core'
-//     ],
-// ]);
-
-// $pipeline->registerPerm('dashpagewidgets.add', [
-//     'file'     => 'perms/dashpagewidgets/adddashpagewidgets.js',
-//     'group'    => 'dashpagewidgets',
-//     'sub'      => 'adddashpagewidgets',
-//     'priority' => 211,
-//     'requires' => [
-//         'dashboards.core'
-//     ],
-// ]);
-
-// $pipeline->registerPerm('dashpagewidgets.delete', [
-//     'file'     => 'perms/dashpagewidgets/deletedashpagewidgets.js',
-//     'group'    => 'dashpagewidgets',
-//     'sub'      => 'deletedashpagewidgets',
-//     'priority' => 212,
-//     'requires' => [
-//         'dashboards.core'
-//     ],
-// ]);
-
-$pipeline->register('dashboards.actions', [
-    'file'     => 'plugins/dashboards.actions.js',
-    'type'     => 'plugin',
-    'priority' => 220,
-    'requires' => ['runtime'],
+$pipeline->register('chartjs', [
+    'file'              => 'vendor/chart.js',
+    'type'              => 'lib',
+    'workspaceService'  => true,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
 ]);
 
-/* ==================================================
-   COMPILE
-================================================== */
+$pipeline->register('dashboards.utils', [
+    'file'              => 'utils/dashboards.utils.js',
+    'type'              => 'lib',
+    'workspaceService'  => true,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
 
-$pipeline->compile();
+/* --------------------------------------------------
+ | Services
+ * ------------------------------------------------- */
+
+$pipeline->register('dashboards.api', [
+    'file'              => 'services/DashboardsAPI.js',
+    'type'              => 'lib',
+    'workspaceService'  => true,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+$pipeline->register('dashboards.state', [
+    'file'              => 'services/DashboardsState.js',
+    'type'              => 'lib',
+    'workspaceService'  => true
+]);
+
+$pipeline->register('dashboards.realtime', [
+    'file'              => 'services/DashboardsRealtime.js',
+    'type'              => 'lib',
+    'workspaceService'  => true,
+    'priority'          => 10,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+$pipeline->register('dashboards.ui', [
+    'file'              => 'services/DashboardsUI.js',
+    'type'              => 'lib',
+    'workspaceService'  => true,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+$pipeline->register('chart.service', [
+    'file'      => 'services/chart.service.js',
+    'type'      => 'service',
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+$pipeline->register('dashboards.notifications', [
+    'file'      => 'services/dashboards.notifications.js',
+    'type'      => 'service',
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+/* --------------------------------------------------
+ | Plugins
+ * ------------------------------------------------- */
+
+$pipeline->register('dashboards.actions', [
+    'file'      => 'plugins/dashboards.actions.js',
+    'type'      => 'plugin',
+    'faces'     => ['guest','client','admin'],
+    'priority'  => 10,
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+$pipeline->register('dashboards.controller', [
+    'file'      => 'plugins/dashboards.controller.js',
+    'type'      => 'plugin',
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+$pipeline->register('dashboards.dashboard', [
+    'file'      => 'plugins/dashboards.dashboard.js',
+    'type'      => 'plugin',
+
+    'requires' => [
+        'chartjs'
+    ],
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+]);
+
+/* --------------------------------------------------
+ | Workspace
+ * ------------------------------------------------- */
+
+$pipeline->register('dashboards.workspace', [
+
+    'file'      => 'plugins/dashboards.workspace.js',
+
+    'type'      => 'plugin',
+
+    'workspace' => true,
+
+    'priority'  => 200,
+
+    'requires'  => [
+        'dashboards.realtime',
+        'dashboards.state',
+        'dashboards.controller',
+        'dashboards.actions',
+        'dashboards.notifications'
+    ],
+
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+
+]);
+
+$pipeline->register('dashboards.admin.workspace', [
+
+    'file'      => 'plugins/dashboards.admin.workspace.js',
+
+    'type'      => 'plugin',
+
+    'workspace' => true,
+
+    'priority'  => 200,
+
+    'requires'  => [
+        'dashboards.realtime',
+        'dashboards.state',
+        'dashboards.controller',
+        'dashboards.actions',
+        'dashboards.notifications'
+    ],
+
+    'routes' => [
+        // 'portal/dashboards',
+        // 'portal/dashboards/*',
+        'bo/dashboards',
+        'bo/dashboards/*',
+    ],
+
+]);
+
+/* --------------------------------------------------
+ | Compile
+ * ------------------------------------------------- */
+
+$pipeline
+    ->setDebug(true)
+    ->compile();

@@ -1,12 +1,12 @@
 __BORA_REGISTER_SERVICE__(
     'navigation',
     async function(scope){
-
+        console.log('[SCOPE]',scope);
         const state   = await scope.getService('state');
         const router  = await scope.getService('router');
         const hooks   = await scope.getService('hooks');
         const meta    = await scope.getService('meta');
-        const uiStack = await scope.getService('uiStack');        
+        const uiStack = await scope.getService('ui.stack');        
 
         const app     = window.__BORA_APP__;
         let overlayTimer = null;
@@ -474,7 +474,7 @@ __BORA_REGISTER_SERVICE__(
         }
 
         window.addEventListener('popstate', async (e) => {
-            const uiStack  = await scope.getService('uiStack');
+            const uiStack  = await scope.getService('ui.stack');
             const navigator = await scope.getService('navigator');
             const popup    = await scope.getPlugin('popup');
 

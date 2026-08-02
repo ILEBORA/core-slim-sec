@@ -1,23 +1,35 @@
 <?php
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
 
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+EnvLoader::load(
+    __DIR__ . '/../../../../../../../',
+    'wahenga'
+);
 
 use BoraSlim\Core\Assets\AssetPipelineJs;
 
-$origin = $GLOBALS['__CURRENT_MODULE_ORIGIN__'] ?? 'core';
-
-$pipeline = new AssetPipelineJs('system', __DIR__, $origin);
+$pipeline = new AssetPipelineJs(
+   'system',
+   __DIR__
+);
 
 /* ==================================================
    LIBS (FOUNDATION)
 ================================================== */
 
 $pipeline->register('system.core', [
-    'file'     => 'system.js',
-    'type'     => 'lib',
-    'priority' => 100,
-    'requires' => ['runtime'],
+   'file'     => 'system.js',
+   'type'     => 'lib',
+   'workspaceService' => true,
+   'priority' => 10,
+   'requires' => [],
+    
+   'routes' => [
+         // 'portal/system',
+         // 'portal/system/*',
+         'bo/system',
+         'bo/system/*',
+   ],
 ]);
 
 
@@ -25,18 +37,40 @@ $pipeline->register('system.core', [
    PLUGINS (UI BEHAVIOUR)
 ================================================== */
 
+$pipeline->register('system.roleperm.plugin', [
+   'file'     => 'plugins/system.roleperm.plugin.js',
+   'type'     => 'plugin',
+   'priority' => 12,
+   'faces'     => ['admin'],
+   'routes'   => [
+     'bo/system/rolepermission'
+   ],
+   'requires' => [
+   //   'system.core'
+   ],
+]);
+
 $pipeline->register('system.langmanager.plugin', [
     'file'     => 'plugins/system.langmanager.plugin.js',
     'type'     => 'plugin',
-    'priority' => 130,
+    'priority' => 13,
+    'faces'     => ['admin'],
+    'routes'   => [
+      'bo/system/langmanager'
+    ],
     'requires' => [
-        
+      'system.core'
     ],
 ]);
+
+
 
 
 /* ==================================================
    COMPILE
 ================================================== */
 
-$pipeline->compile();
+
+$pipeline
+   ->setDebug(true)
+   ->compile();

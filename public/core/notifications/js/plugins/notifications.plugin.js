@@ -16,7 +16,7 @@ formJourney.registerJourney('notifications.admin.send', function($form, done) {
 		data: data,
 		success: function(resp) {
             if(resp.success){
-                $form[0].reset()
+                $form[0].reset();
                 alertBora.notify(resp.message??'Successful', 'success', 4);
                 if(resp.redirect){
                     if(typeof authChannel !== 'undefined'){

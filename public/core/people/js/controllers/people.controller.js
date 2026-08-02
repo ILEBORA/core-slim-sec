@@ -103,6 +103,8 @@ async function(scope){
         init
     };
 
-},{
-    faces:['client']
-});
+},
+// {
+//     faces:['client']
+// }
+);
