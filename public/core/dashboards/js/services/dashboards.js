@@ -72,26 +72,7 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
                 icon.classList.toggle('fa-times');
             }
         });
-        // document.addEventListener('click', function(e){
-        //     const toggle = e.target.closest('.dash-controls-toggle');
-        //     if(!toggle) return;
-
-        //     toggle.classList.toggle('opened');
-
-        //     const container = toggle.closest('.dash-controls-container');
-        //     if(!container) return;
-
-        //     container.classList.toggle('expanded');
-
-        //     const controls = container.querySelector('.dash-controls');
-        //     if(controls) controls.classList.toggle('expanded');
-
-        //     const icon = toggle.querySelector('i');
-        //     if(icon){
-        //         icon.classList.toggle('fa-cogs');
-        //         icon.classList.toggle('fa-times');
-        //     }
-        // });
+     
 
         // Hover tools (no jQuery required)
         document.addEventListener('mouseover', function(e){
@@ -158,7 +139,7 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
     */
 
     function init(){
-
+        alert('Dash tools');
         console.log('[Dashboards] initializing');
 
         bindCoreControls();

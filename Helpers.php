@@ -139,6 +139,11 @@ if (!function_exists('processDBRoute')) {
     }
 }
 
+function Http(): \BoraSlim\Core\Http\HttpClient
+{
+    return new \BoraSlim\Core\Http\HttpClient;
+}
+
 //TODO:: Cleanup
 //Email
 function isEmail($email) {
@@ -474,7 +479,7 @@ if (!function_exists('ModManage')) {
 }
 
 if (!function_exists('Feature')) {
-    function Feature(): \BoraSlim\Core\Helpers\FeatureResolver
+    function feature(): \BoraSlim\Core\Helpers\FeatureResolver
     {
         return \BoraSlim\Core\App::getInstance()->getResolver();
     }
@@ -834,7 +839,7 @@ if (!function_exists('hasPermission')) {
 //         // $class = Manage()->permission->getInstance();
 //         // return $class->hasPermission($perm, $sub, $force_create);
 //         $permManager = myApp()->getFeature('permissions');
-//         // $class = Feature()->permissions->getInstance();  // note: key "permissions" must match registration
+//         // $class = feature()->permissions->getInstance();  // note: key "permissions" must match registration
 //         return $permManager->hasPermission($perm, $sub, $force_create);
 //     }
 // }
@@ -1065,7 +1070,10 @@ if (!function_exists('Event')) {
     {
         $ctx = ctx();
         if (!$ctx->registered(\BoraSlim\Core\Managers\EventManager::class)) {
-            $ctx->singleton(\BoraSlim\Core\Managers\EventManager::class, fn() => new \BoraSlim\Core\Managers\EventManager());
+            $ctx->singleton(\BoraSlim\Core\Managers\EventManager::class, 
+                fn() => new \BoraSlim\Core\Managers\EventManager(
+                    new \BoraSlim\Core\Contracts\Events\EventPayloadSerializer
+                ));
         }
         return $ctx->resolve(\BoraSlim\Core\Managers\EventManager::class);
     }
@@ -1344,9 +1352,19 @@ if (!function_exists('env')) {
 }
 
 use BoraSlim\Core\Helpers\WithResolver;
+
 if (!function_exists('With')) {
-    function With($name) {
-        return WithResolver::get($name);
+    function With(string $name)
+    {
+        $service = WithResolver::get($name);
+
+        if ($service === null) {
+            throw new \RuntimeException(
+                "Unable to resolve module or feature: '{$name}'."
+            );
+        }
+
+        return $service;
     }
 }
 
@@ -1695,6 +1713,34 @@ if(!function_exists('abort')){
 }
 
 /* Translator */
+if (!function_exists('Translator')) {
+
+    function Translator(): \BoraSlim\Core\Translation\TranslationManager
+    {
+        $ctx = ctx();
+
+        if (
+            !$ctx->registered(
+                \BoraSlim\Core\Translation\TranslationManager::class
+            )
+        ) {
+
+            $ctx->singleton(
+
+                \BoraSlim\Core\Translation\TranslationManager::class,
+
+                fn () => new \BoraSlim\Core\Translation\TranslationManager()
+
+            );
+
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Translation\TranslationManager::class
+        );
+    }
+
+}
 if (!function_exists('i18n_current_lang')) {
     function i18n_current_lang(): string
     {
@@ -1813,16 +1859,21 @@ if (!function_exists('i18n_register_auto')) {
 if (!function_exists('isLoggedIn')) {
     function isLoggedIn(): bool
     {
-        try {
+        $users = WithResolver::get('users');
 
-            $users = With('users');
-
-            return (bool) $users->getManager()->isAuthenticated();
-
-        } catch (\Throwable $e) {
-            error_log($e->getMessage());
+        if (!$users) {
             return false;
         }
+
+        $manager = method_exists($users, 'getManager')
+            ? $users->getManager()
+            : null;
+
+        if (!$manager) {
+            return false;
+        }
+
+        return (bool) $manager->isAuthenticated();
     }
 }
 
@@ -2044,6 +2095,26 @@ if (!function_exists('routes')) {
             $ctx->singleton(\BoraSlim\Core\Routing\RouteRegistry::class, fn() => new \BoraSlim\Core\Routing\RouteRegistry());
         }
         return $ctx->resolve(\BoraSlim\Core\Routing\RouteRegistry::class);
+    }
+}
+
+// Feed
+if (!function_exists('feed')) {
+
+    function feed(): \BoraSlim\Core\Feed\CandidateManager
+    {
+        $ctx = ctx();
+
+        if (!$ctx->registered(\BoraSlim\Core\Feed\CandidateManager::class)) {
+            $ctx->singleton(
+                \BoraSlim\Core\Feed\CandidateManager::class,
+                fn() => new \BoraSlim\Core\Feed\CandidateManager()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Feed\CandidateManager::class
+        );
     }
 }
 

@@ -15,7 +15,7 @@ __BORA_REGISTER_PLUGIN__('events', async function(scope){
         allow: null,
 
         init(){
-
+            // alert('boraevents init');
             // Generic fallback
             $(document).on('click', '[data-e], [data-e-trigger]', function(e){
                 BoraEvents.handleEvent($(this), e, 'click');
@@ -48,9 +48,18 @@ __BORA_REGISTER_PLUGIN__('events', async function(scope){
             }
         },
 
-        resolveFunction(fnCall, e, $el, eventType){
+        async resolveFunction(fnCall, e, $el, eventType){
 
             try{
+                console.log(fnCall);
+
+
+                if (fnCall.startsWith('action:')) { 
+                    console.log('Found',fnCall);
+                    const uiActions = await scope.getService('ui.actions');
+                    uiActions.run(fnCall.slice(7), $el[0], e);
+                    return;
+                }
 
                 const app = window.__BORA_APP__;
                 const securityMode = scope.config?.securityMode || 'loose';
@@ -212,6 +221,9 @@ __BORA_REGISTER_PLUGIN__('events', async function(scope){
             return this;
         };
     }
+
+    window.BoraEvents = BoraEvents;
+    $(document).ready(() => BoraEvents.init());
 
     return BoraEvents;
 });

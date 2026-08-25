@@ -7,8 +7,9 @@
 .landing-hero-section{
     position: relative;
     overflow: hidden;
-    background: var(--landing-bg, #f7f7f3);
+    background: var(--activity-composer-back, --landing-bg, #f7f7f3);
     padding: 90px 0;
+    width: 100%;
 }
 
 

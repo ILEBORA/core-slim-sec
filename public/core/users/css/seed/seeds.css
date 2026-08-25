@@ -1,0 +1,249 @@
+/* =========================================================
+   Seed Tasks Widget
+   ========================================================= */
+
+   .seed-tasks-widget {
+    width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.seed-tasks-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.seed-tasks-heading {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.seed-tasks-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(25, 135, 84, .10);
+    color: #198754;
+
+    font-size: 1rem;
+}
+
+.seed-tasks-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.seed-tasks-subtitle {
+    margin-top: .15rem;
+
+    font-size: .78rem;
+    color: var(--bs-secondary-color, #6c757d);
+}
+
+.seed-tasks-count {
+    min-width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 .45rem;
+
+    border-radius: 999px;
+
+    background: #198754;
+    color: #fff;
+
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------
+   Task list
+   --------------------------------------------------------- */
+
+.seed-tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
+}
+
+
+/* ---------------------------------------------------------
+   Task card
+   --------------------------------------------------------- */
+
+.seed-task-card {
+    padding: .9rem 1rem;
+
+    border: 1px solid var(
+        --bs-border-color,
+        #dee2e6
+    );
+
+    border-radius: 10px;
+
+    background: var(
+        --bs-body-bg,
+        #fff
+    );
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease,
+        transform .15s ease;
+}
+
+.seed-task-card:hover {
+    border-color: rgba(25, 135, 84, .35);
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, .06);
+
+    transform: translateY(-1px);
+}
+
+
+/* ---------------------------------------------------------
+   Task heading
+   --------------------------------------------------------- */
+
+.seed-task-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: .75rem;
+}
+
+.seed-task-type {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.seed-task-type-icon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: rgba(25, 135, 84, .08);
+    color: #198754;
+
+    font-size: .75rem;
+}
+
+
+/* ---------------------------------------------------------
+   Status
+   --------------------------------------------------------- */
+
+.seed-status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: .2rem .5rem;
+
+    border-radius: 999px;
+
+    font-size: .68rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.seed-status.assigned {
+    background: rgba(13, 110, 253, .08);
+    color: #0d6efd;
+}
+
+.seed-status.started {
+    background: rgba(255, 193, 7, .12);
+    color: #997404;
+}
+
+
+/* ---------------------------------------------------------
+   Description
+   --------------------------------------------------------- */
+
+.seed-task-description {
+    margin-top: .65rem;
+
+    color: var(
+        --bs-secondary-color,
+        #6c757d
+    );
+
+    font-size: .8rem;
+    line-height: 1.45;
+}
+
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+
+.seed-task-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: .75rem;
+    padding-top: .65rem;
+
+    border-top: 1px solid var(
+        --bs-border-color,
+        #dee2e6
+    );
+}
+
+.seed-task-action {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+
+    color: #198754;
+
+    font-size: .78rem;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.seed-task-action:hover {
+    color: #146c43;
+}
+
+.seed-task-action i {
+    font-size: .65rem;
+
+    transition:
+        transform .15s ease;
+}
+
+.seed-task-action:hover i {
+    transform: translateX(3px);
+}

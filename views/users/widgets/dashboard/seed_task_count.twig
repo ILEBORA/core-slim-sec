@@ -1,0 +1,38 @@
+<div class="seed-task-count-widget container">
+
+    <div class="seed-task-count-icon">
+        <i class="fa fa-seedling"></i>
+    </div>
+
+    <div class="seed-task-count-content">
+
+        <div class="seed-task-count-label">
+            Seed Tasks
+        </div>
+
+        <div class="seed-task-count-value">
+            {{ count }}
+        </div>
+
+        <div class="seed-task-count-description">
+            {% if count == 1 %}
+                task waiting for you
+            {% else %}
+                tasks waiting for you
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="seed-task-count-action">
+
+        <a
+            href="{{ url|default('/seed/tasks') }}"
+            title="View Seed Tasks"
+        >
+            <i class="fa fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</div>

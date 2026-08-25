@@ -187,6 +187,7 @@ return [
     'capability' => ['file' => 'services/capability.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 36, 'requires' => []],
     'ui.actions' => ['file' => 'services/ui.actions.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 37, 'requires' => []],
     'ui.stack' => ['file' => 'services/ui.stack.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 39, 'preload'=>true,'requires' => []],
+    'forms' => ['file' => 'services/forms.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 28, 'preload'=>true,'requires' => []],
     
     'ui.dismissable' => ['file' => 'services/ui.dismissable.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 40,'preload'=>true, 'requires' => []],
     'ui.element.dismiss' => ['file' => 'services/ui.element.dismiss.js', 'type' => 'service', 'version' => '1.0.0', 'priority' => 41, 'requires' => []],
@@ -252,7 +253,7 @@ return [
        app layer (lazy)
     ================================================== */
 
-    'ilebora_or' => ['file' => 'app/ilebora_or.js', 'version' => '1.0.0', 'priority' => 70, 'preload' => true, 'bypass' => true],
+    'ilebora_or' => ['file' => 'app/ilebora_or.js', 'version' => '1.0.0', 'priority' => 70, 'preload' => true ],
     'mainjs' => ['file' => 'app/mainjs.js', 'version' => '1.0.0', 'priority' => 75, 'preload' => true],    
 
     'config' => [

@@ -170,13 +170,13 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
         return `
             <div class="comment-item" data-id="${c.id}" style="margin-left:${depth * 2}px">
                 <div class="comment-avatar">
-                    <img src="${c.actor.avatar_url || 'assets/images/icons/noavatar.png'}">
+                    <img src="${c._actor.avatar_url || 'assets/images/icons/noavatar.png'}">
                 </div>
 
                 <div class="comment-body">
                     <div class="comment-meta">
-                        <strong data-nav="portal/people/person/${c.actor.person_id}/view">${c.actor.first_name}</strong>
-                        <strong>@${c.actor.username}</strong>
+                        <strong data-nav="portal/people/person/${c._actor.person_id}/view">${c._actor.first_name}</strong>
+                        <strong>@${c._actor.username}</strong>
                         <span class="time">${c.timeago_format}</span>
                     </div>
 

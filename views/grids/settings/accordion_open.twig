@@ -1,0 +1,56 @@
+ <div id="item{{ id }}" class="{{ class }}" >
+    <span class="toggle inactive">
+        <span style="float:right;">
+            {{ tools|raw }}
+        </span>
+        {{ main|raw }}
+    </span>
+
+    <ul id="column-list{{ ulid }}" class="inner {{ ulclass }} sortable-list" data-uniqueid="{{ id }}" style="display:block">
+        {{ inner|raw }}
+        
+    </ul>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script>
+    $(function () {
+        $("#column-list{{ ulid }}").sortable({
+            axis: "y",          // vertical only
+            placeholder: "drop-placeholder",
+            update: function () {
+                const order = $(this).sortable("toArray", {
+                    attribute: "data-id"
+                });
+
+                console.log(order); // [503, 502, 504, ...]
+            }
+        });
+
+        $("#column-list").disableSelection();
+    });
+    </script>
+
+    <style>
+    .sortable-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 300px;
+    }
+
+    .sortable-list li {
+        padding: 10px 14px;
+        margin-bottom: 6px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        cursor: move;
+    }
+
+    .drop-placeholder {
+        height: 40px;
+        border: 2px dashed #999;
+        background: #fafafa;
+    }
+    </style>
+
+</div>

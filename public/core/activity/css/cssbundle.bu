@@ -16,5 +16,7 @@ $pipeline
     ->add('stories.css')
     ->add('comments.css')
     ->add('share.css')
+    ->add('mentions.css')
+    ->add('tabs.css')
     
     ->send();

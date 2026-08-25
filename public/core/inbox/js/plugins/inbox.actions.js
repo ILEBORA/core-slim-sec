@@ -47,7 +47,7 @@ __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
         if (state.mounted) return;
         state.mounted = true;
 
-        // init();
+        init();
 
         realtime.initUserChannel();        
     }
@@ -61,10 +61,11 @@ __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
         if(state.initialized) return;
         state.initialized = true;
         
-        // alert('Inbox Actions');
+        // 
+        
     }
 
-    init();
+    // init();
 
     return {
         mount,

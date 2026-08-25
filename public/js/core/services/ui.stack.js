@@ -24,15 +24,54 @@ __BORA_REGISTER_SERVICE__('ui.stack', async function(scope){
         return stack[stack.length - 1] || null;
     }
 
+    let closing = false;
     function closeTop(){
+        if(closing){
+            return;
+        }
+    
+        closing = true;
+
+        try{
+
+            const instance = top();
+        
+            if(!instance) return false;
+        
+            if(typeof instance.close !== 'function'){
+                return false;
+            }
+        
+            instance.close();
+        }
+        finally{
+
+            setTimeout(() => {
+
+                closing = false;
+
+            },0);
+
+        }
+    
+        return true;
+    }
+
+    function closeTopO(){
         console.trace("uiStack.closeTop");
         const instance = stack.pop();
 
         if(!instance) return;
 
+        if(instance.handlesEscape === false){
+            return false;
+        }
+
         if(typeof instance.close === 'function'){
             instance.close();
         }
+
+        return true;
     }
 
     function size(){

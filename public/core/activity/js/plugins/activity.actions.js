@@ -5,6 +5,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     const activityComposer  = await scope.getPlugin('activity.composer');
     const uiStack = await scope.getService('ui.stack');
     const uiActions = await scope.getService('ui.actions');
+    const forms = await scope.getService('forms');
     // const popup = await scope.getPlugin('popup');
     // const routeRegistry = await scope.getService('route.registry');
 
@@ -126,6 +127,140 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
             });
         });
 
+
+        forms.register(
+            'timeline.add', function($form, done) {
+            alert('test');
+            const url = $form.attr('action');
+            const method = $form.attr('method') || 'POST';
+            const btn = $form.find('button[type=submit]');
+            const prevtext = btn.text();
+            btn.prop('disabled', true).text('Processing...');
+            
+            //
+            const values = $form.find('.select2-ajax').val() || [];
+    
+            const invalid = values.filter(v => v.startsWith('__new__:'));
+    
+            if (invalid.length) {
+                e.preventDefault();
+                alert('Please select valid people from the list.');
+                return false;
+            }
+            //
+    
+            // If files exist, use FormData; otherwise fallback to serialize
+            let hasFiles = $form.find('input[type="file"]').length > 0;
+            let data = null;
+            let ajaxOptions = {
+                url,
+                method,
+                success(resp){
+                    if(resp.success){
+                        //Add to timeline
+                        feedUI?.addToTimeline(resp.data.html);
+    
+                        alertBora.notify('Post Shared', 'success', 4);
+                        if(resp.redirect){
+                            if(typeof authChannel !== 'undefined'){
+                                authChannel.postMessage({cmd:'login', usr: rd('bID'), lnk: resp.redirect});
+                            }
+                            redirectTo(resp.redirect);
+                        }
+                        
+                        if(resp.esc){
+                            uiStack.closeTop();
+                        }
+    
+                        btn.prop('disabled', false).text(prevtext);
+                        
+                    } else {
+                        alertBora.notify(resp.message || 'Unexpected error', 'error', 5);
+                        btn.prop('disabled', false).text(prevtext);
+                    }
+                    if(typeof done === 'function') done(resp);
+    
+                    // Remove attachments from cache
+                    activityComposer.reset();
+                },
+                error(err){
+                    btn.prop('disabled', false).text(prevtext);
+                    alertBora.notify('Network / Server error', 'error', 5);
+                    if(typeof done === 'function') done(err);
+                }
+            };
+    
+            if(hasFiles){
+                data = new FormData($form[0]);
+                ajaxOptions.data = data;
+                ajaxOptions.processData = false;
+                ajaxOptions.contentType = false;
+            } else {
+                data = $form.serialize();
+                ajaxOptions.data = data;
+            }
+    
+            $.ajax(ajaxOptions);
+        });
+    
+        forms.register('stories.add', function($form, done) {
+            const url = $form.attr('action');
+            const method = $form.attr('method') || 'POST';
+            const btn = $form.find('button[type=submit]');
+            const prevtext = btn.text();
+            btn.prop('disabled', true).text('Processing...');
+    
+            // If files exist, use FormData; otherwise fallback to serialize
+            let hasFiles = $form.find('input[type="file"]').length > 0;
+            let data = null;
+            let ajaxOptions = {
+                url,
+                method,
+                success(resp){
+                    if(resp.success){
+                        //Add to timeline
+                        // feedUI.addToTimeline(resp.data.html);
+    
+                        alertBora.notify('Post Shared', 'success', 4);
+                        if(resp.redirect){
+                            if(typeof authChannel !== 'undefined'){
+                                authChannel.postMessage({cmd:'login', usr: rd('bID'), lnk: resp.redirect});
+                            }
+                            redirectTo(resp.redirect);
+                        }
+                        
+                        if(resp.esc){
+                            uiStack.closeTop();
+                        }
+    
+                        btn.prop('disabled', false).text(prevtext);
+                        
+                    } else {
+                        alertBora.notify(resp.message || 'Unexpected error', 'error', 5);
+                        btn.prop('disabled', false).text(prevtext);
+                    }
+                    if(typeof done === 'function') done(resp);
+                },
+                error(err){
+                    btn.prop('disabled', false).text(prevtext);
+                    alertBora.notify('Network / Server error', 'error', 5);
+                    if(typeof done === 'function') done(err);
+                }
+            };
+    
+            if(hasFiles){
+                data = new FormData($form[0]);
+                ajaxOptions.data = data;
+                ajaxOptions.processData = false;
+                ajaxOptions.contentType = false;
+            } else {
+                data = $form.serialize();
+                ajaxOptions.data = data;
+            }
+    
+            $.ajax(ajaxOptions);
+        });
+
     }
 
     async function showReactions(el){
@@ -149,8 +284,8 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
         const instance = dismissable.create(()=>{
             // alert('called');
-            // $box.removeClass('open');
-            // $box.removeData('dismissInstance');
+            $box.removeClass('open');
+            $box.removeData('dismissInstance');
         });
 
         $box.data('dismissInstance', instance);
@@ -313,137 +448,6 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
     async function popupTimelineComposer() {
         activityComposer.open();
     }
-
-    formJourney.registerJourney('timeline.add', function($form, done) {
-        const url = $form.attr('action');
-        const method = $form.attr('method') || 'POST';
-        const btn = $form.find('button[type=submit]');
-        const prevtext = btn.text();
-        btn.prop('disabled', true).text('Processing...');
-        
-        //
-        const values = $form.find('.select2-ajax').val() || [];
-
-        const invalid = values.filter(v => v.startsWith('__new__:'));
-
-        if (invalid.length) {
-            e.preventDefault();
-            alert('Please select valid people from the list.');
-            return false;
-        }
-        //
-
-        // If files exist, use FormData; otherwise fallback to serialize
-        let hasFiles = $form.find('input[type="file"]').length > 0;
-        let data = null;
-        let ajaxOptions = {
-            url,
-            method,
-            success(resp){
-                if(resp.success){
-                    //Add to timeline
-                    feedUI?.addToTimeline(resp.data.html);
-
-                    alertBora.notify('Post Shared', 'success', 4);
-                    if(resp.redirect){
-                        if(typeof authChannel !== 'undefined'){
-                            authChannel.postMessage({cmd:'login', usr: rd('bID'), lnk: resp.redirect});
-                        }
-                        redirectTo(resp.redirect);
-                    }
-                    
-                    if(resp.esc){
-                        uiStack.closeTop();
-                    }
-
-                    btn.prop('disabled', false).text(prevtext);
-                    
-                } else {
-                    alertBora.notify(resp.message || 'Unexpected error', 'error', 5);
-                    btn.prop('disabled', false).text(prevtext);
-                }
-                if(typeof done === 'function') done(resp);
-
-                // Remove attachments from cache
-                activityComposer.reset();
-            },
-            error(err){
-                btn.prop('disabled', false).text(prevtext);
-                alertBora.notify('Network / Server error', 'error', 5);
-                if(typeof done === 'function') done(err);
-            }
-        };
-
-        if(hasFiles){
-            data = new FormData($form[0]);
-            ajaxOptions.data = data;
-            ajaxOptions.processData = false;
-            ajaxOptions.contentType = false;
-        } else {
-            data = $form.serialize();
-            ajaxOptions.data = data;
-        }
-
-        $.ajax(ajaxOptions);
-    });
-
-    formJourney.registerJourney('stories.add', function($form, done) {
-        const url = $form.attr('action');
-        const method = $form.attr('method') || 'POST';
-        const btn = $form.find('button[type=submit]');
-        const prevtext = btn.text();
-        btn.prop('disabled', true).text('Processing...');
-
-        // If files exist, use FormData; otherwise fallback to serialize
-        let hasFiles = $form.find('input[type="file"]').length > 0;
-        let data = null;
-        let ajaxOptions = {
-            url,
-            method,
-            success(resp){
-                if(resp.success){
-                    //Add to timeline
-                    // feedUI.addToTimeline(resp.data.html);
-
-                    alertBora.notify('Post Shared', 'success', 4);
-                    if(resp.redirect){
-                        if(typeof authChannel !== 'undefined'){
-                            authChannel.postMessage({cmd:'login', usr: rd('bID'), lnk: resp.redirect});
-                        }
-                        redirectTo(resp.redirect);
-                    }
-                    
-                    if(resp.esc){
-                        uiStack.closeTop();
-                    }
-
-                    btn.prop('disabled', false).text(prevtext);
-                    
-                } else {
-                    alertBora.notify(resp.message || 'Unexpected error', 'error', 5);
-                    btn.prop('disabled', false).text(prevtext);
-                }
-                if(typeof done === 'function') done(resp);
-            },
-            error(err){
-                btn.prop('disabled', false).text(prevtext);
-                alertBora.notify('Network / Server error', 'error', 5);
-                if(typeof done === 'function') done(err);
-            }
-        };
-
-        if(hasFiles){
-            data = new FormData($form[0]);
-            ajaxOptions.data = data;
-            ajaxOptions.processData = false;
-            ajaxOptions.contentType = false;
-        } else {
-            data = $form.serialize();
-            ajaxOptions.data = data;
-        }
-
-        $.ajax(ajaxOptions);
-    });
 
     async function popupReplies(el){
 

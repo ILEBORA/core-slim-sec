@@ -1,5 +1,7 @@
-{% include "activity/timeline/header.twig" with {
-    entry: entry
-} %}
+<div class="container">
+    {% include "activity/timeline/header.twig" with {
+        entry: entry
+    } %}
 
-{{ entity.html|raw }}
+    {{ entity.html|raw }}
+</div>

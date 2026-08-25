@@ -4,5 +4,9 @@
                 {{submenus|raw}}
             {% endblock %}
         </div> 
-        <div id="injectSubChild" class="container sub_menu_child" style="display: block;"></div> 
+        <div id="injectSubChild" class="container sub_menu_child" style="display: block;">
+            {% block subchildmenus %}
+                {{subchildmenus|raw}}
+            {% endblock %}
+        </div> 
 </section>

@@ -307,11 +307,11 @@
         const serviceCache = new Map();
 
         async function importServices(map){
-            console.log('[IMPORT SERVICES]', map);
+            // console.log('[IMPORT SERVICES]', map);
             const result = {};
 
             for(const [alias, service] of Object.entries(map)){
-                console.log('[IMPORT SERVICE]', service);
+                // console.log('[IMPORT SERVICE]', service);
                 if(!serviceCache.has(service)){
                     serviceCache.set(
                         service,
@@ -363,7 +363,7 @@
             name = name.toLowerCase();
 
             if(services.has(name)){
-                console.warn('[Service exists]', name);
+                // console.warn('[Service exists]', name);
                 return;
             }
 
@@ -373,7 +373,7 @@
                 notifyRegistered(name);
             }
             catch(err){
-                console.error('[Service failed]', name, err);
+                // console.error('[Service failed]', name, err);
             }
         }
 
@@ -385,7 +385,7 @@
             name = name.toLowerCase();
 
             if(plugins.has(name)){
-                console.warn('[Plugin exists]', name);
+                // console.warn('[Plugin exists]', name);
                 return;
             }
             
@@ -519,7 +519,7 @@
 
                     // 🔥 CRITICAL: trigger activation only if new plugins arrived
                     if(newPlugins){
-                        console.log('NEW PLUGINS:: ', newPlugins);
+                        // console.log('NEW PLUGINS:: ', newPlugins);
                         emit('plugins:registered');
                         // await evaluatePluginActivation(normalizeUrl(window.location));
                     }
@@ -604,7 +604,7 @@
                     activateAgain = false;
                     // alert('evaluatePluginActivation :: ' + route + ' called:: '+cn); cn++;
                     const manifest = rd('manifest');// || global.__BORA_MANIFEST__ || {};
-                    // console.warn('[MANIFEST]', manifest);
+                    console.warn('[MANIFEST]', manifest);
 
                     global.__BORA_FACE__ = resolveFace(route);
                     await syncFace(global.__BORA_FACE__);
@@ -667,11 +667,11 @@
                         // );
 
                         if (!ok) {
-                            console.warn(
-                                "[Rejected]",
-                                name,
-                                meta
-                            );
+                            // console.warn(
+                            //     "[Rejected]",
+                            //     name,
+                            //     meta
+                            // );
                             let p = plugins.get(name);
                             if (p?.__active) {
 
@@ -680,7 +680,7 @@
                                     p.__active = false;
                                     p.__activating = false;
 
-                                    console.log(`${name} unmounted`);
+                                    // console.log(`${name} unmounted`);
                                 }
                                 catch (err) {
                                     console.error(err);
@@ -704,10 +704,10 @@
                         
 
                         const plugin = plugins.get(name);
-                        console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
+                        // console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
                         // Plugin not loaded yet (loader should have loaded it by now, but just in case)
                         if(!plugin){
-                            console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
+                            // console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
                             // console.log(pluginMeta.get(name));
                             continue;
                         }
@@ -732,7 +732,7 @@
                         --------------------------- */
 
                         if(shouldActivate){
-                            console.log('Activate plugin ' + name);
+                            // console.log('Activate plugin ' + name);
                             // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
                             if (plugin.__activating) {
                                 continue;  //return;
@@ -748,10 +748,10 @@
                                     await plugin.mount?.();
                                     plugin.__active = true;
 
-                                    console.log(
-                                        `%c ${name} Plugin active`,
-                                        'color:#22c55e;font-weight:bold;'
-                                    );
+                                    // console.log(
+                                    //     `%c ${name} Plugin active`,
+                                    //     'color:#22c55e;font-weight:bold;'
+                                    // );
 
                                     /* timing (optional keep your existing logic) */
                                     plugin.__activating = false;
@@ -774,10 +774,10 @@
                                     await plugin.unmount?.();
                                     plugin.__active = false;
 
-                                    console.log(
-                                        `%c ${name} Plugin unmounted`,
-                                        'color:red;font-weight:bold;'
-                                    );
+                                    // console.log(
+                                    //     `%c ${name} Plugin unmounted`,
+                                    //     'color:red;font-weight:bold;'
+                                    // );
 
                                 }catch(err){
                                     console.error(`[Plugin] Unmount failed: ${name}`, err);
@@ -803,7 +803,7 @@
         }
 
         function shouldLoad(meta, context, name){
-            console.log('[Should Load?]', name, meta, context);
+            // console.log('[Should Load?]', name, meta, context);
             // console.log(
             //     typeof meta.activateOn,
             //     meta.activateOn
@@ -815,12 +815,12 @@
             if(meta.activateOn){
 
                 const patterns = [].concat(meta.activateOn);
-                console.log('[ROUTES] ' + name + ' :: ', context.route, patterns);
+                // console.log('[ROUTES] ' + name + ' :: ', context.route, patterns);
                 const re = new RegExp(patterns[0]);
 
-                console.log(re);
-                console.log(context.route);
-                console.log(re.test(context.route));
+                // console.log(re);
+                // console.log(context.route);
+                // console.log(re.test(context.route));
 
                 if(!patterns.some(r => new RegExp(r).test(context.route))){
                     return false;
@@ -832,7 +832,7 @@
 
 
         function shouldLoadO(meta, context, name){
-            console.log('[Should Load?]', name, meta, context);
+            // console.log('[Should Load?]', name, meta, context);
 
             if(!meta) return true;
 
@@ -1095,23 +1095,23 @@
                 const report = sanity();
 
                 if(!report.ok){
-                    console.error('[BoraRuntime] Sanity failed:', report.issues);
+                    // console.error('[BoraRuntime] Sanity failed:', report.issues);
                 }
                 else{
-                    console.log('%c BoraRuntime started (clean)',
-                        'color:#22c55e;font-weight:bold;'
-                    );
+                    // console.log('%c BoraRuntime started (clean)',
+                    //     'color:#22c55e;font-weight:bold;'
+                    // );
                 }
 
-                console.table( 
-                    Array.from(timings.entries()).map(([name, t]) => ({ 
-                        plugin: name, 
-                        mounts: t.count, 
-                        avg_ms: t.avg.toFixed(2), 
-                        max_ms: t.max.toFixed(2), 
-                        total_ms: t.total.toFixed(2) 
-                    })) 
-                );
+                // console.table( 
+                //     Array.from(timings.entries()).map(([name, t]) => ({ 
+                //         plugin: name, 
+                //         mounts: t.count, 
+                //         avg_ms: t.avg.toFixed(2), 
+                //         max_ms: t.max.toFixed(2), 
+                //         total_ms: t.total.toFixed(2) 
+                //     })) 
+                // );
             }
 
         }

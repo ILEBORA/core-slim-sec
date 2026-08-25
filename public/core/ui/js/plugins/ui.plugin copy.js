@@ -6,6 +6,7 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
     const uiActions = await scope.getService('ui.actions');
     const popup = await scope.getPlugin('popup');
     const prefs = await scope.getService('preferences');
+    const forms = await scope.getService('forms');
 
     const store = await scope.getPlugin('store');
 
@@ -74,7 +75,7 @@ __BORA_REGISTER_PLUGIN__('ui.plugin', async function(scope){
             // location.reload();
         });
 
-        formJourney.registerJourney('user.profile.edit', function ($form, done) {
+        forms.registerJourney('user.profile.edit', function ($form, done) {
             const url = $form.attr('action');
             const method = $form.attr('method') || 'POST';
 

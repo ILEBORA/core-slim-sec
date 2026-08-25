@@ -226,7 +226,7 @@ async function(scope){
 
         uiActions.register(
             'person.claim.invite',
-            personClaim 
+            personClaim
         );
 
         uiActions.register(

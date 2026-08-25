@@ -4,6 +4,8 @@ __BORA_REGISTER_PLUGIN__(
 async function(scope){
 
     const $ = await scope.getService('jquery');
+    const appState = await scope.getService('state');
+    const uiBindings = await  scope.getPlugin('ui.bindings');
 
     const state = {
         mounted:false,
@@ -30,6 +32,28 @@ async function(scope){
         init();
 
         scan();
+
+        (async function(){
+            uiBindings.bind();
+            const widgetImages = [
+                'assets/images/widgets/1.jpg',
+                'assets/images/widgets/2.jpg',
+                'assets/images/widgets/3.jpg',
+                'assets/images/widgets/4.jpg',
+                'assets/images/widgets/5.jpg',
+                'assets/images/widgets/6.jpg'
+            ];
+
+            setInterval(() => {
+                console.log('suffle...');
+                const shuffled = [...widgetImages].sort(() => Math.random() - 0.5);
+                console.log(shuffled);
+                appState.set('landing.impact.mainImage', shuffled[0]);
+                appState.set('landing.impact.topImage', shuffled[1]);
+                appState.set('landing.impact.bottomImage', shuffled[2]);
+
+            }, 5000);
+        });
 
     }
 

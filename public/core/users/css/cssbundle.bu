@@ -8,4 +8,7 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
     ->add('style.css')
+    ->add('seed/seeds.css')
+    ->add('seed/seed_tasks_progress.css')
+    ->add('seed/seed_task_count.css')
     ->send();

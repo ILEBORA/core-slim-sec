@@ -2,22 +2,24 @@
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
 
 EnvLoader::load(
-
     __DIR__ . '/../../../../../../../',
-
     'wahenga'
 );
 
 use BoraSlim\Core\Assets\AssetPipelineJs;
 
 $pipeline = new AssetPipelineJs(
-
     'grids',
-
-    __DIR__,
-
-    'core'
+    __DIR__
 );
+
+$pipeline->register('grid.actions', [
+    'file'      => 'plugins/grid.actions.js',
+    'type'      => 'plugin',
+    'priority'  => 10,
+    // 'faces'     => ['client'],
+    'preload'   => true
+]);
 
 /* ==================================================
    SERVICES

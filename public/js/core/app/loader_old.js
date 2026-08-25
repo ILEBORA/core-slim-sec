@@ -130,7 +130,7 @@
     }
 
     async function loadScriptOnce(src, version = '1.0.0'){
-        console.log('[LOADER] loadScriptOnce',loadScriptOnce);
+        // console.log('[LOADER] loadScriptOnce',loadScriptOnce);
         if(scriptCache.has(src)){
             return scriptCache.get(src);
         }
@@ -226,7 +226,7 @@
         }
         //end new
 
-        console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
+        // console.warn(`[Loader-helper-new] Ensuring module: ${name}`);
 
         if(stack.includes(name)){
             const cycle = [...stack, name].join(' → ');
@@ -340,7 +340,7 @@
                 loaded.add(name);
 
                 if(global.__BORA_CONFIG__?.dev){
-                    console.log(`[Loader] Loaded: ${name}`);
+                    // console.log(`[Loader] Loaded: ${name}`);
                 }
 
                 return true;
@@ -348,7 +348,7 @@
             }catch(err){
 
                 failed.set(name, err);
-                console.error(`[Loader] Failed: ${name}`, err);
+                // console.error(`[Loader] Failed: ${name}`, err);
                 //
                 progress.failed++;
                 emitProgress('loader:error', {

@@ -1,7 +1,9 @@
 __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
 
-    const feed = await scope.getService('activity.feed');
+    // const feed = await scope.getService('activity.feed');
     // const sse  = await scope.getService('realtime.sse');
+
+    let feed, tabs;
 
     let el;
     let scopeName='home';
@@ -13,12 +15,49 @@ __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
 
     async function init(){
         ({
-            feed,
+            feed,tabs
             
         } = await scope.importServices({
             feed: 'activity.feed',
-           
+            tabs: 'activity.tabs'
         }));
+
+        /*
+        * Mount workspace services
+        */
+        await tabs.load();
+
+
+        /*
+        * Feed
+        */
+        // await feed.load({
+        //     scopeName
+        // });
+
+        /*
+        * Tab content request
+        */
+        scope.on(
+            'activity.tab.load',
+
+            async ({tab}) => {
+
+                /*
+                * profile-like/static tabs don't need
+                * feed loading, if applicable.
+                */
+                if (tab === 'foryou') {
+                    return;
+                }
+
+                await tabs.load();
+
+                await feed.load({
+                    scopeName
+                });
+            }
+        );
     }
 
     async function mount(){
@@ -27,7 +66,7 @@ __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
 
         
 
-        alert('Activity Workspace Mounted');
+        // alert('Activity Workspace Mounted');
 
         await init();
 
@@ -42,6 +81,21 @@ __BORA_REGISTER_PLUGIN__('activity.workspace', async function(scope){
             // load();
             bindRealtime();
         });
+
+        scope.on(
+            'activity.tab.ui',
+
+            ({tab, personId, root})=>{
+
+                tabs.setTab(
+                    root,
+                    personId,
+                    tab
+                );
+
+            }
+        );
+
     }
 
     function waitForElement(selector, callback){

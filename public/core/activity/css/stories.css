@@ -35,20 +35,20 @@
 
 .stories-rail::before{
     left:0;
-    background:linear-gradient(
+    /* background:linear-gradient(
         to right,
         var(--bg-color, #fff),
         transparent
-    );
+    ); */
 }
 
 .stories-rail::after{
     right:0;
-    background:linear-gradient(
+    /* background:linear-gradient(
         to left,
         var(--bg-color, #fff),
         transparent
-    );
+    ); */
 }
 
 /* =========================================================
@@ -252,7 +252,8 @@
             135deg,
             #7c5cff,
             #b14dff
-        );
+        )
+        !important;
 
     display:flex;
     align-items:center;

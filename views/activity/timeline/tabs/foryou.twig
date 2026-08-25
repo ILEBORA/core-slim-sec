@@ -1,0 +1,14 @@
+<div
+    id="activityFeedNew"
+    class="timeline-feed activityFeedNew"
+    data-scope="{{ scope|default('home') }}"
+>
+    {% for entry in items %}
+        {{ entry.html|raw }}
+    {% endfor %}
+</div>
+
+{# Loading indicator #}
+<div class="timeline-loading" style="display:none;">
+    Loading…
+</div>

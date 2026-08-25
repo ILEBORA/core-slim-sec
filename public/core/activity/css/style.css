@@ -11,8 +11,9 @@
 .timeline-composer {
     background: var(--card-bg, #fff);
     border-radius: 8px;
-    padding: 12px;
+    padding: 38px 14px 38px 14px;
     margin-bottom: 16px;
+    border-radius: 11px;
 }
 
 .composer-placeholder {
@@ -223,6 +224,7 @@
     gap: 12px;
     padding: 10px;
     overflow-x: auto;
+    background-color: #202d3c;
 }
 
 .story-item {

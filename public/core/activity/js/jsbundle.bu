@@ -38,6 +38,16 @@ $pipeline->register('activity.utils', [
     ],
 ]);
 
+$pipeline->register('activity.tabs', [
+    'file'             => 'services/activity.tabs.js',
+    'type'             => 'lib',
+    'workspaceService' => true,
+    'routes' => [
+        'portal/activity',
+        'portal/activity/*'
+    ],
+]);
+
 $pipeline->register('activity.feed', [
     'file'             => 'services/activity.feed.js',
     'type'             => 'lib',

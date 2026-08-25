@@ -13,19 +13,32 @@
     </div>
 
     {# Feed #}
-    <div
-        id="activityFeedNew"
-        class="timeline-feed activityFeedNew"
-        data-scope="{{ scope|default('home') }}"
-    >
-        {% for entry in items %}
-            {{ entry.html|raw }}
-        {% endfor %}
+    <nav class="activity-tabs">
+        <button data-tab="foryou" class="active">For You</button>
+        <button data-tab="following">Following</button>
+    </nav>  
+
+    <div class="activity-content">
+
+        <div class="activity-tab-panel active" data-tab="foryou">
+            <div class="tab-placeholder"
+                 data-tab="foryou">
+                <!-- will be replaced -->
+                {% include 'activity/timeline/tabs/foryou.twig' with{ data: data }%}
+            </div>
+        </div>
+
+        <div class="activity-tab-panel" data-tab="following">
+            <div class="tab-placeholder"
+                 data-tab="connections">
+                <!-- will be replaced -->
+                Following...
+            </div>
+        </div>
+
     </div>
 
-    {# Loading indicator #}
-    <div class="timeline-loading" style="display:none;">
-        Loading…
-    </div>
+
+    
 
 </div>

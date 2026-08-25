@@ -19,6 +19,7 @@ __BORA_REGISTER_PLUGIN__('dashboards.actions', async function(scope){
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
+        init();
     }
 
     function unmount(){

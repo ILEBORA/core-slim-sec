@@ -7,6 +7,7 @@ async function (scope) {
     const uiStack = await scope.getService('ui.stack');
     const callbora = await scope.getService('callbora');
     const navigation = await scope.getService('navigation');
+    const forms = await scope.getService('forms');
 
     let initialized = false;
     let originalHTML = '';
@@ -526,7 +527,7 @@ async function (scope) {
 
             });
 
-            formJourney.registerJourney('page.add', function ($form, done) {
+            forms.registerJourney('page.add', function ($form, done) {
                 const url = $form.attr('action');
                 const method = $form.attr('method') || 'POST';
 

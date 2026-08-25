@@ -60,6 +60,28 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function bind(){
+            scope.on(
+                'people.tab.changed',
+        
+                async ({tab, personId, root})=>{
+        
+                        // optional immediate ui feedback
+                        scope.emit(
+                            'people.tab.ui',
+                            {
+                                tab,
+                                personId,
+                                root
+                            }
+                        );
+        
+                        await api.loadTab(
+                            personId,
+                            tab
+                        );
+        
+                    }
+                );
             // scope.on(
     
             //     'realtime:activity:timeline.updated',

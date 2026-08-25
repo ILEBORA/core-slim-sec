@@ -2495,140 +2495,143 @@ function showAlert(content, style = 'info', duration = 10) {
 
 //FormJourney Handler
 // Register the plugin
-var formJourney = addPlugin(
-    BoraPlugin,
-    {
-        pluginName: 'formJourney',
-        journeys: {}, // store the registered journeys
-        init: function() {
-            BoraPlugin.init.call(this); // call base init
-            console.log('formJourney plugin initialized.');
+// var formJourney = addPlugin(
+//     BoraPlugin,
+//     {
+//         pluginName: 'formJourney',
+//         journeys: {}, // store the registered journeys
+//         init: function() {
+//             BoraPlugin.init.call(this); // call base init
+//             console.log('formJourney plugin initialized.');
 
-            // Attach a global submit listener for forms with data-ajax="true"
-            var self = this;
-            // $(document).on('submit', 'form[data-ajax="true"]', function(e) {
-			$(document).off('submit.formJourney')
-           		.on('submit.formJourney', 'form[data-ajax="true"]', function(e){
-                e.preventDefault();
-                var $form = $(this);
-                var journey = $form.data('handler') || 'default';
+//             // Attach a global submit listener for forms with data-ajax="true"
+//             var self = this;
+//             // $(document).on('submit', 'form[data-ajax="true"]', function(e) {
+// 			$(document).off('submit.formJourney')
+//            		.on('submit.formJourney', 'form[data-ajax="true"]', function(e){
+//                 e.preventDefault();
+//                 var $form = $(this);
+//                 var journey = $form.data('handler') || 'default';
 
-				if ($form.data('journey-running')) return;
+// 				if ($form.data('journey-running')) return;
 
-                // Trigger pre-submit hooks if they exist
-                if (typeof appHooks !== 'undefined') {
-                    let result = appHooks.callHook('form:beforeSubmit', $form);
+//                 // Trigger pre-submit hooks if they exist
+//                 if (typeof appHooks !== 'undefined') {
+//                     let result = appHooks.callHook('form:beforeSubmit', $form);
 
-					if (result === false) {
-						console.warn("Submission cancelled by beforeSubmit hook.");
-						return; // IMPORTANT: stop here!
-					}
-                }
+// 					if (result === false) {
+// 						console.warn("Submission cancelled by beforeSubmit hook.");
+// 						return; // IMPORTANT: stop here!
+// 					}
+//                 }
 
-                // Execute registered journey or default
-                // let handler = self.journeys[journey] || self.default;
-				let handler;
+//                 // Execute registered journey or default
+//                 // let handler = self.journeys[journey] || self.default;
+// 				let handler;
+// 				console.log('[formJourneys]',this.journeys);
+// 				console.log('[Journey]',journey);
 
-				if(self.journeys[journey]){
-					handler = self.journeys[journey];
-				} else {
-					handler = self.default;
-				}
+// 				if(self.journeys[journey]){
+// 					handler = self.journeys[journey];
+// 				} else {
+// 					handler = self.default;
+// 				}
 
-				handler($form, function(resp) {
-					self._afterSubmit($form, resp);
-					$form.removeData('journey-running');
-				});
-            });
-        }
-    }
-);
+// 				handler($form, function(resp) {
+// 					self._afterSubmit($form, resp);
+// 					$form.removeData('journey-running');
+// 				});
+//             });
+//         }
+//     }
+// );
 
-// Add methods
-formJourney.addMethods({
-    registerJourney: function(name, callback) {
-        if (!this.journeys[name]) {
-            this.journeys[name] = callback;
-        }
-    },
+// // Add methods
+// formJourney.addMethods({
+//     registerJourney: function(name, callback) {
+//         if (!this.journeys[name]) {
+//             this.journeys[name] = callback;
+//         }
+//     },
 
-    default: function($form, done) {
-        var url = $form.attr('action');
-        var method = $form.attr('method') || 'POST';
-        var data = $form.serialize();
+//     default: function($form, done) {
+// 		console.log('[formJourney default] called...');
+//         var url = $form.attr('action');
+//         var method = $form.attr('method') || 'POST';
+//         var data = $form.serialize();
 
-        $.ajax({
-            url: url,
-            method: method,
-            data: data,
-            success: function(resp) {
-                console.log('Default form saved', resp);
-                if (typeof done === 'function') done(resp);
-            },
-            // error: function(err) {
-            //     console.error('Form error', err);
-            //     if (typeof done === 'function') done(err);
-            // }
-			error: function(xhr) {
+//         $.ajax({
+//             url: url,
+//             method: method,
+//             data: data,
+//             success: function(resp) {
+//                 console.log('Default form saved', resp);
+//                 if (typeof done === 'function') done(resp);
+//             },
+//             // error: function(err) {
+//             //     console.error('Form error', err);
+//             //     if (typeof done === 'function') done(err);
+//             // }
+// 			error: function(xhr) {
 
-				console.error('Form error', xhr);
+// 				console.error('Form error', xhr);
 
-				let resp = xhr.responseJSON;
+// 				let resp = xhr.responseJSON;
 
-				// fallback if responseJSON missing
-				if (!resp && xhr.responseText) {
-					try {
-						resp = JSON.parse(xhr.responseText);
-					} catch(e) {
-						resp = {
-							success: false,
-							message: 'Unknown server error'
-						};
-					}
-				}
+// 				// fallback if responseJSON missing
+// 				if (!resp && xhr.responseText) {
+// 					try {
+// 						resp = JSON.parse(xhr.responseText);
+// 					} catch(e) {
+// 						resp = {
+// 							success: false,
+// 							message: 'Unknown server error'
+// 						};
+// 					}
+// 				}
 
-				if (typeof done === 'function') {
-					done(resp);
-				}
-			}
-        });
-    },
+// 				if (typeof done === 'function') {
+// 					done(resp);
+// 				}
+// 			}
+//         });
+//     },
 
-    _afterSubmit: function($form, resp) {
-        if (typeof appHooks !== 'undefined') {
-            appHooks.callHook('form:afterSubmit', $form, resp);
-        }
-    },
-	// Add this inside `formJourney.addMethods({...})`
-	run: function(journeyName, $form, done) {
-		if (typeof this.journeys[journeyName] !== 'function') {
-			console.warn(`Journey "${journeyName}" not found.`);
-			return false;
-		}
+//     _afterSubmit: function($form, resp) {
+//         if (typeof appHooks !== 'undefined') {
+//             appHooks.callHook('form:afterSubmit', $form, resp);
+//         }
+//     },
+// 	// Add this inside `formJourney.addMethods({...})`
+// 	run: function(journeyName, $form, done) {
+// 		if (typeof this.journeys[journeyName] !== 'function') {
+// 			console.warn(`Journey "${journeyName}" not found.`);
+// 			return false;
+// 		}
 
-		// Pre-submit hooks (just like auto mode)
-		if (typeof appHooks !== 'undefined') {
-			let result = appHooks.callHook('form:beforeSubmit', $form);
-			if (result === false) {
-				console.warn("Manual journey cancelled by beforeSubmit hook.");
-				return false;
-			}
-		}
+// 		// Pre-submit hooks (just like auto mode)
+// 		if (typeof appHooks !== 'undefined') {
+// 			let result = appHooks.callHook('form:beforeSubmit', $form);
+// 			if (result === false) {
+// 				console.warn("Manual journey cancelled by beforeSubmit hook.");
+// 				return false;
+// 			}
+// 		}
 
-		// Execute it
-		this.journeys[journeyName]($form, (resp) => {
-			this._afterSubmit($form, resp);
-			if (typeof done === 'function') done(resp);
-		});
+// 		// Execute it
+// 		this.journeys[journeyName]($form, (resp) => {
+// 			this._afterSubmit($form, resp);
+// 			if (typeof done === 'function') done(resp);
+// 		});
 
-		return true;
-	},
+// 		return true;
+// 	},
 	
-});
+// });
 
-// Debug & initialize
-formJourney.setDebug(true);
-formJourney.init();
+// // Debug & initialize
+// formJourney.setDebug(true);
+// formJourney.init();
 
 $.fn.attachDragger = (function(){
     var attachment = false, lastPosition, position, difference;

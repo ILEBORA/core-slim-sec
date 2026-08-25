@@ -1,0 +1,143 @@
+<div class="seed-tasks-widget container">
+
+    <div class="seed-tasks-header">
+        <div class="seed-tasks-heading">
+            <div class="seed-tasks-icon">
+                <i class="fa fa-seedling"></i>
+            </div>
+
+            <div>
+                <h5 class="seed-tasks-title">
+                    Your Seed Tasks
+                </h5>
+
+                <div class="seed-tasks-subtitle">
+                    Help keep the community engaged.
+                </div>
+            </div>
+        </div>
+
+        <div class="seed-tasks-count">
+            {{ tasks|length }}
+        </div>
+    </div>
+
+
+    <div class="seed-tasks-list">
+
+        {% for task in tasks %}
+
+            <div class="seed-task-card">
+
+                <div class="seed-task-main">
+
+                    <div class="seed-task-type">
+
+                        {% if task.task_type == 'reply' %}
+
+                            <span class="seed-task-type-icon">
+                                <i class="fa fa-comment"></i>
+                            </span>
+
+                            <span>
+                                Start a conversation
+                            </span>
+
+                        {% elseif task.task_type == 'question' %}
+
+                            <span class="seed-task-type-icon">
+                                <i class="fa fa-circle-question"></i>
+                            </span>
+
+                            <span>
+                                Ask a question
+                            </span>
+
+                        {% elseif task.task_type == 'knowledge' %}
+
+                            <span class="seed-task-type-icon">
+                                <i class="fa fa-lightbulb"></i>
+                            </span>
+
+                            <span>
+                                Share some knowledge
+                            </span>
+
+                        {% else %}
+
+                            <span class="seed-task-type-icon">
+                                <i class="fa fa-seedling"></i>
+                            </span>
+
+                            <span>
+                                {{ task.task_type|title }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="seed-task-status">
+
+                        {% if task.status == 'assigned' %}
+
+                            <span class="seed-status assigned">
+                                Assigned
+                            </span>
+
+                        {% elseif task.status == 'started' %}
+
+                            <span class="seed-status started">
+                                In progress
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="seed-task-description">
+
+                    {% if task.task_type == 'reply' %}
+
+                        Help continue this conversation.
+
+                    {% elseif task.task_type == 'question' %}
+
+                        Ask something that encourages discussion.
+
+                    {% elseif task.task_type == 'knowledge' %}
+
+                        Add something useful to the conversation.
+
+                    {% else %}
+
+                        Help keep this conversation going.
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="seed-task-footer">
+
+                    <a
+                        data-nav="portal/activity/timeline/{{ task.target_id }}"
+                        class="seed-task-action"
+                    >
+                        <span>View conversation</span>
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>

@@ -5,6 +5,10 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
     let attachments = [];
     let bound = false;
 
+    function init(){
+        bindUI();
+    }
+
     function bindUI(){
 
         /*
@@ -29,17 +33,179 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
             uploadFiles
         );
 
+        $('.input-placeholder').on('input keyup', function () {
+
+            const text = this.value;
+            const cursor = this.selectionStart;
+        
+            const before = text.substring(0, cursor);
+        
+            const match = before.match(/@([\w]*)$/);
+            console.log(match);
+            if (!match) {
+                hideMentions();
+                return;
+            }
+        
+            const search = match[1];
+        
+            loadUsers(search);
+        
+        });
+
+        $(document).on(
+            'click',
+            '.mention-item',
+            function(){
+                alert('clicked');
+                const index = $(this).data('index');
+        
+                insertMention(
+                    mentionResults[index]
+                );
+                hideMentions()
+            }
+        );
+
     }
 
-    // function bindUIO(){
-    //     // if(bound) return;
-    //     // alert('bind');
-    //     $(document).on('click','.attach-photo', openFileDialog);
-    //     $(document).on('change','#composerUpload', uploadFiles);
+    let mentionResults = [];
+    let mentionIndex = -1;
+    let mentionDismissable = null;
 
-    //     bound = true;
+    function hideMentions(){
 
-    // }
+        mentionResults = [];
+        mentionIndex = -1;
+    
+        $('#mention-menu')
+            .hide()
+            .empty();
+    
+        if(mentionDismissable){
+    
+            mentionDismissable.close();
+    
+            mentionDismissable = null;
+    
+        }
+
+        return;
+    
+    }
+
+    function loadUsers(search){
+
+        $.getJSON(
+            'api/modules/activity/mentions/mentions',
+            {
+                q: search
+            },
+            function(users){
+    
+                mentionResults = users || [];
+    
+                renderMentions();
+    
+            }
+        );
+    
+    }
+
+    async function renderMentions(){
+
+        const menu = $('#mention-menu');
+
+        if(!mentionDismissable){
+
+            const dismissable = await scope.getService('ui.dismissable');
+
+            mentionDismissable = dismissable.create(() => {
+
+                hideMentions();
+
+            });
+
+        }
+    
+        menu.empty();
+    
+        if(!mentionResults.length){
+            hideMentions();
+            return;
+        }
+    
+        mentionResults.forEach(function(item,index){
+    
+            menu.append(`
+    
+                <div class="mention-item ${index===0?'active':''}"
+                     data-index="${index}">
+    
+                    <img
+                        class="mention-avatar"
+                        src="${item.avatar}"
+                    >
+    
+                    <div class="mention-details">
+    
+                        <div class="mention-label">
+                            ${item.label}
+                        </div>
+    
+                        <div class="mention-handle">
+                            @${item.handle}
+                        </div>
+    
+                    </div>
+    
+                </div>
+    
+            `);
+    
+        });
+    
+        mentionIndex = 0;
+    
+        menu.show();
+    
+    }
+
+    function insertMention(item){
+
+        const textarea = $('.input-placeholder');
+    
+        const el = textarea[0];
+    
+        const value = el.value;
+    
+        const cursor = el.selectionStart;
+    
+        const before = value.substring(0,cursor);
+    
+        const after = value.substring(cursor);
+    
+        const updatedBefore = before.replace(
+            /@([\w]*)$/,
+            '@' + item.handle + ' '
+        );
+    
+        el.value = updatedBefore + after;
+    
+        const position = updatedBefore.length;
+    
+        el.focus();
+    
+        el.setSelectionRange(
+            position,
+            position
+        );
+    
+        textarea.trigger('input');
+
+        hideMentions();
+    
+    }
 
     function openFileDialog(){
         $('#composerUpload').click();
@@ -331,9 +497,18 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
         attachments = [];
     }
 
-    return { open, handleRemoveMedia, handleRotateMedia, reset };
+    return {
+        init,
+        bindUI, 
+        open, 
+        handleRemoveMedia, 
+        handleRotateMedia, 
+        reset 
+    };
 
-},{
-    //requires:['realtime'],
-    activateOn: (route) => route.startsWith('portal/activity')
-});
+}
+// ,{
+//     //requires:['realtime'],
+//     activateOn: (route) => route.startsWith('portal/activity')
+// }
+);

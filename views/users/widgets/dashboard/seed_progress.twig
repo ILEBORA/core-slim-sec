@@ -1,0 +1,112 @@
+<div class="seed-progress-widget container">
+
+    <div class="seed-progress-header">
+
+        <div class="seed-progress-heading">
+
+            <div class="seed-progress-icon">
+                <i class="fa fa-seedling"></i>
+            </div>
+
+            <div>
+                <h5 class="seed-progress-title">
+                    Seed Progress
+                </h5>
+
+                <div class="seed-progress-subtitle">
+                    Your contribution to the community
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="seed-progress-summary">
+
+        <div class="seed-progress-total">
+            <strong>
+                {{ progress.completed }}
+            </strong>
+
+            <span>
+                tasks completed
+            </span>
+        </div>
+
+        <div class="seed-progress-percent">
+            {{ progress.completion }}%
+        </div>
+
+    </div>
+
+
+    <div class="seed-progress-bar">
+
+        <div
+            class="seed-progress-bar-fill"
+            style="width: {{ progress.completion }}%;"
+        ></div>
+
+    </div>
+
+
+    <div class="seed-progress-stats">
+
+        <div class="seed-progress-stat">
+
+            <span class="seed-stat-value">
+                {{ progress.assigned }}
+            </span>
+
+            <span class="seed-stat-label">
+                Assigned
+            </span>
+
+        </div>
+
+
+        <div class="seed-progress-stat">
+
+            <span class="seed-stat-value">
+                {{ progress.started }}
+            </span>
+
+            <span class="seed-stat-label">
+                In progress
+            </span>
+
+        </div>
+
+
+        <div class="seed-progress-stat">
+
+            <span class="seed-stat-value">
+                {{ progress.completed }}
+            </span>
+
+            <span class="seed-stat-label">
+                Completed
+            </span>
+
+        </div>
+
+    </div>
+
+
+    {% if progress.completed > 0 %}
+
+        <div class="seed-progress-message">
+
+            <i class="fa fa-heart"></i>
+
+            <span>
+                Thanks for helping keep the community active.
+            </span>
+
+        </div>
+
+    {% endif %}
+
+</div>

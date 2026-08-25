@@ -3,6 +3,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     const hooks = await scope.getService('hooks');
     const uiActions = await scope.getService('ui.actions');
     const uiStack = await scope.getService('ui.stack');
+    const forms = await scope.getService('forms');
 
     scope.on('esc',()=>{
         uiStack.closeTop();
@@ -78,7 +79,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
     // Register journeys dynamically
     // Login
-    formJourney.registerJourney('login', function($form, done) {
+    forms.register('login', function($form, done) {
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
         const formData = new FormData($form[0]);
@@ -120,7 +121,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
         });
     });
 
-    formJourney.registerJourney('mfaselect', function($form, done) {
+    forms.register('mfaselect', function($form, done) {
         // alert('login here');
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
@@ -167,7 +168,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
         });
     });
 
-    formJourney.registerJourney('mfaverify', function($form, done) {
+    forms.register('mfaverify', function($form, done) {
         // alert('login here');
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
@@ -229,7 +230,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     });
 
     //Save 
-    formJourney.registerJourney('save', function($form, done) {
+    forms.register('save', function($form, done) {
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
         var data = $form.serialize();
@@ -251,7 +252,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     });
 
     //Delete
-    formJourney.registerJourney('delete', function($form, done) {
+    forms.register('delete', function($form, done) {
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
         var data = $form.serialize();
@@ -274,7 +275,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
 
     //Password forgot journey
     // Forgot Password
-    formJourney.registerJourney('forgot', function($form, done) {
+    forms.register('forgot', function($form, done) {
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
         const formData = new FormData($form[0]);
@@ -317,7 +318,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     });
 
     // Reset Password Journey
-    formJourney.registerJourney('reset', function($form, done) {
+    forms.register('reset', function($form, done) {
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
         const formData = new FormData($form[0]);
@@ -372,7 +373,7 @@ __BORA_REGISTER_PLUGIN__('ui.hooks', async (scope) => {
     });
 
 
-    formJourney.registerJourney('register', function($form, done) {
+    forms.register('register', function($form, done) {
         var url = $form.attr('action');
         var method = $form.attr('method') || 'POST';
         const formData = new FormData($form[0]);

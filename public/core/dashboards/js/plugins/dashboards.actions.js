@@ -21,7 +21,7 @@ async function(scope){
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
-        // alert('dashboard.actions');
+        alert('dashboard.actions');
         init();
     }
 
@@ -32,7 +32,7 @@ async function(scope){
     }
 
     function init(){
-        console.log('[BILLING ACTIONS]','state', state.initialized);
+        console.log('[DASH ACTIONS]','state', state.initialized);
         if(state.initialized){
             return;
         }

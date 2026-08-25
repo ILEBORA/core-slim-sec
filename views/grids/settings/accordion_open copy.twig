@@ -1,0 +1,12 @@
+<li id="item{{ id }}" class="{{ class }}" >
+    
+    <span class="toggle inactive">
+        <span style="float:right;">
+            {{ tools|raw }}
+        </span>
+        {{ main|raw }}
+    </span>
+    <ul id="{{ ulid }}" class="inner {{ ulclass }}" data-uniqueid="{{ id }}" style="display:block">
+        {{ inner|raw }}
+    </ul>
+</li>

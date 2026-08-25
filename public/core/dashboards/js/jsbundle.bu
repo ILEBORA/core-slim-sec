@@ -19,10 +19,12 @@ $pipeline->register('dashboards.resources', [
     'priority'  => 10,
     'preload'   => true,
     'routes' => [
-        // 'portal/dashboards',
-        // 'portal/dashboards/*',
+        'portal/dashboards',
+        'portal/dashboards/*',
         'bo/dashboards',
         'bo/dashboards/*',
+        '/',
+        '/*',
     ],
 ]);
 
@@ -132,12 +134,12 @@ $pipeline->register('dashboards.actions', [
     'type'      => 'plugin',
     'faces'     => ['guest','client','admin'],
     'priority'  => 10,
-    'routes' => [
-        // 'portal/dashboards',
-        // 'portal/dashboards/*',
-        'bo/dashboards',
-        'bo/dashboards/*',
-    ],
+    // 'routes' => [
+    //     // 'portal/dashboards',
+    //     // 'portal/dashboards/*',
+    //     'bo/dashboards',
+    //     'bo/dashboards/*',
+    // ],
 ]);
 
 $pipeline->register('dashboards.controller', [
