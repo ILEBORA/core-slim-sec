@@ -1,7 +1,7 @@
 <?php
 return array (
   'asset_api' => 4,
-  'generated_at' => '2026-08-25T05:26:50+03:00',
+  'generated_at' => '2026-08-25T05:30:45+03:00',
   'core_hash' => NULL,
   'modules' => 
   array (

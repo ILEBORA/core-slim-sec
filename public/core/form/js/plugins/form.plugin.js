@@ -349,6 +349,235 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
         }
     }
 
+    class BoraTaxonomySelect {
+
+        constructor(element) {
+    
+            this.el = $(element);
+    
+            this.input =
+                this.el.find('.bora-taxonomy-input');
+    
+            this.value =
+                this.el.find('.bora-taxonomy-value');
+    
+            this.dropdown =
+                this.el.find('.bora-taxonomy-dropdown');
+    
+            this.source =
+                this.el.data('taxonomy-source');
+    
+            this.allowCreate =
+                Number(
+                    this.el.data('taxonomy-create')
+                ) === 1;
+    
+            this.timer = null;
+    
+            this.bind();
+        }
+    
+    
+        bind() {
+    
+            this.input.on(
+                'input',
+                () => this.search()
+            );
+    
+            this.input.on(
+                'focus',
+                () => this.search()
+            );
+    
+            $(document).on(
+                'click.boraTaxonomy',
+                (e) => {
+    
+                    if(
+                        !this.el.is(e.target) &&
+                        this.el.has(e.target).length === 0
+                    ) {
+                        this.close();
+                    }
+    
+                }
+            );
+        }
+    
+    
+        search() {
+    
+            const q =
+                $.trim(this.input.val());
+    
+            clearTimeout(this.timer);
+    
+            this.timer = setTimeout(
+                () => this.fetch(q),
+                250
+            );
+        }
+    
+    
+        async fetch(q) {
+    
+            if(!this.source){
+                return;
+            }
+    
+            try {
+    
+                this.loading();
+    
+                const response =
+                    await fetch(
+                        'api/modules/form/taxonomy/search?' +
+                        new URLSearchParams({
+                            q,
+                            source: this.source
+                        })
+                    );
+    
+                const data =
+                    await response.json();
+    
+                this.render(
+                    data.results || [],
+                    q
+                );
+    
+            } catch(error) {
+    
+                console.error(
+                    'Taxonomy search failed',
+                    error
+                );
+    
+                this.dropdown.empty();
+    
+            }
+    
+        }
+    
+    
+        loading() {
+    
+            this.dropdown
+                .html(
+                    '<div class="bora-taxonomy-loading">' +
+                        'Searching...' +
+                    '</div>'
+                )
+                .show();
+        }
+    
+    
+        render(results, query) {
+    
+            this.dropdown.empty();
+    
+            results.forEach(item => {
+    
+                const option =
+                    $('<div>')
+                        .addClass(
+                            'bora-taxonomy-option'
+                        )
+                        .text(item.text)
+                        .attr(
+                            'data-value',
+                            item.id
+                        );
+    
+                option.on(
+                    'click',
+                    () => this.select(item)
+                );
+    
+                this.dropdown.append(option);
+            });
+    
+    
+            if(
+                this.allowCreate &&
+                query &&
+                !results.some(
+                    item =>
+                        String(item.text).toLowerCase() ===
+                        query.toLowerCase()
+                )
+            ) {
+    
+                const create =
+                    $('<div>')
+                        .addClass(
+                            'bora-taxonomy-create'
+                        )
+                        .text(
+                            `Create "${query}"`
+                        );
+    
+                create.on(
+                    'click',
+                    () => this.create(query)
+                );
+    
+                this.dropdown.append(create);
+            }
+    
+    
+            this.dropdown.show();
+        }
+    
+    
+        select(item) {
+    
+            this.input.val(
+                item.text
+            );
+    
+            this.value.val(
+                item.id
+            );
+    
+            this.close();
+    
+            this.value.trigger('change');
+    
+            this.el.trigger(
+                'taxonomy:selected',
+                [item]
+            );
+        }
+    
+    
+        create(text) {
+    
+            const item = {
+    
+                id:
+                    '__taxonomy__|' +
+                    this.source +
+                    '|' +
+                    text,
+    
+                text: text,
+    
+                newTag: true
+    
+            };
+    
+            this.select(item);
+        }
+    
+    
+        close() {
+    
+            this.dropdown.hide();
+        }
+    }
+
     class BoraFormObserver {
 
         constructor()
@@ -546,91 +775,49 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
         }
     );
 
-    $.fn.dictionarySelect = async function(
+    $.fn.dictionarySelect =
+    async function(
         resource,
         options = {}
     ){
-    
-        const resources =
-            await scope.getService('resources');
-    
-        const data =
-            await resources.get(resource);
-    
+
         const placeholder =
-            options.placeholder ??
-            `Select ${resource}...`;
-    
-        return this.each(function(){
-    
-            const select = $(this);
-    
-            select.empty();
-    
-            select.append(
-                new Option(
-                    placeholder,
-                    ''
-                )
+            options.placeholder
+            ?? `Select ${resource}...`;
+
+        const resources =
+            await scope.getService(
+                'resources'
             );
-    
-            data.forEach(item => {
-    
-                select.append(
-                    new Option(
-                        item.text,
-                        item.id
+
+        const data =
+            await resources.get(
+                resource
+            );
+
+        return this.each(
+            function(){
+
+                $(this)
+                    .append(
+                        new Option(
+                            '',
+                            '',
+                            false,
+                            false
+                        )
                     )
-                );
-    
-            });
-    
-        });
+                    .select2({
+                        width:
+                            '100%',
+                        placeholder,
+                        allowClear:
+                            true,
+                        data
+                    });
+            }
+        );
     };
-
-    // $.fn.dictionarySelect =
-    // async function(
-    //     resource,
-    //     options = {}
-    // ){
-
-    //     const placeholder =
-    //         options.placeholder
-    //         ?? `Select ${resource}...`;
-
-    //     const resources =
-    //         await scope.getService(
-    //             'resources'
-    //         );
-
-    //     const data =
-    //         await resources.get(
-    //             resource
-    //         );
-
-    //     return this.each(
-    //         function(){
-
-    //             $(this)
-    //                 .append(
-    //                     new Option(
-    //                         '',
-    //                         '',
-    //                         false,
-    //                         false
-    //                     )
-    //                 )
-    //                 .select2({
-    //                     width:
-    //                         '100%',
-    //                     placeholder,
-    //                     allowClear:
-    //                         true,
-    //                     data
-    //                 });
-    //         }
-    //     );
-    // };
 
     $.fn.peopleSelect = async function(options = {}) {
 
@@ -669,25 +856,25 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
             });
         });
     };
-    // $.fn.peopleSelectO = async function(){
+    $.fn.peopleSelectO = async function(){
 
-    //     const resources =
-    //         await scope.getService(
-    //             'resources'
-    //         );
+        const resources =
+            await scope.getService(
+                'resources'
+            );
 
-    //     const people =
-    //         await resources.get(
-    //             'people'
-    //         );
+        const people =
+            await resources.get(
+                'people'
+            );
 
-    //     return this.select2({
-    //         width: '100%',
-    //         placeholder:
-    //             'Search person...',
-    //         data: people
-    //     });
-    // };
+        return this.select2({
+            width: '100%',
+            placeholder:
+                'Search person...',
+            data: people
+        });
+    };
 
     
     /*
@@ -699,136 +886,159 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
     function initTaxonomies(context = document)
     {
         $(context)
-        .find('.bora-taxonomy')
-        .each(function(){
+            .find('.bora-taxonomy')
+            .each(function(){
 
-            const $el = $(this);
+                const $el = $(this);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Prevent Double Init
-            |--------------------------------------------------------------------------
-            */
+                if(
+                    $el.data('taxonomy-init')
+                ){
+                    return;
+                }
 
-            if(
-                $el.data('taxonomy-init')
-            ){
-                return;
-            }
-
-            $el.data(
-                'taxonomy-init',
-                true
-            );
-
-            console.log(
-                'Initializing taxonomy:',
-                $el.attr('name')
-            );
-
-            const allowCreate =
-                Number(
-                    $el.data(
-                        'taxonomy-create'
-                    )
-                ) === 1;
-
-            /*
-            |--------------------------------------------------------------------------
-            | Ensure Select2 Exists
-            |--------------------------------------------------------------------------
-            */
-
-            if(
-                typeof $.fn.select2 !== 'function'
-            ){
-
-                console.error(
-                    'Select2 is not loaded'
+                $el.data(
+                    'taxonomy-init',
+                    true
                 );
 
-                return;
-            }
-
-            $el.select2({
-
-                width: '100%',
-
-                tags: allowCreate,
-
-                ajax: {
-
-                    url:
-                        'api/modules/form/taxonomy/search',
-
-                    dataType: 'json',
-
-                    delay: 250,
-
-                    cache: true,
-
-                    data(params){
-
-                        return {
-
-                            q:
-                                params.term || '',
-
-                            source:
-                                $el.data(
-                                    'taxonomy-source'
-                                )
-                        };
-                    },
-
-                    processResults(data){
-
-                        return {
-
-                            results:
-                                data.results || []
-                        };
-                    }
-                },
-
-                /*
-                |--------------------------------------------------------------------------
-                | Allow Custom Creation
-                |--------------------------------------------------------------------------
-                */
-
-                createTag(params){
-
-                    const term =
-                        $.trim(
-                            params.term
-                        );
-
-                    if(term === ''){
-
-                        return null;
-                    }
-
-                    return {
-
-                        // id:
-                        //     '__new__:' + term,
-                        id:
-                            '__taxonomy__|'
-                            + $el.data('taxonomy-source')
-                            + '|'
-                            + term,
-
-                        text:
-                            term,
-
-                        newTag:
-                            true
-                    };
-                }
+                new BoraTaxonomySelect(this);
             });
-        });
     }
+
+    // function initTaxonomies(context = document)
+    // {
+    //     $(context)
+    //     .find('.bora-taxonomy')
+    //     .each(function(){
+
+    //         const $el = $(this);
+
+    //         /*
+    //         |--------------------------------------------------------------------------
+    //         | Prevent Double Init
+    //         |--------------------------------------------------------------------------
+    //         */
+
+    //         if(
+    //             $el.data('taxonomy-init')
+    //         ){
+    //             return;
+    //         }
+
+    //         $el.data(
+    //             'taxonomy-init',
+    //             true
+    //         );
+
+    //         console.log(
+    //             'Initializing taxonomy:',
+    //             $el.attr('name')
+    //         );
+
+    //         const allowCreate =
+    //             Number(
+    //                 $el.data(
+    //                     'taxonomy-create'
+    //                 )
+    //             ) === 1;
+
+    //         /*
+    //         |--------------------------------------------------------------------------
+    //         | Ensure Select2 Exists
+    //         |--------------------------------------------------------------------------
+    //         */
+
+    //         if(
+    //             typeof $.fn.select2 !== 'function'
+    //         ){
+
+    //             console.error(
+    //                 'Select2 is not loaded'
+    //             );
+
+    //             return;
+    //         }
+
+    //         $el.select2({
+
+    //             width: '100%',
+
+    //             tags: allowCreate,
+
+    //             ajax: {
+
+    //                 url:
+    //                     'api/modules/form/taxonomy/search',
+
+    //                 dataType: 'json',
+
+    //                 delay: 250,
+
+    //                 cache: true,
+
+    //                 data(params){
+
+    //                     return {
+
+    //                         q:
+    //                             params.term || '',
+
+    //                         source:
+    //                             $el.data(
+    //                                 'taxonomy-source'
+    //                             )
+    //                     };
+    //                 },
+
+    //                 processResults(data){
+
+    //                     return {
+
+    //                         results:
+    //                             data.results || []
+    //                     };
+    //                 }
+    //             },
+
+    //             /*
+    //             |--------------------------------------------------------------------------
+    //             | Allow Custom Creation
+    //             |--------------------------------------------------------------------------
+    //             */
+
+    //             createTag(params){
+
+    //                 const term =
+    //                     $.trim(
+    //                         params.term
+    //                     );
+
+    //                 if(term === ''){
+
+    //                     return null;
+    //                 }
+
+    //                 return {
+
+    //                     // id:
+    //                     //     '__new__:' + term,
+    //                     id:
+    //                         '__taxonomy__|'
+    //                         + $el.data('taxonomy-source')
+    //                         + '|'
+    //                         + term,
+
+    //                     text:
+    //                         term,
+
+    //                     newTag:
+    //                         true
+    //                 };
+    //             }
+    //         });
+    //     });
+    // }
 
     /*
     |--------------------------------------------------------------------------
