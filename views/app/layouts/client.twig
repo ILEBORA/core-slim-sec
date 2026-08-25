@@ -40,7 +40,11 @@
     <link class="scc" rel="stylesheet" type="text/css" href="{{cdn_url}}assets/libs/font-awesome/v5.7.2/css/all.css">
     {{ renderStyles()|raw }}
     {{ renderInlineStyles()|raw }}
-    <!-- <script src="assets/js/jquery.js"></script> -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script src="assets/js/select2.js"></script>
     <script src="assets/js/vendor/crypto-js.min.js"></script>
     <script src="assets/js/app.js?v={{ app_version }}&c={{channel_id}}&p={{perm_version}}"></script>
     <script src="assets/client/js/client.bundle.js?v={{ app_version }}"></script>
