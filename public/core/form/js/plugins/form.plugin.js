@@ -546,49 +546,91 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
         }
     );
 
-    $.fn.dictionarySelect =
-    async function(
+    $.fn.dictionarySelect = async function(
         resource,
         options = {}
     ){
-
-        const placeholder =
-            options.placeholder
-            ?? `Select ${resource}...`;
-
+    
         const resources =
-            await scope.getService(
-                'resources'
-            );
-
+            await scope.getService('resources');
+    
         const data =
-            await resources.get(
-                resource
+            await resources.get(resource);
+    
+        const placeholder =
+            options.placeholder ??
+            `Select ${resource}...`;
+    
+        return this.each(function(){
+    
+            const select = $(this);
+    
+            select.empty();
+    
+            select.append(
+                new Option(
+                    placeholder,
+                    ''
+                )
             );
-
-        return this.each(
-            function(){
-
-                $(this)
-                    .append(
-                        new Option(
-                            '',
-                            '',
-                            false,
-                            false
-                        )
+    
+            data.forEach(item => {
+    
+                select.append(
+                    new Option(
+                        item.text,
+                        item.id
                     )
-                    .select2({
-                        width:
-                            '100%',
-                        placeholder,
-                        allowClear:
-                            true,
-                        data
-                    });
-            }
-        );
+                );
+    
+            });
+    
+        });
     };
+
+    // $.fn.dictionarySelect =
+    // async function(
+    //     resource,
+    //     options = {}
+    // ){
+
+    //     const placeholder =
+    //         options.placeholder
+    //         ?? `Select ${resource}...`;
+
+    //     const resources =
+    //         await scope.getService(
+    //             'resources'
+    //         );
+
+    //     const data =
+    //         await resources.get(
+    //             resource
+    //         );
+
+    //     return this.each(
+    //         function(){
+
+    //             $(this)
+    //                 .append(
+    //                     new Option(
+    //                         '',
+    //                         '',
+    //                         false,
+    //                         false
+    //                     )
+    //                 )
+    //                 .select2({
+    //                     width:
+    //                         '100%',
+    //                     placeholder,
+    //                     allowClear:
+    //                         true,
+    //                     data
+    //                 });
+    //         }
+    //     );
+    // };
 
     $.fn.peopleSelect = async function(options = {}) {
 
@@ -627,25 +669,25 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
             });
         });
     };
-    $.fn.peopleSelectO = async function(){
+    // $.fn.peopleSelectO = async function(){
 
-        const resources =
-            await scope.getService(
-                'resources'
-            );
+    //     const resources =
+    //         await scope.getService(
+    //             'resources'
+    //         );
 
-        const people =
-            await resources.get(
-                'people'
-            );
+    //     const people =
+    //         await resources.get(
+    //             'people'
+    //         );
 
-        return this.select2({
-            width: '100%',
-            placeholder:
-                'Search person...',
-            data: people
-        });
-    };
+    //     return this.select2({
+    //         width: '100%',
+    //         placeholder:
+    //             'Search person...',
+    //         data: people
+    //     });
+    // };
 
     
     /*
