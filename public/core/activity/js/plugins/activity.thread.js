@@ -51,7 +51,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
             return;
         }
 
-        callbora.post(`api/modules/activity/comment`, {
+        callbora.post(`api/modules/activity/comments/add`, {
             activity_id:activityId,
             parent_id: parentId,
             body
@@ -98,7 +98,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
         if(loading) return;
         loading=true;
         // alert(activityId+' :: '+parentId);
-        callbora.get(`api/modules/activity/comments`, {
+        callbora.get(`api/modules/activity/comments/load`, {
             activity_id:activityId,
             parent_id:parentId
         }).then(function(res){
@@ -125,7 +125,7 @@ __BORA_REGISTER_PLUGIN__('activity.thread', async function(scope){
         if(loading) return;
         loading=true;
         // alert(activityId+' :: '+parentId);
-        callbora.get(`api/modules/activity/replies`, {
+        callbora.get(`api/modules/activity/comments/replies`, {
             comment_id:id,
         }).then(function(res){
             if(!res.success){

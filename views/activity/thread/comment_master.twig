@@ -1,12 +1,12 @@
 <div class="comment-item" data-id="{{ item.id }}" style="">
-    <div class="comment-avatar" data-nav="portal/people/person/{{ item.actor.person_id }}/view">
-        <img src="{{ item.actor.avatar|default('assets/images/noavatar.png') }}">
+    <div class="comment-avatar" data-nav="portal/people/person/{{ item._actor.person_id }}/view">
+        <img src="{{ item._actor.avatar_url|default('assets/images/icons/noavatar.png') }}">
     </div>
 
     <div class="comment-body">
         <div class="comment-meta">
-            <strong data-nav="portal/people/person/{{ item.actor.person_id }}/view">{{ item.actor.name }}</strong>
-            <span data-nav="portal/people/person/{{ item.actor.person_id }}/view" class="activity-username">@{{ item.actor.username }}</span>
+            <strong data-nav="portal/people/person/{{ item._actor.person_id }}/view">{{ item._actor.name }}</strong>
+            <span data-nav="portal/people/person/{{ item._actor.person_id }}/view" class="activity-username">@{{ item._actor.username }}</span>
 
             <span class="time">{{ item.timeago_format }}</span>
         </div>

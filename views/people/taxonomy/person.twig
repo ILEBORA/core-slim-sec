@@ -1,0 +1,52 @@
+<div class="bora-taxonomy-person">
+
+    <div class="bora-taxonomy-person-avatar">
+
+        {% if entity.avatar_url %}
+            <img
+                src="{{ entity.avatar_url }}"
+                alt="{{ entity.full_name }}"
+                loading="lazy"
+            >
+        {% else %}
+            <div class="bora-taxonomy-person-avatar-placeholder">
+                {{ entity.first_name|first|upper }}
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="bora-taxonomy-person-content">
+
+        <div class="bora-taxonomy-person-name">
+            {{ entity.full_name }}
+        </div>
+
+        <div class="bora-taxonomy-person-meta">
+
+            {% if entity.gender %}
+                <span>
+                    {{ entity.gender == 'M'
+                        ? 'Male'
+                        : (entity.gender == 'F' ? 'Female' : 'Other')
+                    }}
+                </span>
+            {% endif %}
+
+            {% if entity.birth_year %}
+                <span>
+                    Born {{ entity.birth_year }}
+                </span>
+            {% endif %}
+
+            {% if entity.is_deceased and entity.death_year %}
+                <span>
+                    – {{ entity.death_year }}
+                </span>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>

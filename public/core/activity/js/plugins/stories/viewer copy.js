@@ -71,17 +71,17 @@ async function(scope){
             .find('.story-avatar')
             .attr(
                 'src',
-                story.actor?.avatar_url || ''
+                story._actor?.avatar_url || ''
             );
         // $('.story-avatar')
         //     .attr(
         //         'src',
-        //         story.actor?.avatar_url || ''
+        //         story._actor?.avatar_url || ''
         //     );
 
         $('.story-username')
             .text(
-                story.actor?.username || ''
+                story._actor?.username || ''
             );
 
         $('.story-image')

@@ -25,10 +25,10 @@ $pipeline->register('ui.core', [
 ================================================== */
 
 $pipeline->register('ui.hooks', [
-    'file'     => 'hooks.js',
+    'file'     => 'ui.hooks.js',
     'type'     => 'lib',
     'priority' => 110,
-    'requires' => [],
+    // 'requires' => [],
 ]);
 
 /* ==================================================

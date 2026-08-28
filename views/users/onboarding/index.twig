@@ -1,0 +1,107 @@
+<div class="onboarding-page container">
+
+    <div class="onboarding-header">
+
+        <div class="onboarding-header-icon">
+            <i class="fa fa-compass"></i>
+        </div>
+
+        <div>
+            <h1>Let's get to know you</h1>
+
+            <p>
+                Help us personalize your experience by telling us
+                a little about yourself.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if complete %}
+
+        <div class="onboarding-complete">
+
+            <div class="onboarding-complete-icon">
+                <i class="fa fa-check"></i>
+            </div>
+
+            <h2>You're all set!</h2>
+
+            <p>
+                Thanks for helping us understand what matters to you.
+            </p>
+
+            <a
+                href="portal"
+                data-nav="portal"
+                class="onboarding-button"
+            >
+                Continue
+                <i class="fa fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    {% elseif curiosity %}
+
+        <div class="onboarding-card">
+
+            <div class="onboarding-progress">
+
+                <span>
+                    Getting to know you
+                </span>
+
+                {% if level %}
+                    <span>
+                        {{ level.name }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+
+            <div class="onboarding-question">
+
+                <h2>
+                    {{ curiosity.prompt }}
+                </h2>
+
+                {% if curiosity.description %}
+                    <p>
+                        {{ curiosity.description }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+
+            <a
+                href="portal/onboarding/step/{{ curiosity.id }}"
+                data-nav="portal/onboarding/step/{{ curiosity.id }}"
+                class="onboarding-button"
+            >
+                Continue
+                <i class="fa fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="onboarding-empty">
+
+            <i class="fa fa-check-circle"></i>
+
+            <h2>Nothing more to complete</h2>
+
+            <p>
+                Your onboarding is currently up to date.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>

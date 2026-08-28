@@ -1,0 +1,195 @@
+<div class="onboarding-page container">
+
+    <div class="onboarding-header">
+
+        <a
+            href="portal/onboarding"
+            data-nav="portal/onboarding"
+            class="onboarding-back"
+        >
+            <i class="fa fa-arrow-left"></i>
+        </a>
+
+        <div>
+
+            <h1>
+                {{ curiosity.prompt }}
+            </h1>
+
+            {% if curiosity.description %}
+                <p>
+                    {{ curiosity.description }}
+                </p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="onboarding-card">
+
+        <form
+            method="post"
+            action="api/modules/users/onboarding/answer"
+            class="onboarding-form"
+        >
+
+            <input
+                type="hidden"
+                name="curiosity_id"
+                value="{{ curiosity.id }}"
+            >
+
+
+            {% if curiosity.type == 'text' %}
+
+                <div class="onboarding-field">
+
+                    <label>
+                        {{ curiosity.prompt }}
+                    </label>
+
+                    <textarea
+                        name="value"
+                        rows="5"
+                        placeholder="Tell us a little about this..."
+                        {% if curiosity.required %}
+                            required
+                        {% endif %}
+                    ></textarea>
+
+                </div>
+
+
+            {% elseif curiosity.type == 'select' %}
+
+                <div class="onboarding-options">
+
+                    {% for option in curiosity.options %}
+
+                        <label class="onboarding-option">
+
+                            <input
+                                type="radio"
+                                name="value"
+                                value="{{ option.value }}"
+                                {% if curiosity.required %}
+                                    required
+                                {% endif %}
+                            >
+
+                            <span>
+                                {{ option.label }}
+                            </span>
+
+                        </label>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% elseif curiosity.type == 'email' %}
+
+                <div class="onboarding-field">
+
+                    <label>
+                        {{ curiosity.prompt }}
+                    </label>
+
+                    <input
+                        type="email"
+                        name="value"
+                        {% if curiosity.required %}
+                            required
+                        {% endif %}
+                    >
+
+                </div>
+
+
+            {% elseif curiosity.type == 'phone' %}
+
+                <div class="onboarding-field">
+
+                    <label>
+                        {{ curiosity.prompt }}
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="value"
+                        {% if curiosity.required %}
+                            required
+                        {% endif %}
+                    >
+
+                </div>
+
+
+            {% elseif curiosity.type == 'date' %}
+
+                <div class="onboarding-field">
+
+                    <label>
+                        {{ curiosity.prompt }}
+                    </label>
+
+                    <input
+                        type="date"
+                        name="value"
+                        {% if curiosity.required %}
+                            required
+                        {% endif %}
+                    >
+
+                </div>
+
+
+            {% else %}
+
+                <div class="onboarding-field">
+
+                    <label>
+                        {{ curiosity.prompt }}
+                    </label>
+
+                    <input
+                        type="text"
+                        name="value"
+                        {% if curiosity.required %}
+                            required
+                        {% endif %}
+                    >
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="onboarding-form-footer">
+
+                <a
+                    href="portal/onboarding"
+                    data-nav="portal/onboarding"
+                    class="onboarding-secondary-button"
+                >
+                    Back
+                </a>
+
+                <button
+                    type="submit"
+                    class="onboarding-button"
+                >
+                    Save & Continue
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

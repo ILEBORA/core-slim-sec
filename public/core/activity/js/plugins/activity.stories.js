@@ -104,7 +104,7 @@ __BORA_REGISTER_PLUGIN__('activity.stories', async function(scope){
                     </div>
 
                     <div class="story-label">
-                        ${first.actor?.username || 'You'}
+                        ${first._actor?.username || 'You'}
                     </div>
 
                 </div>

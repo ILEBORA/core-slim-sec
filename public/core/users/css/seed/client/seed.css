@@ -1,0 +1,625 @@
+/* ============================================================
+   SEED CLIENT
+   ============================================================ */
+
+   .seed-client {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+}
+
+.seed-client-header,
+.seed-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.seed-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 7px;
+    color: var(--primary-color, #2d6a4f);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.seed-client h1,
+.seed-page-header h1 {
+    margin: 0 0 7px;
+    font-size: 28px;
+}
+
+.seed-client-header p,
+.seed-page-header p {
+    margin: 0;
+    color: var(--text-muted, #777);
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.seed-primary-button,
+.seed-secondary-button,
+.seed-task-primary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 9px;
+    padding: 11px 16px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: .2s ease;
+}
+
+.seed-primary-button {
+    background: var(--primary-color, #2d6a4f);
+    color: #fff;
+}
+
+.seed-secondary-button {
+    background: transparent;
+    border: 1px solid var(--border-color, #ddd);
+    color: var(--text-color, #333);
+}
+
+.seed-primary-button:hover,
+.seed-secondary-button:hover,
+.seed-task-primary-action:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+.seed-dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+}
+
+.seed-dashboard-card,
+.seed-detail-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 15px;
+    padding: 22px;
+}
+
+.seed-card-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.seed-card-heading h2 {
+    margin: 3px 0 0;
+    font-size: 19px;
+}
+
+.seed-card-heading > i {
+    color: var(--primary-color, #2d6a4f);
+    font-size: 22px;
+}
+
+.seed-card-label {
+    color: var(--text-muted, #888);
+    font-size: 12px;
+}
+
+.seed-dashboard-card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.seed-info-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    background: rgba(45, 106, 79, .1);
+    color: var(--primary-color, #2d6a4f);
+    font-size: 19px;
+}
+
+.seed-dashboard-card-info h2 {
+    margin: 0 0 8px;
+}
+
+.seed-dashboard-card-info p {
+    color: var(--text-muted, #777);
+    line-height: 1.65;
+    margin: 0 0 20px;
+}
+
+
+/* ============================================================
+   TASK LIST
+   ============================================================ */
+
+.seed-task-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.seed-task-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.seed-task-row:last-child {
+    border-bottom: 0;
+}
+
+.seed-task-row-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(45, 106, 79, .08);
+    color: var(--primary-color, #2d6a4f);
+}
+
+.seed-task-row-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.seed-task-row-content strong {
+    font-size: 14px;
+}
+
+.seed-task-row-content span {
+    color: var(--text-muted, #888);
+    font-size: 12px;
+}
+
+.seed-task-row-action {
+    color: var(--primary-color, #2d6a4f);
+}
+
+.seed-card-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color, #eee);
+}
+
+.seed-card-footer a {
+    color: var(--primary-color, #2d6a4f);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   FULL TASK CARDS
+   ============================================================ */
+
+.seed-task-list-full {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.seed-task-card {
+    padding: 20px;
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 14px;
+    background: var(--card-bg, #fff);
+}
+
+.seed-task-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.seed-task-type {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.seed-task-type-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(45, 106, 79, .09);
+    color: var(--primary-color, #2d6a4f);
+}
+
+.seed-task-type strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.seed-task-type span span {
+    color: var(--text-muted, #888);
+    font-size: 12px;
+}
+
+.seed-task-description {
+    margin: 17px 0;
+    color: var(--text-muted, #666);
+    line-height: 1.6;
+}
+
+.seed-task-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 13px;
+    border-top: 1px solid var(--border-color, #eee);
+}
+
+.seed-task-action {
+    color: var(--primary-color, #2d6a4f);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.seed-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.seed-status-badge.large {
+    padding: 8px 13px;
+    font-size: 12px;
+}
+
+.seed-status-badge.assigned {
+    background: #e7f1ff;
+    color: #245a9c;
+}
+
+.seed-status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.seed-status-badge.in_progress {
+    background: #e8f4ff;
+    color: #12618a;
+}
+
+.seed-status-badge.completed {
+    background: #e5f6ec;
+    color: #217346;
+}
+
+.seed-status-badge.failed {
+    background: #fde8e8;
+    color: #a33a3a;
+}
+
+.seed-status-badge.cancelled {
+    background: #eee;
+    color: #666;
+}
+
+
+/* ============================================================
+   TASK DETAIL
+   ============================================================ */
+
+.seed-task-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 18px;
+}
+
+.seed-task-detail-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.seed-detail-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.seed-detail-card-heading > i {
+    color: var(--primary-color, #2d6a4f);
+    font-size: 18px;
+}
+
+.seed-detail-card-heading h2 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.seed-detail-card-heading span {
+    color: var(--text-muted, #888);
+    font-size: 12px;
+}
+
+.seed-task-instruction h3 {
+    margin: 0 0 10px;
+}
+
+.seed-task-instruction p {
+    color: var(--text-muted, #666);
+    line-height: 1.7;
+}
+
+.seed-task-primary-action {
+    margin-top: 15px;
+    background: var(--primary-color, #2d6a4f);
+    color: #fff;
+    width: fit-content;
+}
+
+
+/* ============================================================
+   WORKFLOW
+   ============================================================ */
+
+.seed-task-progress {
+    display: flex;
+    align-items: center;
+}
+
+.seed-progress-step {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    opacity: .45;
+}
+
+.seed-progress-step.active {
+    opacity: 1;
+}
+
+.seed-progress-step > span {
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--border-color, #ddd);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.seed-progress-step.active > span {
+    background: var(--primary-color, #2d6a4f);
+    color: #fff;
+}
+
+.seed-progress-step strong {
+    display: block;
+    font-size: 12px;
+}
+
+.seed-progress-step small {
+    color: var(--text-muted, #888);
+    font-size: 10px;
+}
+
+.seed-progress-line {
+    flex: 1;
+    height: 1px;
+    margin: 0 12px;
+    background: var(--border-color, #ddd);
+}
+
+
+/* ============================================================
+   META
+   ============================================================ */
+
+.seed-task-meta {
+    margin: 0;
+}
+
+.seed-task-meta div {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.seed-task-meta div:last-child {
+    border-bottom: 0;
+}
+
+.seed-task-meta dt {
+    color: var(--text-muted, #888);
+    font-size: 12px;
+}
+
+.seed-task-meta dd {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+}
+
+
+/* ============================================================
+   HELP / CALLOUT
+   ============================================================ */
+
+.seed-help-card,
+.seed-dashboard-callout {
+    padding: 20px;
+    border-radius: 14px;
+    background: rgba(45, 106, 79, .07);
+    border: 1px solid rgba(45, 106, 79, .12);
+}
+
+.seed-help-card > i {
+    color: var(--primary-color, #2d6a4f);
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.seed-help-card strong {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.seed-help-card p {
+    color: var(--text-muted, #666);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.seed-help-card a {
+    color: var(--primary-color, #2d6a4f);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.seed-dashboard-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 18px;
+}
+
+.seed-callout-icon {
+    color: var(--primary-color, #2d6a4f);
+    font-size: 20px;
+}
+
+.seed-dashboard-callout strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.seed-dashboard-callout p {
+    margin: 0;
+    color: var(--text-muted, #666);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   EMPTY STATES
+   ============================================================ */
+
+.seed-empty,
+.seed-empty-page {
+    text-align: center;
+    padding: 35px 20px;
+}
+
+.seed-empty i,
+.seed-empty-icon {
+    color: var(--primary-color, #2d6a4f);
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.seed-empty strong {
+    display: block;
+}
+
+.seed-empty p,
+.seed-empty-page p {
+    color: var(--text-muted, #888);
+    font-size: 13px;
+}
+
+.seed-empty-page {
+    padding: 70px 20px;
+}
+
+.seed-empty-page h2 {
+    margin: 5px 0;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 750px) {
+
+    .seed-client {
+        padding: 20px 15px 40px;
+    }
+
+    .seed-client-header,
+    .seed-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .seed-dashboard-grid,
+    .seed-task-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seed-dashboard-card-info {
+        min-height: 200px;
+    }
+
+    .seed-task-main {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .seed-task-progress {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .seed-progress-line {
+        width: 1px;
+        height: 15px;
+        flex: none;
+        margin-left: 15px;
+    }
+
+    .seed-dashboard-callout {
+        align-items: flex-start;
+    }
+
+}

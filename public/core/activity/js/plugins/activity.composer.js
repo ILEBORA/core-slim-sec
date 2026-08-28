@@ -41,7 +41,7 @@ __BORA_REGISTER_PLUGIN__('activity.composer', async function(scope){
             const before = text.substring(0, cursor);
         
             const match = before.match(/@([\w]*)$/);
-            console.log(match);
+            // console.log(match);
             if (!match) {
                 hideMentions();
                 return;

@@ -141,7 +141,7 @@ async function(scope){
         $viewer
             .find('.story-username')
             .text(
-                story.actor.username
+                story.actor.full_name
             );
 
         /*

@@ -128,6 +128,8 @@
         const plugins    = new Map();
         const pluginMeta = new Map();
 
+        const pluginState = new Map();
+
         // const events  = new Map();
         const timings = new Map();
         const errors  = new Map();
@@ -378,29 +380,61 @@
         }
 
         async function _registerPlugin(name, factory, meta = {}){
-            // console.log(
-            //     '[REGISTER PLUGIN]',
-            //     name
-            // );
+            console.log(
+                '[REGISTER PLUGIN]',
+                name
+            );
             name = name.toLowerCase();
 
             if(plugins.has(name)){
-                // console.warn('[Plugin exists]', name);
-                return;
+                console.warn(
+                    `[Plugin exists] ${name} — registration ignored`
+                );
+        
+                return plugins.get(name);
             }
             
+            
+            if(pluginState.get(name)?.registering){
+                return;
+            }
+
+        
+            pluginState.set(name, {
+                registering: true,
+                registered: false,
+                mounting: false,
+                mounted: false,
+                active: false
+            });
+
+            
+            // console.log(
+            //     '[REGISTER PLUGIN]',
+            //     name,
+            //     pluginState.get(name)
+            // );
 
             try{
                 const instance = await factory(createScope());
 
                 plugins.set(name, instance);
                 pluginMeta.set(name, meta);
+
+                pluginState.set(name, {
+                    registering: false,
+                    registered: true,
+                    mounting: false,
+                    mounted: false,
+                    active: false
+                });
+                
                 notifyRegistered(name);
 
                 // lazy-safe activation trigger
-                // await evaluatePluginActivation(normalizeUrl(window.location));
+                await evaluatePluginActivation(normalizeUrl(window.location));
 
-                
+                return instance;
 
             }
             catch(err){
@@ -617,7 +651,7 @@
                 
                     const context = {
                         route,
-                        face: global.__BORA_FACE__ || 'guest', // default to guest if face service or resolution fails
+                        face: global.__BORA_FACE__ || 'guest', //                to guest if face service or resolution fails
                         appcore: plugins.get('app.core'),
                         plugins
                     };
@@ -694,7 +728,7 @@
                             continue;
                         }
 
-                        // console.log('[Should Load] yes =', name);
+                        console.log('[Should Load] yes =', name);
 
                         // console.warn(`[Loader-success] Loading plugin: ${name}`);
                         // ensure code is loaded
@@ -704,7 +738,7 @@
                         
 
                         const plugin = plugins.get(name);
-                        // console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
+                        console.warn(`[Loader]-helper Plugin "${name}" loaded:`, plugin);
                         // Plugin not loaded yet (loader should have loaded it by now, but just in case)
                         if(!plugin){
                             // console.error(`[Loader] Plugin "${name}" is not loaded yet.`);
@@ -732,7 +766,7 @@
                         --------------------------- */
 
                         if(shouldActivate){
-                            // console.log('Activate plugin ' + name);
+                            console.log('Activate plugin ' + name);
                             // alert('Plugin:: '+name+ ' cnt:: '+cnt); cnt++;
                             if (plugin.__activating) {
                                 continue;  //return;
@@ -742,11 +776,26 @@
 
                             if(!plugin.__active){
 
+                                const state = pluginState.get(name);
+
+                                if(!state){
+                                    continue;
+                                }
+
+                                if(state.mounting || state.active){
+                                    continue;
+                                }
+
+                                state.mounting = true;
+
                                 try{
                                     const start = performance.now();
 
                                     await plugin.mount?.();
                                     plugin.__active = true;
+
+                                    state.mounted = true;
+                                    state.active = true;
 
                                     // console.log(
                                     //     `%c ${name} Plugin active`,
@@ -756,9 +805,15 @@
                                     /* timing (optional keep your existing logic) */
                                     plugin.__activating = false;
                                 }catch(err){
+                                    state.active = false;
+                                    state.mounted = false;
+
                                     errors.set(name, err);
                                     emit('plugin:error', { name, error: err });
                                     plugin.__activating = false;
+                                } finally {
+
+                                    state.mounting = false;
                                 }
                             }
 
@@ -1189,6 +1244,7 @@
                                         includeQuery: true
                                     },
                                  ),
+            _getPluginState: () => pluginState,
         }
 
         publicAPI.ready = () => readyPromise;

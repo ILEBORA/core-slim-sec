@@ -1,0 +1,441 @@
+<div class="seed-admin-detail seed-task-detail container">
+
+    <div class="seed-detail-header">
+
+        <div class="seed-detail-heading">
+
+            <div class="seed-detail-icon">
+                <i class="fa fa-tasks"></i>
+            </div>
+
+            <div>
+
+                <div class="seed-detail-eyebrow">
+                    Seed Task #{{ task.id }}
+                </div>
+
+                <h1>
+                    {{ task.task_type|default('Task')|replace({
+                        '_': ' ',
+                        '-': ' '
+                    })|title }}
+                </h1>
+
+                <div class="seed-detail-meta">
+
+                    {% set status = task.status.value|default(task.status)|default('pending') %}
+
+                    {% if status == 'completed' %}
+
+                        <span class="seed-badge seed-badge-success">
+                            <i class="fa fa-check"></i>
+                            Completed
+                        </span>
+
+                    {% elseif status == 'in_progress' %}
+
+                        <span class="seed-badge seed-badge-warning">
+                            <i class="fa fa-spinner"></i>
+                            In progress
+                        </span>
+
+                    {% elseif status == 'assigned' %}
+
+                        <span class="seed-badge seed-badge-info">
+                            Assigned
+                        </span>
+
+                    {% elseif status == 'failed' %}
+
+                        <span class="seed-badge seed-badge-danger">
+                            Failed
+                        </span>
+
+                    {% elseif status == 'cancelled' %}
+
+                        <span class="seed-badge seed-badge-muted">
+                            Cancelled
+                        </span>
+
+                    {% else %}
+
+                        <span class="seed-badge">
+                            Pending
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-detail-actions">
+
+            <a
+                href="bo/seed/tasks"
+                data-nav="bo/seed/tasks"
+                class="seed-btn seed-btn-secondary"
+            >
+                <i class="fa fa-arrow-left"></i>
+                Tasks
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="seed-detail-grid">
+
+        <!-- Assignment -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Assignment
+                    </span>
+
+                    <h2>
+                        Persona
+                    </h2>
+                </div>
+
+            </div>
+
+            {% if persona is defined and persona %}
+
+                <div class="seed-assignee">
+
+                    <div class="seed-avatar">
+                        <i class="fa fa-user"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ persona.name|default(persona.key) }}
+                        </strong>
+
+                        <span>
+                            {{ persona.role|default('Seed Persona') }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    This task has not been assigned to a persona.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Objective -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Objective
+                    </span>
+
+                    <h2>
+                        {{ objective.name|default(
+                            objective.key|default('Objective')
+                        ) }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div class="seed-info-list">
+
+                <div class="seed-info-row">
+                    <span>Key</span>
+                    <strong>
+                        {{ objective.key|default('—') }}
+                    </strong>
+                </div>
+
+                <div class="seed-info-row">
+                    <span>Weight</span>
+                    <strong>
+                        {{ objective.weight|default(100) }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Target -->
+
+        <section class="seed-panel seed-panel-wide">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Target
+                    </span>
+
+                    <h2>
+                        Task Target
+                    </h2>
+                </div>
+
+            </div>
+
+            <div class="seed-target">
+
+                <div class="seed-target-icon">
+                    <i class="fa fa-bullseye"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        {{ task.target_type|default('Unknown target') }}
+                    </span>
+
+                    <strong>
+                        #{{ task.target_id|default('—') }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Timeline -->
+
+        <section class="seed-panel seed-panel-wide">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Lifecycle
+                    </span>
+
+                    <h2>
+                        Task Timeline
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="seed-task-timeline">
+
+                <div class="seed-timeline-item is-complete">
+
+                    <span class="seed-timeline-dot">
+                        <i class="fa fa-plus"></i>
+                    </span>
+
+                    <div>
+                        <strong>Created</strong>
+
+                        <small>
+                            {{ task.created_at|default('—') }}
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="
+                    seed-timeline-item
+                    {{ task.assigned_at ? 'is-complete' : '' }}
+                ">
+
+                    <span class="seed-timeline-dot">
+                        <i class="fa fa-user-check"></i>
+                    </span>
+
+                    <div>
+                        <strong>Assigned</strong>
+
+                        <small>
+                            {{ task.assigned_at|default('Not assigned') }}
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="
+                    seed-timeline-item
+                    {{ task.started_at ? 'is-complete' : '' }}
+                ">
+
+                    <span class="seed-timeline-dot">
+                        <i class="fa fa-play"></i>
+                    </span>
+
+                    <div>
+                        <strong>Started</strong>
+
+                        <small>
+                            {{ task.started_at|default('Not started') }}
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="
+                    seed-timeline-item
+                    {{ task.completed_at ? 'is-complete' : '' }}
+                ">
+
+                    <span class="seed-timeline-dot">
+                        <i class="fa fa-check"></i>
+                    </span>
+
+                    <div>
+                        <strong>Completed</strong>
+
+                        <small>
+                            {{ task.completed_at|default('Not completed') }}
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Matching -->
+
+        {% if match is defined and match %}
+
+            <section class="seed-panel seed-panel-wide">
+
+                <div class="seed-panel-header">
+
+                    <div>
+                        <span class="seed-panel-eyebrow">
+                            Decision
+                        </span>
+
+                        <h2>
+                            Persona Matching
+                        </h2>
+                    </div>
+
+                    {% if match.score is defined %}
+
+                        <div class="seed-score">
+                            <span>Score</span>
+                            <strong>
+                                {{ match.score }}
+                            </strong>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if match.reasons is defined and match.reasons|length %}
+
+                    <div class="seed-reasons">
+
+                        {% for reason in match.reasons %}
+
+                            <span class="seed-reason">
+                                <i class="fa fa-check"></i>
+                                {{ reason }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- Result -->
+
+        <section class="seed-panel seed-panel-wide">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Measurement
+                    </span>
+
+                    <h2>
+                        Task Results
+                    </h2>
+                </div>
+
+            </div>
+
+            {% if results is defined and results|length %}
+
+                <div class="seed-result-list">
+
+                    {% for result in results %}
+
+                        <div class="seed-result">
+
+                            <div>
+                                <strong>
+                                    {{ result.metric }}
+                                </strong>
+
+                                <small>
+                                    {{ result.measured_at }}
+                                </small>
+                            </div>
+
+                            <strong class="seed-result-value">
+                                {{ result.value }}
+                            </strong>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    No task results have been recorded yet.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+</div>

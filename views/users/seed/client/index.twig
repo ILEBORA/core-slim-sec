@@ -1,0 +1,167 @@
+<div class="seed-client container">
+
+    <div class="seed-client-header">
+
+        <div>
+            <div class="seed-eyebrow">
+                <i class="fa fa-seedling"></i>
+                Seed
+            </div>
+
+            <h1>Grow the conversation</h1>
+
+            <p>
+                Help create meaningful conversations and preserve
+                knowledge within the community.
+            </p>
+        </div>
+
+        <a
+            href="portal/seed/tasks"
+            data-nav="portal/seed/tasks"
+            class="seed-primary-button"
+        >
+            <i class="fa fa-tasks"></i>
+            My Tasks
+        </a>
+
+    </div>
+
+
+    <div class="seed-dashboard-grid">
+
+        <div class="seed-dashboard-card seed-dashboard-card-main">
+
+            <div class="seed-card-heading">
+
+                <div>
+                    <span class="seed-card-label">
+                        Your Seed Tasks
+                    </span>
+
+                    <h2>Tasks waiting for you</h2>
+                </div>
+
+                <i class="fa fa-leaf"></i>
+
+            </div>
+
+
+            {% if tasks is not empty %}
+
+                <div class="seed-task-list">
+
+                    {% for task in tasks %}
+
+                        <div class="seed-task-row">
+
+                            <div class="seed-task-row-icon">
+                                <i class="fa fa-comment"></i>
+                            </div>
+
+                            <div class="seed-task-row-content">
+
+                                <strong>
+                                    {{ task.task_type|default('Task')|title }}
+                                </strong>
+
+                                <span>
+                                    {{ task.status.value|default(task.status) }}
+                                </span>
+
+                            </div>
+
+                            <a
+                                href="portal/seed/task/{{ task.id }}"
+                                data-nav="portal/seed/task/{{ task.id }}"
+                                class="seed-task-row-action"
+                            >
+                                <i class="fa fa-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+
+                    <i class="fa fa-check-circle"></i>
+
+                    <strong>No tasks right now</strong>
+
+                    <p>
+                        There are no Seed tasks waiting for you.
+                        Check back later.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="seed-card-footer">
+
+                <a
+                    href="portal/seed/tasks"
+                    data-nav="portal/seed/tasks"
+                >
+                    View all tasks
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-dashboard-card seed-dashboard-card-info">
+
+            <div class="seed-info-icon">
+                <i class="fa fa-lightbulb"></i>
+            </div>
+
+            <h2>How it works</h2>
+
+            <p>
+                Seed tasks are created when the community presents
+                an opportunity for meaningful participation.
+            </p>
+
+            <a
+                href="portal/seed/instructions"
+                data-nav="portal/seed/instructions"
+                class="seed-secondary-button"
+            >
+                Read instructions
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="seed-dashboard-callout">
+
+        <div class="seed-callout-icon">
+            <i class="fa fa-heart"></i>
+        </div>
+
+        <div>
+
+            <strong>Quality matters</strong>
+
+            <p>
+                Your role isn't simply to create activity.
+                Help people connect, share knowledge and keep
+                conversations meaningful.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

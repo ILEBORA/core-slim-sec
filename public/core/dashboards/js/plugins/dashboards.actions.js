@@ -17,11 +17,12 @@ async function(scope){
         mounted:false
     };
 
+    mount(); //force
 
     function mount(){
         if (state.mounted) return;
         state.mounted = true;
-        alert('dashboard.actions');
+        // alert('dashboard.actions');
         init();
     }
 

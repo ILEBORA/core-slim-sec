@@ -2098,6 +2098,28 @@ if (!function_exists('routes')) {
     }
 }
 
+// Controllers
+if (!function_exists('controllers')) {
+
+    function controllers(): \BoraSlim\Core\Routing\ControllerRegistry
+    {
+        $ctx = ctx();
+
+        if (!$ctx->registered(
+            \BoraSlim\Core\Routing\ControllerRegistry::class
+        )) {
+            $ctx->singleton(
+                \BoraSlim\Core\Routing\ControllerRegistry::class,
+                fn() => new \BoraSlim\Core\Routing\ControllerRegistry()
+            );
+        }
+
+        return $ctx->resolve(
+            \BoraSlim\Core\Routing\ControllerRegistry::class
+        );
+    }
+}
+
 // Feed
 if (!function_exists('feed')) {
 

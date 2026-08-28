@@ -23,17 +23,17 @@
                 <tbody>
                 <tr style="border: none;">
                     <td align="right" width="20%" valign="middle"><span>{{__t('ui.country',null,'Country')}}:</span></td>
-                    <td><span data-bind="ui.label.country">{{ country }}</span></td>
+                    <td><span data-bind="ui.label.country">{{ country.name }}</span></td>
                     <td width="25"></td>
                 </tr>
                 <tr style="border: none;">
                     <td align="right" width="20%" valign="middle"><span>{{__t('ui.label.county',null,'County')}}:</span></td>
-                    <td><span data-bind="ui.label.county">{{ county }}</span></td>
+                    <td><span data-bind="ui.label.county">{{ county.name }}</span></td>
                     <td width="25"></td>
                 </tr>
                 <tr style="border: none;">
                     <td align="right" valign="middle"><span>{{__t('ui.label.town',null,'Town')}}:</span></td>
-                    <td><span data-bind="ui.label.city">{{ city }}</span></td>
+                    <td><span data-bind="ui.label.city">{{ city.name }}</span></td>
                     <td width="25"></td>
                 </tr>
             </tbody></table>

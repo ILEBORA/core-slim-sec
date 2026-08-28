@@ -1,0 +1,279 @@
+<div class="seed-client seed-task-page container">
+
+    <div class="seed-page-header">
+
+        <div>
+
+            <div class="seed-eyebrow">
+                <i class="fa fa-seedling"></i>
+                Seed Task
+            </div>
+
+            <h1>
+                {% if task.task_type == 'reply' %}
+                    Start a conversation
+                {% else %}
+                    {{ task.task_type|default('Seed Task')|title }}
+                {% endif %}
+            </h1>
+
+            <p>
+                Follow the task instructions and complete the activity
+                when you are finished.
+            </p>
+
+        </div>
+
+
+        {% set status = task.status.value|default(task.status) %}
+
+        <span class="seed-status-badge large {{ status }}">
+            {{ status|replace({'_': ' '})|title }}
+        </span>
+
+    </div>
+
+
+    <div class="seed-task-detail-grid">
+
+        <div class="seed-task-detail-main">
+
+            <div class="seed-detail-card">
+
+                <div class="seed-detail-card-heading">
+
+                    <i class="fa fa-clipboard"></i>
+
+                    <div>
+                        <h2>Your task</h2>
+                        <span>What you need to do</span>
+                    </div>
+
+                </div>
+
+
+                <div class="seed-task-instruction">
+
+                    {% if task.task_type == 'reply' %}
+
+                        <h3>Continue the conversation</h3>
+
+                        <p>
+                            Visit the conversation associated with this
+                            task and make a meaningful contribution.
+                        </p>
+
+                        <p>
+                            Your response should feel natural and relevant
+                            to the conversation. Focus on adding value,
+                            sharing knowledge or encouraging further
+                            discussion.
+                        </p>
+
+                    {% else %}
+
+                        <h3>Complete this Seed task</h3>
+
+                        <p>
+                            Follow the instructions associated with
+                            this task and complete the requested action.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if targetUrl %}
+
+                    {% if task.status.value != 'completed' %}
+                        <button
+                            data-target="portal/activity/timeline/{{ task.target_id }}"
+                            class="seed-task-action seed-task-primary-action"
+                            data-action="users.seed.startTask"
+                            data-task-id="{{ task.target_id }}"
+                            data-task-uid="{{ task.uid }}"
+                        >
+                            <span>
+                                {% if task.status.value == 'assigned' %}
+                                    <i class="fa fa-play"></i> Start this task
+                                {% elseif task.status.value == 'in_progress' %}
+                                    Continue this task <i class="fa fa-arrow-right"></i>
+                                {% else %}
+                                    View task <i class="fa fa-arrow-right"></i>
+                                {% endif %}
+                            </span>
+                            
+                        </button>
+                    {% else %}
+                        <button
+                            data-nav="portal/activity/timeline/{{ task.target_id }}"
+                            class="seed-task-action seed-task-primary-action"
+                            data-action="users.seed.viewTask"
+                            data-task-id="{{ task.target_id }}"
+                            data-task-uid="{{ task.uid }}"
+                        >
+                            <span>
+                                View task <i class="fa fa-arrow-right"></i>
+                            </span>
+                            
+                        </button>
+                    {% endif %}
+
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="seed-detail-card">
+
+                <div class="seed-detail-card-heading">
+
+                    <i class="fa fa-route"></i>
+
+                    <div>
+                        <h2>Task workflow</h2>
+                        <span>Keep your task status up to date</span>
+                    </div>
+
+                </div>
+
+
+                <div class="seed-task-progress">
+
+                    <div class="seed-progress-step active">
+
+                        <span>1</span>
+
+                        <div>
+                            <strong>Assigned</strong>
+                            <small>Task received</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="seed-progress-line"></div>
+
+
+                    <div class="seed-progress-step
+                        {% if status == 'in_progress' or status == 'completed' %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <span>2</span>
+
+                        <div>
+                            <strong>In Progress</strong>
+                            <small>Work on the task</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="seed-progress-line"></div>
+
+
+                    <div class="seed-progress-step
+                        {% if status == 'completed' %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <span>3</span>
+
+                        <div>
+                            <strong>Completed</strong>
+                            <small>Finish the task</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <aside class="seed-task-detail-sidebar">
+
+            <div class="seed-detail-card">
+
+                <div class="seed-detail-card-heading">
+
+                    <i class="fa fa-info-circle"></i>
+
+                    <div>
+                        <h2>Task details</h2>
+                    </div>
+
+                </div>
+
+
+                <dl class="seed-task-meta">
+
+                    <div>
+                        <dt>Status</dt>
+                        <dd>
+                            {{ status|replace({'_': ' '})|title }}
+                        </dd>
+                    </div>
+
+                    <div>
+                        <dt>Task</dt>
+                        <dd>
+                            {{ task.task_type|default('Seed task')|title }}
+                        </dd>
+                    </div>
+
+                    {% if task.created_at %}
+
+                        <div>
+                            <dt>Created</dt>
+                            <dd>{{ task.created_at }}</dd>
+                        </div>
+
+                    {% endif %}
+
+                    {% if task.assigned_at %}
+
+                        <div>
+                            <dt>Assigned</dt>
+                            <dd>{{ task.assigned_at }}</dd>
+                        </div>
+
+                    {% endif %}
+
+                </dl>
+
+            </div>
+
+
+            <div class="seed-help-card">
+
+                <i class="fa fa-question-circle"></i>
+
+                <strong>Need help?</strong>
+
+                <p>
+                    Review the Seed instructions to understand how
+                    tasks work.
+                </p>
+
+                <a
+                    href="portal/seed/instructions"
+                    data-nav="portal/seed/instructions"
+                >
+                    View instructions
+                </a>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>

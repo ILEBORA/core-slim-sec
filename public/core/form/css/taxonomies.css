@@ -1,0 +1,224 @@
+.form-group .taxonomy-field {
+    width: 100%;
+    position: relative;
+}
+
+.form-group .taxonomy-results {
+    width: 100%;
+}
+
+.form-label {
+    width: 30%;
+}
+
+.form-control-wrapper {
+    width: 70%;
+}
+
+/**/
+/* =========================================================
+   BORA TAXONOMY
+   ========================================================= */
+
+   .bora-taxonomy {
+    position: relative;
+    width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   Input
+   --------------------------------------------------------- */
+
+.bora-taxonomy .bora-taxonomy-input {
+    display: block;
+
+    width: 100%;
+    height: 44px;
+
+    box-sizing: border-box;
+
+    padding: 0 40px 0 13px;
+
+    border: 1px solid #d8dde3;
+    border-radius: 7px;
+
+    background: #fff;
+
+    color: #333;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease,
+        background .15s ease;
+}
+
+.bora-taxonomy .bora-taxonomy-input::placeholder {
+    color: #8b929a;
+}
+
+.bora-taxonomy .bora-taxonomy-input:hover {
+    border-color: #b9c1ca;
+}
+
+.bora-taxonomy .bora-taxonomy-input:focus {
+    border-color: #4d8df7;
+
+    box-shadow:
+        0 0 0 3px rgba(77, 141, 247, .12);
+}
+
+
+/* ---------------------------------------------------------
+   Chevron
+   --------------------------------------------------------- */
+
+.bora-taxonomy::after {
+    content: "⌄";
+
+    position: absolute;
+
+    right: 13px;
+    top: 22px;
+
+    transform: translateY(-50%);
+
+    color: #777;
+    font-size: 17px;
+    line-height: 1;
+
+    pointer-events: none;
+
+    transition: transform .15s ease;
+}
+
+.bora-taxonomy.is-open::after {
+    transform:
+        translateY(-50%)
+        rotate(180deg);
+}
+
+
+/* ---------------------------------------------------------
+   Dropdown
+   --------------------------------------------------------- */
+
+.bora-taxonomy .bora-taxonomy-dropdown {
+    position: absolute;
+
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    max-height: 240px;
+
+    overflow-y: auto;
+
+    padding: 5px;
+
+    background: #fff;
+
+    border: 1px solid #d8dde3;
+    border-radius: 8px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, .12);
+    text-align: left;
+}
+
+
+/*
+ * Your JS appears to control visibility using
+ * the inline style, so don't force display:block
+ * here. Let JS continue controlling it.
+ */
+
+
+/* ---------------------------------------------------------
+   Options
+   --------------------------------------------------------- */
+
+.bora-taxonomy .bora-taxonomy-option {
+    display: block;
+
+    padding: 9px 11px;
+
+    border-radius: 5px;
+
+    color: #333;
+
+    font-size: 14px;
+    line-height: 1.3;
+
+    cursor: pointer;
+
+    transition:
+        background-color .12s ease,
+        color .12s ease;
+}
+
+.bora-taxonomy .bora-taxonomy-option:hover {
+    background: #f1f5fb;
+
+    color: #245eb7;
+}
+
+
+/* ---------------------------------------------------------
+   Selected option
+   --------------------------------------------------------- */
+
+.bora-taxonomy
+.bora-taxonomy-option.is-selected {
+
+    background: #e8f0ff;
+
+    color: #245eb7;
+
+    font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------
+   Scrollbar
+   --------------------------------------------------------- */
+
+.bora-taxonomy
+.bora-taxonomy-dropdown::-webkit-scrollbar {
+    width: 7px;
+}
+
+.bora-taxonomy
+.bora-taxonomy-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.bora-taxonomy
+.bora-taxonomy-dropdown::-webkit-scrollbar-thumb {
+    background: #cbd1d8;
+    border-radius: 10px;
+}
+
+
+/* ---------------------------------------------------------
+   Empty / loading states
+   --------------------------------------------------------- */
+
+.bora-taxonomy .bora-taxonomy-empty,
+.bora-taxonomy .bora-taxonomy-loading {
+
+    padding: 12px;
+
+    color: #8a9199;
+
+    font-size: 13px;
+
+    text-align: center;
+}

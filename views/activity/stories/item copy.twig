@@ -34,17 +34,17 @@
 
         <div class="story-user">
 
-            {% if first.actor.avatar_url %}
+            {% if first._actor.avatar_url %}
                 <img
                     class="story-user-avatar"
-                    src="{{ first.actor.avatar_url }}"
+                    src="{{ first._actor.avatar_url }}"
                 >
             {% endif %}
 
             <div class="story-user-meta">
 
                 <div class="story-username">
-                    {{ first.actor.username ?? 'You' }}
+                    {{ first._actor.username ?? 'You' }}
                 </div>
 
                 <div class="story-time">

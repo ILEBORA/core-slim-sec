@@ -130,7 +130,7 @@ __BORA_REGISTER_PLUGIN__('activity.actions', async function(scope){
 
         forms.register(
             'timeline.add', function($form, done) {
-            alert('test');
+            // alert('test');
             const url = $form.attr('action');
             const method = $form.attr('method') || 'POST';
             const btn = $form.find('button[type=submit]');

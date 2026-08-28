@@ -8,4 +8,5 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 
 $pipeline
     ->add('form.css')
+    ->add('taxonomies.css')
     ->send();

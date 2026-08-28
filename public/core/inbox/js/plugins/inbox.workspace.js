@@ -45,7 +45,7 @@ async function (scope) {
 
     function mount() {
         if (state.mounted) return;
-        alert('Inbox workspace');
+        // alert('Inbox workspace');
         state.mounted = true;
 
         ui.bind();

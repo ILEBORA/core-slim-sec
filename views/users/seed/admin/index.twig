@@ -1,0 +1,581 @@
+<div class="seed-admin-dashboard container">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="seed-detail-header">
+
+        <div class="seed-detail-heading">
+
+            <div class="seed-detail-icon">
+                <i class="fa fa-seedling"></i>
+            </div>
+
+            <div>
+
+                <div class="seed-detail-eyebrow">
+                    Users / Seed
+                </div>
+
+                <h1>
+                    Seed Management
+                </h1>
+
+                <div class="seed-detail-subtitle">
+                    Monitor seed users, assignments and activity.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-detail-actions">
+
+            <a
+                href="bo/seed/personas"
+                data-nav="bo/seed/personas"
+                class="seed-btn seed-btn-secondary"
+            >
+                <i class="fa fa-users"></i>
+                Personas
+            </a>
+
+            <a
+                href="bo/seed/tasks"
+                data-nav="bo/seed/tasks"
+                class="seed-btn seed-btn-secondary"
+            >
+                <i class="fa fa-tasks"></i>
+                Tasks
+            </a>
+
+            <a
+                href="bo/seed/performance"
+                data-nav="bo/seed/performance"
+                class="seed-btn seed-btn-primary"
+            >
+                <i class="fa fa-chart-line"></i>
+                Performance
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         KPI SUMMARY
+         ===================================================== -->
+
+    <div class="seed-dashboard-stats">
+
+        <div class="seed-dashboard-stat">
+
+            <div class="seed-dashboard-stat-icon">
+                <i class="fa fa-users"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Active Personas
+                </span>
+
+                <strong>
+                    {{ stats.personas_active|default(0) }}
+                </strong>
+
+                <small>
+                    of {{ stats.personas_total|default(0) }} configured
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-dashboard-stat">
+
+            <div class="seed-dashboard-stat-icon">
+                <i class="fa fa-tasks"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Pending Tasks
+                </span>
+
+                <strong>
+                    {{ stats.tasks_pending|default(0) }}
+                </strong>
+
+                <small>
+                    awaiting execution
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-dashboard-stat">
+
+            <div class="seed-dashboard-stat-icon">
+                <i class="fa fa-spinner"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    In Progress
+                </span>
+
+                <strong>
+                    {{ stats.tasks_in_progress|default(0) }}
+                </strong>
+
+                <small>
+                    currently being handled
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-dashboard-stat">
+
+            <div class="seed-dashboard-stat-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Completed
+                </span>
+
+                <strong>
+                    {{ stats.tasks_completed|default(0) }}
+                </strong>
+
+                <small>
+                    total completed
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <div class="seed-dashboard-grid">
+
+
+        <!-- -------------------------------------------------
+             TASK PIPELINE
+             ------------------------------------------------- -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+
+                    <span class="seed-panel-eyebrow">
+                        Operations
+                    </span>
+
+                    <h2>
+                        Task Pipeline
+                    </h2>
+
+                </div>
+
+                <a
+                    href="bo/seed/tasks"
+                    data-nav="bo/seed/tasks"
+                    class="seed-panel-link"
+                >
+                    View all
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <div class="seed-pipeline">
+
+                <div class="seed-pipeline-stage">
+
+                    <span class="seed-pipeline-number">
+                        {{ stats.tasks_pending|default(0) }}
+                    </span>
+
+                    <span>
+                        Pending
+                    </span>
+
+                </div>
+
+
+                <div class="seed-pipeline-arrow">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+
+
+                <div class="seed-pipeline-stage">
+
+                    <span class="seed-pipeline-number">
+                        {{ stats.tasks_assigned|default(0) }}
+                    </span>
+
+                    <span>
+                        Assigned
+                    </span>
+
+                </div>
+
+
+                <div class="seed-pipeline-arrow">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+
+
+                <div class="seed-pipeline-stage">
+
+                    <span class="seed-pipeline-number">
+                        {{ stats.tasks_in_progress|default(0) }}
+                    </span>
+
+                    <span>
+                        In Progress
+                    </span>
+
+                </div>
+
+
+                <div class="seed-pipeline-arrow">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+
+
+                <div class="seed-pipeline-stage">
+
+                    <span class="seed-pipeline-number">
+                        {{ stats.tasks_completed|default(0) }}
+                    </span>
+
+                    <span>
+                        Completed
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- -------------------------------------------------
+             OBJECTIVES
+             ------------------------------------------------- -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+
+                    <span class="seed-panel-eyebrow">
+                        Strategy
+                    </span>
+
+                    <h2>
+                        Objectives
+                    </h2>
+
+                </div>
+
+                <a
+                    href="bo/seed/objectives"
+                    data-nav="bo/seed/objectives"
+                    class="seed-panel-link"
+                >
+                    Manage
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            {% if objectives is defined and objectives|length %}
+
+                <div class="seed-admin-list">
+
+                    {% for objective in objectives %}
+
+                        <a
+                            href="bo/seed/objective/{{ objective.id }}"
+                            data-nav="bo/seed/objective/{{ objective.id }}"
+                            class="seed-admin-list-item"
+                        >
+
+                            <div class="seed-list-icon">
+                                <i class="fa fa-bullseye"></i>
+                            </div>
+
+                            <div class="seed-list-content">
+
+                                <strong>
+                                    {{ objective.name }}
+                                </strong>
+
+                                <small>
+                                    {{ objective.task_count|default(0) }}
+                                    tasks
+                                </small>
+
+                            </div>
+
+                            <div class="seed-list-value">
+
+                                <strong>
+                                    {{ objective.success_rate|default(0) }}%
+                                </strong>
+
+                                <small>
+                                    success
+                                </small>
+
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    No objectives configured.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- -------------------------------------------------
+             RECENT TASKS
+             ------------------------------------------------- -->
+
+        <section class="seed-panel seed-panel-wide">
+
+            <div class="seed-panel-header">
+
+                <div>
+
+                    <span class="seed-panel-eyebrow">
+                        Activity
+                    </span>
+
+                    <h2>
+                        Recent Tasks
+                    </h2>
+
+                </div>
+
+                <a
+                    href="bo/seed/tasks"
+                    data-nav="bo/seed/tasks"
+                    class="seed-panel-link"
+                >
+                    View all
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            {% if recent_tasks is defined and recent_tasks|length %}
+
+                <div class="seed-task-table">
+
+                    {% for task in recent_tasks %}
+
+                        {% set status =
+                            task.status.value|default(task.status)|default('pending')
+                        %}
+
+                        <a
+                            href="bo/seed/task/{{ task.id }}"
+                            data-nav="bo/seed/task/{{ task.id }}"
+                            class="seed-task-row"
+                        >
+
+                            <div class="seed-task-row-type">
+
+                                <span class="seed-list-icon">
+                                    <i class="fa fa-comment"></i>
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        {{ task.task_type|default('Task')|title }}
+                                    </strong>
+
+                                    <small>
+                                        #{{ task.id }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="seed-task-row-objective">
+
+                                {{ task.objective_name|default('—') }}
+
+                            </div>
+
+
+                            <div>
+
+                                {% if status == 'completed' %}
+
+                                    <span class="seed-badge seed-badge-success">
+                                        Completed
+                                    </span>
+
+                                {% elseif status == 'in_progress' %}
+
+                                    <span class="seed-badge seed-badge-warning">
+                                        In progress
+                                    </span>
+
+                                {% elseif status == 'assigned' %}
+
+                                    <span class="seed-badge seed-badge-info">
+                                        Assigned
+                                    </span>
+
+                                {% elseif status == 'failed' %}
+
+                                    <span class="seed-badge seed-badge-danger">
+                                        Failed
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="seed-badge">
+                                        Pending
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <i class="fa fa-chevron-right seed-row-arrow"></i>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    No seed tasks have been created yet.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- -------------------------------------------------
+             QUICK LINKS
+             ------------------------------------------------- -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+
+                    <span class="seed-panel-eyebrow">
+                        Configuration
+                    </span>
+
+                    <h2>
+                        Seed System
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="seed-quick-links">
+
+                <a
+                    href="bo/seed/personas"
+                    data-nav="bo/seed/personas"
+                >
+                    <i class="fa fa-users"></i>
+                    <span>
+                        Manage Personas
+                    </span>
+                </a>
+
+                <a
+                    href="bo/seed/objectives"
+                    data-nav="bo/seed/objectives"
+                >
+                    <i class="fa fa-bullseye"></i>
+                    <span>
+                        Manage Objectives
+                    </span>
+                </a>
+
+                <a
+                    href="bo/seed/tasks"
+                    data-nav="bo/seed/tasks"
+                >
+                    <i class="fa fa-tasks"></i>
+                    <span>
+                        Task Queue
+                    </span>
+                </a>
+
+                <a
+                    href="bo/seed/performance"
+                    data-nav="bo/seed/performance"
+                >
+                    <i class="fa fa-chart-line"></i>
+                    <span>
+                        Performance
+                    </span>
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>

@@ -1,0 +1,151 @@
+<div class="seed-client seed-tasks-page container">
+
+    <div class="seed-page-header">
+
+        <div>
+
+            <div class="seed-eyebrow">
+                <i class="fa fa-tasks"></i>
+                Seed
+            </div>
+
+            <h1>My Tasks</h1>
+
+            <p>
+                Tasks assigned to you as a Seed.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if tasks is not empty %}
+
+        <div class="seed-task-list-full">
+
+            {% for task in tasks %}
+
+                <div class="seed-task-card">
+
+                    <div class="seed-task-main">
+
+                        <div class="seed-task-type">
+
+                            <span class="seed-task-type-icon">
+                                {% if task.task_type == 'reply' %}
+                                    <i class="fa fa-comment"></i>
+                                {% elseif task.task_type == 'share' %}
+                                    <i class="fa fa-share"></i>
+                                {% else %}
+                                    <i class="fa fa-seedling"></i>
+                                {% endif %}
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    {% if task.task_type == 'reply' %}
+                                        Start a conversation
+                                    {% else %}
+                                        {{ task.task_type|default('Seed task')|title }}
+                                    {% endif %}
+                                </strong>
+
+                                <span>
+                                    Assigned
+                                    {% if task.created_at %}
+                                        {{ task.created_at }}
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="seed-task-status">
+
+                            {% set status = task.status.value|default(task.status) %}
+
+                            <span class="seed-status-badge {{ status }}">
+                                {{ status|replace({
+                                    '_': ' '
+                                })|title }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="seed-task-description">
+
+                        {% if task.task_type == 'reply' %}
+
+                            Help continue this conversation.
+
+                        {% else %}
+
+                            Complete the assigned Seed task.
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="seed-task-footer">
+                        
+                        <a
+                            href="portal/seed/task/{{ task.id }}"
+                            data-nav="portal/seed/task/{{ task.id }}"
+                            class="seed-task-action"
+                        >
+
+                            {% if status == 'assigned' %}
+                                Start this task
+                            {% elseif status == 'in_progress' %}
+                                Continue this task
+                            {% else %}
+                                View task
+                            {% endif %}
+
+                            <i class="fa fa-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="seed-empty-page">
+
+            <div class="seed-empty-icon">
+                <i class="fa fa-check"></i>
+            </div>
+
+            <h2>You're all caught up</h2>
+
+            <p>
+                You don't have any Seed tasks at the moment.
+            </p>
+
+            <a
+                href="portal/seed"
+                data-nav="portal/seed"
+                class="seed-secondary-button"
+            >
+                Back to Seed
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>

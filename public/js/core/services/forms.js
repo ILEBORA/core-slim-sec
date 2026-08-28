@@ -44,13 +44,18 @@ __BORA_REGISTER_SERVICE__('forms', async function(scope){
     }
 
     function defaultJourney($form, done){
-        alert('defaultJourney');
+        // alert('defaultJourney');
         $.ajax({
             url: $form.attr('action'),
             method: $form.attr('method') || 'POST',
             data: $form.serialize(),
 
             success(resp){
+            
+                    console.trace(
+                        '[form.journey] DEFAULT SUCCESS',
+                        resp
+                    );
                 done?.(resp);
             },
 
@@ -77,25 +82,74 @@ __BORA_REGISTER_SERVICE__('forms', async function(scope){
 
     function run(name, $form, done){
 
-        const handler = journeys[name] || defaultJourney;
-
         if(!beforeSubmit($form)){
             return false;
         }
-
+    
+        const handler = journeys[name];
+    
+        if(typeof handler === 'function'){
+    
+            console.log(
+                '[form.journey] Running journey:',
+                name
+            );
+    
+            $form.data('journey-running', true);
+    
+            handler($form, function(resp){
+    
+                afterSubmit($form, resp);
+                // alert('run');
+                $form.removeData('journey-running');
+    
+                done?.(resp);
+            });
+    
+            return true;
+        }
+    
+        console.log(
+            '[form.journey] No journey registered:',
+            name,
+            '→ default'
+        );
+    
         $form.data('journey-running', true);
-
-        handler($form, function(resp){
-
+    
+        defaultJourney($form, function(resp){
+    
             afterSubmit($form, resp);
-
+            // alert('default');
             $form.removeData('journey-running');
-
+    
             done?.(resp);
         });
-
+    
         return true;
     }
+
+    // function runO(name, $form, done){
+
+    //     const handler = journeys[name] || defaultJourney;
+
+    //     if(!beforeSubmit($form)){
+    //         return false;
+    //     }
+
+    //     $form.data('journey-running', true);
+
+    //     handler($form, function(resp){
+
+    //         afterSubmit($form, resp);
+
+    //         $form.removeData('journey-running');
+
+    //         done?.(resp);
+    //     });
+
+    //     return true;
+    // }
 
     function bind(){
 
@@ -107,19 +161,45 @@ __BORA_REGISTER_SERVICE__('forms', async function(scope){
         submitHandler = function(e){
 
             const $form = $(this);
-
+        
+            console.trace(
+                '[form.journey] SUBMIT',
+                this
+            );
+        
+            console.log(
+                '[form.journey] handler:',
+                $form.data('handler')
+            );
+        
             if($form.data('journey-running')){
                 e.preventDefault();
                 return;
             }
-
+        
             e.preventDefault();
-
+        
             const journey =
                 $form.data('handler') || 'default';
-
+        
             run(journey, $form);
         };
+        // submitHandler = function(e){
+
+        //     const $form = $(this);
+
+        //     if($form.data('journey-running')){
+        //         e.preventDefault();
+        //         return;
+        //     }
+
+        //     e.preventDefault();
+
+        //     const journey =
+        //         $form.data('handler') || 'default';
+
+        //     run(journey, $form);
+        // };
 
         $(document)
             .off('submit.formJourney')
@@ -128,6 +208,12 @@ __BORA_REGISTER_SERVICE__('forms', async function(scope){
                 'form[data-ajax="true"]',
                 submitHandler
             );
+
+        // $(document).on(
+        //     'submit',
+        //     'form[data-ajax="true"]:not([data-form-journey])',
+        //     submitHandler
+        // );
 
         console.log('[form.journey] bound');
     }

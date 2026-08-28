@@ -40,7 +40,11 @@
                             </span>
 
                             <span>
-                                Start a conversation
+                                {% if task._objective %}
+                                    {{ task._objective.name }}
+                                {% else %}
+                                    Start a conversation
+                                {% endif %}
                             </span>
 
                         {% elseif task.task_type == 'question' %}
@@ -101,21 +105,32 @@
 
                 <div class="seed-task-description">
 
-                    {% if task.task_type == 'reply' %}
+                    {% if task._objective %}
 
-                        Help continue this conversation.
-
-                    {% elseif task.task_type == 'question' %}
-
-                        Ask something that encourages discussion.
-
-                    {% elseif task.task_type == 'knowledge' %}
-
-                        Add something useful to the conversation.
+                        {% if task._objective.description %}
+                            {{ task._objective.description }}
+                        {% else %}
+                            {{ task._objective.name }}
+                        {% endif %}
 
                     {% else %}
+                        {% if task.task_type == 'reply' %}
 
-                        Help keep this conversation going.
+                            Help continue this conversation.
+
+                        {% elseif task.task_type == 'question' %}
+
+                            Ask something that encourages discussion.
+
+                        {% elseif task.task_type == 'knowledge' %}
+
+                            Add something useful to the conversation.
+
+                        {% else %}
+
+                            Help keep this conversation going.
+
+                        {% endif %}
 
                     {% endif %}
 
@@ -124,13 +139,24 @@
 
                 <div class="seed-task-footer">
 
-                    <a
-                        data-nav="portal/activity/timeline/{{ task.target_id }}"
+                    <button
+                        data-target="portal/activity/timeline/{{ task.target_id }}"
                         class="seed-task-action"
+                        data-action="users.seed.startTask"
+                        data-task-id="{{ task.target_id }}"
+                        data-task-uid="{{ task.uid }}"
                     >
-                        <span>View conversation</span>
+                        <span>
+                            {% if task.status.value == 'assigned' %}
+                                Start this task
+                            {% elseif task.status.value == 'in_progress' %}
+                                Continue this task
+                            {% else %}
+                                View task
+                            {% endif %}
+                        </span>
                         <i class="fa fa-arrow-right"></i>
-                    </a>
+                    </button>
 
                 </div>
 

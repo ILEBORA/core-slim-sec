@@ -37,15 +37,15 @@ __BORA_REGISTER_PLUGIN__(
             state.mounted = true;
             // alert('timeline controller mounted');
 
-            console.log('jQuery:', !!window.jQuery);
-            console.log('Select2:', !!$.fn.select2);
-            console.log($);
-            console.log(jQuery);
+            // console.log('jQuery:', !!window.jQuery);
+            // console.log('Select2:', !!$.fn.select2);
+            // console.log($);
+            // console.log(jQuery);
 
-            console.log($.fn.jquery);
-            console.log($.fn.select2);
+            // console.log($.fn.jquery);
+            // console.log($.fn.select2);
 
-            console.log(window.$ === window.jQuery);
+            // console.log(window.$ === window.jQuery);
 
             await init();
             

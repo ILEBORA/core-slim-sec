@@ -1,0 +1,285 @@
+<div class="seed-admin-detail seed-persona-detail container">
+
+    <div class="seed-detail-header">
+
+        <div class="seed-detail-heading">
+            <div class="seed-detail-icon">
+                <i class="fa fa-user"></i>
+            </div>
+
+            <div>
+                <div class="seed-detail-eyebrow">
+                    Seed Persona
+                </div>
+
+                <h1>
+                    {{ persona.name|default(persona.key|default('Persona')) }}
+                </h1>
+
+                <div class="seed-detail-meta">
+                    <span class="seed-badge seed-badge-role">
+                        {{ persona.role|default('Unknown role') }}
+                    </span>
+
+                    {% if persona.enabled %}
+                        <span class="seed-badge seed-badge-success">
+                            <i class="fa fa-check"></i>
+                            Enabled
+                        </span>
+                    {% else %}
+                        <span class="seed-badge seed-badge-muted">
+                            Disabled
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="seed-detail-actions">
+            <a
+                href="bo/seed/personas"
+                data-nav="bo/seed/personas"
+                class="seed-btn seed-btn-secondary"
+            >
+                <i class="fa fa-arrow-left"></i>
+                Personas
+            </a>
+
+            <button
+                type="button"
+                class="seed-btn seed-btn-primary"
+                data-action="seed.persona.edit"
+                data-id="{{ persona.id }}"
+            >
+                <i class="fa fa-edit"></i>
+                Edit Persona
+            </button>
+        </div>
+
+    </div>
+
+
+    <div class="seed-detail-grid">
+
+        <!-- Overview -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Configuration
+                    </span>
+
+                    <h2>Overview</h2>
+                </div>
+            </div>
+
+            <div class="seed-info-list">
+
+                <div class="seed-info-row">
+                    <span>Key</span>
+                    <strong>
+                        {{ persona.key|default('—') }}
+                    </strong>
+                </div>
+
+                <div class="seed-info-row">
+                    <span>Role</span>
+                    <strong>
+                        {{ persona.role|default('—') }}
+                    </strong>
+                </div>
+
+                <div class="seed-info-row">
+                    <span>Purpose</span>
+                    <strong>
+                        {{ persona.purpose|default('—') }}
+                    </strong>
+                </div>
+
+                <div class="seed-info-row">
+                    <span>Activity level</span>
+
+                    <strong>
+                        {{ persona.activity_level|default(1) }}
+                        / 5
+                    </strong>
+                </div>
+
+                <div class="seed-info-row">
+                    <span>User ID</span>
+                    <strong>
+                        #{{ persona.user_id|default('—') }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Performance -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Performance
+                    </span>
+
+                    <h2>Activity</h2>
+                </div>
+            </div>
+
+            <div class="seed-stat-grid">
+
+                <div class="seed-stat">
+                    <span class="seed-stat-label">
+                        Tasks
+                    </span>
+
+                    <strong>
+                        {{ persona.task_count|default(0) }}
+                    </strong>
+                </div>
+
+                <div class="seed-stat">
+                    <span class="seed-stat-label">
+                        Completed
+                    </span>
+
+                    <strong>
+                        {{ persona.completed_tasks|default(0) }}
+                    </strong>
+                </div>
+
+                <div class="seed-stat">
+                    <span class="seed-stat-label">
+                        Completion
+                    </span>
+
+                    <strong>
+                        {{ persona.completion_rate|default(0) }}%
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Traits -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Matching
+                    </span>
+
+                    <h2>Traits</h2>
+                </div>
+            </div>
+
+            {% if traits is defined and traits|length %}
+
+                <div class="seed-trait-list">
+
+                    {% for trait in traits %}
+
+                        <div class="seed-trait">
+
+                            <div class="seed-trait-main">
+
+                                <span class="seed-trait-type">
+                                    {{ trait.trait_type }}
+                                </span>
+
+                                <strong>
+                                    {{ trait.trait }}
+                                </strong>
+
+                            </div>
+
+                            <span class="seed-weight">
+                                {{ trait.weight }}
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    No traits configured.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Behaviour -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Behaviour
+                    </span>
+
+                    <h2>Actions</h2>
+                </div>
+            </div>
+
+            {% if behaviours is defined and behaviours|length %}
+
+                <div class="seed-behaviour-list">
+
+                    {% for behaviour in behaviours %}
+
+                        <div class="seed-behaviour">
+
+                            <div>
+                                <strong>
+                                    {{ behaviour.action }}
+                                </strong>
+
+                                <small>
+                                    {{ behaviour.min_interval_minutes|default('—') }}
+                                    –
+                                    {{ behaviour.max_interval_minutes|default('—') }}
+                                    min
+                                </small>
+                            </div>
+
+                            <span class="seed-weight">
+                                {{ behaviour.weight }}
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    No behaviour rules configured.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+</div>

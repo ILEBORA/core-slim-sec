@@ -2,8 +2,13 @@
    Seed Progress Widget
    ========================================================= */
 
-   .seed-progress-widget {
+.seed-progress-widget {
     width: 100%;
+    flex-direction: column;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: 10px;
+    background: var(--bs-body-bg, #fff);
+    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
 }
 
 

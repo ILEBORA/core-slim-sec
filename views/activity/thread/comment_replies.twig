@@ -43,4 +43,9 @@ $(async function(){
         $('#threadCommentBody').focus();
     }
 })
+
+$(async function(){
+    const gateway= await window.__BORA_APP__.getPlugin('activity.composer');
+    gateway.init();
+});
 </script>

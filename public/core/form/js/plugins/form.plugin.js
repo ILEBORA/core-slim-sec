@@ -357,6 +357,10 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
     
             this.input =
                 this.el.find('.bora-taxonomy-input');
+
+            this.originalPlaceholder =
+                this.input.attr('placeholder')
+                || 'Select option';
     
             this.value =
                 this.el.find('.bora-taxonomy-value');
@@ -373,10 +377,172 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                 ) === 1;
     
             this.timer = null;
+
+            this.lastSelectedText = '';
+
+            this.initializing = true;
+
+            this.excludeParameter = this.el.data('taxonomy-exclude-parameter') || null;
+
+            const excludeField = this.el.data('taxonomy-exclude');
+
+            if (excludeField) {
+
+                const excludeValue =
+                    $(`[name="${excludeField}"]`).val();
+
+                if (excludeValue) {
+                    params.exclude_id = excludeValue;
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Dependency
+            |--------------------------------------------------------------------------
+            */
+
+            this.dependsOn =
+                this.el.data('taxonomy-depends-on')
+                || null;
+
+            this.dependsParameter =
+                this.el.data('taxonomy-depends-parameter')
+                || 'parent_id';
     
             this.bind();
+
+            this.bindDependency();
+
+            this.initializeDependency();
+
+            // prepopulate
+            this.initializeValue();
         }
+
+        
+
+        async initializeValue() {
+
+            const value = $.trim(
+                this.value.val()
+            );
+
+            if (!value) {
+                this.initializing = false;
+                return;
+            }
+        
+            /*
+             * Nothing to hydrate.
+             */
+            if (!value) {
+                return;
+            }
+        
+            /*
+             * New taxonomy values don't need
+             * resolving through the database.
+             */
+            if (
+                String(value).startsWith('__taxonomy__|')
+            ) {
+                return;
+            }
+        
+            if (!this.source) {
+                return;
+            }
+        
+            try {
+        
+                const params = {
+                    source: this.source,
+                    id: value
+                };
+        
+                /*
+                 * Include dependency if applicable.
+                 */
+                const dependencyValue =
+                    this.getDependencyValue();
+        
+                if (
+                    this.dependsOn &&
+                    dependencyValue
+                ) {
+                    params[this.dependsParameter] =
+                        dependencyValue;
+                }
+        
+                const response =
+                    await fetch(
+                        'api/modules/form/taxonomy/value?' +
+                        new URLSearchParams(params)
+                    );
+        
+                const data =
+                    await response.json();
+        
+                if (
+                    data.success &&
+                    data.result
+                ) {
+        
+                    this.input.val(
+                        data.result.text
+                    );
+
+                    /*
+                    * Tell dependent taxonomies that
+                    * this field has been initialized.
+                    */
+                    this.el.trigger(
+                        'taxonomy:initialized',
+                        [data.result]
+                    );
+        
+                }
+        
+            } catch (error) {
+        
+                console.error(
+                    'Taxonomy value hydration failed',
+                    error
+                );
+            } finally {
+
+                this.initializing = false;
+            }
+        }
+
+        
     
+        initializeDependency() {
+
+            this.updateState();
+        
+            /*
+             * If this is a dependent field and
+             * the parent already has a value, leave
+             * it enabled.
+             */
+        
+            if (
+                this.dependsOn &&
+                this.getDependencyValue()
+            ) {
+                return;
+            }
+        
+            if (this.dependsOn) {
+        
+                this.input.prop(
+                    'disabled',
+                    true
+                );
+            }
+        }
     
         bind() {
     
@@ -385,9 +551,60 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                 () => this.search()
             );
     
+            // this.input.on(
+            //     'focus',
+            //     () => this.search()
+            // );
             this.input.on(
-                'focus',
+                'focus.boraTaxonomy',
                 () => this.search()
+            );
+            
+            this.input.on(
+                'click.boraTaxonomy',
+                () => {
+                    if (!this.input.val().trim()) {
+                        this.search();
+                    }
+                }
+            );
+
+            // this.input.on(
+            //     'input.boraTaxonomy',
+            //     () => {
+            //         this.search();
+            
+            //         // If this taxonomy is a parent,
+            //         // notify dependent taxonomies.
+            //         this.value.trigger('change');
+            //     }
+            // );
+
+            this.input.on(
+                'input.boraTaxonomy',
+                () => {
+            
+                    const text =
+                        $.trim(this.input.val());
+            
+                    /*
+                     * If the user edits/removes the selected
+                     * text, invalidate the selected value.
+                     */
+                    if (
+                        !text ||
+                        text !== this.lastSelectedText
+                    ) {
+            
+                        this.value.val('');
+            
+                        this.value.trigger('change');
+            
+                        this.updateState();
+                    }
+            
+                    this.search();
+                }
             );
     
             $(document).on(
@@ -404,15 +621,201 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                 }
             );
         }
-    
+
+        setValue(value, text = '') {
+
+            const oldValue =
+                this.value.val();
+
+            const newValue =
+                value == null
+                    ? ''
+                    : String(value);
+
+            const changed =
+                String(oldValue) !== newValue;
+
+            this.input.val(text);
+
+            this.value.val(newValue);
+
+            this.lastSelectedText = text;
+
+            if (changed) {
+                this.value.trigger('change');
+            }
+
+            return changed;
+        }
+
+        bindDependency() {
+
+            if (!this.dependsOn) {
+                return;
+            }
+        
+            const parent =
+                $(`[name="${this.dependsOn}"]`);
+        
+            if (!parent.length) {
+        
+                console.warn(
+                    'Taxonomy dependency not found:',
+                    this.dependsOn
+                );
+        
+                return;
+            }
+        
+            parent.on(
+                'change.boraTaxonomyDependency',
+                () => {
+        
+                    this.reset();
+        
+                }
+            );
+        }
+
+        getDependencyValue() {
+
+            if (!this.dependsOn) {
+                return null;
+            }
+        
+            const parent =
+                $(`[name="${this.dependsOn}"]`);
+        
+            if (!parent.length) {
+                return null;
+            }
+        
+            /*
+             * Taxonomy fields store their actual
+             * value in .bora-taxonomy-value.
+             */
+        
+            const taxonomyValue =
+                parent
+                    .closest('.bora-taxonomy')
+                    .find('.bora-taxonomy-value');
+        
+            if (taxonomyValue.length) {
+                return taxonomyValue.val() || null;
+            }
+        
+            return parent.val() || null;
+        }
+
+        reset() {
+            const hadValue = !!this.value.val();
+
+            this.input.val('');
+        
+            this.value.val('');
+        
+            this.dropdown.empty();
+        
+            this.close();
+        
+            this.updateState();
+        
+            if (hadValue) {
+                this.value.trigger('change');
+            }
+
+            this.el.trigger(
+                'taxonomy:reset',
+                [null]
+            );
+        }
+
+        updateState() {
+
+            if (!this.dependsOn) {
+        
+                this.input.prop(
+                    'disabled',
+                    false
+                );
+        
+                return;
+            }
+        
+            const parentValue =
+                this.getDependencyValue();
+        
+            const disabled =
+                !parentValue;
+        
+            this.input.prop(
+                'disabled',
+                disabled
+            );
+        
+            if (disabled) {
+        
+                this.input.attr(
+                    'placeholder',
+                    'Select parent first'
+                );
+        
+            } else {
+        
+                this.input.attr(
+                    'placeholder',
+                    this.originalPlaceholder
+                        || 'Select option'
+                );
+            }
+        }
     
         search() {
-    
+
+            if (this.dependsOn) {
+        
+                const parentValue =
+                    this.getDependencyValue();
+        
+                if (!parentValue) {
+        
+                    this.reset();
+        
+                    return;
+                }
+            }
+        
             const q =
                 $.trim(this.input.val());
-    
+        
             clearTimeout(this.timer);
-    
+        
+            this.timer = setTimeout(
+                () => this.fetch(q),
+                q ? 250 : 0
+            );
+        }
+
+        searchO() {
+
+            if (this.dependsOn) {
+        
+                const parentValue =
+                    this.getDependencyValue();
+        
+                if (!parentValue) {
+        
+                    this.reset();
+        
+                    return;
+                }
+            }
+        
+            const q =
+                $.trim(this.input.val());
+        
+            clearTimeout(this.timer);
+        
             this.timer = setTimeout(
                 () => this.fetch(q),
                 250
@@ -425,6 +828,18 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
             if(!this.source){
                 return;
             }
+
+            const params = {
+                q,
+                source: this.source
+            };
+
+            const dependencyValue = this.getDependencyValue();
+
+            if (this.dependsOn && dependencyValue) {
+
+                params[this.dependsParameter] = dependencyValue;
+            }
     
             try {
     
@@ -433,10 +848,7 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                 const response =
                     await fetch(
                         'api/modules/form/taxonomy/search?' +
-                        new URLSearchParams({
-                            q,
-                            source: this.source
-                        })
+                        new URLSearchParams(params)
                     );
     
                 const data =
@@ -479,16 +891,30 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
     
             results.forEach(item => {
     
+                // const option =
+                //     $('<div>')
+                //         .addClass(
+                //             'bora-taxonomy-option'
+                //         )
+                //         .text(item.text)
+                //         .attr(
+                //             'data-value',
+                //             item.id
+                //         );
+
                 const option =
                     $('<div>')
-                        .addClass(
-                            'bora-taxonomy-option'
-                        )
-                        .text(item.text)
-                        .attr(
-                            'data-value',
-                            item.id
-                        );
+                        .addClass('bora-taxonomy-option')
+                        .attr('data-value', item.id);
+
+                if (item.html) {
+
+                    option.html(item.html);
+
+                } else {
+
+                    option.text(item.text);
+                }
     
                 option.on(
                     'click',
@@ -532,18 +958,37 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
     
     
         select(item) {
+            // const oldValue = this.value.val();
+
+            // const newValue = String(item.id);
+
+            // const changed = String(oldValue) !== newValue;
+            // this.input.val(
+            //     item.text
+            // );
     
-            this.input.val(
+            // this.value.val(
+            //     item.id
+            // );
+
+            this.setValue(
+                item.id,
                 item.text
             );
-    
-            this.value.val(
-                item.id
-            );
+
+            this.lastSelectedText = item.text;
     
             this.close();
     
-            this.value.trigger('change');
+            /*
+            * Only notify dependents when the
+            * actual selected value changed.
+            */
+            // if (changed) {
+
+            //     this.value.trigger('change');
+
+            // }
     
             this.el.trigger(
                 'taxonomy:selected',
@@ -948,7 +1393,7 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
     //         | Ensure Select2 Exists
     //         |--------------------------------------------------------------------------
     //         */
-
+ 
     //         if(
     //             typeof $.fn.select2 !== 'function'
     //         ){

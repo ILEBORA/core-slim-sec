@@ -1,0 +1,205 @@
+.onboarding-page {
+    max-width: 760px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.onboarding-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.onboarding-header-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-color, #222);
+    color: #fff;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.onboarding-header h1 {
+    margin: 0 0 6px;
+    font-size: 28px;
+}
+
+.onboarding-header p {
+    margin: 0;
+    opacity: .7;
+    line-height: 1.6;
+}
+
+.onboarding-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
+}
+
+.onboarding-progress {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    opacity: .6;
+    margin-bottom: 30px;
+}
+
+.onboarding-question h2 {
+    font-size: 24px;
+    line-height: 1.4;
+    margin: 0 0 12px;
+}
+
+.onboarding-question p {
+    line-height: 1.6;
+    opacity: .7;
+}
+
+.onboarding-field {
+    margin-top: 25px;
+}
+
+.onboarding-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.onboarding-field input,
+.onboarding-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 10px;
+    font: inherit;
+    background: transparent;
+}
+
+.onboarding-field textarea {
+    resize: vertical;
+}
+
+.onboarding-options {
+    display: grid;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.onboarding-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.onboarding-option:hover {
+    border-color: var(--primary-color, #222);
+}
+
+.onboarding-form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.onboarding-button,
+.onboarding-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    font: inherit;
+}
+
+.onboarding-button {
+    background: var(--primary-color, #222);
+    color: #fff;
+}
+
+.onboarding-secondary-button {
+    border: 1px solid var(--border-color, #ddd);
+    color: inherit;
+}
+
+.onboarding-back {
+    text-decoration: none;
+    font-size: 18px;
+    padding-top: 5px;
+}
+
+.onboarding-complete,
+.onboarding-empty {
+    text-align: center;
+    padding: 60px 30px;
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 18px;
+}
+
+.onboarding-complete-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    font-size: 26px;
+}
+
+.onboarding-complete h2,
+.onboarding-empty h2 {
+    margin-bottom: 8px;
+}
+
+.onboarding-complete p,
+.onboarding-empty p {
+    opacity: .7;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 600px) {
+
+    .onboarding-page {
+        margin: 20px auto;
+        padding: 12px;
+    }
+
+    .onboarding-card {
+        padding: 20px;
+    }
+
+    .onboarding-header h1 {
+        font-size: 23px;
+    }
+
+    .onboarding-question h2 {
+        font-size: 20px;
+    }
+
+    .onboarding-form-footer {
+        gap: 12px;
+    }
+
+    .onboarding-form-footer > * {
+        flex: 1;
+        justify-content: center;
+    }
+}

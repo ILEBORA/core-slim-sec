@@ -1,0 +1,279 @@
+<div class="seed-admin-detail seed-objective-detail container">
+
+    <div class="seed-detail-header">
+
+        <div class="seed-detail-heading">
+
+            <div class="seed-detail-icon">
+                <i class="fa fa-bullseye"></i>
+            </div>
+
+            <div>
+
+                <div class="seed-detail-eyebrow">
+                    Seed Objective
+                </div>
+
+                <h1>
+                    {{ objective.name|default(objective.key|default('Objective')) }}
+                </h1>
+
+                <div class="seed-detail-meta">
+
+                    <span class="seed-badge">
+                        {{ objective.key|default('—') }}
+                    </span>
+
+                    {% if objective.enabled %}
+
+                        <span class="seed-badge seed-badge-success">
+                            <i class="fa fa-check"></i>
+                            Enabled
+                        </span>
+
+                    {% else %}
+
+                        <span class="seed-badge seed-badge-muted">
+                            Disabled
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="seed-detail-actions">
+
+            <a
+                href="bo/seed/objectives"
+                data-nav="bo/seed/objectives"
+                class="seed-btn seed-btn-secondary"
+            >
+                <i class="fa fa-arrow-left"></i>
+                Objectives
+            </a>
+
+            <button
+                type="button"
+                class="seed-btn seed-btn-primary"
+                data-action="seed.objective.edit"
+                data-id="{{ objective.id }}"
+            >
+                <i class="fa fa-edit"></i>
+                Edit Objective
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="seed-detail-grid">
+
+        <!-- Description -->
+
+        <section class="seed-panel seed-panel-wide">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Definition
+                    </span>
+
+                    <h2>
+                        Objective
+                    </h2>
+                </div>
+
+                <div class="seed-weight-badge">
+                    Weight
+                    <strong>
+                        {{ objective.weight|default(100) }}
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="seed-description">
+
+                {{ objective.description|default(
+                    'No description has been provided.'
+                ) }}
+
+            </div>
+
+        </section>
+
+
+        <!-- Metrics -->
+
+        <section class="seed-panel seed-panel-wide">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Measurement
+                    </span>
+
+                    <h2>
+                        Success Metrics
+                    </h2>
+                </div>
+
+            </div>
+
+
+            {% if metrics is defined and metrics|length %}
+
+                <div class="seed-metric-list">
+
+                    {% for metric in metrics %}
+
+                        <div class="seed-metric">
+
+                            <div class="seed-metric-main">
+
+                                <span class="seed-metric-icon">
+                                    <i class="fa fa-chart-line"></i>
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        {{ metric.metric }}
+                                    </strong>
+
+                                    <small>
+                                        {{ metric.enabled
+                                            ? 'Active metric'
+                                            : 'Disabled metric'
+                                        }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                            <div class="seed-metric-weight">
+
+                                <span>
+                                    Weight
+                                </span>
+
+                                <strong>
+                                    {{ metric.weight }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="seed-empty">
+                    No metrics configured for this objective.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Performance -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Results
+                    </span>
+
+                    <h2>
+                        Performance
+                    </h2>
+                </div>
+
+            </div>
+
+            <div class="seed-stat-grid">
+
+                <div class="seed-stat">
+                    <span class="seed-stat-label">
+                        Tasks
+                    </span>
+
+                    <strong>
+                        {{ objective.task_count|default(0) }}
+                    </strong>
+                </div>
+
+                <div class="seed-stat">
+                    <span class="seed-stat-label">
+                        Completed
+                    </span>
+
+                    <strong>
+                        {{ objective.completed_tasks|default(0) }}
+                    </strong>
+                </div>
+
+                <div class="seed-stat">
+                    <span class="seed-stat-label">
+                        Success
+                    </span>
+
+                    <strong>
+                        {{ objective.success_rate|default(0) }}%
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Default metric -->
+
+        <section class="seed-panel">
+
+            <div class="seed-panel-header">
+
+                <div>
+                    <span class="seed-panel-eyebrow">
+                        Primary Metric
+                    </span>
+
+                    <h2>
+                        Default
+                    </h2>
+                </div>
+
+            </div>
+
+            <div class="seed-primary-metric">
+
+                <i class="fa fa-chart-bar"></i>
+
+                <strong>
+                    {{ objective.metric|default('Not configured') }}
+                </strong>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>

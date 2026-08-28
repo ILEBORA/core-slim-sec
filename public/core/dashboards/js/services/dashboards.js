@@ -106,30 +106,30 @@ __BORA_REGISTER_SERVICE__('dashboards', async function(scope){
 
     function initDraggable(){
 
-        if(typeof ILEBORA === 'undefined') return;
+        // if(typeof ILEBORA === 'undefined') return;
 
-        ILEBORA.use('assets/js/draggable', function(){
+        // ILEBORA.use('assets/js/draggable', function(){
 
-            if(typeof draggable === 'undefined') return;
+        //     if(typeof draggable === 'undefined') return;
 
-            const widgets = document.querySelectorAll('.widget_container');
+        //     const widgets = document.querySelectorAll('.widget_container');
 
-            widgets.forEach(el => {
-                $(el).draggable({
-                    handle: '.handle',
-                    revert: true,
-                    placeholder: true
-                });
-            });
+        //     widgets.forEach(el => {
+        //         $(el).draggable({
+        //             handle: '.handle',
+        //             revert: true,
+        //             placeholder: true
+        //         });
+        //     });
 
-            $('.parent').droppable({
-                accept: '.drop',
-                drop: function(event, ui){
-                    $(this).append($(ui.draggable));
-                }
-            });
+        //     $('.parent').droppable({
+        //         accept: '.drop',
+        //         drop: function(event, ui){
+        //             $(this).append($(ui.draggable));
+        //         }
+        //     });
 
-        });
+        // });
     }
 
     /*

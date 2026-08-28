@@ -51,8 +51,8 @@ const StoryViewer = {
 
     render(data) {
         console.log('DATA::',data);
-        $('.story-avatar').attr('src', data.actor.avatar);
-        $('.story-username').text('@' + data.actor.username);
+        $('.story-avatar').attr('src', data._actor.avatar_url);
+        $('.story-username').text('@' + data._actor.username);
 
         if (data.payload?.full) {
             $('.story-image').attr('src', data.payload.full).show();

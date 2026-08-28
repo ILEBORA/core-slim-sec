@@ -26,13 +26,13 @@
 
             <img
                 class="story-user-avatar" data-action="inbox:view_profile" data-id="{{ first.actor_id }}" data-type="user"
-                src="{{ first.actor.avatar_url ?? '' }}"
+                src="{{ first._actor.avatar_url ?? '' }}"
             >
 
             <div class="story-user-meta">
 
                 <div class="story-username" data-action="inbox:view_profile" data-id="{{ first.actor_id }}" data-type="user">
-                    {{ first.actor.username ?? 'User' }}
+                    {{ first._actor.username ?? 'User' }}
                 </div>
 
             </div>
