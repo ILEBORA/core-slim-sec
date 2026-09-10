@@ -62,7 +62,7 @@ __BORA_REGISTER_PLUGIN__('ui.context.menu', async function(scope){
 
     async function loadMenu(type,id){
 
-        return $.get('api/modules/ui/contextmenu',{
+        return callbora.get('api/modules/ui/contextmenu',{
             type:type,
             id:id
         });

@@ -17,9 +17,9 @@
 
     border-radius: 36px;
 
-    margin: 80px auto;
+    /* margin: 80px auto; */
 
-    max-width: 1280px;
+    /* max-width: 1280px; */
 }
 
 
@@ -259,7 +259,7 @@
 
     .landing-cta-section{
         padding: 70px 20px;
-        margin: 56px 16px;
+        /* margin: 56px 16px; */
 
         border-radius: 24px;
     }

@@ -54,22 +54,76 @@ if (!defined('REQUEST_SCHEME')) {
 }
 
 // Define BASE_DIR etc. only if not already defined
+// Define BASE_DIR etc. only if not already defined
 if (!defined("BASE_DIR")) {
+
     define("BASE_DIR", dirname(__DIR__, 3));
-    if(isset($_SERVER['DOCUMENT_ROOT']) && !empty(isset($_SERVER['DOCUMENT_ROOT']))){
-        $baseUrlRelative = !empty($_SERVER['DOCUMENT_ROOT']) ?  explode($_SERVER['DOCUMENT_ROOT'], str_replace(DIRECTORY_SEPARATOR, "/", BASE_DIR))[1] : '';
+
+    if (isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT'])) {
+        $baseUrlRelative = !empty($_SERVER['DOCUMENT_ROOT'])
+            ? explode(
+                $_SERVER['DOCUMENT_ROOT'],
+                str_replace(DIRECTORY_SEPARATOR, "/", BASE_DIR)
+            )[1]
+            : '';
+
         define("BASE_URL_RELATIVE", $baseUrlRelative . '/');
-    }else{
-         define("BASE_URL_RELATIVE", '/'); 
+    } else {
+        define("BASE_URL_RELATIVE", '/');
     }
-    $lnkfix = (BASE_URL_RELATIVE == "/") ? "/" : BASE_URL_RELATIVE;
-    if(isset($_SERVER['HTTP_HOST'])){
-        define("BASE_URL", REQUEST_SCHEME . '://' . $_SERVER['HTTP_HOST'] . $lnkfix);
-    }else{
-        define("BASE_URL", REQUEST_SCHEME . '://' . $lnkfix);
+
+    $lnkfix = (BASE_URL_RELATIVE === "/")
+        ? "/"
+        : BASE_URL_RELATIVE;
+
+    /*
+     * Determine the public request scheme.
+     *
+     * When behind Cloudflare, Apache may receive HTTP from
+     * cloudflared even though the visitor connected using HTTPS.
+     */
+    $scheme = 'http';
+
+    if (
+        isset($_SERVER['HTTP_CF_VISITOR']) &&
+        !empty($_SERVER['HTTP_CF_VISITOR'])
+    ) {
+        $cfVisitor = json_decode($_SERVER['HTTP_CF_VISITOR'], true);
+
+        if (
+            is_array($cfVisitor) &&
+            isset($cfVisitor['scheme']) &&
+            in_array(strtolower($cfVisitor['scheme']), ['http', 'https'], true)
+        ) {
+            $scheme = strtolower($cfVisitor['scheme']);
+        }
+    } elseif (
+        isset($_SERVER['HTTPS']) &&
+        $_SERVER['HTTPS'] !== 'off' &&
+        !empty($_SERVER['HTTPS'])
+    ) {
+        $scheme = 'https';
+    } elseif (
+        isset($_SERVER['REQUEST_SCHEME']) &&
+        in_array(strtolower($_SERVER['REQUEST_SCHEME']), ['http', 'https'], true)
+    ) {
+        $scheme = strtolower($_SERVER['REQUEST_SCHEME']);
     }
-    
+
+    if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
+        define(
+            "BASE_URL",
+            $scheme . '://' . $_SERVER['HTTP_HOST'] . $lnkfix
+        );
+    } else {
+        define(
+            "BASE_URL",
+            $scheme . '://' . $lnkfix
+        );
+    }
+
     define("SITEROOT", str_replace("/", "", BASE_URL_RELATIVE));
+
     $_SESSION['BASE_DIR'] = BASE_URL;
 }
 

@@ -24,14 +24,14 @@ return [
         // 'preload'  => true,
     ],
 
-    'select2' => [
-        'file'     => 'vendor/select2.js',
-        'version'  => '4.1.0',
-        'priority' => 3,
-        // 'global'   => 'select2',
-        'bypass'  => true,
-        'preload'  => false,
-    ],
+    // 'select2' => [
+    //     'file'     => 'vendor/select2.js',
+    //     'version'  => '4.1.0',
+    //     'priority' => 3,
+    //     // 'global'   => 'select2',
+    //     'bypass'  => true,
+    //     'preload'  => false,
+    // ],
 
     'colorpicker' => [
         'file'     => 'vendor/colorpicker.js',
@@ -212,16 +212,22 @@ return [
         'type' => 'plugin',
         'version' => '1.0.0',
         'priority' => 39,
-        'requires' => ['jquery', ]
+        'requires' => [
+            // 'jquery', 
+            ]
     ],
     'events' => [
         'file' => 'plugins/events.js',
         'type' => 'plugin',
         'version' => '1.0.0',
         'priority' => 40,
-        'requires' => ['jquery', ]
+        'requires' => [
+            // 'jquery', 
+            ]
     ],
-    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => ['jquery',  'events'],'preload'=>false],
+    'popup.core' => ['file' => 'plugins/popup.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 41, 'requires' => [
+        // 'jquery',  'events'
+    ],'preload'=>false],
     'navigation.plugin' => ['file' => 'plugins/navigation.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 42],
     'alerts' => ['file' => 'plugins/alerts.js', 'type' => 'plugin', 'version' => '2.0.0', 'preload'=>false, 'priority' => 45, 'requires' => []],
     'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.plugin.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => []],

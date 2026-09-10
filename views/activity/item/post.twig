@@ -2,8 +2,8 @@
     
     {% include 'activity/header.twig' with { item: item } %}
 
-    <div class="activity-body">
-        {{ item.body|raw }}
+    <div class="activity-body"> Here
+        {{ item.body|safehtml }}
     </div>
 
     <div class="activity-media">

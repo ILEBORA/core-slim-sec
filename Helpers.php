@@ -204,33 +204,150 @@ function getRequest($method = "POST"){
         $post = $jdata;
     }
 
+    /*
+     * Firewall input inspection
+     */
+    if (!empty($post)) {
+
+        $decision = With('firewall')
+            ->getManager()
+            ->inspectInput($post);
+
+        if ($decision->isBlocked()) {
+
+            // http_response_code(403);
+
+            jsonExit([
+                'success' => false,
+                'error'   => 'SECURITY_VIOLATION',
+                'message' => $decision->message
+                    ?: 'Request blocked by security policy.'
+            ]);
+        }
+    }
+
     return $post;
 }
 
-function getRequestN() {
-    $method = $_SERVER['REQUEST_METHOD'];
+function getRequestN()
+{
+    $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
     $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-    
-    // Handle simple cases
-    if ($method === 'GET')    return $_GET;
-    if ($method === 'POST' && strpos($contentType, 'multipart/form-data') !== false) {
-        return array_merge($_POST, $_FILES); // files + text fields
-    }
-    if ($method === 'POST')   return $_POST;
-    
-    // Handle API verbs (PUT / PATCH / DELETE)
-    if (in_array($method, ['PUT','PATCH','DELETE'])) {
-        parse_str(file_get_contents('php://input'), $data);
-        return $data ?: [];
+
+    $data = [];
+
+    /*
+     * GET
+     */
+    if ($method === 'GET') {
+
+        $data = $_GET;
     }
 
-    // Handle JSON bodies
-    if (strpos($contentType, 'application/json') !== false) {
-        return json_decode(file_get_contents('php://input'), true) ?? [];
+    /*
+     * Multipart POST
+     *
+     * Text fields are inspected by the normal input firewall.
+     * Files should eventually have their own upload-security
+     * inspection rather than being treated as ordinary strings.
+     */
+    elseif (
+        $method === 'POST' &&
+        stripos($contentType, 'multipart/form-data') !== false
+    ) {
+
+        $data = $_POST;
     }
 
-    // Fallback
-    return $_REQUEST;
+    /*
+     * Standard POST
+     */
+    elseif ($method === 'POST') {
+
+        $data = $_POST;
+    }
+
+    /*
+     * JSON bodies
+     */
+    elseif (
+        in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true) &&
+        stripos($contentType, 'application/json') !== false
+    ) {
+
+        $raw = file_get_contents('php://input');
+
+        if ($raw !== false && trim($raw) !== '') {
+
+            $decoded = json_decode($raw, true);
+
+            if (
+                json_last_error() !== JSON_ERROR_NONE ||
+                !is_array($decoded)
+            ) {
+                jsonExit([
+                    'success' => false,
+                    'error'   => 'INVALID_JSON',
+                    'message' => 'Invalid JSON request body.'
+                ], 400);
+            }
+
+            $data = $decoded;
+        }
+    }
+
+    /*
+     * PUT / PATCH / DELETE form-style bodies
+     */
+    elseif (
+        in_array($method, ['PUT', 'PATCH', 'DELETE'], true)
+    ) {
+
+        $raw = file_get_contents('php://input');
+
+        if ($raw !== false && trim($raw) !== '') {
+            parse_str($raw, $data);
+        }
+    }
+
+    /*
+     * Fallback
+     */
+    else {
+
+        $data = $_REQUEST;
+    }
+
+    /*
+     * ==========================================================
+     * FIREWALL INPUT INSPECTION
+     * ==========================================================
+     *
+     * Everything returned from this helper passes through the
+     * same zero-trust input policy.
+     */
+    if (!empty($data)) {
+
+        $decision = With('firewall')
+            ->getManager()
+            ->inspectInput($data);
+        
+        if ($decision->isBlocked()) {
+
+            // http_response_code(403);
+
+            jsonExit([
+                'success' => false,
+                'error'   => 'SECURITY_VIOLATION',
+                'message' => $decision->message
+                    ?: 'Request blocked by security policy.'
+            ]);
+        }
+    }
+
+    // die('here');
+
+    return $data;
 }
 
 
@@ -1133,7 +1250,7 @@ if (!function_exists('vendor_path')){
 
 if (!function_exists('public_path')) {
     function public_path($relative = '') {
-        return 'assets' . ($relative ? '/' . ltrim($relative, '/') : '');
+        return BASE_URL.'assets' . ($relative ? '/' . ltrim($relative, '/') : '');
     }
 }
 
@@ -2632,5 +2749,46 @@ if (!function_exists('identity()')){
         return $ctx->resolve(
             \BoraSlim\Core\Domain\Identity\Identity::class
         );
+    }
+}
+
+if (!function_exists('themeAssets')) {
+    function themeAssets(): \BoraSlim\Core\Modules\Themes\Services\ThemeAssetResolver
+    {
+        static $resolver = null;
+
+        if ($resolver === null) {
+            $resolver = new \BoraSlim\Core\Modules\Themes\Services\ThemeAssetResolver();
+        }
+
+        return $resolver;
+    }
+}
+
+if (!function_exists('resolveTheme')) {
+    function resolveTheme(): string
+    {
+        $default = 'wahenga';
+
+        if (empty($_SESSION['siteprefs'])) {
+            return $default;
+        }
+
+        $configs = unserialize($_SESSION['siteprefs']);
+
+        if (!is_array($configs)) {
+            return $default;
+        }
+
+        $theme = $configs['theme'] ?? $default;
+
+        if (
+            !is_string($theme) ||
+            !preg_match('/^[a-zA-Z0-9_-]+$/', $theme)
+        ) {
+            return $default;
+        }
+
+        return $theme;
     }
 }

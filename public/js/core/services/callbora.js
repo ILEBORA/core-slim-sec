@@ -9,6 +9,133 @@ __BORA_REGISTER_SERVICE__('callbora', async function(scope){
     //     throw new Error('callbora requires jquery service');
     // }
 
+    function resolveErrorResponse(xhr){
+
+        let resp = null;
+    
+        try{
+            resp = xhr.responseJSON ||
+                   JSON.parse(xhr.responseText);
+        }
+        catch(e){
+            // Non-JSON response
+        }
+    
+        /*
+         * ==================================================
+         * FRAMEWORK STATES
+         * ==================================================
+         */
+    
+        if(
+            xhr.status === 503 &&
+            resp?.error === 'MAINTENANCE_MODE'
+        ){
+    
+            hooks?.run?.(
+                'callbora.maintenance',
+                resp
+            );
+    
+            return {
+                handled: true,
+                type: 'maintenance',
+                response: resp,
+                status: xhr.status
+            };
+        }
+    
+        /*
+         * Security violation
+         */
+        if(
+            xhr.status === 403 &&
+            resp?.error === 'SECURITY_VIOLATION'
+        ){
+    
+            hooks?.run?.(
+                'callbora.securityViolation',
+                resp
+            );
+    
+            return {
+                handled: true,
+                type: 'security',
+                response: resp,
+                status: xhr.status
+            };
+        }
+    
+        /*
+         * Authentication
+         */
+        if(
+            xhr.status === 401
+        ){
+    
+            hooks?.run?.(
+                'callbora.unauthenticated',
+                resp
+            );
+    
+            return {
+                handled: true,
+                type: 'unauthenticated',
+                response: resp,
+                status: xhr.status
+            };
+        }
+    
+        /*
+         * Rate limiting
+         */
+        if(
+            xhr.status === 429
+        ){
+    
+            hooks?.run?.(
+                'callbora.rateLimited',
+                resp
+            );
+    
+            return {
+                handled: true,
+                type: 'rate_limited',
+                response: resp,
+                status: xhr.status
+            };
+        }
+    
+        /*
+         * Domain/application error
+         */
+        if(
+            xhr.status >= 400 &&
+            xhr.status < 500 &&
+            resp?.success === false &&
+            resp?.code
+        ){
+    
+            return {
+                handled: true,
+                type: 'domain',
+                response: resp,
+                status: xhr.status
+            };
+        }
+    
+        /*
+         * Everything else is a system error.
+         */
+        return {
+            handled: false,
+            type: 'system',
+            response: resp,
+            status: xhr.status,
+            xhr
+        };
+    }
+
     /* ==================================================
        CORE REQUEST ENGINE (Promise-Based)
     ================================================== */
@@ -93,30 +220,74 @@ __BORA_REGISTER_SERVICE__('callbora', async function(scope){
 
                 error: (xhr)=>{
 
-                    let resp = null;
-
-                    try{
-                        resp = xhr.responseJSON ||
-                               JSON.parse(xhr.responseText);
-                    }catch(e){}
-
-                    // Domain error (expected)
-                    if(
-                        xhr.status >= 400 &&
-                        xhr.status < 500 &&
-                        resp?.success === false &&
-                        resp?.code
-                    ){
-                        resolve(resp);
+                    const result = resolveErrorResponse(xhr);
+                
+                    /*
+                     * Expected application/framework state.
+                     *
+                     * Return it through the Promise rather than treating
+                     * it as a transport/system failure.
+                     */
+                    if(result.handled){
+                
+                        resolve({
+                            success: false,
+                
+                            error: result.response?.error
+                                || result.response?.code
+                                || result.type,
+                
+                            message: result.response?.message
+                                || 'Request could not be completed.',
+                
+                            status: result.status,
+                
+                            state: result.type,
+                
+                            response: result.response
+                        });
+                
                         return;
                     }
-
-                    // System error
+                
+                    /*
+                     * Genuine infrastructure/system failure.
+                     */
                     reject({
-                        system:true,
+                        system: true,
+                        type: result.type,
+                        status: result.status,
+                        response: result.response,
                         xhr
                     });
                 }
+
+                // error: (xhr)=>{
+
+                //     let resp = null;
+
+                //     try{
+                //         resp = xhr.responseJSON ||
+                //                JSON.parse(xhr.responseText);
+                //     }catch(e){}
+
+                //     // Domain error (expected)
+                //     if(
+                //         xhr.status >= 400 &&
+                //         xhr.status < 500 &&
+                //         resp?.success === false &&
+                //         resp?.code
+                //     ){
+                //         resolve(resp);
+                //         return;
+                //     }
+
+                //     // System error
+                //     reject({
+                //         system:true,
+                //         xhr
+                //     });
+                // }
             });
         });
     }

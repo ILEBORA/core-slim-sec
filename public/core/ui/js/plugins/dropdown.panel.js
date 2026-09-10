@@ -3,6 +3,7 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
     const dismissable = await scope.getService('ui.dismissable');
     const anchor = await scope.getPlugin('ui.anchor.positioner');
     const uiActions = await scope.getService('ui.actions');
+    const callbora   = await scope.getService('callbora');
 
     let panel = null;
     let dismissInstance = null;
@@ -73,7 +74,7 @@ __BORA_REGISTER_PLUGIN__('ui.dropdown.panel', async function(scope){
 
     async function loadPanel(type){
 
-        return $.get('api/modules/ui/dropdown',{
+        return callbora.get('api/modules/ui/dropdown',{
             type:type
         });
 

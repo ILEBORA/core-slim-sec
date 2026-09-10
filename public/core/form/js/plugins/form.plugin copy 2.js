@@ -362,29 +362,8 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                 this.input.attr('placeholder')
                 || 'Select option';
     
-            // this.value =
-            //     this.el.find('.bora-taxonomy-value');
-
-            this.multiple =
-                Number(
-                    this.el.data('taxonomy-multiple')
-                ) === 1;
-
-            this.selected =
-                this.el.find('.bora-taxonomy-selected');
-
             this.value =
                 this.el.find('.bora-taxonomy-value');
-
-            this.value.each((_, el) => {
-                const value = $(el).val();
-            
-                if (value !== '') {
-                    this.selectedValues.push(String(value));
-                }
-            });
-
-            this.selectedValues = [];
     
             this.dropdown =
                 this.el.find('.bora-taxonomy-dropdown');
@@ -441,181 +420,9 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
             this.initializeValue();
         }
 
+        
+
         async initializeValue() {
-
-            if (this.multiple) {
-        
-                const values = [];
-        
-                this.value.each((_, el) => {
-        
-                    const value =
-                        $.trim($(el).val());
-        
-                    if (value) {
-                        values.push(value);
-                    }
-                });
-        
-                if (!values.length) {
-                    this.initializing = false;
-                    return;
-                }
-        
-                // Hydrate each existing value
-                for (const value of values) {
-                    await this.hydrateValue(value);
-                }
-        
-                this.initializing = false;
-                return;
-            }
-        
-            const value =
-                $.trim(this.value.val());
-        
-            if (!value) {
-                this.initializing = false;
-                return;
-            }
-        
-            await this.hydrateValue(value);
-        
-            this.initializing = false;
-        }
-
-        async hydrateValue(value) {
-
-            if (
-                String(value)
-                    .startsWith('__taxonomy__|')
-            ) {
-                return;
-            }
-        
-            if (!this.source) {
-                return;
-            }
-        
-            try {
-        
-                const params = {
-                    source: this.source,
-                    id: value
-                };
-        
-                const dependencyValue =
-                    this.getDependencyValue();
-        
-                if (
-                    this.dependsOn &&
-                    dependencyValue
-                ) {
-                    params[this.dependsParameter] =
-                        dependencyValue;
-                }
-        
-                const response =
-                    await fetch(
-                        'api/modules/form/taxonomy/value?' +
-                        new URLSearchParams(params)
-                    );
-        
-                const data =
-                    await response.json();
-        
-                if (
-                    data.success &&
-                    data.result
-                ) {
-        
-                    if (this.multiple) {
-        
-                        this.renderExisting(
-                            data.result
-                        );
-        
-                    } else {
-        
-                        this.input.val(
-                            data.result.text
-                        );
-        
-                        this.lastSelectedText =
-                            data.result.text;
-                    }
-        
-                    this.el.trigger(
-                        'taxonomy:initialized',
-                        [data.result]
-                    );
-                }
-        
-            } catch (error) {
-        
-                console.error(
-                    'Taxonomy value hydration failed',
-                    error
-                );
-            }
-        }
-
-        renderExisting(item) {
-
-            const id = String(item.id);
-        
-            if (
-                !this.selectedValues.includes(id)
-            ) {
-                this.selectedValues.push(id);
-            }
-        
-            const selectedItem =
-                $('<div>')
-                    .addClass('bora-taxonomy-selected-item')
-                    .attr('data-value', id);
-        
-            const label =
-                $('<span>')
-                    .addClass('bora-taxonomy-selected-text')
-                    .text(item.text);
-        
-            const remove =
-                $('<button>')
-                    .attr({
-                        type: 'button',
-                        'aria-label': 'Remove'
-                    })
-                    .addClass('bora-taxonomy-remove')
-                    .text('×');
-        
-            remove.on(
-                'click',
-                () => this.removeValue(id)
-            );
-        
-            selectedItem.append(
-                label,
-                remove
-            );
-        
-            // Existing hidden input is already there.
-            selectedItem.append(
-                this.value
-                    .filter(function () {
-                        return String(
-                            $(this).val()
-                        ) === id;
-                    })
-                    .detach()
-            );
-        
-            this.selected.append(
-                selectedItem
-            );
-        }
-
-        async initializeValueO() {
 
             const value = $.trim(
                 this.value.val()
@@ -780,52 +587,25 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                     const text =
                         $.trim(this.input.val());
             
-                    if (!this.multiple) {
+                    /*
+                     * If the user edits/removes the selected
+                     * text, invalidate the selected value.
+                     */
+                    if (
+                        !text ||
+                        text !== this.lastSelectedText
+                    ) {
             
-                        if (
-                            !text ||
-                            text !== this.lastSelectedText
-                        ) {
+                        this.value.val('');
             
-                            this.value.val('');
+                        this.value.trigger('change');
             
-                            this.value.trigger(
-                                'change'
-                            );
-            
-                            this.updateState();
-                        }
+                        this.updateState();
                     }
             
                     this.search();
                 }
             );
-            // this.input.on(
-            //     'input.boraTaxonomy',
-            //     () => {
-            
-            //         const text =
-            //             $.trim(this.input.val());
-            
-            //         /*
-            //          * If the user edits/removes the selected
-            //          * text, invalidate the selected value.
-            //          */
-            //         if (
-            //             !text ||
-            //             text !== this.lastSelectedText
-            //         ) {
-            
-            //             this.value.val('');
-            
-            //             this.value.trigger('change');
-            
-            //             this.updateState();
-            //         }
-            
-            //         this.search();
-            //     }
-            // );
     
             $(document).on(
                 'click.boraTaxonomy',
@@ -928,45 +708,6 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
         }
 
         reset() {
-
-            const hadValue =
-                this.multiple
-                    ? this.selectedValues.length > 0
-                    : !!this.value.val();
-        
-            this.input.val('');
-        
-            if (this.multiple) {
-        
-                this.selectedValues = [];
-        
-                this.selected.empty();
-        
-            } else {
-        
-                this.value.val('');
-            }
-        
-            this.dropdown.empty();
-        
-            this.close();
-        
-            this.updateState();
-        
-            if (hadValue) {
-        
-                this.el.trigger(
-                    'change'
-                );
-            }
-        
-            this.el.trigger(
-                'taxonomy:reset',
-                [null]
-            );
-        }
-
-        resetO() {
             const hadValue = !!this.value.val();
 
             this.input.val('');
@@ -1215,110 +956,8 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
             this.dropdown.show();
         }
     
+    
         select(item) {
-
-            if (this.multiple) {
-                this.addValue(item);
-            } else {
-                this.setValue(
-                    item.id,
-                    item.text
-                );
-        
-                this.lastSelectedText = item.text;
-            }
-        
-            this.close();
-        
-            this.el.trigger(
-                'taxonomy:selected',
-                [item]
-            );
-        }
-
-        addValue(item) {
-
-            const id = String(item.id);
-        
-            // Don't allow duplicates
-            if (
-                this.selectedValues.includes(id)
-            ) {
-                this.input.val('');
-                return;
-            }
-        
-            this.selectedValues.push(id);
-        
-            const name =
-                this.el.data('taxonomy-name');
-        
-            const valueInput =
-                $('<input>')
-                    .attr({
-                        type: 'hidden',
-                        name: `${name}[]`,
-                        value: id
-                    })
-                    .addClass('bora-taxonomy-value');
-        
-            const selectedItem =
-                $('<div>')
-                    .addClass('bora-taxonomy-selected-item')
-                    .attr('data-value', id);
-        
-            const label =
-                $('<span>')
-                    .addClass('bora-taxonomy-selected-text')
-                    .text(item.text);
-        
-            const remove =
-                $('<button>')
-                    .attr({
-                        type: 'button',
-                        'aria-label': 'Remove'
-                    })
-                    .addClass('bora-taxonomy-remove')
-                    .text('×');
-        
-            remove.on(
-                'click',
-                () => this.removeValue(id)
-            );
-        
-            selectedItem.append(
-                label,
-                remove,
-                valueInput
-            );
-        
-            this.selected.append(selectedItem);
-        
-            // Search box becomes empty again
-            this.input.val('');
-        
-            this.updateState();
-        }
-
-        removeValue(id) {
-
-            id = String(id);
-        
-            this.selectedValues =
-                this.selectedValues.filter(
-                    value => value !== id
-                );
-        
-            this.selected
-                .find(
-                    `.bora-taxonomy-selected-item[data-value="${CSS.escape(id)}"]`
-                )
-                .remove();
-        
-            this.updateState();
-        }
-
-        selectO(item) {
             // const oldValue = this.value.val();
 
             // const newValue = String(item.id);

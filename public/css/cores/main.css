@@ -192,8 +192,8 @@ section{
 }
 
 #page_content{
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 #page_refresh{
     display:none;
