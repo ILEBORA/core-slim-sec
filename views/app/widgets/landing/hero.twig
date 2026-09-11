@@ -1,0 +1,567 @@
+<section class="landing-hero-section animated fadeIn" style="animation-delay:0.1s">
+
+    <div class="landing-hero-inner">
+
+        <div class="landing-hero-content">
+
+            {% if eyebrow %}
+                <div class="landing-hero-eyebrow animated fadeIn"
+                     style="animation-delay:0.5s">
+                    {{ eyebrow }}
+                </div>
+            {% endif %}
+
+            {% if title %}
+                <h1 class="landing-hero-title animated fadeIn"
+                    style="animation-delay:1s">
+                    {{ title|nl2br }}
+                </h1>
+            {% endif %}
+
+            {% if description %}
+                <div class="landing-hero-description animated fadeIn"
+                     style="animation-delay:1.3s">
+                    {{ description|nl2br }}
+                </div>
+            {% endif %}
+
+            {% if buttons is not empty %}
+                <div class="landing-hero-actions animated fadeIn"
+                     style="animation-delay:1.4s">
+
+                    {% for button in buttons %}
+
+                        {% set label = button.label|default('Button') %}
+                        {% set url = button.url|default('#') %}
+                        {% set variant = button.variant|default('primary') %}
+
+                        <button
+                            data-nav="{{ url }}"
+                            class="
+                                landing-hero-btn
+                                {{ variant }}
+                            "
+                        >
+                            {{ label }}
+                        </button>
+
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <div class="landing-hero-media animated fadeIn"
+             style="animation-delay:1s">
+
+            {% if image %}
+
+                <section class="tree-panel" id="treeCanvas">
+
+                    <div class="canvas-label">
+                        <span class="live-dot"></span>
+                        Living family tree
+                    </div>
+
+                    <div class="canvas-status">
+                        INTERACTIVE · FAMILY NETWORK
+                    </div>
+
+
+                    <svg
+                        class="africa"
+                        viewBox="0 0 100 110"
+                        preserveAspectRatio="xMidYMid meet"
+                    >
+                        <path d="M32 12 C38 10 48 12 55 15 C62 17 72 14 80 22 C88 30 90 42 85 50 C80 58 72 62 68 68 C64 74 58 82 55 90 C52 98 48 105 45 108 C43 110 41 108 42 102 C43 96 40 90 36 82 C32 74 25 72 20 68 C15 64 8 62 5 55 C2 48 5 42 10 38 C15 34 14 28 16 22 C18 16 26 14 32 12 Z"/>
+                    </svg>
+
+                    <svg
+                        class="relationship-layer"
+                        id="relationshipLayer"
+                    ></svg>
+
+
+                    <div class="physics-stage" id="physicsStage">
+
+                        <div class="node-card male"
+                             id="node-259"
+                             data-weight="1">
+                            <span class="node-id">#259</span>
+                            <div class="node-avatar">👴🏽</div>
+                            <p class="node-name">Guka wa Michael</p>
+                            <p class="node-date">1920</p>
+                            <span class="arrow-indicator down">↓ 8</span>
+                        </div>
+
+
+                        <div class="node-card male active-focus"
+                             id="node-100"
+                             data-weight="1.2">
+                            <span class="node-id">#100</span>
+                            <span class="arrow-indicator up">↑ 1</span>
+                            <div class="node-avatar">👨🏽</div>
+                            <p class="node-name">John</p>
+                            <p class="node-date">1950</p>
+                            <span class="side-stat left">♡ 1</span>
+                        </div>
+
+
+                        <div class="node-card female"
+                             id="node-101"
+                             data-weight="1">
+                            <span class="node-id">#101</span>
+                            <span class="arrow-indicator up">↑ 2</span>
+                            <div class="node-avatar">👵🏽</div>
+                            <p class="node-name">Jane</p>
+                            <p class="node-date">1952</p>
+                            <span class="side-stat right">♡ 1</span>
+                        </div>
+
+
+                        <div class="node-card male highlighted"
+                             id="node-102"
+                             data-weight="1.5">
+                            <span class="node-id">#102</span>
+                            <span class="arrow-indicator up">↑ 5</span>
+                            <div class="node-avatar">🧑🏽</div>
+                            <p class="node-name">Michael</p>
+                            <p class="node-date">1975</p>
+                            <span class="arrow-indicator down">↓ 5</span>
+                        </div>
+
+
+                        <div class="node-card female"
+                             id="node-103"
+                             data-weight=".9">
+                            <span class="node-id">#103</span>
+                            <span class="arrow-indicator up">↑ 1</span>
+                            <div class="node-avatar">👩🏽</div>
+                            <p class="node-name">Sarah</p>
+                            <p class="node-date">1977</p>
+                            <span class="side-stat right">💍 1</span>
+                        </div>
+
+
+                        <div class="node-card male"
+                             id="node-105"
+                             data-weight="1.1">
+                            <span class="node-id">#105</span>
+                            <div class="node-avatar">👦🏽</div>
+                            <p class="node-name">Daniel</p>
+                            <p class="node-date">1998</p>
+                            <span class="arrow-indicator down">↓ 3</span>
+                        </div>
+
+
+                        <div class="node-card female"
+                             id="node-104"
+                             data-weight="1">
+                            <span class="node-id">#104</span>
+                            <span class="arrow-indicator up">↑ 8</span>
+                            <div class="node-avatar">👧🏽</div>
+                            <p class="node-name">Emily</p>
+                            <p class="node-date">2000</p>
+                            <span class="side-stat left">♡ 1</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="canvas-caption">
+                        <strong>7 family members</strong>
+                        · drag a person to explore
+                    </div>
+
+                </section>
+
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+
+                        const container =
+                            document.getElementById("treeCanvas");
+
+                        const stage =
+                            document.getElementById("physicsStage");
+
+                        const svg =
+                            document.getElementById("relationshipLayer");
+
+                        const cards =
+                            [...stage.querySelectorAll(".node-card")];
+
+
+                        const nodes = cards.map((element, index) => ({
+                            element,
+                            width: element.offsetWidth,
+                            height: element.offsetHeight,
+
+                            x: 30 +
+                               (index % 4) * 125 +
+                               Math.random() * 35,
+
+                            y: 45 +
+                               Math.floor(index / 4) * 155 +
+                               Math.random() * 45,
+
+                            vx: (Math.random() - .5) * .32,
+                            vy: (Math.random() - .5) * .32,
+
+                            weight:
+                                parseFloat(element.dataset.weight) || 1,
+
+                            dragging: false
+                        }));
+
+
+                        const relationships = [
+                            ["node-259", "node-100"],
+                            ["node-259", "node-101"],
+                            ["node-100", "node-102"],
+                            ["node-101", "node-102"],
+                            ["node-102", "node-103"],
+                            ["node-102", "node-105"],
+                            ["node-103", "node-104"]
+                        ];
+
+
+                        let pointer = {
+                            x: -1000,
+                            y: -1000
+                        };
+
+                        const pointerRadius = 135;
+
+
+                        function bounds() {
+                            return {
+                                width: stage.clientWidth,
+                                height: stage.clientHeight
+                            };
+                        }
+
+
+                        container.addEventListener(
+                            "mousemove",
+                            event => {
+
+                                const rect =
+                                    stage.getBoundingClientRect();
+
+                                pointer.x =
+                                    event.clientX - rect.left;
+
+                                pointer.y =
+                                    event.clientY - rect.top;
+                            }
+                        );
+
+
+                        container.addEventListener(
+                            "mouseleave",
+                            () => {
+
+                                pointer.x = -1000;
+                                pointer.y = -1000;
+                            }
+                        );
+
+
+                        nodes.forEach(node => {
+
+                            node.element.addEventListener(
+                                "pointerdown",
+                                event => {
+
+                                    node.dragging = true;
+
+                                    node.element
+                                        .setPointerCapture
+                                        ?.(
+                                            event.pointerId
+                                        );
+
+                                    node.vx = 0;
+                                    node.vy = 0;
+                                }
+                            );
+
+
+                            node.element.addEventListener(
+                                "pointermove",
+                                event => {
+
+                                    if (!node.dragging)
+                                        return;
+
+                                    const rect =
+                                        stage.getBoundingClientRect();
+
+                                    node.x =
+                                        event.clientX -
+                                        rect.left -
+                                        node.width / 2;
+
+                                    node.y =
+                                        event.clientY -
+                                        rect.top -
+                                        node.height / 2;
+                                }
+                            );
+
+
+                            node.element.addEventListener(
+                                "pointerup",
+                                () => {
+                                    node.dragging = false;
+                                }
+                            );
+
+
+                            node.element.addEventListener(
+                                "pointercancel",
+                                () => {
+                                    node.dragging = false;
+                                }
+                            );
+
+                        });
+
+
+                        function center(node) {
+                            return {
+                                x: node.x + node.width / 2,
+                                y: node.y + node.height / 2
+                            };
+                        }
+
+
+                        function drawRelationships() {
+
+                            svg.innerHTML = "";
+
+                            const rect =
+                                container.getBoundingClientRect();
+
+                            svg.setAttribute(
+                                "viewBox",
+                                `0 0 ${rect.width} ${rect.height}`
+                            );
+
+
+                            relationships.forEach(([a, b]) => {
+
+                                const n1 =
+                                    nodes.find(
+                                        n => n.element.id === a
+                                    );
+
+                                const n2 =
+                                    nodes.find(
+                                        n => n.element.id === b
+                                    );
+
+                                if (!n1 || !n2)
+                                    return;
+
+
+                                const p1 = center(n1);
+                                const p2 = center(n2);
+
+
+                                const line =
+                                    document.createElementNS(
+                                        "http://www.w3.org/2000/svg",
+                                        "line"
+                                    );
+
+                                line.setAttribute(
+                                    "x1",
+                                    p1.x + 22
+                                );
+
+                                line.setAttribute(
+                                    "y1",
+                                    p1.y + 24
+                                );
+
+                                line.setAttribute(
+                                    "x2",
+                                    p2.x + 22
+                                );
+
+                                line.setAttribute(
+                                    "y2",
+                                    p2.y + 24
+                                );
+
+                                svg.appendChild(line);
+                            });
+                        }
+
+
+                        function animate() {
+
+                            const { width, height } =
+                                bounds();
+
+
+                            nodes.forEach(node => {
+
+                                if (!node.dragging) {
+
+                                    node.x += node.vx;
+                                    node.y += node.vy;
+
+
+                                    const cx =
+                                        node.x +
+                                        node.width / 2;
+
+                                    const cy =
+                                        node.y +
+                                        node.height / 2;
+
+
+                                    const dx =
+                                        cx - pointer.x;
+
+                                    const dy =
+                                        cy - pointer.y;
+
+
+                                    const distance =
+                                        Math.hypot(dx, dy);
+
+
+                                    if (
+                                        distance < pointerRadius &&
+                                        distance > 0
+                                    ) {
+
+                                        const force =
+                                            (
+                                                pointerRadius -
+                                                distance
+                                            ) / pointerRadius;
+
+
+                                        node.vx +=
+                                            (dx / distance) *
+                                            force *
+                                            .018 /
+                                            node.weight;
+
+                                        node.vy +=
+                                            (dy / distance) *
+                                            force *
+                                            .018 /
+                                            node.weight;
+                                    }
+
+
+                                    node.vx *= .992;
+                                    node.vy *= .992;
+
+
+                                    if (
+                                        Math.abs(node.vx) < .08
+                                    ) {
+                                        node.vx +=
+                                            (Math.random() - .5) *
+                                            .006;
+                                    }
+
+
+                                    if (
+                                        Math.abs(node.vy) < .08
+                                    ) {
+                                        node.vy +=
+                                            (Math.random() - .5) *
+                                            .006;
+                                    }
+
+
+                                    if (node.x < 0) {
+                                        node.x = 0;
+                                        node.vx =
+                                            Math.abs(node.vx);
+                                    }
+
+
+                                    if (
+                                        node.x + node.width > width
+                                    ) {
+                                        node.x =
+                                            width - node.width;
+
+                                        node.vx =
+                                            -Math.abs(node.vx);
+                                    }
+
+
+                                    if (node.y < 0) {
+                                        node.y = 0;
+                                        node.vy =
+                                            Math.abs(node.vy);
+                                    }
+
+
+                                    if (
+                                        node.y + node.height > height
+                                    ) {
+                                        node.y =
+                                            height - node.height;
+
+                                        node.vy =
+                                            -Math.abs(node.vy);
+                                    }
+                                }
+
+
+                                node.element.style.transform =
+                                    `translate3d(
+                                        ${node.x}px,
+                                        ${node.y}px,
+                                        0
+                                    )`;
+                            });
+
+
+                            drawRelationships();
+
+                            requestAnimationFrame(animate);
+                        }
+
+
+                        const resizeObserver =
+                            new ResizeObserver(
+                                drawRelationships
+                            );
+
+                        resizeObserver.observe(container);
+
+                        animate();
+
+                    });
+                </script>
+
+
+                {# Original image retained as an optional fallback/resource. #}
+                <img
+                    src="{{ image }}"
+                    alt="Hero Image"
+                    class="landing-hero-image"
+                    style="display:none;"
+                >
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>

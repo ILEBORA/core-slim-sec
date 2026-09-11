@@ -1,0 +1,20 @@
+<div id="{{ id }}" class="inf_block">
+
+    <div class="inf_title">
+        <span>{{ title }}</span>
+
+        <a
+            title="Edit"
+            class="edit_link"
+            onclick="return false;"
+            style="display:none;">
+        </a>
+    </div>
+
+    <div class="inf_cont">
+        <div class="info_box">
+            {{ content|safehtml }}
+        </div>
+    </div>
+
+</div>

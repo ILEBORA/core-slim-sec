@@ -9,6 +9,7 @@ $pipeline = new AssetPipeline(__DIR__, 'css');
 $pipeline
     ->add('theme.css')
     ->add('style.css')
+    ->add('about/details.css')
     ->add('landing/hero.css')
     ->add('landing/call_to_action.css')
     ->add('landing/impact_stats.css')

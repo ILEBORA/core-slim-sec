@@ -198,7 +198,7 @@
     max-width: 560px;
     height: auto;
 
-    display: block;
+    display: none;
     object-fit: contain;
 }
 

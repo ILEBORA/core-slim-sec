@@ -1,0 +1,586 @@
+/* ============================================================
+   APP DETAILS / INFORMATION BLOCKS
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   INFORMATION BLOCK
+   ------------------------------------------------------------ */
+
+   .about_inf_block {
+    width: 100%;
+    margin: 0 0 2rem;
+}
+
+.about_inf_block:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ------------------------------------------------------------
+   INFORMATION TITLE
+   ------------------------------------------------------------ */
+
+.about_inf_title {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    margin: 0 0 0.75rem;
+    padding: 0 0 0.65rem;
+
+    color: var(--text-color, #202124);
+
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.35;
+
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+/*
+ * Small accent bar beside the section title.
+ */
+.about_inf_title::before {
+    content: "";
+
+    flex: 0 0 auto;
+
+    width: 4px;
+    height: 1.3rem;
+
+    margin-right: 0.7rem;
+
+    background: var(--primary-color, #4f46e5);
+    border-radius: 4px;
+}
+
+
+/* ------------------------------------------------------------
+   EDIT LINK
+   ------------------------------------------------------------ */
+
+.about_inf_title .edit_link {
+    margin-left: auto;
+}
+
+
+/* ------------------------------------------------------------
+   INFORMATION CONTAINER
+   ------------------------------------------------------------ */
+
+.about_inf_cont {
+    width: 100%;
+}
+
+
+/* ------------------------------------------------------------
+   INFORMATION BOX
+   ------------------------------------------------------------ */
+
+.about_info_box {
+    box-sizing: border-box;
+
+    width: 100%;
+
+    padding: 1.35rem 1.5rem;
+
+    color: var(--text-muted-color, #4b5563);
+
+    font-size: 1rem;
+    line-height: 1.75;
+
+    background: var(--surface-color, #fff);
+
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 12px;
+
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+
+/* ============================================================
+   CONTENT TYPOGRAPHY
+   ============================================================ */
+
+.about_info_box p {
+    margin: 0 0 1rem;
+}
+
+.about_info_box p:last-child {
+    margin-bottom: 0;
+}
+
+.about_info_box strong,
+.about_info_box b {
+    color: var(--text-color, #202124);
+    font-weight: 650;
+}
+
+.about_info_box em,
+.about_info_box i {
+    font-style: italic;
+}
+
+
+/* ------------------------------------------------------------
+   HEADINGS INSIDE CONTENT
+   ------------------------------------------------------------ */
+
+.about_info_box h2,
+.about_info_box h3,
+.about_info_box h4,
+.about_info_box h5 {
+    margin: 1.5rem 0 0.65rem;
+
+    color: var(--text-color, #202124);
+
+    line-height: 1.35;
+}
+
+.about_info_box h2 {
+    font-size: 1.3rem;
+}
+
+.about_info_box h3 {
+    font-size: 1.15rem;
+}
+
+.about_info_box h4,
+.about_info_box h5 {
+    font-size: 1rem;
+}
+
+.about_info_box h2:first-child,
+.about_info_box h3:first-child,
+.about_info_box h4:first-child,
+.about_info_box h5:first-child {
+    margin-top: 0;
+}
+
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+
+.about_info_box ul,
+.about_info_box ol {
+    margin: 1rem 0 1.25rem;
+    padding-left: 1.75rem;
+}
+
+/*
+ * A paragraph immediately followed by a list should
+ * visually belong to the list.
+ */
+.about_info_box p + ul,
+.about_info_box p + ol {
+    margin-top: 0.25rem;
+}
+
+
+/* Unordered list */
+
+.about_info_box ul {
+    list-style-type: disc;
+}
+
+
+/* Ordered list */
+
+.about_info_box ol {
+    list-style-type: decimal;
+}
+
+
+/* List items */
+
+.about_info_box li {
+    margin: 0 0 0.55rem;
+    padding-left: 0.35rem;
+
+    line-height: 1.7;
+}
+
+.about_info_box li:last-child {
+    margin-bottom: 0;
+}
+
+
+/* List markers */
+
+.about_info_box li::marker {
+    color: var(--primary-color, #4f46e5);
+    font-size: 0.85em;
+}
+
+
+/* ------------------------------------------------------------
+   NESTED LISTS
+   ------------------------------------------------------------ */
+
+.about_info_box ul ul,
+.about_info_box ol ol,
+.about_info_box ul ol,
+.about_info_box ol ul {
+    margin-top: 0.55rem;
+    margin-bottom: 0.65rem;
+}
+
+.about_info_box ul ul {
+    list-style-type: circle;
+}
+
+.about_info_box ul ul ul {
+    list-style-type: square;
+}
+
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+
+.about_info_box a {
+    color: var(--primary-color, #4f46e5);
+
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+
+    transition:
+        color 0.15s ease,
+        text-decoration-thickness 0.15s ease;
+}
+
+.about_info_box a:hover {
+    color: var(--primary-color-hover, #4338ca);
+    text-decoration-thickness: 2px;
+}
+
+
+/* ============================================================
+   BLOCKQUOTES
+   ============================================================ */
+
+.about_info_box blockquote {
+    margin: 1.25rem 0;
+    padding: 0.85rem 1.1rem;
+
+    color: var(--text-muted-color, #6b7280);
+
+    background: var(--surface-alt-color, #f8fafc);
+
+    border-left: 3px solid var(--primary-color, #4f46e5);
+    border-radius: 0 8px 8px 0;
+}
+
+.about_info_box blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.about_info_box table {
+    width: 100%;
+    margin: 1.25rem 0;
+
+    border-collapse: collapse;
+
+    font-size: 0.95rem;
+}
+
+.about_info_box th,
+.about_info_box td {
+    padding: 0.7rem 0.8rem;
+
+    text-align: left;
+    vertical-align: top;
+
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.about_info_box th {
+    color: var(--text-color, #202124);
+    font-weight: 650;
+
+    background: var(--surface-alt-color, #f8fafc);
+}
+
+.about_info_box tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* ============================================================
+   HORIZONTAL RULE
+   ============================================================ */
+
+.about_info_box hr {
+    margin: 1.5rem 0;
+
+    border: 0;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+
+/* ============================================================
+   LEGAL / DETAILS PAGE
+   ============================================================ */
+
+.legal-page {
+    box-sizing: border-box;
+
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+}
+
+
+/* ------------------------------------------------------------
+   PAGE HEADER
+   ------------------------------------------------------------ */
+
+.legal-header {
+    margin-bottom: 2.5rem;
+}
+
+.legal-header h1 {
+    margin: 0 0 0.75rem;
+
+    color: var(--text-color, #202124);
+
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.legal-header .legal-subtitle {
+    margin: 0 0 0.5rem;
+
+    color: var(--text-muted-color, #6b7280);
+
+    font-size: 1rem;
+}
+
+.legal-header .legal-date {
+    color: var(--text-muted-color, #6b7280);
+
+    font-size: 0.9rem;
+}
+
+.legal-header .legal-intro {
+    max-width: 720px;
+
+    margin: 1.5rem 0 0;
+
+    color: var(--text-muted-color, #4b5563);
+
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+
+/* ------------------------------------------------------------
+   LEGAL CONTENT
+   ------------------------------------------------------------ */
+
+.legal-content {
+    width: 100%;
+}
+
+
+/* ============================================================
+   CONTACT / END BLOCK
+   ============================================================ */
+
+.legal-contact {
+    margin-top: 3rem;
+    padding: 1.5rem;
+
+    background: var(--surface-alt-color, #f8fafc);
+
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 12px;
+}
+
+.legal-contact h2 {
+    margin: 0 0 0.5rem;
+
+    color: var(--text-color, #202124);
+
+    font-size: 1.25rem;
+    line-height: 1.35;
+}
+
+.legal-contact p {
+    margin: 0;
+
+    color: var(--text-muted-color, #4b5563);
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   THANK YOU
+   ============================================================ */
+
+.legal-thanks {
+    margin-top: 2rem;
+
+    color: var(--text-muted-color, #6b7280);
+
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+.dark .about_inf_title,
+[data-theme="dark"] .about_inf_title {
+    color: #f3f4f6;
+
+    border-color: #374151;
+}
+
+.dark .about_info_box,
+[data-theme="dark"] .about_info_box {
+    color: #d1d5db;
+
+    background: #17191d;
+    border-color: #2d3138;
+
+    box-shadow: none;
+}
+
+.dark .about_info_box strong,
+.dark .about_info_box b,
+[data-theme="dark"] .about_info_box strong,
+[data-theme="dark"] .about_info_box b {
+    color: #f3f4f6;
+}
+
+.dark .about_info_box h2,
+.dark .about_info_box h3,
+.dark .about_info_box h4,
+.dark .about_info_box h5,
+[data-theme="dark"] .about_info_box h2,
+[data-theme="dark"] .about_info_box h3,
+[data-theme="dark"] .about_info_box h4,
+[data-theme="dark"] .about_info_box h5 {
+    color: #f3f4f6;
+}
+
+.dark .about_info_box blockquote,
+[data-theme="dark"] .about_info_box blockquote {
+    color: #9ca3af;
+
+    background: #1e2228;
+}
+
+.dark .about_info_box th,
+[data-theme="dark"] .about_info_box th {
+    color: #f3f4f6;
+
+    background: #1e2228;
+}
+
+.dark .about_info_box th,
+.dark .about_info_box td,
+[data-theme="dark"] .about_info_box th,
+[data-theme="dark"] .about_info_box td {
+    border-color: #2d3138;
+}
+
+.dark .legal-header h1,
+[data-theme="dark"] .legal-header h1 {
+    color: #f3f4f6;
+}
+
+.dark .legal-contact,
+[data-theme="dark"] .legal-contact {
+    background: #17191d;
+    border-color: #2d3138;
+}
+
+.dark .legal-contact h2,
+[data-theme="dark"] .legal-contact h2 {
+    color: #f3f4f6;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .about_inf_block {
+        margin-bottom: 1.5rem;
+    }
+
+    .about_inf_title {
+        font-size: 1.15rem;
+    }
+
+    .about_inf_title::before {
+        width: 3px;
+        height: 1.15rem;
+
+        margin-right: 0.55rem;
+    }
+
+    .about_info_box {
+        padding: 1rem;
+
+        font-size: 0.95rem;
+        line-height: 1.7;
+
+        border-radius: 10px;
+    }
+
+    .about_info_box ul,
+    .about_info_box ol {
+        padding-left: 1.5rem;
+    }
+
+    .about_info_box li {
+        padding-left: 0.2rem;
+    }
+
+    .about_info_box table {
+        display: block;
+        overflow-x: auto;
+
+        white-space: nowrap;
+    }
+
+    .legal-page {
+        padding: 1.5rem 0.9rem 3rem;
+    }
+
+    .legal-header {
+        margin-bottom: 2rem;
+    }
+
+    .legal-header h1 {
+        font-size: 2rem;
+    }
+
+    .legal-header .legal-intro {
+        font-size: 1rem;
+    }
+
+    .legal-contact {
+        margin-top: 2rem;
+        padding: 1.15rem;
+    }
+}

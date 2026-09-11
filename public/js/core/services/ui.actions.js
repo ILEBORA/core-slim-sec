@@ -149,6 +149,65 @@ __BORA_REGISTER_SERVICE__('ui.actions', async function(scope){
 
                 e.preventDefault();
 
+                const targetRoute = navEl.dataset.nav;
+
+                /*
+                * ============================================================
+                * LOCAL / FRAGMENT NAVIGATION
+                * ============================================================
+                */
+                if (targetRoute === '#' || targetRoute.startsWith('#')){
+
+                    const targetId = targetRoute.substring(1);
+                
+                    if (!targetId){
+                
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                
+                        return;
+                    }
+                
+                    const targetEl =
+                        document.getElementById(targetId);
+                
+                    if (!targetEl){
+                        return;
+                    }
+                
+                    const stickyMenu =
+                        document.querySelector('.submenu-area');
+                
+                    const offset =
+                        stickyMenu?.getBoundingClientRect().height ?? 0;
+                
+                    const targetTop =
+                        targetEl.getBoundingClientRect().top +
+                        window.scrollY -
+                        offset;
+                    
+                    window.scrollTo({
+                        top: targetTop,
+                        behavior: 'smooth'
+                    });
+                
+                    history.pushState(
+                        null,
+                        '',
+                        targetRoute
+                    );
+                
+                    return;
+                }
+
+                /*
+                * ============================================================
+                * APPLICATION ROUTE NAVIGATION
+                * ============================================================
+                */
+
                 const navigation =
                     await app?.service?.('navigation');
 
@@ -156,18 +215,11 @@ __BORA_REGISTER_SERVICE__('ui.actions', async function(scope){
                     return;
                 }
 
-                const targetRoute =
-                    navEl.dataset.nav;
-
                 const currentRoute =
                     app.currentRoute
                         ? app.currentRoute()
                         : window.location.pathname;
 
-                /* =========================
-                SAME PAGE
-                ========================= */
-            
                 const target = normalizeRoute(targetRoute);
                 const current = normalizeRoute(currentRoute);
 
