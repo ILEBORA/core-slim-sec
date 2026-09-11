@@ -51,7 +51,7 @@
 
     margin-right: 0.7rem;
 
-    background: var(--primary-color, #4f46e5);
+    background: var(--landing-text-secondary, --primary-color, #4f46e5);
     border-radius: 4px;
 }
 
@@ -210,7 +210,7 @@
 /* List markers */
 
 .about_info_box li::marker {
-    color: var(--primary-color, #4f46e5);
+    color: var(--landing-text-secondary, --primary-color, #4f46e5);
     font-size: 0.85em;
 }
 
@@ -270,7 +270,7 @@
 
     background: var(--surface-alt-color, #f8fafc);
 
-    border-left: 3px solid var(--primary-color, #4f46e5);
+    border-left: 3px solid var(--landing-text-secondary, --primary-color, #4f46e5);
     border-radius: 0 8px 8px 0;
 }
 

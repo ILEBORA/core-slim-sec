@@ -1,0 +1,441 @@
+<!-- =====================================================
+     CONTACT HERO
+====================================================== -->
+
+<section class="page-section vp-contact-hero">
+
+    <div class="page-container">
+
+        <div class="about-label">
+            <span></span>
+            Get In Touch
+        </div>
+
+        <h1>
+            Let's keep
+            <span>the story going.</span>
+        </h1>
+
+        <p>
+            Have a question about WahengaPlus, need help with your
+            family tree, or have an idea you'd like to share?
+            We'd love to hear from you.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTACT AREA
+====================================================== -->
+
+<section class="page-section vp-contact-section">
+
+    <div class="page-container">
+
+        <div class="vp-contact-grid">
+
+
+            <!-- =================================================
+                 CONTACT INFORMATION
+            ================================================== -->
+
+            <div class="vp-contact-info">
+
+                <div class="about-label">
+                    <span></span>
+                    We're Listening
+                </div>
+
+                <h2>
+                    Your story
+                    <span>matters.</span>
+                </h2>
+
+                <p>
+                    Whether you need help using WahengaPlus,
+                    have discovered something interesting about
+                    your family history, or simply want to share
+                    an idea, we're here.
+                </p>
+
+
+                <!-- =================================================
+                     DIRECT CONTACT
+                ================================================== -->
+
+                <div class="vp-contact-methods">
+
+                    {% if email %}
+
+                        <a
+                            href="mailto:{{ email }}"
+                            class="vp-contact-method"
+                        >
+
+                            <div class="vp-contact-method-icon">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+
+                            <div class="vp-contact-method-content">
+
+                                <span>Email</span>
+
+                                <strong>
+                                    {{ email }}
+                                </strong>
+
+                            </div>
+
+                            <i class="fa-solid fa-arrow-up-right-from-square vp-contact-method-arrow"></i>
+
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if phone %}
+
+                        <a
+                            href="tel:{{ phone|replace({' ': ''}) }}"
+                            class="vp-contact-method"
+                        >
+
+                            <div class="vp-contact-method-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+
+                            <div class="vp-contact-method-content">
+
+                                <span>Phone</span>
+
+                                <strong>
+                                    {{ phone }}
+                                </strong>
+
+                            </div>
+
+                            <i class="fa-solid fa-arrow-up-right-from-square vp-contact-method-arrow"></i>
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     SOCIAL MEDIA
+                ================================================== -->
+
+                {% if social %}
+
+                    <div class="vp-social-section">
+
+                        <span class="vp-social-label">
+                            Follow WahengaPlus
+                        </span>
+
+                        <div class="vp-social-links">
+
+                            {% for item in social %}
+
+                                <a
+                                    href="{{ item.url }}"
+                                    class="vp-social-link"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="{{ item.name }}"
+                                    title="{{ item.name }}"
+                                >
+
+                                    <i class="{{ item.icon }}"></i>
+
+                                    <span>
+                                        {{ item.name }}
+                                    </span>
+
+                                </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTACT FORM
+            ================================================== -->
+
+            <div class="vp-contact-form-wrapper">
+
+                <div class="vp-contact-form-header">
+
+                    <span class="vp-contact-form-kicker">
+                        Start A Conversation
+                    </span>
+
+                    <h3>
+                        Tell us
+                        <span>what's on your mind.</span>
+                    </h3>
+
+                    <p>
+                        A few details are enough to get the conversation started.
+                    </p>
+
+                </div>
+
+
+                <form
+                    class="vp-contact-form"
+                    id="contact-form"
+                    method="post"
+                    action="api/modules/app/submitContact"
+                >
+
+                    <input
+                        type="hidden"
+                        name="form_time"
+                        value="{{ 'now'|date('U') }}"
+                    >
+
+
+                    <!-- Honeypot -->
+
+                    <div
+                        class="vp-honeypot"
+                        aria-hidden="true"
+                    >
+
+                        <label for="company_url">
+                            Company Website
+                        </label>
+
+                        <input
+                            type="text"
+                            id="company_url"
+                            name="company_url"
+                            tabindex="-1"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <!-- Name / Email -->
+
+                    <div class="vp-form-row">
+
+                        <div class="vp-form-field">
+
+                            <label for="name">
+                                Name
+                            </label>
+
+                            <div class="vp-input-wrapper">
+
+                                <i class="fa-regular fa-user"></i>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Your name"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="vp-form-field">
+
+                            <label for="email">
+                                Email
+                            </label>
+
+                            <div class="vp-input-wrapper">
+
+                                <i class="fa-regular fa-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Subject -->
+
+                    <div class="vp-form-field">
+
+                        <label for="subject">
+                            What can we help with?
+                        </label>
+
+                        <div class="vp-input-wrapper">
+
+                            <i class="fa-solid fa-layer-group"></i>
+
+                            <select
+                                id="subject"
+                                name="subject"
+                                required
+                            >
+
+                                <option value="">
+                                    Select an option
+                                </option>
+
+                                <option value="general">
+                                    General Enquiry
+                                </option>
+
+                                <option value="support">
+                                    Help &amp; Support
+                                </option>
+
+                                <option value="feedback">
+                                    Feedback
+                                </option>
+
+                                <option value="family-tree">
+                                    Family Tree
+                                </option>
+
+                                <option value="heritage">
+                                    Heritage &amp; Family History
+                                </option>
+
+                                <option value="partnership">
+                                    Partnership
+                                </option>
+
+                                <option value="business">
+                                    Business Enquiry
+                                </option>
+
+                                <option value="other">
+                                    Something Else
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Message -->
+
+                    <div class="vp-form-field">
+
+                        <label for="message">
+                            Tell us more
+                        </label>
+
+                        <div class="vp-textarea-wrapper">
+
+                            <i class="fa-regular fa-message"></i>
+
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="6"
+                                placeholder="Tell us what's on your mind..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Footer -->
+
+                    <div class="vp-contact-form-footer">
+
+                        <div
+                            class="vp-form-status"
+                            id="contact-form-status"
+                        ></div>
+
+                        <button
+                            type="submit"
+                            class="vp-contact-submit"
+                            id="contact-submit"
+                        >
+
+                            <span class="submit-text">
+                                Send Message
+                            </span>
+
+                            <span class="submit-loading">
+                                Sending...
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTACT FOOTER STATEMENT
+====================================================== -->
+
+<section class="page-section page-section-animated vp-contact-closing">
+
+    <div class="page-container">
+
+        <div class="vp-contact-closing-content">
+
+            <div class="about-label">
+                <span></span>
+                WahengaPlus
+            </div>
+
+            <h2>
+                Preserve the past.
+                <span>Inspire the future.</span>
+            </h2>
+
+            <p>
+                Every family has a story worth remembering.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
