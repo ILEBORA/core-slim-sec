@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.17
- *  Build ID:   016ADD0553F8
- *  Timestamp:  2026-09-14 12:24:57
+ *  Build ID:   090C1F374FC2
+ *  Timestamp:  2026-09-17 04:24:09
  *  License:    Proprietary - Unauthorized modification prohibited.
  *  © 2025 ILEBORA Technologies. All Rights Reserved.
  * ================================================================
@@ -95,7 +95,7 @@ if ($envPath && file_exists($envPath . '/.env')) {
  | 2. CORE CONFIG
  * ================================================================ */
 
-define('CORE_SERVER', 'https://ilebora.co.ke');
+define('CORE_SERVER', 'http://localhost:8080/boraapi');
 define('CORE_SEC_PASSWORD', $_ENV['CORE_CLIENT_SECRET'] ?? '');
 define('CORE_CLIENT_ID', $_ENV['CORE_CLIENT_ID'] ?? '');
 define('CORE_CLIENT_IV', $_ENV['CORE_CLIENT_IV'] ?? '');
@@ -116,6 +116,12 @@ $paths = [
     'fails'       => $cacheDir . '/.update_fail_count',
     'tamper_ping' => $cacheDir . '/.last_loader_tamper_ping',
 ];
+
+define('APP_BASE_PATH', $basePath);
+
+define('CORE_PATH',        $paths['core']);
+define('CORE_HASH_PATH',   $paths['core_hash']);
+define('CORE_VERSION_PATH',$paths['version']);
 
 /* ================================================================
  | 3. UTILITIES
@@ -174,10 +180,21 @@ function tamperPing(array $paths): void
     file_put_contents($paths['tamper_ping'], time());
 
     httpGet(
-        CORE_SERVER . "/tamper?client=" . urlencode(CORE_CLIENT_ID),
+        CORE_SERVER . "/api/modules/tenant/tamper?client=" . urlencode(CORE_CLIENT_ID),
         1
     );
 }
+
+function loaderDebug(string $message): void
+    {
+        @file_put_contents(
+            $cacheDir . '/.loader-debug.log',
+            '[' . date('Y-m-d H:i:s') . '] ' .
+            $message .
+            PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
+    }
 
 /* ================================================================
  | 4. LOADER SIGNATURE VERIFICATION (ROOT TRUST)
@@ -282,11 +299,68 @@ if (file_exists($paths['js']) && verifyHash($paths['js'], $paths['js_hash'])) {
  | 8. BACKGROUND SAFE UPDATE (THROTTLED)
  * ================================================================ */
 
+// $autoUpdate = ($_ENV['CORE_AUTO_UPDATE'] ?? 'true') === 'true';
+
+// if ($autoUpdate) {
+
+//     $interval = 3600;
+//     $maxFails = 5;
+
+//     $lastCheck = file_exists($paths['lastcheck'])
+//         ? (int) file_get_contents($paths['lastcheck'])
+//         : 0;
+
+//     $failCount = file_exists($paths['fails'])
+//         ? (int) file_get_contents($paths['fails'])
+//         : 0;
+
+//     if (time() - $lastCheck > $interval && $failCount < $maxFails) {
+
+//         file_put_contents($paths['lastcheck'], time());
+
+//         $remoteVersion = httpGet(CORE_SERVER . '/api/modules/tenant/latest-version');
+
+//         if ($remoteVersion) {
+
+//             $localVersion = file_exists($paths['version'])
+//                 ? trim(file_get_contents($paths['version']))
+//                 : '0.0.0';
+
+//             $remoteVersion = preg_replace('/[^0-9.]/', '', trim($remoteVersion));
+
+//             if (version_compare($localVersion, trim($remoteVersion), '<')) {
+
+//                 $download = httpGet(
+//                     CORE_SERVER . "/api/modules/tenant/download?client_id=" . urlencode(CORE_CLIENT_ID)
+//                 );
+
+//                 if ($download) {
+//                     file_put_contents($paths['core'], $download);
+//                     file_put_contents($paths['core_hash'], hash('sha256', $download));
+//                     file_put_contents($paths['version'], trim($remoteVersion));
+//                     file_put_contents($paths['fails'], 0);
+//                 } else {
+//                     file_put_contents($paths['fails'], $failCount + 1);
+//                 }
+//             }
+//         }
+//     }
+// }
+
+
 $autoUpdate = ($_ENV['CORE_AUTO_UPDATE'] ?? 'true') === 'true';
 
-if ($autoUpdate) {
+/*
+* Automatic updates are intentionally restricted to CLI.
+*
+* Admin web updates should call CoreUpdateService explicitly from
+* an authenticated admin action.
+*/
+$canAutoUpdate = PHP_SAPI === 'cli';
 
-    $interval = 3600;
+if ($autoUpdate && $canAutoUpdate) {
+
+    $interval = 10; //3600
     $maxFails = 5;
 
     $lastCheck = file_exists($paths['lastcheck'])
@@ -297,33 +371,81 @@ if ($autoUpdate) {
         ? (int) file_get_contents($paths['fails'])
         : 0;
 
-    if (time() - $lastCheck > $interval && $failCount < $maxFails) {
+    if (
+        time() - $lastCheck > $interval &&
+        $failCount < $maxFails
+    ) {
 
-        file_put_contents($paths['lastcheck'], time());
+        file_put_contents(
+            $paths['lastcheck'],
+            time(),
+            LOCK_EX
+        );
 
-        $remoteVersion = httpGet(CORE_SERVER . '/latest-version');
+        try {
 
-        if ($remoteVersion) {
+            $remoteVersion = httpGet(
+                CORE_SERVER . '/api/modules/tenant/latest-version'
+            );
 
-            $localVersion = file_exists($paths['version'])
-                ? trim(file_get_contents($paths['version']))
+            if (!$remoteVersion) {
+                throw new RuntimeException(
+                    'Unable to retrieve remote core version.'
+                );
+            }
+
+            $remoteVersion = preg_replace(
+                '/[^0-9.]/',
+                '',
+                trim($remoteVersion)
+            );
+
+            $localVersion = file_exists(CORE_VERSION_PATH)
+                ? trim(file_get_contents(CORE_VERSION_PATH))
                 : '0.0.0';
 
-            if (version_compare($localVersion, trim($remoteVersion), '<')) {
+            if (version_compare($localVersion, $remoteVersion, '<')) {
+                loaderDebug("Upgrading to $remoteVersion");
+                $downloadUrl =
+                    CORE_SERVER .
+                    '/api/modules/tenant/download?client_id=' .
+                    urlencode(CORE_CLIENT_ID);
 
-                $download = httpGet(
-                    CORE_SERVER . "/download?client_id=" . urlencode(CORE_CLIENT_ID)
+                $updater = new \BoraSlim\Core\Updates\CoreUpdateService(
+                    CORE_SEC_PASSWORD,
+                    CORE_CLIENT_IV
                 );
 
-                if ($download) {
-                    file_put_contents($paths['core'], $download);
-                    file_put_contents($paths['core_hash'], hash('sha256', $download));
-                    file_put_contents($paths['version'], trim($remoteVersion));
-                    file_put_contents($paths['fails'], 0);
+                if ($updater->update($downloadUrl, $remoteVersion)) {
+
+                    file_put_contents(
+                        $paths['fails'],
+                        0,
+                        LOCK_EX
+                    );
+
                 } else {
-                    file_put_contents($paths['fails'], $failCount + 1);
+
+                    file_put_contents(
+                        $paths['fails'],
+                        $failCount + 1,
+                        LOCK_EX
+                    );
                 }
             }
+
+        } catch (\Throwable $e) {
+
+            loaderDebug(
+                '[CoreLoader] Automatic update failed: ' .
+                $e->getMessage()
+            );
+
+            file_put_contents(
+                $paths['fails'],
+                $failCount + 1,
+                LOCK_EX
+            );
         }
     }
 }
