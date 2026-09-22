@@ -1,35 +1,494 @@
-<div class="container">
-    <h2>Security Settings</h2>
+<style>
+    .security-settings {
+        max-width: 760px;
+        margin: 2rem auto;
+    }
 
-    <div class="security-block">
-        <h3>Multi-Factor Authentication</h3>
+    .security-settings-header {
+        margin-bottom: 1.5rem;
+    }
 
-        {% if mfa.enabled %}
-            <p class="status success">
-                MFA is enabled
-            </p>
+    .security-settings-header h2 {
+        margin: 0 0 .35rem;
+        font-size: 1.6rem;
+        font-weight: 650;
+    }
 
-            <button class="btn danger" id="disable-mfa">
-                Disable MFA
-            </button>
-        {% else %}
-            <p class="status warning">
-                MFA is not enabled
-            </p>
+    .security-settings-header p {
+        margin: 0;
+        color: var(--text-muted, #6b7280);
+        font-size: .95rem;
+    }
 
-            <button class="btn primary" id="enable-mfa">
-                Enable MFA
-            </button>
-        {% endif %}
+    .security-block {
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 14px;
+        background: var(--card-bg, #fff);
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+    }
+
+    .security-block-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .security-icon {
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: var(--primary-light, #eef2ff);
+        color: var(--primary, #4f46e5);
+        font-size: 1.25rem;
+    }
+
+    .security-block-header h3 {
+        margin: 0 0 .2rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+
+    .security-block-header p {
+        margin: 0;
+        color: var(--text-muted, #6b7280);
+        font-size: .875rem;
+    }
+
+    .security-block-body {
+        padding: 1.5rem;
+    }
+
+    .mfa-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 10px;
+        background: var(--surface-muted, #f8fafc);
+        margin-bottom: 1.25rem;
+    }
+
+    .mfa-status-info {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex: 0 0 10px;
+    }
+
+    .status-indicator.success {
+        background: #16a34a;
+        box-shadow: 0 0 0 4px rgba(22, 163, 74, .12);
+    }
+
+    .status-indicator.warning {
+        background: #d97706;
+        box-shadow: 0 0 0 4px rgba(217, 119, 6, .12);
+    }
+
+    .status-text {
+        font-weight: 600;
+        font-size: .925rem;
+    }
+
+    .status-description {
+        margin-top: .2rem;
+        color: var(--text-muted, #6b7280);
+        font-size: .825rem;
+    }
+
+    .security-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: .75rem;
+    }
+
+    .btn {
+        border: 0;
+        border-radius: 8px;
+        padding: .65rem 1rem;
+        font-size: .875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+            background-color .15s ease,
+            transform .1s ease,
+            box-shadow .15s ease,
+            opacity .15s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn.primary {
+        background: var(--primary, #4f46e5);
+        color: #fff;
+    }
+
+    .btn.primary:hover {
+        background: var(--primary-hover, #4338ca);
+    }
+
+    .btn.danger {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .btn.danger:hover {
+        background: #fecaca;
+    }
+
+    #mfa-setup {
+        margin-top: 1.25rem;
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 12px;
+        background: var(--card-bg, #fff);
+        overflow: hidden;
+    }
+
+    .mfa-error {
+        margin-bottom: 1rem;
+        padding: .75rem 1rem;
+        border-radius: 8px;
+        background: #fee2e2;
+        color: #991b1b;
+        font-size: .875rem;
+    }
+
+    @media (max-width: 600px) {
+        .security-settings {
+            margin: 1rem auto;
+        }
+
+        .security-block-header,
+        .security-block-body {
+            padding: 1rem;
+        }
+
+        .mfa-status {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .security-actions {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .security-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="container security-settings">
+
+    <div class="security-settings-header">
+        <h2>Security Settings</h2>
+        <p>Manage the security features that protect your account.</p>
     </div>
 
-    <div id="mfa-setup" style="display:none;"></div>
-</div>
-<script>
-$('#enable-mfa').on('click', function () {
-    $.get('api/modules/settings/setup-totp', function (resp) {
-        $('#mfa-setup').html(resp.html).show();
-    });
-});
-</script>
 
+    <div class="security-block">
+
+        <div class="security-block-header">
+
+            <div class="security-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+                <h3>Multi-Factor Authentication</h3>
+                <p>Add an extra layer of protection to your account.</p>
+            </div>
+
+        </div>
+
+
+        <div class="security-block-body">
+
+            <div id="mfa-message"></div>
+
+
+            {% if mfa.enabled %}
+
+                <div class="mfa-status">
+
+                    <div class="mfa-status-info">
+
+                        <span class="status-indicator success"></span>
+
+                        <div>
+                            <div class="status-text">
+                                MFA is enabled
+                            </div>
+
+                            <div class="status-description">
+                                Your account is protected with
+                                multi-factor authentication.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-actions">
+
+                    <button
+                        type="button"
+                        class="btn danger"
+                        id="disable-mfa">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Disable MFA
+
+                    </button>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="mfa-status">
+
+                    <div class="mfa-status-info">
+
+                        <span class="status-indicator warning"></span>
+
+                        <div>
+                            <div class="status-text">
+                                MFA is not enabled
+                            </div>
+
+                            <div class="status-description">
+                                Protect your account by enabling
+                                multi-factor authentication.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-actions">
+
+                    <button
+                        type="button"
+                        class="btn primary"
+                        id="enable-mfa">
+
+                        <i class="fa-solid fa-lock"></i>
+                        Enable MFA
+
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+
+            <div id="mfa-setup" style="display:none;"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+$(function () {
+
+    /*
+     * Enable MFA
+     */
+    $('#enable-mfa').on('click', function () {
+
+        const $button = $(this);
+
+        $button.prop('disabled', true);
+
+        $('#mfa-message').empty();
+
+        $.get(
+            'api/modules/settings/totp-setup',
+            function (resp) {
+
+                if (!resp || !resp.html) {
+                    $('#mfa-message').html(
+                        '<div class="mfa-error">' +
+                        'Unable to start MFA setup. Please try again.' +
+                        '</div>'
+                    );
+
+                    return;
+                }
+
+                $('#mfa-setup')
+                    .html(resp.html)
+                    .slideDown(200);
+
+            }
+        )
+        .fail(function (xhr) {
+
+            let message =
+                'Unable to start MFA setup. Please try again.';
+
+            if (xhr.responseJSON?.message) {
+                message = xhr.responseJSON.message;
+            }
+
+            $('#mfa-message').html(
+                '<div class="mfa-error">' +
+                $('<div>').text(message).html() +
+                '</div>'
+            );
+
+        })
+        .always(function () {
+
+            $button.prop('disabled', false);
+
+        });
+
+    });
+
+
+    /*
+     * Disable MFA
+     */
+    $('#disable-mfa').on('click', function () {
+
+        const $button = $(this);
+
+        /*
+        * Confirm before disabling MFA.
+        */
+        if (!confirm(
+            'Are you sure you want to disable multi-factor authentication?'
+        )) {
+            return;
+        }
+
+        /*
+        * Request the current authenticator code.
+        */
+        const code = prompt(
+            'Enter the 6-digit code from your authenticator app:'
+        );
+
+        /*
+        * User cancelled.
+        */
+        if (code === null) {
+            return;
+        }
+
+        const totpCode = code.trim();
+
+        /*
+        * Validate locally before making the request.
+        */
+        if (!totpCode) {
+            $('#mfa-message').html(
+                '<div class="mfa-error">' +
+                'Verification code required.' +
+                '</div>'
+            );
+
+            return;
+        }
+
+        $button.prop('disabled', true);
+
+        $('#mfa-message').empty();
+
+        $.ajax({
+            url: 'api/modules/settings/totp-disable',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                code: totpCode
+            },
+
+            success: function (resp) {
+
+                if (!resp || resp.success !== true) {
+
+                    $('#mfa-message').html(
+                        '<div class="mfa-error">' +
+                        $('<div>').text(
+                            resp?.message ||
+                            'Unable to disable MFA.'
+                        ).html() +
+                        '</div>'
+                    );
+
+                    return;
+                }
+
+                /*
+                * MFA was successfully disabled.
+                *
+                * Reload so that the server re-evaluates
+                * the MFA state on the server.
+                */
+                window.location.reload();
+            },
+
+            error: function (xhr) {
+
+                let message =
+                    'Unable to disable MFA. Please try again.';
+
+                if (xhr.responseJSON?.message) {
+                    message = xhr.responseJSON.message;
+                }
+
+                $('#mfa-message').html(
+                    '<div class="mfa-error">' +
+                    $('<div>').text(message).html() +
+                    '</div>'
+                );
+            },
+
+            complete: function () {
+
+                $button.prop('disabled', false);
+            }
+        });
+
+    });
+
+});
+
+</script>

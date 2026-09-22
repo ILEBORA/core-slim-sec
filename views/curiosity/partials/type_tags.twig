@@ -22,29 +22,29 @@
 <script>
 ILEBORA.use('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', function() {
     $(function() {
-        $('#tags-select').select2({
-            placeholder: "Select or add interests",
-            tags: true,                 // allow new tags
-            tokenSeparators: [',', ' '],
-            allowClear: true,
-            ajax: {
-                url: 'api/modules/curiosity/interests',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-                    if (data.results) {
-                        return data;
-                    }
-                    // Otherwise map it manually
-                    return {
-                        results: data.map(function (item) {
-                            return { id: item.id, text: item.text }; // <- use `id`, not `pid`
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
+        // $('#tags-select').select2({
+        //     placeholder: "Select or add interests",
+        //     tags: true,                 // allow new tags
+        //     tokenSeparators: [',', ' '],
+        //     allowClear: true,
+        //     ajax: {
+        //         url: 'api/modules/curiosity/interests',
+        //         dataType: 'json',
+        //         delay: 250,
+        //         processResults: function (data) {
+        //             if (data.results) {
+        //                 return data;
+        //             }
+        //             // Otherwise map it manually
+        //             return {
+        //                 results: data.map(function (item) {
+        //                     return { id: item.id, text: item.text }; // <- use `id`, not `pid`
+        //                 })
+        //             };
+        //         },
+        //         cache: true
+        //     }
+        // });
 
         $('#send-btn').on('click', function(e) {
             e.preventDefault();

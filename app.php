@@ -4,8 +4,8 @@
  *  BoraSlim Secure Distribution
  *  Framework:  ilebora/core-slim-sec
  *  Version:    2.1.17
- *  Build ID:   D4F88C8286F9
- *  Timestamp:  2026-09-17 16:01:25
+ *  Build ID:   2A77FB4A89EC
+ *  Timestamp:  2026-09-22 19:12:16
  *  License:    Proprietary - Unauthorized modification prohibited.
  *  © 2025 ILEBORA Technologies. All Rights Reserved.
  * ================================================================
@@ -86,6 +86,8 @@ if (!defined('CORE_SECURE_APP_FOLDER')) {
 }
 
 $envPath = realpath($basePath . '/' . CORE_SECURE_APP_FOLDER);
+
+define('CORE_SLIM_PATH', $basePath. DIRECTORY_SEPARATOR . '/wahenga/vendor/ilebora/core-slim-sec');
 
 if ($envPath && file_exists($envPath . '/.env')) {
     Dotenv::createImmutable($envPath)->safeLoad();

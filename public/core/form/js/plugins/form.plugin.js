@@ -1613,14 +1613,14 @@ __BORA_REGISTER_PLUGIN__('form.plugin', async function(scope){
                             false
                         )
                     )
-                    .select2({
-                        width:
-                            '100%',
-                        placeholder,
-                        allowClear:
-                            true,
-                        data
-                    });
+                    // .select2({
+                    //     width:
+                    //         '100%',
+                    //     placeholder,
+                    //     allowClear:
+                    //         true,
+                    //     data
+                    // });
             }
         );
     };

@@ -1186,8 +1186,8 @@
         });
 
         function getLoader(){
-            // return global.__BORA_LOADER__;
-            return BORA;
+            return global.__BORA_LOADER__;
+            // return BORA;
         }
 
         /* ==================================================

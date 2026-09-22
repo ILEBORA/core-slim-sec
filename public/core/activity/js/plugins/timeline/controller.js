@@ -241,7 +241,7 @@ __BORA_REGISTER_PLUGIN__(
 
             scope.on(
     
-                'realtime:activity:timeline.created',
+                'realtime:activity.timeline.created',
     
                 (event)=>{
     

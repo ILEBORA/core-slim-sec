@@ -1026,15 +1026,9 @@ if(!function_exists('response')){
 }
 
 if (!function_exists('myApp')) {
-    function myApp(): \BoraSlim\Core\App
+    function myApp(): \App\BoraApp
     {
         return \BoraSlim\Core\App::getInstance();
-        // static $instance = null;
-        // if ($instance === null) {
-        //     global $app;
-        //     $instance = $app;
-        // }
-        // return $instance;
     }
 }
 
@@ -2790,5 +2784,27 @@ if (!function_exists('resolveTheme')) {
         }
 
         return $theme;
+    }
+}
+
+use BoraSlim\Core\Config\MapResolver;
+
+if (!function_exists('map')) {
+
+    function map(string $key): mixed
+    {
+        return MapResolver::get($key);
+    }
+}
+
+use BoraSlim\Core\Config\ConfigResolver;
+
+if (!function_exists('config')) {
+
+    function config(
+        string $key,
+        mixed $default = null
+    ): mixed {
+        return ConfigResolver::get($key, $default);
     }
 }
