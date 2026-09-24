@@ -399,7 +399,7 @@ function getUserIpAddr(){
         //ip pass from proxy
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
     }else{
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $_SERVER['REMOTE_ADDR']??'';
     }
     return $ip;
 }

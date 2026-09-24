@@ -1,8 +1,5 @@
-
-
-console.log('ILEBORA');
-
-
+if(typeof ILEBORA === 'undefined'){
+    
 var _exportsCache = [];
 let ILEBORA = (function () {
     var _listeners = {};
@@ -446,6 +443,8 @@ let ILEBORA = (function () {
 ILEBORA.separator = ".";
 ILEBORA.baseUri = "./";
 ILEBORA.autoInclude = true;
+}
+
 function rd(y, d = ''){
 	return (typeof window.settings[y] === "undefined") ? d : window.settings[y];
 }
