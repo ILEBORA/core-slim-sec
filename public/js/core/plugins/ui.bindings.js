@@ -17,6 +17,10 @@ __BORA_REGISTER_PLUGIN__(
             await scope.getService(
                 'ui.dom'
             );
+
+        const pluginState = {
+                mounted: false
+            };
     
         const renderers = new Map();
     
@@ -81,42 +85,10 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function mount(root = document){
+            if (pluginState.mounted) return;
+            pluginState.mounted = true;
 
             initialize();
-        
-            // const targets = [
-        
-            //     {
-            //         selector: '[data-bind]',
-            //         type: 'scalar'
-            //     },
-        
-            //     {
-            //         selector: '[data-bind-object]',
-            //         type: 'object'
-            //     },
-        
-            //     {
-            //         selector: '[data-bind-list]',
-            //         type: 'list'
-            //     }
-        
-            // ];
-        
-            // targets.forEach(target => {
-        
-            //     root
-            //         .querySelectorAll(target.selector)
-            //         .forEach(el => {
-        
-            //             compile(
-            //                 el,
-            //                 target.type
-            //             );
-        
-            //         });
-        
-            // });
 
             dom.register({
 
@@ -584,6 +556,8 @@ __BORA_REGISTER_PLUGIN__(
         }
 
         function unmount(root = document){
+            if (!pluginState.mounted) return; 
+                pluginState.mounted = false;
 
             root
                 .querySelectorAll(
