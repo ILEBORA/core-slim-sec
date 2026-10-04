@@ -170,7 +170,7 @@ $callback = function () use (&$lastSentm, $ackFile) {
         $out = json_decode($out,true);
         
     }else{
-        error_log("SSE Error blank:: ".$out);
+        // error_log("SSE Error blank:: ".$out);
         $out = [];
         return false;
     }
