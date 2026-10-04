@@ -21,8 +21,8 @@ require __DIR__ . '/../../../../../../../vendor/autoload.php';
 EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
 
 //require __DIR__ . '/../../../../../../../src/engine.php';
-\BoraSlim\Core\Engine::boot();
-
+\BoraSlim\Core\Engine::boot('', BoraSlim\Core\App::CONTEXT_SSE);
+error_log('[SSE] Started for '.PROJECTNAME??'app'.' ... ['.date('Y-m-d hh:mm:ss').']');
 //Proceed
 use BoraSlim\Core\Modules\Realtime\Utils\SSE;
 use BoraSlim\Core\Modules\Realtime\Utils\StopSSEException;
@@ -166,11 +166,11 @@ $callback = function () use (&$lastSentm, $ackFile) {
     // jsonExit(json_decode($out,true)??$out);
     if(isJson($out)){
         //error_log("SSE response:: ".$out);
-        error_log("SSE response:: found ");
+        error_log("SSE response:: found >> ". $out );
         $out = json_decode($out,true);
         
     }else{
-        // error_log("SSE Error blank:: ".$out);
+        error_log("SSE Error blank:: ".$out);
         $out = [];
         return false;
     }
@@ -181,6 +181,7 @@ $callback = function () use (&$lastSentm, $ackFile) {
 
     $shouldStop = false; // Stop if something happens or to clear connection, browser will retry
     if ($shouldStop) {
+        error_log("SSE Stopped:: should stop = true " );
         throw new StopSSEException();
     }
 

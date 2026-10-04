@@ -2,8 +2,9 @@ __BORA_REGISTER_PLUGIN__('events.actions', async function(scope){
 
     const callbora = await scope.getService('callbora');
     const uiActions = await scope.getService('ui.actions');
-    const bNavigator = await scope.getService('navigator');
+
     const mNavigation = await scope.getService('navigation');
+    const bNavigator = await scope.getService('navigator');
 
     const popup = await scope.getPlugin('popup');
 

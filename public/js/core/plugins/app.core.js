@@ -46,10 +46,24 @@ __BORA_REGISTER_PLUGIN__(
         ========================= */
 
         async function mount(){
+            /* =========================
+            🔥 ROUTE → ACTIVATION BRIDGE
+            ========================= */
+
+            scope.on('route:changed', async ({url:route}) => {
+                console.log('route:changed here');
+                try{
+                    // alert('route changed '+route);
+                    await scope.evaluatePluginActivation(route);
+                }catch(err){
+                    console.error('[AppCore] Activation failed', err);
+                }
+            });
+            
             if (state.mounted) return;
             state.mounted = true;
 
-            console.log('[AppCore] mounted');
+            // alert('[AppCore] mounted');
             await loadPermissions();
 
             await registerRouteGuards();
@@ -57,17 +71,19 @@ __BORA_REGISTER_PLUGIN__(
             await preferences.load();
             provide('preferences', preferences);
 
-            /* =========================
-            🔥 ROUTE → ACTIVATION BRIDGE
-            ========================= */
+            // /* =========================
+            // 🔥 ROUTE → ACTIVATION BRIDGE
+            // ========================= */
 
-            scope.on('route:changed', async ({url:route}) => {
-                try{
-                    await scope.evaluatePluginActivation(route);
-                }catch(err){
-                    console.error('[AppCore] Activation failed', err);
-                }
-            });
+            // scope.on('route:changed', async ({url:route}) => {
+            //     alert('here');
+            //     try{
+            //         alert('route changed '+route);
+            //         await scope.evaluatePluginActivation(route);
+            //     }catch(err){
+            //         console.error('[AppCore] Activation failed', err);
+            //     }
+            // });
 
             // 🔥 Initial activation (after boot)
             // const initialRoute = normalizeUrl(window.location);
@@ -86,8 +102,8 @@ __BORA_REGISTER_PLUGIN__(
 
         async function loadPermissions(){
 
-            try{
-
+            // try{
+                
                 // if(typeof globalThis.acs === 'string' && acs.trim()){
                     state.appPerms = JSON.parse(rd('current_permissions'));
                 // }
@@ -101,9 +117,9 @@ __BORA_REGISTER_PLUGIN__(
                     // alert('Perms');
                 }
 
-            }catch(e){
-                console.error('[AppCore] Permission decode failed:', e);
-            }
+            // }catch(e){
+            //     console.error('[AppCore] Permission decode failed:', e);
+            // }
         }
 
         function hasPermission(perm, sub){

@@ -736,7 +736,7 @@ if (!function_exists('modView')) {
 
 if (!function_exists('getVersion')) {
      function getVersion(){
-        $versionFile = '.config/.version';
+        $versionFile = BASE_DIR.'/.config/.version';
         if(!file_exists($versionFile)){
             return $versionFile.' file not found.';
         }

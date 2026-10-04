@@ -31,7 +31,7 @@ async function(scope){
         // hooks?.add('breadcrumbs:changed', render);
 
         scope.on('route:changed', async ({url:url}) => {
-            // alert('route changed bread here :: ' + url);
+            console.log('route changed bread here :: ' + url);
             // optional: pass last known response if you have it
             breadcrumbs.clear();
 

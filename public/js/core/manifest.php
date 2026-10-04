@@ -233,7 +233,7 @@ return [
     'breadcrumbs.plugin' => ['file' => 'plugins/breadcrumbs.plugin.js', 'type' => 'plugin', 'version' => '2.0.0', 'priority' => 45, 'requires' => []],
 
     'devtools.plugin' => ['file' => 'plugins/devtools.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 50],
-    'app.core' => ['file' => 'plugins/app.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, 'requires' => ['hooks', 'state', 'callbora']],
+    'app.core' => ['file' => 'plugins/app.core.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 55, ],
     'layouts' => ['file' => 'plugins/layouts.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57,'preload'=>false],
     'face.guest' => ['file' => 'plugins/face.guest.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 57],
     'face.client' => ['file' => 'plugins/face.client.js', 'type' => 'plugin', 'version' => '1.0.0', 'priority' => 58],

@@ -151,6 +151,7 @@
         --------------------------- */
 
         async function handleRouteState(app){
+            // alert('handleRouteState here');
             if (restoring) return;
             restoring = true;
             // const navigator = await __BORA_APP__?.service('navigator');

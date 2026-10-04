@@ -569,127 +569,130 @@ async function(scope){
         //-------------------------------------------------
         // Random Updates
         //-------------------------------------------------
-    
-        setInterval(()=>{
-            // console.log('Test Realtime...');
-            counter++;
-            
-            const first =
-    
-                firstNames[
-                    Math.floor(
-                        Math.random()*
-                        firstNames.length
-                    )
-                ];
-    
-            const last =
-    
-                lastNames[
-                    Math.floor(
-                        Math.random()*
-                        lastNames.length
-                    )
-                ];
-    
-            const gender =
-    
-                genders[
-                    Math.floor(
-                        Math.random()*2
-                    )
-                ];
-    
-            const active =
-                Math.random()>.5;
-    
-            const visible =
-                Math.random()>.5;
-    
-            const disabled =
-                Math.random()>.5;
-    
-            //-------------------------------------------------
-            // Scalar
-            //-------------------------------------------------
-    
-            appState.set(
-                'demo.counter',
-                counter
-            );
-    
-            appState.set(
-                'demo.name',
-                first
-            );
-    
-            appState.set(
-                'demo.active',
-                active
-            );
-    
-            appState.set(
-                'demo.visible',
-                visible
-            );
-    
-            appState.set(
-                'demo.disabled',
-                disabled
-            );
-    
-            appState.set(
-                'demo.avatar',
-    
-                'https://picsum.photos/150?random='+
-    
-                Math.floor(
-                    Math.random()*1000
-                )
-    
-            );
-    
-            appState.set(
-    
-                'demo.html',
-    
-                '<h3>'+first+'</h3>'+
-    
-                '<small>'+new Date().toLocaleTimeString()+'</small>'
-    
-            );
-    
-            //-------------------------------------------------
-            // Object
-            //-------------------------------------------------
-    
-            appState.set(
-    
-                'demo.person',
-    
-                {
-    
-                    first_name:first,
-    
-                    last_name:last,
-    
-                    age:
-    
+        var live = false;
+        //TODO:: review set state
+        if(live){
+            setInterval(()=>{
+                // console.log('Test Realtime...');
+                counter++;
+                
+                const first =
+        
+                    firstNames[
                         Math.floor(
-    
-                            20+
-    
-                            Math.random()*40
-    
-                        ),
-    
-                    gender:gender
-    
-                }
-    
-            );
-    
-        },1000);
+                            Math.random()*
+                            firstNames.length
+                        )
+                    ];
+        
+                const last =
+        
+                    lastNames[
+                        Math.floor(
+                            Math.random()*
+                            lastNames.length
+                        )
+                    ];
+        
+                const gender =
+        
+                    genders[
+                        Math.floor(
+                            Math.random()*2
+                        )
+                    ];
+        
+                const active =
+                    Math.random()>.5;
+        
+                const visible =
+                    Math.random()>.5;
+        
+                const disabled =
+                    Math.random()>.5;
+        
+                //-------------------------------------------------
+                // Scalar
+                //-------------------------------------------------
+        
+                appState.set(
+                    'demo.counter',
+                    counter
+                );
+        
+                appState.set(
+                    'demo.name',
+                    first
+                );
+        
+                appState.set(
+                    'demo.active',
+                    active
+                );
+        
+                appState.set(
+                    'demo.visible',
+                    visible
+                );
+        
+                appState.set(
+                    'demo.disabled',
+                    disabled
+                );
+        
+                appState.set(
+                    'demo.avatar',
+        
+                    'https://picsum.photos/150?random='+
+        
+                    Math.floor(
+                        Math.random()*1000
+                    )
+        
+                );
+        
+                appState.set(
+        
+                    'demo.html',
+        
+                    '<h3>'+first+'</h3>'+
+        
+                    '<small>'+new Date().toLocaleTimeString()+'</small>'
+        
+                );
+        
+                //-------------------------------------------------
+                // Object
+                //-------------------------------------------------
+        
+                appState.set(
+        
+                    'demo.person',
+        
+                    {
+        
+                        first_name:first,
+        
+                        last_name:last,
+        
+                        age:
+        
+                            Math.floor(
+        
+                                20+
+        
+                                Math.random()*40
+        
+                            ),
+        
+                        gender:gender
+        
+                    }
+        
+                );
+        
+            },1000);
+        }
     
     })();
 

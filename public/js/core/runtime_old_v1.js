@@ -155,13 +155,10 @@
         const replayable = new Set([
             'runtime:started',
             'page.loaded',
-            'view:mounted',
-            'app:ready',
-            'plugins:registered',
-            'route:changed'
+            'view:mounted'
         ]);
 
-        function onO(event, handler, options = {}){
+        function on(event, handler, options = {}){
             if(!events.has(event)) events.set(event, []);
             
             const handlers = events.get(event);
@@ -174,7 +171,6 @@
                 options.replay !== false // allow opt-out
             ){
                 try{
-                    console.log('[Runtime event replay]', event)
                     handler(fired.get(event));
                 }
                 catch(err){
@@ -186,7 +182,7 @@
             return () => off(event, handler);
         }
 
-        function offO(event, handler){
+        function off(event, handler){
             if(!event){
                 events.clear();
                 fired.clear(); // important: reset state too
@@ -212,7 +208,7 @@
             }
         }
 
-        function emitO(event, payload){
+        function emit(event, payload){
             console.log('Emit:: ' + event,payload );
             // store state if replayable
             if(replayable.has(event)){
@@ -231,110 +227,6 @@
                 catch(err){
                     console.error('[Runtime event error]', err);
                 }
-            });
-        }
-
-        function on(event, handler, options = {}) {
-            if (typeof handler !== 'function') {
-                throw new TypeError(`Handler for "${event}" must be a function`);
-            }
-        
-            if (!events.has(event)) {
-                events.set(event, new Set());
-            }
-        
-            const handlers = events.get(event);
-            handlers.add(handler);
-        
-            // Replay the latest state to late subscribers.
-            if (
-                replayable.has(event) &&
-                fired.has(event) &&
-                options.replay !== false
-            ) {
-                invokeHandler(event, handler, fired.get(event));
-            }
-        
-            // Return an unsubscribe function.
-            return () => off(event, handler);
-        }
-        
-        function invokeHandler(event, handler, payload) {
-            try {
-                // console.error(`[Runtime] handle event`, event, payload);
-                const result = handler(payload);
-                
-                // Catch asynchronous handler errors as well.
-                if (result && typeof result.then === 'function') {
-                    result.catch(err => {
-                        console.error(`[Runtime async event error: ${event}]`, err);
-                    });
-                }
-            } catch (err) {
-                console.error(`[Runtime event error: ${event}]`, err);
-            }
-        }
-        
-        function off(event, handler) {
-            // Remove all listeners, but preserve replayable state.
-            if (!event) {
-                events.clear();
-                return;
-            }
-        
-            const handlers = events.get(event);
-            if (!handlers) return;
-        
-            // Remove all listeners for this event.
-            if (!handler) {
-                events.delete(event);
-                return;
-            }
-        
-            handlers.delete(handler);
-        
-            if (handlers.size === 0) {
-                events.delete(event);
-            }
-        }
-        
-        function emit(event, payload) {
-            // Retain latest state only for replayable events.
-            if (replayable.has(event)) {
-                fired.set(event, payload);
-            }
-        
-            const handlers = events.get(event);
-        
-            // Return listener count, useful for diagnostics.
-            if (!handlers || handlers.size === 0) {
-                return 0;
-            }
-        
-            // Snapshot protects iteration if listeners unsubscribe.
-            const snapshot = [...handlers];
-        
-            snapshot.forEach(handler => {
-                invokeHandler(event, handler, payload);
-            });
-        
-            return snapshot.length;
-        }
-
-        function waitFor(event, options = {}) {
-            if (
-                options.replay !== false &&
-                replayable.has(event) &&
-                fired.has(event)
-            ) {
-                return Promise.resolve(fired.get(event));
-            }
-        
-            return new Promise(resolve => {
-                const unsubscribe = on(event, payload => {
-                    unsubscribe();
-                    resolve(payload);
-                }, { replay: false });
             });
         }
 
@@ -391,7 +283,6 @@
                 on,
                 off,
                 emit,
-                waitFor,
                 bindDom,
                 config,
                 runtimeInstance: publicAPI,

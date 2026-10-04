@@ -357,7 +357,7 @@ __BORA_REGISTER_SERVICE__(
                     state?.set?.('route', cleanUrl);
 
                     scope.emit('route:changed', {url:cleanUrl});
-
+                    // alert(cleanUrl);
                     if (overlayVisible){
                         ov?.setProgress?.(100);
                     }
