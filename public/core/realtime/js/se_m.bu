@@ -3,25 +3,34 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+$basePath = dirname(__DIR__ . '/../../../../../../../../');
+
 register_shutdown_function(function () {
     $err = error_get_last();
     if ($err) {
         file_put_contents(
-            __DIR__ . '/../../../../../../../.logs/sse_fatal.log',
+            $basePath . '/.logs/sse_fatal.log',
             print_r($err, true),
             FILE_APPEND
         );
     }
 });
 
-
-require __DIR__ . '/../../../../../../../vendor/autoload.php';
+require $basePath . '/vendor/autoload.php';
 // die('here');
 // use BoraSlim\Core\Utils\EnvLoader;
-EnvLoader::load(__DIR__ . '/../../../../../../../', 'wahenga');
+EnvLoader::load($basePath , 'wahenga');
 
-//require __DIR__ . '/../../../../../../../src/engine.php';
-\BoraSlim\Core\Engine::boot('', BoraSlim\Core\App::CONTEXT_SSE);
+// require $basePath . '/src/engine.php';
+
+\BoraSlim\Core\Engine::engine(
+    $basePath,
+    \App\BoraApp::CONTEXT_WEB
+);
+
+// \BoraSlim\Core\Engine::boot3('', BoraSlim\Core\App::CONTEXT_SSE);
+
+
 error_log('[SSE] Started for '.PROJECTNAME??'app'.' ... ['.date('Y-m-d hh:mm:ss').']');
 //Proceed
 use BoraSlim\Core\Modules\Realtime\Utils\SSE;
@@ -43,7 +52,8 @@ $sessionID  = isset($req['sessionID']) ? $req['sessionID'] : 'null';
 $timer      = isset($req['timer']) ? $req['timer'] : 10;
 $timer      = (int) ($timer * 1000);
 //die($sessionID );
-
+// die(userID());
+error_log('[SSE] $req = '.json_encode($req));
 // $ackFile = BASE_DIR."/.realtime/state/{$userID}_{$sessionID}.json";
 $ackFile = paths()->realtimeState(
                         "{$userID}_{$sessionID}.json"

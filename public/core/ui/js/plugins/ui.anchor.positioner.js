@@ -1,6 +1,6 @@
 __BORA_REGISTER_PLUGIN__('ui.anchor.positioner', async function(scope){
 
-    function position(trigger, panel, options = {}) {
+    function positionO(trigger, panel, options = {}) {
         // Viewport positioning for dropdowns that opt in.
         if (settings.strategy === 'fixed') {
             const triggerEl = trigger[0];
@@ -251,7 +251,7 @@ __BORA_REGISTER_PLUGIN__('ui.anchor.positioner', async function(scope){
         };
     }
 
-    function positionO(trigger, panel, options = {}){
+    function position(trigger, panel, options = {}){
 
         const settings = {
             align: 'right',        // 'left' | 'right' | 'center'
