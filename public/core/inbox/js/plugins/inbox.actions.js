@@ -62,6 +62,26 @@ __BORA_REGISTER_PLUGIN__('inbox.actions', async function(scope){
         state.initialized = true;
         
         // 
+        scope.on(
+            'realtime:inbox:user:'+rd('uID'),
+            (event) => {
+                
+                const payload = event.payload;
+
+                const $badge = $('.page-item-badge_portal-inbox');
+
+                if ($badge.length) {
+                    const count = parseInt($badge.text(), 10) || 0;
+                    $badge.text(count + 1);
+                }
+        
+                alertBora.alert(
+                    'New inbox message for. '+rd('uID')
+                );
+        
+                // scope.emit('sync.completed', payload);
+            }
+        );
         
     }
 

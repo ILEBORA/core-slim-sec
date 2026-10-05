@@ -60,7 +60,9 @@ $ackFile = paths()->realtimeState(
                     );
 $acked = file_exists($ackFile)
     ? json_decode(file_get_contents($ackFile), true)
-    : paths()->ensureAckFile($ackFile);
+    : paths()->initializeAckFile($ackFile);//paths()->ensureAckFile($ackFile);
+// New SSE connection starts from "now"
+// $acked = paths()->initializeAckFile($ackFile);
 
 $lastSent = $acked;
 // dieVal($lastSent);
@@ -134,24 +136,11 @@ $callback = function () use (&$lastSentm, $ackFile) {
         ? json_decode(file_get_contents($ackFile), true)
         : [];
 
-    // $since = isset($req['since']) ? $req['since'] : []; 
-
-    // $cookies    = isset($_COOKIE['lvui']) ? $_COOKIE['lvui'] : '' ;
-    // $widgets    = isset($_COOKIE['lvui_widgets']) ? $_COOKIE['lvui_widgets'] : [] ;
-
     $out = $event;
 
-    // die($_ENV['SE_BASE']);
-    // die(BASE_URL);
-    
-
-    // die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
-    // die("http://localhost/wahenga/api/v1/se_main/".$sessionID."/".$event."/notify");
-    // die($userID);
     if(empty($base)){
         $base = getIfSet($_ENV['SE_BASE'],'http://localhost/wahenga/');
     }
-    //die($base."api/modules/realtime/semain/".$sessionID."/".$event."/notify");
 
     $params = [
             'CRON_MODE' => getenv('CRON_MODE'),
@@ -168,12 +157,11 @@ $callback = function () use (&$lastSentm, $ackFile) {
             'since' => $since
         ];
 
-    // dieVal($params);
-        
+
     $url = $base."api/modules/realtime/semain/".$sessionID."/".$event."/notify";
-    // die($url);
+    
     $out =  callApiB('POST',$url, $params);
-    // jsonExit(json_decode($out,true)??$out);
+    
     if(isJson($out)){
         //error_log("SSE response:: ".$out);
         error_log("SSE response:: found >> ". $out );
@@ -203,14 +191,5 @@ $callback = function () use (&$lastSentm, $ackFile) {
 };
 
 $listener = isset($req['event']) ? $req['event'] : 'noevent';
-// die($listener);
-// jsonExit([
-//     'response' => 'success',
-//     'message' => 'SE::✅ Stream started...',//'Acknowledgment from api '.time(),
-//     'data' => [
-//         'listener' => $listener,
-//         'timer' => $timer
-//     ],
-//     'callback' => $callback()
-// ]);
+
 (new SSE(new Event($callback, $listener, $timer)))->start(10);

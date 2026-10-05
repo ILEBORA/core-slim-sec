@@ -1,0 +1,178 @@
+<section class="inbox-admin-stats container widget-section-padding">
+
+    <div class="inbox-admin-stats-header">
+        <div>
+            <span class="inbox-admin-eyebrow">
+                INBOX ADMINISTRATION
+            </span>
+
+            <h2 class="inbox-admin-title">
+                Inbox Overview
+            </h2>
+
+            <p class="inbox-admin-description">
+                A snapshot of messaging activity, conversations,
+                active users and read performance.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="inbox-admin-stat-grid">
+
+        {# Messages #}
+        <div class="inbox-admin-stat-card inbox-admin-stat-primary">
+
+            <div class="inbox-admin-stat-icon">
+                💬
+            </div>
+
+            <div class="inbox-admin-stat-label">
+                Messages
+            </div>
+
+            <div class="inbox-admin-stat-value">
+                {{ messages.total|default(0) }}
+            </div>
+
+            <div class="inbox-admin-stat-meta">
+                {{ messages.today|default(0) }} today
+            </div>
+
+        </div>
+
+
+        {# Threads #}
+        <div class="inbox-admin-stat-card">
+
+            <div class="inbox-admin-stat-icon">
+                🧵
+            </div>
+
+            <div class="inbox-admin-stat-label">
+                Threads
+            </div>
+
+            <div class="inbox-admin-stat-value">
+                {{ threads.total|default(0) }}
+            </div>
+
+            <div class="inbox-admin-stat-meta">
+                {{ threads.active|default(0) }} active
+            </div>
+
+        </div>
+
+
+        {# Active Users #}
+        <div class="inbox-admin-stat-card">
+
+            <div class="inbox-admin-stat-icon">
+                👥
+            </div>
+
+            <div class="inbox-admin-stat-label">
+                Active Users
+            </div>
+
+            <div class="inbox-admin-stat-value">
+                {{ users.active|default(0) }}
+            </div>
+
+            <div class="inbox-admin-stat-meta">
+                Active Inbox users
+            </div>
+
+        </div>
+
+
+        {# Read Rate #}
+        <div class="inbox-admin-stat-card">
+
+            <div class="inbox-admin-stat-icon">
+                ✓
+            </div>
+
+            <div class="inbox-admin-stat-label">
+                Read Rate
+            </div>
+
+            <div class="inbox-admin-stat-value">
+                {{ read.rate|default(0) }}%
+            </div>
+
+            <div class="inbox-admin-stat-meta">
+                Messages read
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="inbox-admin-breakdown">
+
+        {# Message Activity #}
+        <div class="inbox-admin-breakdown-card">
+
+            <h3>
+                Message Activity
+            </h3>
+
+            <div class="inbox-admin-breakdown-row">
+                <span>Total Messages</span>
+                <strong>
+                    {{ messages.total|default(0) }}
+                </strong>
+            </div>
+
+            <div class="inbox-admin-breakdown-row">
+                <span>Today</span>
+                <strong>
+                    {{ messages.today|default(0) }}
+                </strong>
+            </div>
+
+            <div class="inbox-admin-breakdown-row">
+                <span>Unread</span>
+                <strong>
+                    {{ messages.unread|default(0) }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        {# Thread Activity #}
+        <div class="inbox-admin-breakdown-card">
+
+            <h3>
+                Thread Activity
+            </h3>
+
+            <div class="inbox-admin-breakdown-row">
+                <span>Total</span>
+                <strong>
+                    {{ threads.total|default(0) }}
+                </strong>
+            </div>
+
+            <div class="inbox-admin-breakdown-row">
+                <span>Active</span>
+                <strong>
+                    {{ threads.active|default(0) }}
+                </strong>
+            </div>
+
+            <div class="inbox-admin-breakdown-row">
+                <span>Created Today</span>
+                <strong>
+                    {{ threads.today|default(0) }}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
